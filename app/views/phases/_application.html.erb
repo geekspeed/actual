@@ -1,0 +1,101 @@
+<div class="block">
+  <h3 class="titleLine"><%= t("role_type:participant", "s") %></h3>
+  <div class="row_div_data">
+    <div class="user_name pull-left">Number of <%= t("role_type:participant","p") %> registered</div>
+    <a href="#remind_app" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "participant", :recipients => "#{t("role_type:participant", "p")} registered", :anchor_id => "remind_app" %>
+    <div class="user_status pull-right"><%= @registered_applicants.count %></div>
+    <div class="clr"></div>
+  </div>
+  <br/>
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= t("role_type:participant", "p") %> who haven't registered yet</div>
+    <a href="#remind_not_registered" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "invited_participants", :recipients => "#{t("role_type:participant", "p")} who haven't registered yet", :anchor_id => "remind_not_registered" %>
+    <div class="user_status pull-right"><%= @not_registered_applicants.count %></div>
+    <div class="clr"></div>
+  </div>
+</div>
+
+<div class="block">
+  <h3><%= t("role_type:mentor", "p") %></h3>
+  <div class="">
+    <div class="user_name pull-left"><%= "Number of #{t("role_type:mentor", "p")} registered" %></div>
+    <a href="#message_mentor" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "mentors", :recipients => "#{t("role_type:mentor", "p")} registered", :anchor_id => "message_mentor" %>
+    <div class="user_status pull-right"><%= @registered_mentors %></div>
+    <div class="clr"></div>
+  </div>
+  <br/>
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "#{t("role_type:mentor", "p")} who haven't registered yet" %></div>
+    <a href="#message_mentor_not_registered" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "invited_mentors", :recipients => "#{t("role_type:mentor", "p")} who haven't registered yet", :anchor_id => "message_mentor_not_registered" %>
+    <div class="user_status pull-right"><%= @not_registered_mentors %></div>
+    <div class="clr"></div>
+  </div>
+</div>
+<br />
+<div class="block">
+  <h3><%= "#{t("pitch", "p")}" %></h3>
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "Number of #{t("pitch", "p")} submitted" %></div>
+    <a href="#remind_pitch" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "with_pitches", :recipients => "Teams who have submitted a #{t("pitch", "s")}", :anchor_id => "remind_pitch", :url => polymorphic_path([:pitches, @program, :messages]) %>
+    <div class="user_status pull-right"><%= @pitches.collect(&:user_id).size %></div>
+    <div class="clr"></div>
+  </div>
+  <br/>
+  <div class="row_div_data">
+    <div class="user_name pull-left">
+      <%= "#{t("role_type:participant", "p")} who have not submitted a #{t("pitch", "s")}" %>
+    </div>
+    <div><%= link_to "Download CSV", download_csv_program_messages_url, class: "send_reminder pull-right"%></div>
+    <a href="#remind_app_no_pitch" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "without_pitches", :recipients => "Teams who have not submitted a #{t("pitch", "s")}", :anchor_id => "remind_app_no_pitch", :url => polymorphic_path([:pitches, @program, :messages]) %>
+    <div class="user_status pull-right"><%= @applicants_without_pitches %></div>
+    <div class="clr"></div>
+  </div>
+  
+</div>
+
+<div class="block">
+  <h3 id="accept-new-user" class="titleLine"><%= "Invited #{t("role_type:participant", "p")}" %></h3>
+  <% @registered_applicants.each do |applicant| %>
+    <div class="">
+      <div style="width:290px;" class="user_name"><%= name_or_email(applicant) %></div>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+  <% @not_registered_applicants.each do |applicant| %>
+    <div class="row_div_data">
+      <div style="width:290px;" class="user_name pull-left"><%= name_or_email(applicant) %></div>
+               
+      <a href="#remind_<%= applicant.id %>" class="send_reminder fancybox_small pull-right">Send Reminder</a>
+      <%= render "shared/reminder_lightbox", :user => applicant, :program => @program, :code => "participant", :anchor_id => "remind_#{applicant.id}" %>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+</div>
+
+<div class="block">
+  <h3 class="titleLine">Mentoring</h3>
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "#{t("pitch", "p")} with #{t("role_type:mentor", "p")}" %></div>
+    <a href="#pitch_with_mentor" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "with_mentor", :recipients => "#{t("pitch", "p")} with #{t("role_type:mentor", "p")}", :anchor_id => "pitch_with_mentor", :url => polymorphic_path([:mentor_pitches, @program, :messages]) %>
+    <div class="user_status pull-right"><%= @pitch_with_mentors.size %></div>
+    <div class="clr"></div>
+  </div>
+  <br/>
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "#{t("pitch", "p")} without #{t("role_type:mentor", "p")}" %></div>
+    <a href="#pitch_without_mentor" class="send_reminder fancybox_small pull-right">Message All</a>
+    <%= render "phases/shared/message_all", :code => "without_mentor", :recipients => "#{t("pitch", "p")} without #{t("role_type:mentor", "p")}", :anchor_id => "pitch_without_mentor", :url => polymorphic_path([:mentor_pitches, @program, :messages]) %>
+    <div class="user_status pull-right"><%= @pitch_without_mentors.size %></div>
+    <div class="clr"></div>
+  </div>
+
+</div>
+
+<div class="clr"></div>

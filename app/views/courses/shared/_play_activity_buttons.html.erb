@@ -1,0 +1,26 @@
+<% main_class = !@activity.study_materials.blank? && (!@activity.activity_project_fields.blank? || !@activity.try(:action).blank?) %>
+<div class="video-centered-text-all"> 
+  	<div id="video-data-aligned" class="video-data-aligned"> 									
+        <div class="col-sm-<%= main_class ? "6" : "12"%>">
+          <div class="todo_list">             	
+          	<%if !@activity.study_materials.blank?%>
+           		<%= link_to "Additional materials".html_safe,"#{polymorphic_path([@program, @course, @activity.course_module, @activity, :study_materials])}?pitch_id=#{params[:pitch_id]}", :class=>"course-ajax-load", :remote=>true %>
+           	<% end %>                    
+          </div>  
+        </div>
+
+        <div class="col-sm-<%= main_class ? "6" : "12" %>">                  
+          <div class="todo_list">
+          	<%if !@activity.activity_project_fields.blank? || !@activity.try(:action).blank? %>
+	            <a href="<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, :show_exercise])}?pitch_id=#{params[:pitch_id]}"%>" class="course-ajax-load" data-remote="true">Task</a>
+	        <% else %>
+			  <% if !@next_activity.blank? %>
+                  <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @next_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax">Next activity <i class="icon-angle-right"></i></a>
+              <% elsif !@prev_activity.blank? %>
+                  <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @prev_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax"><i class="icon-angle-left"></i> Previous activity</a>
+              <% end %>
+	        <% end %>
+          </div>
+        </div>
+  	</div>
+</div>          	

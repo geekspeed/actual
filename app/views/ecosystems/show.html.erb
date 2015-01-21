@@ -1,0 +1,73 @@
+<% content_for :title do %>
+  <%= ["Ecosystem", @ecosystem.try(:name) || "Default"].join(": ") %>
+<% end %>
+<% content_for :sidebar do %>
+  <div id="sidebar">
+    <ul id="leftmenu">
+      <li class="<%= params[:id] == "all" ? 'active' : '' %>">
+        <%= link_to("- All", ecosystem_path(:id => "all")) %>
+      </li>
+      <% Ecosystem.all.each do |ecosystem| %>
+        <li class="<%= ecosystem.code == params[:id] ? 'active' : '' %>">
+          <%= link_to ecosystem.name, polymorphic_path(ecosystem) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<div id="rightcontent" class="two_sided_right_content">
+  <div class="innercontent" style="position: relative;">
+    <% cache @pitches do %>
+      <% if @pitches.present? %>
+        <% @pitches.each do |pitch| %>
+          <% context_program ||= pitch.program %>
+          <div class="box_310 margin_right" style="position: absolute; top: 0px; left: 0px;">
+            <div class="p_img">
+              <%= link_to(image_tag(pitch.avatar.logo.url, html_options = {:class=>"img img-responsive pitch_images"}), program_pitch_path(context_program, pitch)) %>
+            </div>
+            <h2 class="pitch_new_title">
+              <%= link_to(pitch.title, edit_program_pitch_path(context_program, pitch)) %>
+            </h2>
+            <div class="content" style="margin: inherit !important;">
+              <p>
+                <%= pitch.summary.try(:content) %>
+              </p>
+              <div>
+                <div style="float:left; padding-right: 5px;">
+                  <%= link_to(image_tag(pitch.try(:user).try(:avatar).try(:thumb).try(:url), html_options = {:class=>"round_img"}), "#") %>
+                </div>
+                <div style="float:left">
+                  <%= link_to(["by", pitch.user.try(:full_name)].join(" "), "#") -%>
+                  <br>
+                  <div class="time_low"><%= time_in_words(pitch.created_at) %></div>
+                </div>
+                <div class="clr"></div>
+                <div class="community_rating">
+                  <!-- <span class="rating_position">1<sup>th</sup></span> Rating Community Approval (0 Virtual Dollars) -->
+                </div>
+              </div>
+              <div class="pitchrating">
+                <!-- <a href="#">Posts</a> (<strong>4</strong>) &nbsp;  
+                <a href="#">Backers</a> (<strong>0</strong>) -->
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div>
+          There are no pitches under this ecosystem.
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var $container = $('.innercontent');
+      $container.imagesLoaded(function(){
+        $container.masonry({
+        itemSelector : '.box_310'
+        });
+      });
+    });
+  </script>
+</div><!-- #rightcontent -->

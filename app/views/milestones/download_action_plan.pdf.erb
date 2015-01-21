@@ -1,0 +1,67 @@
+<%= content_tag :div, :class => "container" do%>
+   <br/>
+		<%= content_tag :div, :class => "row" do%>
+			<%= content_tag :div, :class => "col-lg-12" do%>
+
+			<%= tag 'br', nil, nil%><%= tag 'br', nil, nil%>
+
+			<%= content_tag :table, :class => "table"  do%>
+			  	<%= content_tag :tr do%>
+					<%= content_tag :td do%>
+						<%= content_tag :h4, :class => "text-muted" do %>
+							Action plan:
+						<% end %>
+					<% end %>
+					<%= content_tag :td do%>
+						<%= content_tag :h4, :class => "text-muted" do %>
+							<%= Semantic.t(program, "role_type:mentor")  %>:  <span style="font-weight:normal;"><%= User.where(:id=>pitch.mentors.try(:first)).try(:first).try(:full_name) %></span>
+						<% end %>
+					<% end %>
+				<% end %>
+				<%= content_tag :tr do%>
+					<%= content_tag :td do%>
+						<%= content_tag :h4, :class => "text-muted" do %>
+							<%= Semantic.t(program, "pitch")  %>:  <span style="font-weight:normal;"><%= pitch.try(:title) %></span>
+						<% end %>
+					<% end %>
+					<%= content_tag :td do%>
+						<%= content_tag :h4, :class => "text-muted" do %>
+							<%= Semantic.t(program, "role_type:participant")  %>: <span style="font-weight:normal;"><%=   !User.participants(program.id.to_s).where(:id=>pitch.try(:user).try(:id)).blank? ? User.participants(program.id.to_s).where(:id=>pitch.try(:user).try(:id)).try(:first).try(:full_name) : User.participants(program.id.to_s).where(:id=>pitch.members.try(:first)).try(:first).try(:full_name) %></span>
+						<% end %>
+					<% end %>
+				<% end %>
+			<% end %>
+			
+			<%= content_tag :table, :class => "table table-stripped table-bordered" do%>
+				<%= content_tag :th, "#"%>
+				<%= content_tag :th, "Category"%>
+				<%= content_tag :th, "Action "%>
+				<%= content_tag :th, "Due date"%>
+				<%= content_tag :th, "Completed"%>
+				<%= content_tag :tbody do%>
+				<% i = 0 %>
+				<%milestone = nil%>
+				<%num = 0%>
+					<%pitch.milestones.map(&:tasks).flatten.each_with_index do |task,index|%>
+						<%= content_tag :tr, :class=>"#{('info' if task.milestone_flag)}" do%>
+							<%milestone, num = task.milestone_id, 1 if task.milestone_flag%>
+							<% if milestone and !task.milestone_flag and task.milestone_id == milestone%>
+								<%= content_tag :td, "#{i}.#{num}" %>
+								<% num = num+1 %>
+							<%else%>
+								<%= content_tag :td, i+1 %>
+								<% i = i+1 %>
+							<%end%>
+							<%= content_tag :td, task.milestone.try(:description),:style=>("font-weight:bold" if task.milestone_flag)   %>
+							<%= content_tag :td, task.try(:description),:style=>("font-weight:bold" if task.milestone_flag)  %>
+							<%= content_tag :td, task.try(:deadline).try(:app_format) %>
+							<%= content_tag :td, task.try(:complete) == true ? "Yes" : "No"  %>
+						<% end unless pitch.milestones.blank? %>
+					<% end %>
+				<% end %>
+			<% end %>
+			
+		<% end %>
+	<% end %>
+	
+<% end %>

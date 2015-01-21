@@ -1,0 +1,51 @@
+<% if need?(["participant"], context_program) && @pitch.owner?(current_user) %>
+    <br>  
+    <div class="row ">
+      <div class="col-md-12">
+        <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+          <div class="panel-heading relative_panel_head ">
+            <div class="panel-title title_option">
+              <h3>
+              <label>Settings</label>
+              </h3>
+            </div>
+            <div class="panel-options">
+              <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+            </div>
+          </div>
+          <div class="panel-body" style="display:none;">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="tasks_list">
+                  <li class="late">
+                    <%= link_to "Delete this #{t("pitch")}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, polymorphic_path([context_program, @pitch]), method: "delete", confirm: "Are you sure? This can not be undone." %>
+                  </li>
+                   <% if @program.try(:program_scope).try(:pitch_privacy_settings) or !@program.try(:program_scope)%>
+                    <li class="now">
+                       <%= link_to "Other participants will be able to see your pitch<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe,"#visbleOptionForParticiapt", :class=>"fancybox" %>
+                    </li>
+                    <div style="display: none">
+                      <div id="visbleOptionForParticiapt">
+                        <%= form_for @pitch, :url => polymorphic_path([context_program, @pitch]) do |f| %>                        
+                          <p class="pull-left" style="font-size:15px;"><b>Other participants will be able to see your pitch</b></p>
+                          <div class="radioset pull-right" style="margin-right: 25px;">
+                            <%= f.radio_button :public, "true", :checked => "checked" %>
+                            <%= f.label :public, "Yes" ,:for => "#{f.object_name}_public_true" %>
+                  
+                            <%= f.radio_button :public, "false" %>
+                            <%= f.label :public, "No", :for => "#{f.object_name}_public_false" %>
+                          </div>
+                          <div class="clear"></div>
+                          <%= f.submit "Save", id: "submit", style: "margin: 5px 20px 10px;" %>
+                        <% end %>
+                      </div>
+                    </div>  
+                  <%end%>     
+                </ul>
+              </div>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>
+<% end %>

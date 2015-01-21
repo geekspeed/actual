@@ -1,0 +1,22 @@
+<table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+	<thead>
+		<tr role="row">
+			<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 50px;" aria-label="Student Name: activate to sort column ascending">Module</th>
+			<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;" aria-label="Average Grade: activate to sort column ascending">Title</th>
+			<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 404px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+		</tr>
+	</thead>
+	
+	<tbody role="alert" aria-live="polite" aria-relevant="all">
+		<% @modules.each_with_index do |course_module,index| %>
+		<tr class="odd">
+			<td class=" "><%= index+1 %></td>
+			<td class=" "><%= course_module.title %></td>
+			<td class=" ">
+				<%= link_to "<i class='glyphicon glyphicon-pencil'></i> Edit".html_safe, polymorphic_path([@program, @course, course_module, :edit_module]), :remote =>true, :class=>"new_activity_box btn btn-default btn-sm btn-icon icon-left" %>
+      	<%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, polymorphic_path([@program, @course, course_module, :delete_module]), :class=>"btn btn-danger btn-sm btn-icon icon-left" %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>

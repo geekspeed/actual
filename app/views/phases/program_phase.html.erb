@@ -1,0 +1,84 @@
+<%#= render "shared/navbar", :page => "manage_program" %>
+<%= render "phases/shared/sidebar", :page => "program_phase" %>
+<div id="rightcontents" class="two_sided_right_content">
+  <%= render "shared/feed_form", :community_feed => CommunityFeed.new, :post_to => true %>
+  <%= render "task_manager" %>
+  <div class="block">
+    <div class="row"> 
+      <div class="user_name">Number of teams who have submitted documentation for due diligence phase</div>
+      <a href="#team_doc" class="send_reminder fancybox_small">Send Thank You</a>
+      <!-- lightbox -->
+      <div style="display: none">
+        <div id="team_doc">
+          <h2 class="recipient">Recipient: Teams who have submitted documentation for due diligence phase</h2>
+          Subject:<br>
+          <input type="text" id="subject" value=""><br>
+          <br>
+          Message:<br>
+          <textarea id="message"></textarea><br>
+          <br>
+          <a href="#" class="button submitMessage">Send</a>
+        </div>
+      </div>
+      <div class="user_status"><%= @pitches_with_documents.size %></div>
+      <div class="clr"></div>
+    </div>
+    <div class="row">
+      <div class="user_name">Number of teams who have not submitted documentation for due diligence phase</div>
+      <a href="#team_no_doc_acc" class="send_reminder fancybox_small">Send Reminder</a>
+      <!-- lightbox -->
+      <div style="display: none">
+        <div id="team_no_doc_acc">
+          <h2 class="recipient">Recipient: Teams who have not submitted documentation for due diligence phase</h2>
+          Subject:<br>
+          <input type="text" id="subject" value=""><br>
+          <br>
+          Message:<br>
+          <textarea id="message"></textarea><br>
+          <br>
+          <a href="#" class="button submitMessage">Send</a>
+        </div>
+      </div>
+      <div class="user_status"><%= @pitches_without_documents.size %></div>
+      <div class="clr"></div>
+    </div>
+    <div class="row">
+      <div class="user_name"><%= "Number of documents approved by #{t("role_type:mentor", "p")}" %></div>
+      <a href="#doc_approved" class="send_reminder fancybox_small">Send Thank You</a>
+      <!-- lightbox -->
+      <div style="display: none">
+        <div id="doc_approved">
+          <h2 class="recipient"><%= "Recipient: #{t("role_type:mentor", "s")} who have approved a document" %></h2>
+          Subject:<br>
+          <input type="text" id="subject" value=""><br>
+          <br>
+          Message:<br>
+          <textarea id="message"></textarea><br>
+          <br>
+          <a href="#" class="button submitMessage">Send</a>
+        </div>
+      </div>
+      <div class="user_status"><%= @approved_documents.size %></div>
+      <div class="clr"></div>
+    </div>
+    <div class="row">
+      <div class="user_name"><%= "Number of documents not yet approved by #{t("role_type:mentor", "s")}" %></div>
+      <a href="#doc_not_approved" class="send_reminder fancybox_small">Send Reminder</a>
+      <!-- lightbox -->
+      <div style="display: none">
+        <div id="doc_not_approved">
+          <h2 class="recipient"><%= "Recipient: #{t("role_type:mentor", "s")} who have not yet approved a the outstanding documents" %></h2>
+          Subject:<br>
+          <input type="text" id="subject" value=""><br>
+          <br>
+          Message:<br>
+          <textarea id="message"></textarea><br>
+          <br>
+          <a href="#" class="button submitMessage">Send</a>
+        </div>
+      </div>
+      <div class="user_status"><%= @unapproved_documents.size %></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>

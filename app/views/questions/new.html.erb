@@ -1,0 +1,139 @@
+<% page = "setup_program"; ppage = "surveys"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<%= content_tag :div, class: "two_sided_right_content", id: "rightcontent" do%>
+  <%= render partial: 'form', locals: {survey: @survey, question: @question} %>
+<% end %>
+ <div style="display: none">
+   <div class="lightbox_box" id="help_content_ques">
+   </div>
+</div>
+<!-- Code for drag drop -->
+<style>
+.input-size1 {
+    width: 196px;
+}
+.column .portlet .portlet-header{
+  cursor:pointer;
+}
+.column {
+width: 100%;
+overflow-y: hidden;
+}
+
+.portlet {
+margin-bottom:1em;
+border:0px;
+} 
+.portlet-header h2.titleLine {
+padding-top:6px;
+padding-bottom:6px;
+border-bottom: 0px;
+line-height: 0px;
+margin-bottom: 0px;
+margin-top: 0px;
+}
+.portlet-header {
+padding-right: 26px;
+padding-left: 12px;
+border:0px;
+box-shadow: 1px 1px 5px #CCCCCC;
+-moz-box-shadow: 1px 1px 5px #CCCCCC;
+-webkit-box-shadow: 1px 1px 5px #CCCCCC;
+border-radius:0;1px 1px 5px #CCCCCC;
+position: relative;
+}
+.portlet-toggle {
+position: absolute;
+top: 50%;
+right: 0;
+margin-top: -8px;
+}
+.portlet-placeholder {
+border: 1px dotted black;
+margin: 0 1em 1em 0;
+height: 42px;
+}
+label.section-title{ font-size:18px;}
+a.doc_upload:hover{
+  text-decoration: underline;
+  color:#017FB2
+}
+
+a.doc_upload{
+  color:#2B542C; 
+}
+.panel-title a:first-child{
+  float: left;
+  }
+</style>
+
+<% if @survey.question_order.try(:order).present? %>
+   <% order = @survey.question_order.order.gsub("-",",").split(",") %>
+   <% question_arrange_order = Hash[*order].values %>
+   <% question_arrange_order = (raw question_arrange_order) %>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  <% if @survey.question_order.try(:order).present? %>
+    var arrValuesForOrder = <%= question_arrange_order %>;
+    var div = $("div.column"),
+        items = $("div.column div.portlet");
+    for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+        // arrValuesForOrder[i] element to move
+        // i = index to move element at
+        div.prepend(items.get(arrValuesForOrder[i] - 1));
+    }
+    var i = 1;
+    $('.column').find('.panel-title').each(function() {
+      $(this).html("Question " + i);
+      i++;
+    });
+  <% end %>
+  $('div.column').sortable({
+    stop: function(event, div) {
+      var order_list = $("div.column").sortable('toArray');
+        $("#question_question_order_order").val(order_list)
+      var i = 1;
+      $('.column').find('.panel-title').each(function() {
+        $(this).html("Question " + i);
+        i++;
+      });
+    },
+  });
+  $( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+  });
+  $( ".portlet" )
+  .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+  .find( ".portlet-header" )
+  .addClass( "ui-widget-header ui-corner-all" )
+  .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+  $( ".portlet-toggle" ).click(function() {
+    var icon = $( this );
+    icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+    icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+    });
+  }); 
+  
+  $(document).on('click', ".add_custom_help", function(e){
+   current_obj = $(this);
+   url = $(this).data('url');
+   $.ajax({
+     url: url,
+     type: 'get',
+     dataType: 'html',
+     contentType: 'application/json; charser=utf-8',
+     success: function(data){
+      $("#help_content_ques").html(data);
+     },
+     error: function(){
+      alert('Request failed. Sorry, we are analyzing the cause of this problem');
+     }
+   })
+ });
+  
+</script>

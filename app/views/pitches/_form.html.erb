@@ -1,0 +1,284 @@
+<%= f.error_messages %>
+<div class="block">
+  <table id="nrm_tbl" class="pitchcontent">
+    <tr class="value_line">
+      <td colspan="2" class="label_row">
+        <%= content_tag :b, @program.context_messages.where(anchor: "pitch").first.try(:context_message).try(:html_safe), style: "color: #888888;font-weight:normal; font-size:12px;" %>
+      </td>
+    </tr>
+    <tr class="value_line">
+        <td class="label_row">
+          <%= content_tag :b, t("pitch:title") ? t("pitch:title") : "Title", :class => "mend_field_label", style: "color: #888888;font-weight:normal; font-size:12px;" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => "title", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(@program, "pitch", "title", "")%>
+        </td>
+        <td>
+          <%= f.text_field :title, :class=>"form-control required" %>
+        </td>
+    </tr>
+    <%= render "shared/custom_fields_renderer", f: f, ankor: "pitch",
+      outer_wrap: {tag: :tr, klass: "value_line"}, label_wrap: {tag: :td, klass: "label_row"}, field_wrap: {tag: :td, klass: ""}, field_class: "form-control", position: "title" %>
+
+    <tr class="value_line">
+      <td class="label_row">
+        <%= content_tag :p, t("pitch:avatar") ? t("pitch:avatar") : "Upload visual for your #{t("pitch")}", style: "color: #888888;font-weight:normal; font-size:12px;" %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => "upload", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(@program, "pitch", "upload", "")%>
+      </td>
+      <td>
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="browse-wrapper">
+             <%= f.file_field :avatar, :class => "file_field_width" %>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <img src="" class="img img-responsive">
+          </div>
+        </div>
+        
+      </td>
+    </tr>
+
+    <%= render "shared/custom_fields_renderer", f: f, ankor: "pitch",
+      outer_wrap: {tag: :tr, klass: "value_line"}, label_wrap: {tag: :td, klass: "label_row"}, field_wrap: {tag: :td, klass: ""}, field_class: "form-control", position: "avatar" %>
+
+    <%= f.fields_for :summary, @pitch.build_summary do |summary| %>
+    <tr class="value_line">
+      <td class="label_row">
+        <%= content_tag :b, t("pitch:summary"), :class => "mend_field_label", style: "color: #888888;font-weight:normal; font-size:12px;" %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => "summary", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(@program, "pitch", "summary", "")%>
+      </td>
+      <td>
+        <%= summary.text_area :content, :placeholder => t("pitch:summary"), :class=>" required form-control" %>
+      </td>
+    </tr>
+    <% end %>
+
+    <%= render "shared/custom_fields_renderer", f: f, ankor: "pitch",
+      outer_wrap: {tag: :tr, klass: "value_line"}, label_wrap: {tag: :td, klass: "label_row"}, field_wrap: {tag: :td, klass: ""}, field_class: "form-control", position: "summary" %>
+
+    <tr class="value_line">
+      <td class="label_row">
+        <%= content_tag :b, t("pitch:tag") ? t("pitch:tag") : "Tags", style: "color: #888888;font-weight:normal; font-size:12px;"%>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => "tag", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(@program, "pitch", "tag", "")%>
+      </td>
+      <td>
+      <div class="tag_functionality">
+        <div class="container_tags">
+              <div class="tagList" id="tagList">
+              </div>
+              <div class="clr"></div>
+        </div>
+        <div class="container_add_tag" style="margin: 0 0 0 0;">
+          <%= content_tag :i, "Add up to 10 Tags that will help people find your #{t('pitch')}" %>
+          <%= f.text_field :"tags", :placeholder => "e.g. Healthcare", :name => "tags[]", :class => 'pitchTag form-control', :"data-field-name" => "#{f.object_name}[tags][]", :value => "", :"data-auto-options" => Pitch.pluck(:tags).flatten.uniq.to_json %>
+          <%= link_to "+ Add a Tag", "#", :class => "addPitchTag text_underline" %>
+        </div>
+        
+      </div>
+      </td>
+    </tr>
+    
+    <%= hidden_field_tag "prg_id", @program.id%>
+    <% unless @program.pitch_branches.empty? %>
+       <tr class="value_line">
+         <td class="label_row">
+           <%= label_tag "Branch" %>
+         </td>
+         <td>
+           <%= hidden_field_tag "pit_id",@pitch.id%>
+           <%= f.select :pitch_branch_id, options_for_select(@program.pitch_branches.collect{|r| [r.branch_name, r.id]}), {:prompt => "Select"}, {:class => "form-control", :style => "width:277px;"}%>
+         </td>
+       </tr>
+     <% end if false%>
+    
+    <%= render "shared/custom_fields_renderer", f: f, ankor: "pitch",
+      outer_wrap: {tag: :tr, klass: "value_line"}, label_wrap: {tag: :td, klass: "label_row"}, field_wrap: {tag: :td, klass: ""}, field_class: "form-control" %>
+
+  <!-- organisation functionality for pitch, currently it is not in use-->
+  <%# if ProgramScope.where(:program_id => @program.id).try(:first).try(:associated_organisation) %>
+    <%#= render "shared/add_organisation", :f=>f ,:organisation_id_name=>"pitch_organisation", :main_tag=>"tr", :in_tag=>"td", :in_field_tag=>"td", :label_tag=>"label for=user_organisation", :add_new_width=>"520px", :add_new_margin_left=>"27px"%>
+  <%# end %>
+  
+  </table>
+  <br/><br/>
+</div>
+<div>
+<p class="pull-right">
+  <%= f.submit "Save", :id => "submit" unless controller_name == "customisations"%>
+</p>
+<div class="clear"></div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#pitch_pitch_branch_id").on("change", function(e){
+      var current_object = $(this);
+      var parent_tr = $(this).parents("tr");
+      if($(this).val() != ""){
+      var val = $(this).val();
+      var id = $('#prg_id').val();
+      var pit_id = $('#pit_id').val();
+      path = '/programs/'+ id + '/pitch_branches/branch_fields'
+      $.ajax({
+        url: path,
+        type: 'get',
+        data: "branch_name="+val+"&pitch_id="+pit_id,
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          //var d = document.getElementsByClassName("custom_tr");
+          //while (d.length) d[0].parentElement.removeChild(d[0]);
+          next_tr = parent_tr.next('tr')
+          while( next_tr.hasClass("custom_tr")) {
+            next_tr.remove();
+            next_tr = parent_tr.next('tr');
+          }
+          current_object.parents('.value_line').after(data);
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    }
+    else{
+      next_tr = parent_tr.next('tr')
+      while( next_tr.hasClass("custom_tr")) {
+        next_tr.remove();
+        next_tr = parent_tr.next('tr');
+      }
+		}
+    });
+    
+    $(".select_option").on("change", function(e){
+      var val = $(this).val();
+      var current_object = $(this);
+      var parent_tr = $(this).parents("tr");
+      var id = $('#prg_id').val();
+      path = '/programs/'+ id + '/pitch_branches/custom_branch_fields'
+      $.ajax({
+        url: path,
+        type: 'get',
+        data: "option_name="+val+"&option_id="+$(this).attr('data-id'),
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          //var d = document.getElementsByClassName("branch_select_fields");
+          //while (d.length) d[0].parentElement.removeChild(d[0]);
+          next_tr = parent_tr.next('tr')
+          while( next_tr.hasClass("branch_select_fields")) {
+            next_tr.remove();
+            next_tr = parent_tr.next('tr')
+          }
+          current_object.parents('.custom_branch_dropdown').after(data);
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    });
+    
+    
+    $(".other_select").on("change", function(e){
+    	e.preventDefault();
+    	if($(this).val()=="other" || $(this).val()=="Other"){
+    		$(this).next().removeClass("hide");
+    		$(this).next().attr("disabled", false);
+    		if ($(this).hasClass('required')){ $(this).next().addClass('required'); }
+    	}
+    	else{
+    		$(this).next().addClass("hide");
+    		$(this).next().attr("disabled", true);
+    		if ($(this).next().hasClass('required')){ $(this).next().removeClass('required'); }
+    	}
+    });
+    
+    $(document).mouseup(function (e) {
+      if ($('.popover').has(e.target).length === 0) {
+          $('.popover').toggleClass('in').remove();
+          return;
+      }
+    });
+    
+    $(document).on('click', ".show_help_text", function(e){
+      e.preventDefault();
+      current_obj = $(this);
+      $.ajax({
+        url: $(this).data('url'),
+        type: 'get',
+        data: "field_name="+ $(this).data('field-name')+"&text_for="+$(this).data('text-for')+"&custom_id="+$(this).data('custom-field-id'),
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          current_obj.data('content', data.content);
+          current_obj.popover('show');
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    });
+
+  });
+function checkValidityOffile(file, types, field_id){
+ 	$("#" +field_id +"_error").html('');
+ 	if(file.value.split(".") && types != "All"){
+ 		if(file.value.split(".").length >= 1){
+ 			upload_type = file.value.split(".")[file.value.split(".").length-1]
+ 			if (types.indexOf(upload_type) == -1){
+ 				 text = "You tried to upload a " +upload_type + " file, only " + types + " files are accepted.";
+ 				$("#" +field_id +"").val("");
+ 				$("#" +field_id +"_error").html('<span style="color:red">'+ text +'</span>');
+ 			}
+ 		}
+ 	}
+ }
+
+  function checkNoOfFiles(file, field_id, count){
+      $("#" +field_id +"error"+count).html('');
+      $(".thumb-"+field_id+""+count).remove()
+        var files = file.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+          // Only process image files.
+          if (!f.type.match('image.*')) {
+            continue;
+          }
+
+          var reader = new FileReader();
+
+          // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+              // Render thumbnail.
+              var span = document.createElement('span');
+              span.innerHTML = ['<img class="thumb-gallery thumb-'+field_id+''+count+'" src="', e.target.result,
+                                '" title="', escape(theFile.name), '"/>'].join('');
+              $(file).next().after(span)        
+          };
+          })(f);
+          // Read in the image file as a data URL.
+          reader.readAsDataURL(f);
+        }
+      if (file.files["length"] > 10){
+        $(".thumb-"+field_id+""+count).remove()
+        $("#" +field_id +"error"+count).html('');
+        $(file).val("");
+        $("#" +field_id +"error"+count).html('<span style="color:red">Limit excceed, Please upload 10 files.</span>');
+      }
+    }
+
+</script>
+
+<div id="gallery-extra" style="display:none;">
+  <div class="clr"></div>
+  <div id="-1-_gallery_error_-2-"></div>  
+  <br/>
+  <input class="file_field_width pull-left" id="gallery_custom_fields_gallery_-1-_-2-" multiple="multiple" name="gallery_custom_fields[-3-][]" onchange="checkNoOfFiles(this,&quot;-1-_gallery_&quot;,&quot;_-2-&quot;)" type="file">
+  <label class="accepted_value_label pull-left" for="accepted_value" style="margin-left:10px;width: 50%;">Upload multiple photos, Accepted File types: [ png, jpg, jpeg ]</label>
+</div>
+
+<script>
+  $("body").on('click','.addGalleryExtra', function(e){
+    $("#"+($(this).data("custom-field-id"))+"_browse_button").val(parseInt($("#"+($(this).data("custom-field-id"))+"_browse_button").val())+1)
+    $("#"+($(this).data("custom-field-id"))+"_gallery_section").append($("#gallery-extra").html().replace(/-1-/g,$(this).data("custom-field-id")).replace(/-2-/g,$("#"+($(this).data("custom-field-id"))+"_browse_button").val()).replace(/-3-/g,$(this).data("custom-field-code")))
+    e.preventDefault()
+  });
+</script>

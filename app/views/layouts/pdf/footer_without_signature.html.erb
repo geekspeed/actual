@@ -1,0 +1,6 @@
+<div id="report-footer">
+  <% if !program.try(:program_report_branding).blank? %>
+    <!-- report footer -->
+    <%= program.program_report_branding.try(:footer).gsub("#date",Time.now.app_format).try(:html_safe) %>
+  <% end %>
+</div>

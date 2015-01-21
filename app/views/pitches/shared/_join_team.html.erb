@@ -1,0 +1,4 @@
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<li class="branded">
+	<%= link_to "#{workspace_sementic("to_do_list_join_this_team_txt","I would like to join this team")}<i class='gn-icon gn-icon-contacts gn-icon-glyphicon-todo' style='text-align:right;'></i>".html_safe, (is_subdomain ? join_team_program_pitch_url(context_program, @pitch, subdomain: false) : join_team_program_pitch_url(context_program, @pitch)) %>
+</li>

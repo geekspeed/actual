@@ -1,0 +1,26 @@
+<div style="display: none">
+  <div id="be_mentor">
+    <%= form_tag be_mentor_program_pitch_path(context_program, @pitch), method: :get do %>
+      <% if @pitch.contacts.include?(current_user.id.to_s) %>
+        <p>Your request is pending for consideration.</p>
+        <br />      
+        <br>
+      <% else %>
+        <br />
+        <p><%= "Are you sure you would like to let the team know of your interest to be a #{t("role_type:mentor", "s")}"%></p>
+        <br />      
+        <br>
+        <%= submit_tag "Yes", :id => "submit", style: "margin-left: 20px" %>
+      <% end %>
+      <%= link_to "Cancel", "#", id: "submit", class: "js_close_fancybox" %>
+    <% end %>
+  </div>
+</div>
+<script>
+  $(document).ready(function(e){
+    $(".js_close_fancybox").on("click", function(e){
+      $.fancybox.close();
+      e.preventDefault();
+    })
+  });
+</script>

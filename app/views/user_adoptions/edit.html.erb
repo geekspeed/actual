@@ -1,0 +1,334 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - User Adoption Mail Setting" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "user_adoption"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var refreshOptions = function(elem, refreshElem){
+      var new_options = eval(elem.val());
+
+      refreshElem.empty(); // remove old options
+      $.each(new_options, function(key, value) {
+        refreshElem.append($("<option></option>")
+           .attr("value", value).text(key));
+      });
+      refreshElem.selectmenu("destroy").selectmenu({ style: "dropdown" });
+    }
+    var day = {"Everyday": "everyday", "Weekdays Only": "weekdays_only"}
+    var week = {"Monday": "monday", "Tuesday": "tuesday", "Wednesday": "wednesday", "Thursday": "thursday", "Friday": "friday", "Saturday": "saturday", "Sunday": "sunday"}
+    var month = {}, key, never = {"Never": ""};
+    for(i=0; i < 31; i++){
+      if(i==0){
+        key = "1st";
+      }else if(i==1){
+        key = "2nd";
+      }else if(i==2){
+        key = "3rd";
+      }else{
+        key = (i + 1) + "th" 
+      }
+      month[key] = i+1;
+    }
+    $("form select.digest").each(function(index, elem){
+      console.log(elem);
+      var elem = $(this);
+      var change_elem = elem.parents("tr").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+    $("form").on("change", "select.digest", function(e){
+      var elem = $(this);
+      var change_elem = elem.parents("tr").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+
+    $("form").on("change", "select.custom", function(e){
+      var elem = $(this);
+      var change_elem = $(".custom_reminder").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+
+  });
+</script>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail-settings gn-icon-large"></i>
+      User Adoption Mail Setting
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="User adoption emails settings lets you automate the sending of emails aimed at triggering activities among participants"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">User Adoption Mail Setting</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<%= form_for @mail_setting, :url => program_user_adoption_path(@program) do |f| %>
+			<div class="block">
+				<style type="text/css">
+					.ddl_width { width: 150px;}
+				</style>
+				<h2 class="titleLine">User adoption emails cycle</h2>
+				<table class="settings table table-striped" width="100%">
+					<tr>
+						<td class="lbl">Iterations</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :iterations, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :iteration_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Invite Feedback</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :feedback, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :feedback_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Identify Problems</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :problems, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :problem_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Capture Learnings</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :learnings, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :learning_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Complete Fields</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :pitch_fields, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :pitch_field_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Project feeds</td>
+						<td></td>
+						<td>
+							Admin Feeds <%= f.check_box :admin_activity_feeds %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :feed_day, MailSetting::DAILY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Share Project Update</td>
+						<td></td>
+						<td>
+							<%= f.collection_select :project_update, MailSetting::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations digest"} %>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :project_update_day, MailSetting::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="lbl">Activity Feeds (Program/Buzz)</td>
+						<td></td>
+						<td>
+						</td>
+						<td></td>
+						<td>
+							<div class="day_iteration">
+								<%= f.collection_select :activity_feeds, MailSetting::DAILY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value"}  %>
+							</div>
+						</td>
+						</tr>
+             <tr>
+               <td class="lbl">Sends an email every time a post is done in the Program Feed </td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>
+                 <div class="day_iteration">
+                   <div class="radioset">
+                     <%= f.radio_button :immediate_post_program_feed, "true" %>
+                     <%= f.label "Yes", :for => "#{f.object_name}_immediate_post_program_feed_true" %>
+                     <%= f.radio_button :immediate_post_program_feed, "false" %>
+                     <%= f.label "No", :for => "#{f.object_name}_immediate_post_program_feed_false" %>
+                     <div class="clr"></div>
+                   </div>
+                </div>
+              </td>
+             </tr>
+             <tr>
+               <td class="lbl">Sends an email every time a post is done in the Project Feed</td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>
+                 <div class="day_iteration">
+                   <div class="radioset">
+                     <%= f.radio_button :immediate_post_project_feed, "true" %>
+                     <%= f.label "Yes", :for => "#{f.object_name}_immediate_post_project_feed_true" %>
+                     <%= f.radio_button :immediate_post_project_feed, "false" %>
+                     <%= f.label "No", :for => "#{f.object_name}_immediate_post_project_feed_false" %>
+                     <div class="clr"></div>
+                   </div>
+                 </div>
+             </td>
+					</tr>
+				</table>
+			</div>
+			<%= f.submit "Save", id: "submit" %>
+		<% end %>
+		<br>
+		<br>
+		<div class="custom_reminder_list">
+      <div class="row">
+        <div class="col-md-12">
+          <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-heading">
+              <div class="panel-title title_option">
+                <h4>Custom Reminders</h4>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <table class="table table-striped program_table table-bordered">
+                <tr>
+                  <th width="20%">Subject</th>
+                  <th width="20%">Message</th>
+                  <th width="15%">Target</th>
+                  <th width="15%">Frequency</th>
+                  <th width="10%">Day</th>
+                  <th width="20%">Actions</th>
+                </tr>
+      
+                <% @custom_reminders.each do |custom_reminder| %>
+                  <tr>
+                    <td class="lbl"><%= custom_reminder.subject%></td>
+                    <td><%= custom_reminder.message.html_safe%></td>
+                    <td><%= Targetting.where(:id => custom_reminder.to_target).first.try(:name)%></td>
+                    <td><%= get_frequency(custom_reminder.frequency)%></td>
+                    <td><%= custom_reminder.reminder_day%></td>
+                    <td>
+                      <%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe, edit_program_custom_reminder_url(id: custom_reminder.id), :class=>"btn btn btn-success btn-sm btn-icon icon-left" %>
+                      <%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe, program_custom_reminder_path(id: custom_reminder.id), :method=>:delete, :class=>"btn btn-danger btn-sm btn-icon icon-left", :confirm => "Are you sure" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+		<br>
+		<br>
+		<%= form_for @program.custom_reminders.new, :url => program_custom_reminders_path(@program) do |f| %>
+			<div class="custom_reminder">
+				<div class="row">
+					<div class="col-md-12">
+						<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+							<div class="panel-heading">
+								<div class="panel-title title_option">
+									<h4>Add custom reminder</h4>
+								</div>
+							</div>
+				
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-2 setting-font">
+										<div>Subject</div>
+									</div>
+									<div class="col-sm-8">
+										<%= f.text_field :subject, {:class => "form-controls form-style-1"}%>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-sm-2 setting-font">
+										<div>Message</div>
+									</div>
+									<div class="col-sm-8 setting-font">
+										<%=  f.text_area :message,  {:class => "form-controls form-style-1 summernote"} %>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-sm-2 setting-font">
+										<div>To</div>
+									</div>
+									<div class="col-sm-8">
+										<%= f.select :to_target, options_for_select(@program.targettings.map{|t| [t.name,t.id]}), :class => "form-controls form-style-1"%>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-sm-2 setting-font">
+										<div>Frequency</div>
+									</div>
+									<div class="col-sm-8">
+										<%= f.collection_select :frequency, CustomReminder::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations custom form-controls form-style-1"} %>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-sm-2 setting-font">
+										<div>Day</div>
+									</div>
+									<div class="col-sm-8">
+										<%= f.collection_select :reminder_day, CustomReminder::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value form-controls form-style-1"}  %>
+									</div>
+								</div>
+								<br />
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<%= f.submit "Add", :id => "submit" %>
+			</div>
+		<%end%>
+	</div>
+</div>
+<script>
+  $('.summernote').summernote();
+</script>

@@ -1,0 +1,41 @@
+<!-- FEEDBACK -->
+<div class="feedback">
+<a href="#" class="back-to-top"><span class="glyphicon glyphicon-chevron-up"></span></a>
+  <a id="feedbacker_link" href="#">
+	  Report a bug
+	</a>
+	<div id="feedback_container">
+		<h3><b>Report a bug</b></h3>
+		<br />
+		<%= form_tag report_bug_dashboard_path, id: "feedback_form" do %>
+			<input type="hidden" name="action" value="jfeedbacker" />
+			<div>
+				<p>Subject:</p> 
+				<input type="text" name="title" id="title" class="title form-control" />
+			</div>
+			<br />
+			<div>
+			<p>Description:</p>
+			<textarea style="height: 100px; width: 300px;" name="description" class="description form-control" cols="25" rows="8"></textarea><br />
+			</div>
+			<input type="hidden" value="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/28.0.1500.71 Chrome/28.0.1500.71 Safari/537.36" name="user_agent" />
+			<input type="hidden" value="/niederkofler/150-competition/community/" name="request_uri" />
+			<input type="hidden" name="request_user_id" value="150">
+			<div>
+			<% unless user_signed_in? %>
+  			<%= show_simple_captcha(:multiple => false) %>
+        <br />
+      <% end %>
+			<input type="submit" style="width:100px" class="feedback_send pull-left" id="submit" value="Send">
+			<input type="reset" style="width:100px" class="feedback_cancel pull-left" id="cancel_btn" value="Cancel">
+			<div class="clear"></div>
+			</div>
+		<% end %>
+	</div>
+	<div id="feedback_container_ok" class="alert alert-success">
+		<a class="closefeedback pull-right fancybox-close glyphicon glyphicon-remove-circle" href="#"></a>
+		Feedback has been sent successfully.
+	</div>
+		
+</div>
+<!-- FEEDBACK ENDE -->

@@ -1,0 +1,68 @@
+<% page = "due_diligence"; ppage = "due_diligence"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "due_diligence" %>
+<%#= render "shared/program_setup_sidebar", :page => "due_diligence" %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-star gn-icon-large"></i>
+      Due Diligence Phase
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Due diligence phase lets you choose the metrics upon which projects will be judged"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Due Diligence Phase</a>
+  </div>
+</div>
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+	<%= render "shared/flash" %>
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <%= form_for(@due_diligence_matrix, :url => program_due_diligence_path(@program), :html => {:class => "reqForm no_float", :method => :put }) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>
+
+<div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <% if context_program.master_program? %>
+            <li><a href="#sec1">Standard Project Evaluation</a></li>
+          <% end %>
+          <li><a href="#sec2">Due diligence Metrics</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 305
+    });
+    
+    $('.help-sign').tooltip();
+  })
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    
+    return false;
+  });
+</script>

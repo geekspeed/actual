@@ -1,0 +1,62 @@
+
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+  <a href="sec2" name="sec2" class="section_nav"></a>
+  <h1 id="faq_list_title">FAQ List (<%= @faqs.count %>) </h1>
+<br />
+  <% count = 1; @faqs.each do |faq| %>
+  <div class="faq_count_<%= count%>" style="margin-left:25px;">
+    <div class="newsentry faq_<%= count%>" style="margin-left:25px;">
+      <div class="faq_bg">
+        <h2 class="titleLine"><b>Question <%= count %>:</b> <%= faq.question %>
+          <p class="pull-right edit_faq " id=<%= count%> style="cursor:pointer"><b>Edit</b></p>
+        </h2>
+        <p><b>Answer:</b> <%= faq.answer.html_safe %></p>
+          <% if faq.attachment.present? %>
+            <% file = faq.attachment_url.split(".")[-1] %>
+            <% if ["jpeg","jpg","png","gif"].include?(file.downcase) %>
+              <%= image_tag faq.attachment, :style => "width: 100%;" %>
+            <% elsif ["pdf"].include?(file.downcase) %>
+              <b>Link URl: </b><%= link_to("#{root_url}#{faq.attachment}", "#{root_url}#{faq.attachment_url}", :target =>"_blank", :class => 'text_underline') %>     
+<!--               <iframe src="/pdfjs/web/viewer.html?file=<%= faq.attachment %>" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe> -->
+            <% else %>
+              <b>Link URl: </b><%= link_to("#{root_url}#{faq.attachment}", "#{root_url}#{faq.attachment_url}", :target =>"_blank", :class => 'text_underline') %>
+            <% end %>
+          <% end %>
+
+          <% if faq.link.present? %>
+            <% file = faq.link.split(".")[-1] %>
+            <% if ["jpeg","jpg","png","gif"].include?(file.downcase) %>
+              <%= image_tag faq.link, :style => "width: 400px;" %>
+            <% elsif faq.link.match("youtube")%>
+              <% video_id = faq.link.split("v=")[-1] %>
+              <b>Link URl: </b><%= link_to(faq.link, faq.link, :target =>"_blank", :class => 'text_underline') %><br><br/>
+
+              <iframe width="100%" height="315" src="//www.youtube.com/embed/<%= video_id %>" frameborder="0" allowfullscreen></iframe>
+            <% elsif faq.link.match("vimeo")%>
+              <b>Link URl: </b><%= link_to(faq.link, faq.link, :target =>"_blank", :class => 'text_underline') %><br><br/>
+              <% video_id = faq.link.split("/")[-1] %>
+              <iframe src="//player.vimeo.com/video/<%= video_id %>?badge=0&amp;color=e64067" width="100%" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> 
+            <% elsif ["pdf"].include?(file.downcase)%>
+              <b>Link URl: </b><%= link_to("#{faq.link}", faq.link, :target =>"_blank", :class => 'text_underline') %>              
+<!--               <iframe src="z/pdfjs/web/viewer.html?file=<%#= faq.link %>" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe> -->
+            <% else%>
+              <b>Link URl: </b><%= link_to("#{root_url}#{faq.link}", faq.link, :target =>"_blank", :class => 'text_underline') %>
+            <% end %>
+          <% end %>
+          
+      </div>
+		<div class="actions feed-actions">
+
+<span class="pull-right"><%= link_to image_tag("ico_trash.png"), program_faq_path(:id => faq.id), :title =>"Delete", :confirm => 'Are you sure?', :method => :delete, :class=>"delFeed" %></span>
+<div class="clear"></div>
+</div>
+    </div>
+    <div class="block edit_<%= count%>" style="display:none">
+      <%= render "edit", :faq => faq, :count=> count%>
+    </div>
+    </div>
+    <% count+=1 %>
+  <% end %>
+</div>
+</div>

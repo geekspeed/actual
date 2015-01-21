@@ -1,0 +1,36 @@
+<div class="eventInsForm modal fade" id="message_<%=session_obj.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"><b>Message All</b></h4>
+			</div>
+			<%= form_tag message_all_program_event_event_sessions_path(@program,session_obj.program_event), id: "contact_form" do %>
+				<div class="modal-body">
+					<input type="hidden" name="event_session_id" value="<%=session_obj.id%>" />
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="col-sm-4 setting-font">Subject</div>
+						</div>
+						<div class="col-sm-12">
+							<input type="text" name="title" id="title" class="title form-control form-style-1">
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="col-sm-4 setting-font">Description</div>
+						</div>
+						<div class="col-sm-12">
+							<textarea style="height: 100px; width: 300px;" name="description" class="description form-control form-style-1" cols="25" rows="8"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<%= submit_tag "Send", :id => "submit", :class => "btn btn_padding" %>
+					<%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :class => "btn btn_padding" %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

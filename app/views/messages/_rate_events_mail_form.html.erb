@@ -1,0 +1,36 @@
+<%if !@program.customize_admin_emails.where(:email_name => "rate_events").first %>
+<% @rate_events_subject = "Rate event mail for #eventname" %>
+<%@rate_events_message = render "rate_event_message"%>
+<%end%>
+
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <a href="sec1" name="sec1" class="section_nav"></a>
+          <h3><label>Declines Join Team Request Mail</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+        </div>
+      </div>
+      <div style="" class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 setting-font"><div>Subject</div></div>
+          <div class="col-sm-8">
+            <%= text_field_tag "subject[rate_events_mail]" , @rate_events_subject,:cols=>"40", :class=>"form-control form-style-1"%>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <%= text_area_tag "feedback[rate_events_mail]" , @rate_events_message,:cols=>"40", :class=>"form-control"%>
+        </div>      
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>

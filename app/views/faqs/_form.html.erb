@@ -1,0 +1,87 @@
+<style type="text/css">
+  .clr {
+    clear: both;
+}
+.add_new_faq{float:left;}
+.upload {
+border:0px solid #000000;
+}
+
+</style>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div role="alert" class="alert alert-info">
+      <p><b>Create your FAQ section here</b></p>
+      <br />
+      <p>Add a list of questions and answers that your users will find helpful. This will appear when users clicks on the FAQ section through out the site </p>
+    </div>
+  </div>
+</div>
+<br />
+<%= f.fields_for :faqs , @program.faqs.build do |faq | %>
+	
+  <div style="margin-bottom: 10px;"><%= faq.text_field :question , :class => "autogrow form-control", :placeholder => "Type your question here" %></div>
+  <div style="margin-bottom: 0;" class="new-status-box"><%= faq.text_area :answer ,:placeholder => "Type your answer to the question here" %></div>
+
+  <div class="link_box" style="margin-top:8px;">
+    <span class="img_link_lbl">Image Link:</span>
+    <span class="vid_link_lbl">Youtube / Vimeo Link:</span>
+    <span class="l_link_lbl">Link or File:</span>
+    <span class="gallery_link_lbl">Pictures:</span>
+    <span class="l_link_lbl vid_link_lbl img_link_lbl gallery_link_lbl">
+      <%= faq.text_field :link, :class => "file_url form-control" %>
+    </span>
+    <span class="l_link_lbl img_link_lbl gallery_link_lbl upload">
+    OR <%= faq.file_field :attachment %>
+    </span>
+  </div>
+<div class="box-content-bottom">
+  <%= link_to image_tag("ico-image.png"), "#", :class => "addImage", :name => "img_link_lbl" %>
+  <%= link_to image_tag("ico-video.png"), "#", :class => "addImage", :name => "vid_link_lbl" %>
+  <%= link_to image_tag("ico-link.png"), "#", :class => "addImage", :name => "l_link_lbl" %>
+  <%= link_to image_tag("ico-gallery.png"), "#", :class => "addImage", :name => "gallery_link_lbl" %>
+
+  <a href="#" class="showNewTagCont" style="margin-top:10px;"><img src="/images/ico-tag.png" alt="Ico-tag"></a>
+
+  <div style="margin-left: 10px; display:inline;">
+    <span class="newTag" style="display:none">
+    <%= faq.text_field :tags, class: "newtag newTagVal", placeholder: "+ add tag", style: "margin-left: 10px; width: 100px;margin_top:0px;" %>
+    </span>
+  </div>
+
+  <span class= "pull-right"> <%= faq.collection_select :role_code, RoleType.on_programs, :code, :name, {:prompt => 'Relevant to'}, :class=>"form-control", :style=>"margin-right:0;" %> </span>
+
+  <% relevant_pages = %w(summary_page community_page mentors_page applicants_page pitch_detail_page milestone_page project_feed_page documents_page feedback_page team_page activity_page setup_page manage_program_page) %>
+  <span class= "pull-right"> <%= faq.collection_select :relevant_page, relevant_pages, :to_s, :titleize, {:include_blank => 'Tag to'}, :class=>"form-control", :style=>"margin-right:0;" %> </span>
+	<div class="clear"></div>
+</div>
+<% end %>
+
+<div class="clr"></div>
+<div>
+  <%= f.link_to_add "+ ADD NEW QUESTION", :faqs , :class=>"add_new_faq clr"%>
+  <div class="clr"></div>
+  <div class="pull-right"><%= f.submit "Save", :id => "submit" %></div>
+</div>
+
+
+
+<script type="text/javascript">
+  jQuery('#main').on('change', '.tag_applicant', function(){
+  var tag_applicant = $('.tag_applicant').val();
+  if(tag_applicant != '')
+  $('.newtag').val(tag_applicant);
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('program_faqs_attributes_0_answer');
+  });
+  
+    $(document).on('click', ".edit_faq", function(e){
+      id = $(this).attr("id");
+      $(".faq_"+id).hide();
+      $(".edit_"+id).show();
+      new nicEditor().panelInstance('faq_answer_'+id);
+    });
+      
+</script>

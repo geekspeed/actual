@@ -1,0 +1,19 @@
+<% @program ||= context_program %>
+<%user = user_badge.user%>
+<div class="eventInsForm modal fade" id=<%= "#{user_badge.id}" %> tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><b>Assertion Detail</b></h4>
+      </div>
+        <div class="modal-body">
+         <h1><%= user.first_name %></h1>
+        </div>
+        <div class="modal-body">
+         <h1>Assertion</h1>
+         <h1><%= link_to "Click here to get assertion result ", assertion_api_user_badges_url(id: user_badge.id, program_id: @program), target: "_blank" %></h1>
+        </div>
+    </div>
+  </div>
+</div>

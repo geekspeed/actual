@@ -1,0 +1,81 @@
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<div class="gn-scroller">
+    <ul class="gn-menu">
+      <li class="<%= 'active' if (page == 'community' or (controller_name == "dashboards" and action_name == "show")) %> menu_with_sub">
+        <%= link_to t("pitch", "p"), (is_subdomain ? dashboard_url(subdomain: false) : dashboard_url), :class=>"gn-icon gn-icon-idea",:id=>"idea_link" %>
+    <% unless need?(['participant'], context_program)%>
+      <%= render "pitches/shared/filters" %>
+    <% end %>
+      </li>
+      <% if context_program and (current_user and !current_user.role?("awaiting_participant", context_program)) and 
+        (current_user and !current_user.role?("awaiting_mentor", context_program)) %>
+        <% roles_allowed =  context_program.roles_allowed.map(&:code)%>
+        <%if roles_allowed.include? "mentor"%>
+          <li class="menu_with_sub <%= 'active' if (controller_name == "dashboards" and params[:code] == "mentor") %>">
+            <%= link_to t("role_type:mentor", "p"), (is_subdomain ? people_dashboard_url(:code => "mentor", subdomain: false) : people_dashboard_url(:code => "mentor")), :class=>"gn-icon gn-icon-mentor" %>
+            <span class="glyphicon glyphicon-chevron-right gn-arrow"></span>
+              <ul class="gn-submenu mentor_custom_checkbox">
+                <% custom_fields = User.custom_fields.enabled.for_program(get_program).filters %>
+                <% custom_fields.for_anchor("mentor").each do |filter| %>
+                  <% filter.options.each do |option| %>
+                    <li>
+                      <%= content_tag :div, :class => "col-md-8" do%>
+                        <%= link_to "#{filter.label}  ::> #{option}", (is_subdomain ? people_dashboard_url(:code => "mentor", "custom_fields.#{filter.code}" => option, subdomain: false) : people_dashboard_url(:code => "mentor", "custom_fields.#{filter.code}" => option)), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params['#{filter.code}'] == '#{option}' ? 'active' : ''}" %>
+                      <% end %>
+                      <%= content_tag :div, :class => "col-md-3" do%>
+                        <%= check_box_tag "select", "", false, {:"data-option-code" => "#{filter.code}:#{option}", :"data-url" => (is_subdomain ? filter_mentor_dashboard_url(:code => "mentor", subdomain: false) : filter_mentor_dashboard_url(:code => "mentor")), :class => "check_mentor_filter"}%>
+                      <% end %>
+                    </li>
+                  <% end %>
+                <% end %>
+              </ul>
+          </li>
+        <% end %>
+        <li class="<%= 'active' if (page == "community_feed" or (controller_name == "dashboards" and action_name == "people" and params[:code] != "mentor")) %> menu_with_sub">
+          <%= link_to "People", user_signed_in? ? (is_subdomain ? people_dashboard_url(subdomain: false) : people_dashboard_url) : (is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url), :class=>"gn-icon gn-icon-users",:id=>"people_link" %>
+          <span class="glyphicon glyphicon-chevron-right gn-arrow"></span>
+          <ul class="gn-submenu">
+            <li class="text_under">
+              <%= link_to t("role_type:participant", "p"), (is_subdomain ? people_dashboard_url(:code => "participant", subdomain: false) : people_dashboard_url(:code => "participant")), :class=>"gn-icon gn-icon-mentor" %>
+            </li>
+            <%if roles_allowed.include? "mentor"%>
+              <li class="text_under">
+                <%= link_to t("role_type:mentor", "p"), (is_subdomain ? people_dashboard_url(:code => "mentor", subdomain: false) : people_dashboard_url(:code => "mentor")), :class=>"gn-icon gn-icon-mentor" %>
+              </li>
+            <% end if false%>
+            <%if roles_allowed.include? "panellist"%>
+              <li class="text_under">
+                <%= link_to t("role_type:panellist", "p"), (is_subdomain ? people_dashboard_url(:code => "panellist", subdomain: false) : people_dashboard_url(:code => "panellist")), :class=>"gn-icon gn-icon-mentor" %>
+              </li>
+            <% end %>
+            <%if roles_allowed.include? "selector"%>
+              <li class="text_under">
+                <%= link_to t("role_type:selector", "p"), (is_subdomain ? people_dashboard_url(:code => "selector", subdomain: false) : people_dashboard_url(:code => "selector")), :class=>"gn-icon gn-icon-mentor" %>
+              </li>
+            <% end %>
+            </ul>
+          </li>
+          <li class="<%= 'active' if page == 'community_feed' or action_name == 'organisations' %> menu_with_sub"> 
+            <% if !context_program.blank? && ProgramScope.where(:program_id => context_program.id).try(:first).try(:associated_organisation) %>  
+              <%= link_to "Organisations", (user_signed_in? ? (is_subdomain ? organisations_dashboard_url(subdomain: false) : organisations_dashboard_url) : (is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url)), :class=>"gn-icon gn-icon-company" %>
+            <% end %>
+          </li>
+		        <% end %>
+		<% if context_program.try(:show_events)%>
+          <li class="<%= 'active' if controller_name == "event_lists" %> ">
+            <% if ((!context_program.blank? and user_signed_in? and context_program.try(:show_events)) or need?(["company_admin"], current_organisation))%>
+              <%= link_to "Events", (is_subdomain ? event_lists_url(subdomain: false) : event_lists_url), :class=>"gn-icon gn-icon-events" %>
+            <% end %>
+          </li>
+        <%end %>
+				</ul>
+			</div><!-- /gn-scroller -->
+<% content_for :sidebar do %>
+  <%= javascript_include_tag "classie" %>
+  <%= javascript_include_tag "gnmenu" %>
+  <script>
+  $(document).ready(function(){
+    new gnMenu( document.getElementById( 'gn-menu' ) );
+  });
+  </script>
+<%end%>

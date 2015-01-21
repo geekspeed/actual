@@ -1,0 +1,54 @@
+<table class="option_field_duplicate table table-striped" style="display:none">
+  <%= render "/questions/options_question_form", field: nil %>
+</table>
+
+<table class="duplicate_options" style="display:none;">
+  <tbody>
+    <tr class="option_row">
+      <td>
+        <h4 class="option_name" >Options for a</h4>
+      </td>
+    </tr>
+    <%#= render "branch_option_form_row" %>
+    <tr class="option_row">
+      <td>
+        <%= link_to("+ Insert new field for this option", "#", :class => "insert_option_field", :data_option_name => "" ) %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="custom_field_duplicate" style="display:none">
+    <%= render "/questions/question_form", ques: nil, field_id:"static-0", indx:0 %>
+</div>
+
+<%= form_for [survey,question] do |f| %>
+  <%- unless question.errors.empty? %>
+    <ul>
+      <%- question.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+    <%= content_tag :div%>
+      <h1><%=@survey.name%></h1>
+  <%= content_tag :div, class: "block" do%>
+    <%= content_tag :h2, "Please add your question", class: "titleLine"%>
+        <%questions = @questions.where(parent_id: "")%>
+        <div class="column" id="main_question_div" data-latest_index= <%=questions.count%>>
+          <% questions.each_with_index do |ques, indx|%>
+            <%= render "/questions/question_form", ques: ques, field_id: "question_row_#{indx+1}-#{indx+1}", indx: indx%>
+          <%end%>
+        </div>
+    <%= link_to("+ Add New Question", "#", :class => "add_new_question") %>
+
+    <% if @survey.try(:question_order).present? %>
+      <%= hidden_field_tag :order, @survey.try(:question_order).order.present? ? @survey.try(:question_order).order : order_sequence, id:"question_question_order_order", :style=>"width:700px;" %>
+    <% else %>
+      <%= hidden_field_tag :survey_question_order_attributes_order, order_sequence, :style=>"width:700px;" %>
+    <% end %>
+
+    <%= f.submit "Save", id: "submit"%>
+    <%= tag 'br'%>
+
+  <%end%>
+<%end%>

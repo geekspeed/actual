@@ -1,0 +1,69 @@
+<%if !@program.customize_admin_emails.where(:email_name => "declines_join_team_request").first %>
+<% @declines_join_team_subject = "Your demand to join team #projectname has not been accepted" %>
+<%@declines_join_team_message = render "default_message", type: "decline"%>
+<%end%>
+
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <a href="sec1" name="sec1" class="section_nav"></a>
+          <h3><label>Declines Join Team Request Mail</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+        </div>
+      </div>
+      <div style="" class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 setting-font"><div>Subject</div></div>
+          <div class="col-sm-8">
+            <%= text_field_tag "subject[declines_join_team_request]" , @declines_join_team_subject,:cols=>"40", :class=>"form-control form-style-1"%>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <%= text_area_tag "feedback[declines_join_team_request]" , @declines_join_team_message,:cols=>"40", :class=>"form-control"%>
+        </div>      
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+
+<%
+=begin
+%>
+<div id="new_mails" class="closable_div">
+    <div style="position: fixed;top: 213px;right: 189px;">
+        <a class="btn btn-info" id="coll-success-hint">* Hint</a>
+    </div>
+    <div style="position: fixed;top: 247px;right: 158px;">
+      <div id="coll-success-hintbox" style="display:none;margin-top:5px;background-color:#ffffff;padding:5px;">
+        <div class="hint-title" rel="tooltip" title="name of person / people receiving feedback">#to</div> 
+        <div class="hint-title" rel="tooltip" title="name of project receiving feedback">#projectname</div> 
+        <div class="hint-title" rel="tooltip" title="name of program">#programname</div> 
+        <div class="hint-title" rel="tooltip" title="name of company">#companyname</div> 
+       </div>
+    </div>
+<div>
+      <div class="inner block">
+      <h2 class="titleLine">Declines Join Team Request Mail</h2>
+          <p>Subject</p>
+          <%= text_field_tag "subject[declines_join_team_request]" , @declines_join_team_subject,:cols=>"40", :class=>"form-control"%>
+          <br /> 
+          <p>Body</p>
+          <%= text_area_tag "feedback[declines_join_team_request]" , @declines_join_team_message,:cols=>"40", :class=>"form-control"%>
+      </div>
+</div>
+</div>
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+<%
+=end
+%>

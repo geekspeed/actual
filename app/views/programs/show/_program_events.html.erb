@@ -1,0 +1,52 @@
+<div class="table-responsive">
+	
+	<table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+    <thead>
+      <tr role="row">
+        <th rowspan="1" colspan="1" style="width: 400px;">Date &amp; Time</th>
+        <th rowspan="1" colspan="1" style="width: 200px;">Activity</th>
+        <th rowspan="1" colspan="1" style="width: 200px;">Location</th>
+        <th rowspan="1" colspan="1" style="width: 200px;">Description</th>
+        <th rowspan="1" colspan="1" style="width: 200px;">Sign up</th>
+        <th rowspan="1" colspan="1" style="width: 200px;">Ratings</th>
+      </tr>
+    </thead>
+    <tbody>
+  		<% i = @program.try(:event_sessions).count %>
+  		<% @program.event_sessions.each do |session| %>
+  			<% unless session.program_event.try(:is_private)%>
+    			<tr>
+    				<td><%= session.date_to ? "#{session.date.try(:event_format)} / #{session.date_to.try(:event_format)}" : session.date.try(:event_format) %><br><%= "#{session.time_from} - #{session.time_to}" %></td>
+    				<td style="text-align: left"><%= session.try(:program_event).try(:title) %></td>
+    				<td><%=session.location %></td>
+    				<td><a href="#session_<%=session.id%>" class="fancybox">More Detail</a></td>
+    				<td>
+    					<% if current_user and EventRecord.for_program(@program.id).where(event_session_id: session.id, user_id: current_user.id ).first%>
+                <% er = EventRecord.for_program(@program.id).where(event_session_id: session.id, user_id: current_user.id ).first%>
+                <%if er.try(:confirmed_at)%>
+                   Attended
+                <% elsif er %>
+                  <%= er.rejected_at ? "Rejected" : "Registered" %>
+                <%end%>
+    					<% else %>
+    						<button type="button" class="btn btn-default" style="margin-right:1%;min-width: 65%;" onclick="window.location='<%=accept_program_event_path(@program, session.try(:program_event), :for => session )%>'"><span class="glyphicon glyphicon-plus-sign"> </span> Click to Attend Event</button>
+    					<% end %>
+    				</td>
+    				<td>
+    				  <% if er and er.program.try(:can_rate_events)%>
+    				   <% rating = event_session_rating(session, current_user)%>
+               <input value="<%= rating %>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">
+    				  <%else%>
+    				   -
+    				  <% end %>
+    				</td>
+    				<%= render "programs/show/program_event_detail", :session => session %>
+    			</tr>
+    		<%end%>
+  			<%i-=1%>
+  			
+  		<% end %>
+		</tbody>
+	</table>
+	
+</div>

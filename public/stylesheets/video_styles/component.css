@@ -1,0 +1,601 @@
+*,
+*:after,
+*::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body, .video_container, .scroller {
+	height: 100%;
+}
+
+.scroller {
+	overflow-x: hidden;
+    overflow-y: visible;
+    background: #f5f5f5;
+}
+
+.scroller,
+.scroller-inner {
+	position: relative;
+}
+.main-frame{
+	position: relative;
+}
+.video_container {
+	position: relative;
+	overflow: hidden;
+}
+
+.menu-trigger {
+	/*position: relative;
+	padding-left: 60px;*/
+	font-size: 0.9em;
+}
+
+.menu-trigger:before {
+	/*position: absolute;
+	top: 2px;
+	left: 0;
+	width: 40px;
+	height: 6px;
+	background: #fff;
+	box-shadow: 0 6px #34495e, 0 12px #fff, 0 18px #34495e, 0 24px #fff;
+	content: '';*/
+}
+
+.mp-pusher {
+	position: relative;
+	left: 0;
+	height: 100%;
+}
+
+.mp-menu {
+	position: absolute; /* we can't use fixed here :( */
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 300px;
+	height: 100%;
+	-webkit-transform: translate3d(-100%, 0, 0);
+	-moz-transform: translate3d(-100%, 0, 0);
+	transform: translate3d(-100%, 0, 0);
+	font-family: 'Lato',Calibri,Arial,sans-serif;
+}
+
+.mp-level {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #3d3d3d;
+	-webkit-transform: translate3d(-100%, 0, 0);
+	-moz-transform: translate3d(-100%, 0, 0);
+	transform: translate3d(-100%, 0, 0);
+}
+
+/* overlays for pusher and for level that gets covered */
+.mp-pusher::after,
+.mp-level::after,
+.mp-level::before {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 0;
+	height: 0;
+	content: '';
+	opacity: 0;
+}
+
+.mp-pusher::after,
+.mp-level::after {
+	background: rgba(0,0,0,0.3);
+	-webkit-transition: opacity 0.3s, width 0.1s 0.3s, height 0.1s 0.3s;
+	-moz-transition: opacity 0.3s, width 0.1s 0.3s, height 0.1s 0.3s;
+	transition: opacity 0.3s, width 0.1s 0.3s, height 0.1s 0.3s;
+}
+
+.mp-level::after {
+	z-index: -1;
+}
+
+.mp-pusher.mp-pushed::after,
+.mp-level.mp-level-overlay::after {
+	opacity: 1;
+	-webkit-transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+}
+
+.mp-level.mp-level-overlay {
+	cursor: pointer;
+}
+
+.mp-level.mp-level-overlay.mp-level::before {
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	opacity: 1;
+}
+
+.mp-pusher,
+.mp-level {
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+/* overlap */
+.mp-overlap .mp-level.mp-level-open {
+	box-shadow: 1px 0 2px rgba(0,0,0,0.2);
+	-webkit-transform: translate3d(-40px, 0, 0);
+	-moz-transform: translate3d(-40px, 0, 0);
+	transform: translate3d(-40px, 0, 0);
+}
+
+/* First level */
+.mp-menu > .mp-level,
+.mp-menu > .mp-level.mp-level-open,
+.mp-menu.mp-overlap > .mp-level,
+.mp-menu.mp-overlap > .mp-level.mp-level-open {
+	box-shadow: none;
+	-webkit-transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
+
+/* cover */
+.mp-cover .mp-level.mp-level-open {
+	-webkit-transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
+
+.mp-cover .mp-level.mp-level-open > ul > li > .mp-level:not(.mp-level-open) {
+	-webkit-transform: translate3d(-100%, 0, 0);
+	-moz-transform: translate3d(-100%, 0, 0);
+	transform: translate3d(-100%, 0, 0);
+}
+
+/* content style */
+.mp-menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mp-menu h2 {
+	background: none repeat scroll 0 0 #333;
+    color: #ccc;
+    font-size: 1em;
+    font-weight: 300;
+    margin: 0;
+    padding: 1em;
+    text-align: center;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+}
+
+.mp-menu.mp-overlap h2::before {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-right: 8px;
+	font-size: 75%;
+	line-height: 1.8;
+	opacity: 0;
+	-webkit-transition: opacity 0.3s, -webkit-transform 0.1s 0.3s;
+	-moz-transition: opacity 0.3s, -moz-transform 0.1s 0.3s;
+	transition: opacity 0.3s, transform 0.1s 0.3s;
+	-webkit-transform: translateX(-100%);
+	-moz-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+.mp-menu.mp-cover h2 {
+	text-transform: uppercase;
+	font-weight: 700;
+	letter-spacing: 1px;
+	font-size: 1em;
+}
+
+.mp-overlap .mp-level.mp-level-overlay > h2::before {
+	opacity: 1;
+	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+	-moz-transition: -moz-transform 0.3s, opacity 0.3s;
+	transition: transform 0.3s, opacity 0.3s;
+	-webkit-transform: translateX(0);
+	-moz-transform: translateX(0);
+	transform: translateX(0);
+}
+
+.mp-menu ul li > a {
+	display: block;
+	padding: 0.7em 1em 0.7em 1.8em;
+	outline: none;
+	box-shadow: inset 0 -1px rgba(255,255,255,0.1);
+	text-shadow: 0 0 1px rgba(255,255,255,0.1);
+	font-size: 1.4em;
+	-webkit-transition: background 0.3s, box-shadow 0.3s;
+	-moz-transition: background 0.3s, box-shadow 0.3s;
+	transition: background 0.3s, box-shadow 0.3s;
+	font-family: 'Lato',Calibri,Arial,sans-serif;
+	font-size: 18px;
+	color:#aaa;
+}
+
+.mp-menu ul li::before {
+	color: #fff;
+    font-size: 19px;
+    left: 10px;
+    line-height: 2.5;
+    position: absolute;
+    z-index: -1;
+}
+
+.mp-level > ul > li:first-child > a {
+	box-shadow: inset 0 -1px rgba(255,255,255,0.1), inset 0 1px rgba(255,255,255,0.1);
+}
+
+.mp-menu ul li a:hover,
+.mp-level > ul > li:first-child > a:hover {
+	background: rgba(0,0,0,0.2);
+	box-shadow: inset 0 -1px rgba(0,0,0,0);
+}
+
+.mp-menu .mp-level.mp-level-overlay > ul > li > a,
+.mp-level.mp-level-overlay > ul > li:first-child > a {
+	box-shadow: inset 0 -1px rgba(0,0,0,0);
+}
+
+.mp-level > ul > li:first-child > a:hover,
+.mp-level.mp-level-overlay > ul > li:first-child > a {
+	box-shadow: inset 0 -1px rgba(0,0,0,0), inset 0 1px rgba(0,0,0,0);
+} /* seems like Chrome 34.0.1847.131 needs the second shadow otherwise the transition breaks */
+
+.mp-back {
+	background: rgba(0,0,0,0.1);
+	outline: none;
+	color: #777;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-family: helvetica;
+    font-size: 12px;
+	display: block;
+	padding: 1em;
+	position: relative;
+	box-shadow: inset 0 1px rgba(0,0,0,0.1);
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
+}
+.mp-back:hover{
+	color: #fff;
+}
+
+.mp-back::after {
+	font-family: 'linecons';
+	position: absolute;
+	content: "\e037";
+	right: 10px;
+	font-size: 1.3em;
+	color: #777;
+}
+
+.mp-menu .mp-level.mp-level-overlay > .mp-back,
+.mp-menu .mp-level.mp-level-overlay > .mp-back::after {
+	background: transparent;
+	box-shadow: none;
+	color: transparent;
+}
+
+/* Fallback example for browsers that don't support 3D transforms (and no JS fallback) */
+/* We'll show the first level only */
+.no-csstransforms3d .mp-pusher,
+.no-js .mp-pusher {
+	padding-left: 300px;
+}
+
+.no-csstransforms3d .mp-menu .mp-level,
+.no-js .mp-menu .mp-level {
+	display: none;
+}
+
+.no-csstransforms3d .mp-menu > .mp-level,
+.no-js .mp-menu > .mp-level {
+	display: block;
+}
+.menu-trigger{
+	display: inline-block;
+    padding: 13px 24px;
+	background: #333;
+}
+.menu-trigger i{
+	color: #fff;
+	font-size: 20px;
+}
+.mp-menu .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+	background-color: #555;
+}
+.mp-menu .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+	background-color: #5c5c5c;
+}
+.mp-menu .table > thead > tr > th {
+    border-bottom: 1px solid #444;
+    vertical-align: bottom;
+    color: #ccc;
+    font-family: Helvetica, sans-serif;
+}
+.mp-menu .table > tbody > tr > td:first-child{
+	border-right:1px solid #666; 
+}
+.mp-menu .table > tbody > tr{
+	border-bottom: 1px dashed #777;
+}
+.video_time{
+	background: none repeat scroll 0 0 #4f4f4f;
+    border-radius: 3px;
+    color: #ddd;
+    font-family: helvetica, sans-serif;
+    padding: 5px 10px;
+}
+.video_time i{
+	padding-right: 17px;
+	color: #ccc;
+}
+.mp-menu .table > tbody > tr > td p{
+	color: #ddd;
+	font-family: helvetica,sans-serif;
+	padding: 3px;
+}
+.excercise-list li{
+	padding: 10px;
+	color: #ccc;
+	font-family: helvetica, sans-serif;
+}
+.mp-menu .cource_indicator{
+	top: 9px !important;
+}
+.mp-menu .course_lessons_table{
+	font-family: helvetica, sans-serif;
+}
+.mp-menu .course_lessons_table .lesson_title{
+	color: #ccc;
+}
+.mp-menu .course_lessons_table .lesson_data{
+	margin-left: 30px;
+	margin-top: 5px;
+}
+.mp-menu .course_lessons_table th{
+	background: none repeat scroll 0 0 #ccc !important;
+    color: #3d3d3d !important;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 20px !important;
+}
+.mp-menu .table.course_lessons_table > tbody > tr{
+	border-bottom: 1px solid #777;
+}
+.back_to_course{
+  display: inline-block;
+  padding: 13px 24px;
+  color: #555;
+  font-weight: bold;
+}
+.back_to_course i{
+	padding-right: 10px;
+	font-size: 18px;
+}
+.video_topbar{
+	background: #f5f5f5;
+	padding-bottom: 0;
+	padding: 40px 20px 0 0;
+}
+.back_to_course_bar{
+	background: #eee;
+}
+.video_nav a{
+	display: block;
+    float: right;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+.video-container iframe{
+	height: 80%;
+    left: 10%;
+    width: 80%
+}
+.video_bg{
+	background: #000;
+	position: relative;
+}
+#video_loader{
+	position: absolute;
+	z-index: 999;
+	width:100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+}
+#video_loader img{
+	
+}
+.vid_desc_container{
+	padding: 20px;
+	background: #ffffff;
+}
+.vid_desc_title{
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color:#3d3d3d;
+	font-size: 18px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+}
+.vid_desc{
+	color: #555;
+	line-height: 24px;
+}
+#mp-pusher .next_video_title{
+	color: #3d3d3d;
+}
+.scroller .row{
+	margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+
+
+
+/*arrows style*/
+nav.nav-slide a {
+	position: absolute;
+	top: 50%;
+	display: block;
+	outline: none;
+	text-align: left;
+	z-index: 1000;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+nav.nav-slide a.prev {
+	left: 10px;
+}
+
+nav.nav-slide a.next {
+	right: 10px;
+}
+
+nav.nav-slide a svg {
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+}
+
+/* Individual styles */
+
+/*--------------------*/
+/* Slide out */
+/*--------------------*/
+
+.color-1 { background: #bdc3c7; }
+
+.nav-slide .icon-wrap {
+	position: relative;
+	z-index: 100;
+	display: block;
+	padding: 20px;
+	background-color: rgba(255, 255, 255, 0.8);
+}
+.nav-slide .icon-wrap i{
+	color: #000;
+	font-size: 18px;
+}
+.nav-slide svg.icon {
+	fill: #34495e;
+}
+
+.nav-slide div {
+	position: absolute;
+	top: 50%;
+	padding: 0 100px;
+	background-color: rgba(60,60,60,0.8);
+	-webkit-transition: -webkit-transform 0.3s;
+	transition: transform 0.3s;
+}
+
+.nav-slide a.prev div {
+	left: -10px;
+	padding-right: 120px;
+	-webkit-transform: translateY(-50%) translateX(-100%);
+	transform: translateY(-50%) translateX(-100%);
+}
+
+.nav-slide a.next div {
+	right: -10px;
+	padding-left: 120px;
+	text-align: right;
+	-webkit-transform: translateY(-50%) translateX(100%);
+	transform: translateY(-50%) translateX(100%);
+}
+
+.nav-slide h3 {
+	position: relative;
+	margin: 0;
+	padding: 20px 0;
+	color: #fff;
+	white-space: nowrap;
+	font-weight: 300;
+	font-size: 1.3em;
+	line-height: 1.5;
+}
+
+.nav-slide div h3 span {
+	display: block;
+	color: #95a5a6;
+	font-style: italic;
+	font-size: 65%;
+	font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
+}
+
+.nav-slide img {
+	position: absolute;
+	top: 0;
+	height: 100%;
+}
+
+.nav-slide a.prev img {
+	right: 0;
+}
+
+.nav-slide a.next img {
+	left: 0;
+}
+
+.nav-slide a:hover div {
+	-webkit-transform: translateY(-50%) translateX(0); 
+	transform: translateY(-50%) translateX(0);
+}
+
+
+
+
+
+
+@media screen and (max-width: 520px) {
+	.nav-slide a.prev,
+	.nav-reveal a.prev,
+	.nav-doubleflip a.prev,
+	.nav-fillslide a.prev,
+	.nav-growpop a.prev {
+		-webkit-transform-origin: 0% 50%;
+		transform-origin: 0% 50%;
+	}
+
+	.nav-slide a.next,
+	.nav-reveal a.next,
+	.nav-doubleflip a.next,
+	.nav-fillslide a.next,
+	.nav-growpop a.next  {
+		-webkit-transform-origin: 100% 50%;
+		transform-origin: 100% 50%;
+	}
+
+	.nav-slide a,
+	.nav-reveal a,
+	.nav-doubleflip a,
+	.nav-fillslide a {
+		-webkit-transform: scale(0.6);
+		transform: scale(0.6);
+	}
+
+	.nav-growpop a {
+		-webkit-transform: translateY(-50%) scale(0.6);
+		transform: translateY(-50%) scale(0.6);
+	}
+}

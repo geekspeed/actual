@@ -1,0 +1,411 @@
+
+
+<div id="rightcontent">
+  <div class="leftcol nopadding pitchdetail">
+    <div class="value mainImageBox" style="line-height: 1px;">
+      <%= image_tag @pitch.avatar.logo.url %>
+      <div class="progress_table_container value">
+        <table class="progress_table " id="progress_table_1056">
+          <tbody>
+            <tr class="title_row">
+            <td>Progress <span class="final_position"></span></td>
+            <td>Quality of work</td>
+            <td>Risk Level</td>
+            <td rowspan="2" style="vertical-align:middle; padding-bottom: 0px;">
+              <!-- <a href="#detail_view_1056" id="show_progress_table" class="fancybox"><img src="http://dev.apptual.com/wp-content/themes/apptual/images/arrow_detail.png"></a> -->
+            </td>
+          </tr>
+          <tr class="main_values" id="main_values_1056">
+            <td>
+              <div class="progress_bar">
+                <div id="grey_bar" class="grey_bar" style="width: 0%;"></div>
+                <div id="custom_bar" class="orange_bar" style="width: 0%;"></div>
+              </div>
+            </td>
+            <td>
+              <div style="float:left; padding: 2px 0 2px 10px;font-size: 12px;">
+                <i>No data available</i>
+              </div>
+              <div class="clr"></div>
+            </td>
+            <td>
+              <div class="progress_bar">
+                <div class="grey_bar" style="width: 0%"></div>
+                <div class="red_bar" style="width: 1%"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div style="display: none;" id="detail_view_1056">
+        <script>
+          $(document).ready(function(){
+            $('.popup_button').click(function(event){
+              event.preventDefault();
+              var tab = $(this).data('tab');
+              $('.popup_button').removeClass('button_active');
+              $(this).addClass('button_active');
+              $('.tabs').hide();
+              $('#'+tab).show();
+            });
+          });
+         </script>
+        <div style="text-align: center">
+          <div class="popup_header">Last program targets Team Progress<!-- (Rank 00...bottom 00%)--></div>
+          <div class="popup_line"><hr></div>
+          <div class="popup_button_block">
+            <div class="popup_button_sub_block">
+              <a data-tab="bar" class="button_active popup_button button">Progress Bars</a>
+            </div>
+            <div style="width:130px;float:left;">
+              <a data-tab="chart" class="popup_button button">Spider Chart</a>
+            </div>
+            <div class="clear"></div>
+          </div>
+
+          <div class="tabs" id="bar">
+            <table class="detailed_values">
+              <tbody>
+                <tr class="first_vals">
+                  <td class="label_left">Hustling</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 100%"></div>
+                      <div class="green_bar" style="width: 0%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right">
+                    You need to acquire 1 more backers 
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label_left">Seeking</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 0%"></div>
+                      <div class="green_bar" style="width: 0%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right">You need to get 3 more pieces of feedback </td>
+                </tr>
+                <tr>
+                  <td class="label_left">Iterating</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 67%"></div>
+                      <div class="orange_bar" style="width: 0%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right">You need to iterate 3 more times </td>
+                </tr>
+                <tr>
+                  <td class="label_left">Efficiency</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 100%"></div>
+                      <div class="orange_bar" style="width: 0%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right">You need to meet another 3 mentor tasks on time </td>
+                </tr>
+                <tr>
+                  <td class="label_left">Communication</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 100%"></div>
+                      <div class="green_bar" style="width: 0%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right">You need to post at least 3 more status updates </td>
+                </tr>
+                <tr>
+                  <td class="label_left">Risk Level</td>
+                  <td class="progress_bar_td">
+                    <div class="progress_bar">
+                      <div class="grey_bar" style="width: 13%"></div>
+                      <div class="green_bar" style="width: 1%"></div>
+                    </div>
+                  </td>
+                  <td class="label_right"></td>
+                </tr>
+              </tbody>
+            </table>
+            <hr>
+            <table class="meta_data_val">
+              <tbody>
+                <tr>
+                  <td> 
+                    0 Virtual Dollars
+                  </td>
+                  <td>0 Backers</td>
+                  <td>3 Views</td>
+                </tr>
+              </tbody>
+            </table>
+            <br/>
+          </div>
+          <div style="display:none;" class="tabs" id="chart">
+            <img src="http://dev.apptual.com/wp-content/themes/apptual/spider_chart/images/3d67907666e95f4b729d7e32b73a0b91.png">
+          </div>  
+          
+        </div>
+      </div>
+      <script type="text/javascript" charset="utf-8">
+        jQuery(document).ready(function($) {
+          $("#main_values_1056").find("#grey_bar").css("width", "0%");
+          $("#main_values_1056").find("#custom_bar").addClass("orange_bar").css("width", "0%");
+          $("#main_values_1056").find(".final_position").html("Rank 4");
+                          //$("#main_values_1056").show();
+          $("#progress_table_1056").on("click", ".progress_table_more", function(){
+            $(this).removeClass("progress_table_more").addClass("progress_table_less").html("- less");
+            $("#progress_table_1056").find("tr").show();
+            return false;
+          });
+          $("#progress_table_1056").on("click", ".progress_table_less", function(){
+            $(this).removeClass("progress_table_less").addClass("progress_table_more").html("+ more");
+            //$("#progress_table_1056").find("tr").hide();
+            //$("#progress_table_1056").find(".main_values").show();
+            return false;
+          });
+        });
+      </script>  
+    </div>
+    <div class="pitchhead">
+                <!--
+      3 Views<br />
+      0 Backers
+      -->
+      <div class="clr"></div>
+    </div>
+        
+    <table class="pitchcontent">
+      <tbody>
+        <tr class="profilebox_section">
+          <td colspan="2">
+            <div class="category ">
+              <table class="inner">
+                <tbody>
+                  <tr>
+                    <td class="title">
+                      <span style="display:inline-block;margin-right:10px;line-height:20px;" class="uppercase"><%= t("pitch:summary") %></span>
+                      <div style="display:inline-block;position:relative; font-size: 12px; ">
+                                                      </div>
+                    </td>
+                    <td class="privacy"></td>
+                    <td class="expandRow">
+                      <a href="#" class="expand opened_expand" id="subbig_idea_1056">-</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="expand_subbig_idea_1056" class="expand_hidden" style="display: block;">
+                <div class="iteration_counter">
+                  <div style="display: none" id="iterations_big_idea_1056">
+                    <div class="lightbox_box">
+                      <h2>Previous iterations and their learnings</h2>
+                      <h3 class="iter_heading first-child">Iteration 1 on 23 Oct 2013</h3>
+                      <div class="previous_iterations">ddfdfdf</div> 
+                    </div>
+                  </div>
+                </div>
+                <div class="rating_content">
+                  <div class="clear"></div>
+                </div>
+                <div class="last_iteration"><%= @pitch.summary.try(:content) %></div>
+                <div class="links_content">
+                  <a href="#" name="cont_comments_1005" class="open_div">+ Feedback (0)</a>
+                  <a href="#iterations_big_idea_1056" class="fancybox">+ 1 Iteration (last: Yesterday)</a>
+                </div>
+                <div class="new-status-box">
+                  <div class="box-content">
+                    <div>
+                      <textarea name="new-status" id="new-status" class="autogrow watermark" watermark="Make an improvement to this section based on your recent learnings. (This text will replace your current summary.)" style="overflow: hidden; height: 100px;">Make an improvement to this section based on your recent learnings</textarea>
+                    </div>
+                    <a href="#" id="save-new-status" class="button reload-page">Send</a><div class="loader" style="float:right;"></div><div class="ok_ico" style="float:right;"></div>
+                    <input type="hidden" name="pgid" id="pgid" value="YmlnX2lkZWFfMTAzMw==">
+                    <input type="hidden" name="section" id="section" value="big_idea_1033">
+                    <div class="clr"></div>
+                  </div>
+                  <div class="clr"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="profilebox_section">
+          <td colspan="2">
+            <div class="category">
+              <table class="inner">
+                <tbody><tr>
+                  <td class="title">
+                    <span class="uppercase">ADDITIONAL INFORMATION</span>
+                  </td>
+                  <td class="rating"></td>
+                  <td class="privacy"></td>
+                  <td class="expandRow">
+                    <a href="#" class="expand" id="sub_additional">+</a>
+                  </td>
+                </tr>
+              </tbody></table>
+              <div id="expand_sub_additional" class="expand_hidden" style="display: none;">
+                <table class="pitchcontent">
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rightcol">
+    <h2 class="sidebarTitle">My Actions</h2>
+    <div class="main_boxright colored_border">
+      <div class="boxright">
+        <%= link_to("Nudge the team for a milestone update", nudge_program_pitch_path(context_program, @pitch), :class => "button fancybox_small fulllength nudge_milestone") %>
+        <div class="clr"></div>
+      </div>
+      <% if current_user.mentor?(context_program) && !@pitch.mentor?(current_user) && !@pitch.close_mentors? %>
+        <div class="boxright">
+          <%= link_to("I want to be #{t("role_type:mentor")}", be_mentor_program_pitch_path(context_program, @pitch), :class => "star_button become_mentor") %>
+        </div>
+      <% end %>
+      <div class="boxright">
+        <%= link_to "Give the team a task", "#give_a_task", :class=>"button fancybox_small" %>
+        <% @task = Task.new %>
+        <%= render "shared/milestone_task" %>
+<!--         <a href="#give_a_task_1" class="button fancybox" style="float:none">Give the team a task</a> -->
+        <!-- <span class="right_status">0 Outstanding tasks</span> -->
+      </div>
+      <div class="boxright">
+        <%= link_to("Review this pitch privately", "#reviewthispitch", :class => "star_button fancybox_small") %>
+        Reviewing pitches is a critical part of bulding killer innovations and makes good karma
+      </div>
+      <%= render "shared/feedback_lightbox" %>
+                  
+      <div class="boxright">
+        <a href="#backthispitch" class="star_button fancybox_small">Back this pitch</a>
+        You can back 5 more pitches and have $10 Virtual Dollars to spend on pitches you back.
+        <u><a href="#backthispitch" class="fancybox_small back_is_true">Click here to manage your list</a></u>
+      </div>
+      <!-- lightboxes -->
+      <div style="display: none">
+        <div id="backthispitch">
+          At the start of a program you are given 10 Virtual Dollars - the symbol on Apptual is V$. You get to spend your prescious V$ on up to 5 pitches.<br>
+          Backing pitches both helps you develop a nose for great ideas as well as it helps the community identigy the best ideas.
+          <br><br>
+          <div class="inner_box">
+            <div style="margin-bottom: 10px;">Back this pitch with:</div>
+            <div id="back-pitch-slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-slider-range-max" style="width: 100%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a></div> <div class="amount_box_cont">V$ <input type="text" id="amount_box" name="amount_box" value="0" readonly="readonly"></div>
+            <div class="clr" style="height: 10px"></div>
+            Your Virtual Dollar bank balance = $10<br>
+            So far you have backed 0 out of 5 pitches                                                 
+          </div>
+          <br>
+          <a href="#" class="button" id="send_back">Back this pitch</a>
+          <div class="clr"></div>
+          <hr>
+          <div class="inner_box">
+            <h2>pitches I back:</h2>
+            <div id="mybacks"></div>
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+        $(document).ready(function() {
+                              
+          $('body').on('click', '#send_back', function(){
+            var amount_box = $('#amount_box').val();
+            jQuery.post(admin_url, {action:'back_pitch',pid:757,ptid:762,amount_box:amount_box}, function(data) {
+              jQuery.post(admin_url, {action:'getMyBacks',pid:757}, function(data) {
+                jQuery("#mybacks").html(data);
+              });
+              parent.$.fancybox.close();
+            });
+            return false;
+          });
+        });
+        $(function() {
+          $( "#back-pitch-slider" ).slider({
+            range: "max",
+            min: 1,
+            max: 10,
+            value: 1,
+            slide: function( event, ui ) {
+              $( "#amount_box" ).val(  ui.value );
+            }
+          });
+          //$( "#amount_box" ).val($( "#back-pitch-slider" ).slider( "value" ) );
+        });
+      </script>
+      <% if need?(["selector"], @program) %>
+        <div class="boxright">
+          <%- already_shortlisted = @pitch.already_shortlist_by?(current_user) %>
+          <%= link_to already_shortlisted ? "Remove from shortlist" : "Add to shortlist", "#shortlistFeedback", :class => "star_button fancybox_small"  %>
+        </div>
+        <%= render "shared/selector_feedback", :anchor_id => "shortlistFeedback", :url => shortlist_program_pitch_path(@program, @pitch, :delete => already_shortlisted) %>
+      <% end %>
+      <% if need?(["selector"], @program) %>
+        <div class="boxright">
+          <%- already_finalised = @pitch.already_finalist_by?(current_user) %>
+          <%= link_to (already_finalised ? "Remove from finalist" : "Add to finalist"), "#finalistFeedback", :class => "star_button fancybox_small"  %>
+        </div>
+        <%= render "shared/selector_feedback", :anchor_id => "finalistFeedback", :url => finalist_program_pitch_path(@program, @pitch, :delete => already_finalised) %>
+      <% end %>
+      <div class="boxright left" style="text-align: left;">
+        <!--<script>
+          $(function() {
+            var user = [
+              "one one", "Test User", "esgseg segseg", "drhdrh dhdrhdrh", "tesgs213 rghweg3414", "teeee estsgeseg", "Stefan Niederkofler", "rdhdrh drhdrhdrh", "Stefan Niederkofler", "Pankaj Participant", "Pankaj Panel", "panajM Mentor", "PankajS Selector", "Shanthan Kumar"                   ];
+            $( ".boxright" ).on("keydown", "#referto", function(){
+              $(this).autocomplete({
+                source: user
+              });
+            });
+          });
+        </script>-->
+<!--         <h2>Refer this to</h2>
+        <input type="text" name="referfrom" id="referfrom" value="Your Name" class="watermark">
+        <input type="text" name="referto" id="referto" value="Name or Email" class="watermark">
+        <textarea name="referto_msg" id="referto_msg" class="watermark">Message</textarea>
+        <input type="hidden" value="aHR0cDovL2Rldi5hcHB0dWFsLmNvbS9uaWVkZXJrb2ZsZXIvMTUwLWZ1bGwtdGVzdGluZy1uZXcvcHJvZmlsZS80ODktcGFua2FqLXBpdGNoL3BpdGNo" id="referto_link">
+        <input type="hidden" value="757" id="program_id">
+        <a href="#" class="button" id="referthisto">Share</a>
+        <div class="loader" style="float:right;"></div>
+        <div class="ok_ico" style="float:right;"></div>
+        <div class="clr"></div>-->
+      </div>
+    </div>
+    <h2 class="sidebarTitle">Information</h2>
+    <div style="padding:0 7px;" class="main_boxright colored_border">
+      <div class="boxright" style="text-align: left;">
+      <h2>Team</h2>
+      <div class="userrow">
+        <a href="http://dev.apptual.com/niederkofler/150-full-testing-new/user/171"><img width="30" src="http://dev.apptual.com/images/user/171/150_150_crop_hQ5LNYExmPAwjatkcJHpMSD3Zu1yfR.png"></a>
+        <a href="http://dev.apptual.com/niederkofler/150-full-testing-new/user/171">Stefan Niederkofler</a>
+        <div class="clr"></div>
+      </div>
+    </div>
+    <div class="boxright" style="text-align: left;">
+      <h2><%= t("role_type:mentor", "p") %></h2>
+      <div class="clr"></div>
+      <div class="userrow">
+        <% User.find(@pitch.mentors).each do |user| %>
+          <%= link_to image_tag(user.avatar.thumb.url), user_path(user) %>
+          <%= link_to user.full_name, user_path(user) %>
+        <% end %>
+        <div class="clr"></div>
+      </div>
+    </div>
+  </div>
+        
+</div>
+<script type="text/javascript"> 
+  jQuery(function($) {
+    $(".expand").first().click();
+  });
+    </script>
+  </div>
+</div>

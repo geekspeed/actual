@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_adoption: MyString
+  activity_feed: MyString
+  project_feed: MyString
+  course_inactive_user: MyString
+
+two:
+  user_adoption: MyString
+  activity_feed: MyString
+  project_feed: MyString
+  course_inactive_user: MyString

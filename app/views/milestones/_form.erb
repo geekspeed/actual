@@ -1,0 +1,14 @@
+<%= form_for @milestone, :url => program_pitch_milestones_path(@program, @pitch), html: {:id => "updateStatusForm", class: "milestone_create_form"} do |f| %>
+  <div>
+    <div class="box-programUpdate">
+      <div>
+        <%= f.text_area :description, :placeholder => "Enter the name of the tag", :class=>"form-control" %>
+        <%= f.hidden_field :user_id, :value => current_user.id%>
+      <br />
+      </div>
+      <%= link_to "Add New Tag", "#", :id => "submit", :class => "milestone_create" %>
+      <div class="loader" style="float:right;"></div><div class="ok_ico" style="float:right;"></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+<% end %>

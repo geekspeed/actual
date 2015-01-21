@@ -1,0 +1,28 @@
+<div style="" class="innercontent people-row">
+  <div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white panel-shadow ui-widget collapses" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+				<!-- panel head -->
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+						<a class="user_name_panel pull-left"><%= organisation.try(:company_name) %></a>
+						<span class="pull-left user_rol">
+						(Organisation)
+						</span>
+					</div>
+					<div class="panel-options">
+						<a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				
+				<!-- panel body -->
+				<div class="panel-body">
+					<div class="row user_data">
+						<div class="pull-left user_data_img_cotainer"><%= link_to(image_tag(organisation.avatar.logo.url, :class => "img-responsive user-img"), popup_details_organisation_path(organisation), :remote=>true) %></div>
+						<b>Bio:</b> <%= link_to "View Organisation", popup_details_organisation_path(organisation), :remote=>true %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

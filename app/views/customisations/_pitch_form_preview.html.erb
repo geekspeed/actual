@@ -1,0 +1,6 @@
+<% @pitch = @program.pitches.build(:user => current_user) %>
+<div id="" style="float: none;">
+  <%= form_for(@pitch, :url => polymorphic_path([@program, @pitch]), :html => {:class => "reqForm no_float" }) do |f| %>
+    <%= render "pitches/form", :f => f %>
+  <% end %>
+</div>

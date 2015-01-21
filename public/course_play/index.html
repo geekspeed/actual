@@ -1,0 +1,389 @@
+<!DOCTYPE HTML>
+<html class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Course video preview</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<link href='/stylesheets/css/font-awesome.css' rel="stylesheet" type="text/css" >
+<link href="/stylesheets/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/normalize.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/demo.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/icons.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/component.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/jquery.mCustomScrollbar.css" />
+<link href="/stylesheets/css/custom.css" rel="stylesheet" type="text/css">
+<script src="/javascripts/video_script/modernizr.custom.js"></script>
+<style>
+		/* This only works with JavaScript, 
+		   if it's not present, don't show loader */
+		.no-js #loader { display: none;  }
+		.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+	</style>
+</head>
+<body>
+	<div class="video_container">
+		<div id="video_loader">
+				<div  style="position:absolute;left: 50%;top:49%">
+				<img src="../images/ajax-loader.gif" id="loader" style="position: initial;">
+				<p style="color:#aaa;margin-top: 10px;">Loading...</p>
+				</div>
+		</div>
+			<!-- Push Wrapper -->
+			<div class="mp-pusher mp-pushed" id="mp-pusher" style="transform: translate3d(300px, 0px, 0px);">
+				<div class="scroller" id="scroller"><!-- this is for emulating position fixed of the nav -->
+					<div class="row back_to_course_bar">
+						<div class="col-sm-12" style="padding-left: 0;"><a href="#" id="trigger" class="menu-trigger"><i class="icon-reorder"></i></a> <a href="#" class="back_to_course"><i class="icon-angle-left"></i>Back to course</a></div>
+					</div>
+					<div class="row video_topbar">
+						<div class="col-sm-8">
+							<p class="next_video_title">Video title: <span class="cource_indicator blue_indi"></span><span class="chapter_title">module one: first activity</span></p>
+						</div>
+						<div class="col-sm-4 video_nav">
+							<a href="#">Next lecture <i class="icon-angle-right"></i></a>
+							<a href="#"><i class="icon-angle-left"></i> Prev lecture</a>
+						</div>
+					</div>
+					<div class="video_bg">
+						<div class="scroller-inner row" id="scroller-inner" style="width:70%;left:15%;">
+							<!-- Top Navigation -->
+								<div class="col-sm-12">
+									<div class="video-container">
+										<iframe width="100%" height="100%" src="http://www.youtube.com/embed/YUe-cF-h60Y" frameborder="0" allowfullscreen></iframe>
+									</div>
+								</div>
+						</div><!-- /scroller-inner -->
+					</div>
+					<div class="row">
+						<div class="col-sm-12 vid_desc_container">
+							<p class="vid_desc_title">Video description</p>
+							<p class="vid_desc">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+							</p>
+						</div>
+					</div>	
+				</div><!-- /scroller -->
+				<!-- mp-menu -->
+				<nav id="mp-menu" class="mp-menu">
+					<div class="mp-level mp-level-open">
+						<h2>Lesson actions</h2>
+						<ul>
+							<li class="icon-angle-left">
+								<a class="icon icon-note" href="#">Notes</a>
+								<div class="mp-level sc-evel">
+									<h2 class="">Notes</h2>
+									<a class="mp-back" href="#">back</a>
+									<div>
+										<textarea rows="20" placeholder="Add your note here" style="margin: 5px 0;padding: 5px 0 5px 5px;width: 100%;"></textarea>
+									</div>
+									<ul>
+										<li class="">
+												<table class="table table-striped">
+													<thead>
+														<th style="width: 200px">Time</th>
+														<th style="width: 500px">Note</th>
+													</thead>
+													<tbody>
+														<tr>
+															<td>
+																<div class="video_time">
+																	<i class="glyphicon glyphicon-time"></i> 2:34
+																</div>
+															</td>
+															<td>
+																<p>
+																	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+																</p>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<div class="video_time">
+																	<i class="glyphicon glyphicon-time"></i> 2:34
+																</div>
+															</td>
+															<td>
+																<p>
+																	Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+																</p>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<div class="video_time">
+																	<i class="glyphicon glyphicon-time"></i> 2:34
+																</div>
+															</td>
+															<td>
+																<p>
+																	Lorem ipsum dolor sit amet.
+																</p>
+															</td>
+														</tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+														<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+													</tbody>
+												</table>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="icon-angle-left">
+								<a class="icon icon-pen" href="#">Excersises</a>
+								<div class="mp-level sc-evel">
+									<h2 class="">Excersises</h2>
+									<a class="mp-back" href="#">back</a>
+									<ul class="excercise-list">
+										<li>1- Lorem ipsum dolor sit amet</li>
+										<li>2- Lorem ipsum dolor sit</li>
+										<li>3- Lorem ipsum dolor</li>
+										<li>4- Lorem ipsum dolor sit</li>
+									</ul>
+								</div>
+							</li>
+							<li class="icon-angle-left">
+								<a class="icon icon-display" href="#">Course grid</a>
+								<div class="mp-level sc-evel">
+									<h2 class="">Course grid</h2>
+									<a class="mp-back" href="#">back</a>
+									<ul>
+										<li class="">
+											<div id="module_activities">
+									      <div class="row">
+									        <div class="col-sm-12">
+									          <table class="table table-striped course_lessons_table">
+									            <thead>
+									              <tr role="row" class="">
+									                <th>Module 1: module one</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> First activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 5  hour  34 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Second activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 3  hour  45 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Third activity 
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 1 hour  33 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									            </tbody>
+									          </table>
+									        </div>
+									      </div>        
+											</div>
+											<div id="module_activities">
+									      <div class="row">
+									        <div class="col-sm-12">
+									          <table class="table table-striped course_lessons_table">
+									            <thead>
+									              <tr role="row" class="">
+									                <th>Module 1: module one</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> First activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 5  hour  34 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Second activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 3  hour  45 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Third activity 
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 1 hour  33 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									            </tbody>
+									          </table>
+									        </div>
+									      </div>        
+											</div>
+											<div id="module_activities">
+									      <div class="row">
+									        <div class="col-sm-12">
+									          <table class="table table-striped course_lessons_table">
+									            <thead>
+									              <tr role="row" class="">
+									                <th>Module 1: module one</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> First activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 5  hour  34 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Second activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 3  hour  45 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Third activity 
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 1 hour  33 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									            </tbody>
+									          </table>
+									        </div>
+									      </div>        
+											</div>
+											<div id="module_activities">
+									      <div class="row">
+									        <div class="col-sm-12">
+									          <table class="table table-striped course_lessons_table">
+									            <thead>
+									              <tr role="row" class="">
+									                <th>Module 1: module one</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> First activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 5  hour  34 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Second activity
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 3  hour  45 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									                <tr class="">
+									                  <td>
+									                    <a class="lesson_title" href="#">
+									                      <span class="cource_indicator blue_indi"></span> Third activity 
+									                    </a>
+									                    <div class="lesson_data">
+									                      <a href="#"><i class="glyphicon glyphicon-time"></i> 1 hour  33 min</a>
+									                    </div>
+									                  </td>
+									                </tr>
+									            </tbody>
+									          </table>
+									        </div>
+									      </div>        
+											</div>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+							
+					</div>
+				</nav>
+				<!-- /mp-menu -->
+
+				
+
+			</div><!-- /pusher -->
+		</div><!-- /container -->
+		<script src="/javascripts/video_script/classie.js"></script>
+		<script src="/javascripts/video_script/mlpushmenu.js"></script>
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		<script src="/javascripts/video_script/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script>
+			new mlPushMenu( document.getElementById( 'mp-menu' ), document.getElementById( 'trigger' ) );
+		</script>
+		<script type="text/javascript">
+		// Wait for window load
+		$(window).load(function() {
+			// Animate loader off screen
+			$("#video_loader").animate({
+				top: -1000
+			}, 1500);
+			
+			$(".sc-evel").mCustomScrollbar();
+		});
+	window.onload = function ()
+{
+var w = window.innerWidth;
+					var scroller_width = w - 300;
+					document.getElementById( 'mp-pusher' ).style.width = scroller_width+"px";
+}
+</script>
+<script src="/javascripts/js/bootstrap.js"></script> 
+</body>
+</html>

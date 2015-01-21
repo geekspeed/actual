@@ -1,0 +1,11 @@
+<% content_for :title do %>
+  <%= "Register" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "organisation" %>
+<%= render "devise/shared/sidebar", page: "organisation" %>
+
+<div id="rightcontent" class="two_sided_right_content" style="float: none;">
+  <%= form_for(@organisation, :html => {:class => "reqForm"}) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>

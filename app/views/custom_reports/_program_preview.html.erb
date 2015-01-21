@@ -1,0 +1,307 @@
+<%= content_tag :div, class: "container" do%>
+  <% @custom_report.custom_report_elements.each do |element| %>  
+    <%element_type = element.type%>
+    <% case element_type%>
+      <% when "Text"%>
+        <%= content_tag :div, :class => "row portlet" do%>
+          <%= content_tag :div, :class => "col-md-12" do %>
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading">
+                <div class="panel-title title_option">
+                  <h3>Element</h3>
+                </div>
+                <div class="panel-options">
+                  <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                </div>
+              </div>
+              
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <%= raw element.option%>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          <% end %>
+        <% end %>
+      <br />
+      <% when "Table"%>
+      
+        <%if @custom_report.type == "Program" and element.option == "Team"%>
+            
+              <%= content_tag :div, :class => "row portlet" do%>
+                <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                  <div class="panel-heading">
+                    <div class="panel-title title_option">
+                      <h3>Team</h3>
+                    </div>
+                  </div>
+                </div>
+                <%= content_tag :div, :class => "col-md-12" do%>
+                  <%@custom_report.program.pitches.each do |pitch|%>
+                    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                      <div class="panel-heading">
+                        <div class="panel-title title_option">
+                          <h3><%= pitch.title%></h3>
+                        </div>
+                        <div class="panel-options">
+                          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                        </div>
+                      </div>
+                      <% ids = (pitch.team - pitch.collaborate_requesters).uniq %>
+                      <div class="panel-body">
+                        <% User.in(id: ids).each do |member| %>
+                          
+                            <div class="row">
+                              <div class="col-sm-4 setting-font">
+                                <div style="line-height: 28px;"><%= member.full_name %></div>
+                              </div>
+                              <div class="col-sm-8">
+                                <%=member.bio%>
+                              </div>
+                            </div>
+                        <% end %>
+                      </div>
+                    </div>
+
+                    
+                    <br />
+                  
+                <% end %>
+              <% end %>
+            <% end %>
+            <br />
+        <% end %>
+        <br/>
+        <%if @custom_report.type == "Program" and element.option == "All fields"%>
+          <% users = User.in(:"_participant" => @custom_report.program_id.to_s)%>
+          <% custom_fields = User.custom_fields.where(anchor: "participant", program_id: @custom_report.program_id.to_s).enabled%>
+          <div class="row portlet">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading">
+                <div class="panel-title title_option">
+                  <h3>All Fields(User)</h3>
+                </div>
+              </div>
+            </div>
+            <% users.each do |user|%>
+                <div class="col-md-12">
+                  <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                    <div class="panel-heading">
+                      <div class="panel-title title_option">
+                        <h3><%= user.full_name%></h3>
+                      </div>
+                      <div class="panel-options">
+                        <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                      </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-sm-4 setting-font">
+                          <div style="line-height: 28px;">Email</div>
+                        </div>
+                        <div class="col-sm-8">
+                          <%= user.email%>
+                        </div>
+                      </div>
+                      <%= content_tag :div, :class => "row" do%>
+                        <% custom_fields.in(code: user.custom_fields.keys).each_with_index do |custom_field, i|%>
+                          <%= content_tag :div, :class => "row" do%>
+                            <div class="col-sm-4 setting-font">
+                              <div style="line-height: 28px;"><%= custom_field.label%></div>
+                            </div>
+                            <div class="col-sm-8">
+                              <%= user.send(custom_field.code.to_sym)%>
+                            </div>
+                          <%end%>
+                        <% end %>
+                      <% end %>
+                      
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              <br />
+            <% end %>
+          </div>
+          <br />
+          <% elsif @custom_report.type == "Program" and element.option == "All fields"%>
+            <div class="row portlet">
+              <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                <div class="panel-heading">
+                  <div class="panel-title title_option">
+                    <h3>All Fields(Project)</h3>
+                  </div>
+                </div>
+              </div>
+            <%@custom_report.program.pitches.each do |pitch|%>
+              <% custom_fields = Pitch.custom_fields_with_anchor("pitch").enabled %>
+              
+              
+                  <div class="col-md-12">
+                    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                      <div class="panel-heading">
+                        <div class="panel-title title_option">
+                          <h3><%= pitch.title%></h3>
+                        </div>
+                        <div class="panel-options">
+                          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                        </div>
+                      </div>
+                      <div class="panel-body">
+                        <% custom_fields.where(program_id: pitch.try(:program).try(:id)).or({branch_id: nil}, {branch_id: pitch.pitch_branch_id.to_s}).select{|field| field if Workflow.where(program_id: pitch.program.id.to_s, active: true, :code.in => field.phases).present?}.each do |custom_field| %>
+                          <%= content_tag :div, :class => "row" do%>
+                            <div class="col-sm-4 setting-font">
+                              <div style="line-height: 28px;"><%= custom_field.label%></div>
+                            </div>
+                            <div class="col-sm-8">
+                              <%= pitch.send(custom_field.code.to_sym)%>
+                            </div>
+                          <% end if pitch.custom_fields.keys.include?(custom_field.code)%>
+                        <% end %>
+                        
+                      </div>
+                    </div>
+                <br />
+                  </div>
+            
+            
+            <% end %>
+                </div>
+                <br />
+          
+          <%elsif @custom_report.type == "Program" and element.option == "Action list"%>
+              <div class="row portlet">
+                <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                  <div class="panel-heading">
+                    <div class="panel-title title_option">
+                      <h3>Action List</h3>
+                    </div>
+                  </div>
+                </div>
+                <%@custom_report.program.pitches.each do |pitch|%>
+                  <div class="col-md-12">
+                    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                      <div class="panel-heading">
+                        <div class="panel-title title_option">
+                          <h3><%= pitch.title%></h3>
+                        </div>
+                        <div class="panel-options">
+                          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                        </div>
+                      </div>
+                      <div class="panel-body">
+                        <%= content_tag :table, :class => "table table-stripped table-bordered" do%>
+                          <%= content_tag :th, "#"%>
+                          <%= content_tag :th, "Category"%>
+                          <%= content_tag :th, "Action "%>
+                          <%= content_tag :th, "Due date"%>
+                          <%= content_tag :th, "Completed"%>
+                          <%= content_tag :tbody do%>
+                          <% i = 0 %>
+                          <%milestone = nil%>
+                          <%num = 0%>
+                            <%pitch.milestones.map(&:tasks).flatten.each_with_index do |task,index|%>
+                              <%= content_tag :tr, :class=>"#{('info' if task.milestone_flag)}" do%>
+                                <%milestone, num = task.milestone_id, 1 if task.milestone_flag%>
+                                <% if milestone and !task.milestone_flag and task.milestone_id == milestone%>
+                                  <%= content_tag :td, "#{i}.#{num}" %>
+                                  <% num = num+1 %>
+                                <%else%>
+                                  <%= content_tag :td, i+1 %>
+                                  <% i = i+1 %>
+                                <%end%>
+                                <%= content_tag :td, task.milestone.try(:description),:style=>("font-weight:bold" if task.milestone_flag)   %>
+                                <%= content_tag :td, task.try(:description),:style=>("font-weight:bold" if task.milestone_flag)  %>
+                                <%= content_tag :td, task.try(:deadline).try(:app_format) %>
+                                <%= content_tag :td, task.try(:complete) == true ? "Yes" : "No"  %>
+                              <% end unless pitch.milestones.blank? %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+          
+          
+          
+          <%elsif @custom_report.type == "Program" and element.option == "Events attended"%>
+            <% users = User.in(:"_participant" => @custom_report.program_id.to_s) %>
+            <%= content_tag :div, :class => "row portlet" do%>
+              <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                <div class="panel-heading">
+                  <div class="panel-title title_option">
+                    <h3>Events Attended</h3>
+                  </div>
+                </div>
+              </div>
+              <%= content_tag :div, :class => "col-md-12" do %>
+                <% users.each do |user| %>
+                  <% attended_events =  EventRecord.in(program_id: @custom_report.program_id, user_id: user, :confirmed_at.ne => nil)%>
+                  <% attended_events.each do |event|%>
+                    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+                      <div class="panel-heading">
+                        <div class="panel-title title_option">
+                          <h3><%= user.full_name%></h3>
+                        </div>
+                        <div class="panel-options">
+                          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                        </div>
+                      </div>
+                      
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-sm-12">
+                              <%= event.event_session.program_event.title%>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <br />
+                  <% end %>
+                <% end %>
+              <% end %>
+              <br />
+            <% end %>
+            <br />
+          <% end %>
+      <br />
+      <% when "Graph"%>
+        <%= content_tag :div, :class => "row portlet" do%>
+          <%= content_tag :div, :class => "col-md-12" do %>
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading">
+                <div class="panel-title title_option">
+                  <h3>Graph</h3>
+                </div>
+                <div class="panel-options">
+                  <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                </div>
+              </div>
+              
+              <div class="panel-body">
+                <div class="row">
+                    <% @graph = Reporting.where(id: element.option).first%>
+                    <div id="show_chart<%= @graph.id %>"></div>
+                  <div class="col-sm-12" >
+                    <% @graph_data = chart_data(@graph.reporting, @graph.graph_type)%>
+                    <% chart_table(@graph.reporting, @graph.graph_type).each_with_index do |report| %>
+                      <%= report[0] %>
+                      <%= report[1] %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          <% end %>
+        <% end %>    
+      <%end%>
+  <% end %>
+  </div>
+<% end %>

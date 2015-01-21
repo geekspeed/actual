@@ -1,0 +1,857 @@
+<% content_for :title do %>
+<%= "#{context_program.try(:title)} - Summary" %>
+<% end %>
+<%= render "shared/bs_navbar", :page => "program_summary" %>
+<%= render "shared/flash" %>
+
+<% if @program.try(:program_summary).try(:program_summary_order).try(:order).present? %>
+   <% order = @program.program_summary.program_summary_order.order.gsub("-",",").split(",") %>
+   <% program_summary_arrange_order = Hash[*order].values %>
+   <% program_summary_arrange_order = (raw program_summary_arrange_order) %>
+<% end %>
+<style type="text/css">
+	#mainnavi{
+		z-index: 1;
+	}
+	.addthis_floating_style{
+		z-index: 10;
+	}
+	#captcha{
+	  width: 100% !important;
+	}
+	.simple_captcha{
+	  width: 60% !important;
+	}
+	.simple_captcha_field{
+	  width: 100% ;
+	}
+	.addthis_floating_style{
+z-index: 10;
+ padding: 0;
+ border-radius: 0;
+ background: #ddd;
+ }
+ .addthis_floating_style.addthis_32x32_style .addthis_internal_container{
+ width: 100%;
+ }
+ .addthis_32x32_style .dummy .at300bs, .addthis_32x32_style .at300bs, .addthis_32x32_style .at15t{
+ height: auto !important;
+ }
+ .addthis_toolbox a{
+ font-size: 18px;
+ color: #888 !important;
+ padding: 5px 0 !important;
+ }
+ .share_sum_title p{
+ font-size: 12px;
+}
+</style>
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_32x32_style visible-lg" style="top:25%;width: 60px;z-index: 10;">
+ <div class="share_sum_title">
+ <p>Share</p>
+ <i class="glyphicon glyphicon-chevron-down"></i>
+ </div>
+ <a class="addthis_button_facebook icon-facebook-share"></a>
+ <a class="addthis_button_twitter icon-twitter-share"></a>
+ <a class="addthis_button_linkedin icon-linkedin-share"></a>
+ <a class="addthis_button_email icon-email-share"></a>
+ <a class="addthis_button_compact icon-all-share"></a>
+</div>
+<script type="text/javascript">
+  var addthis_config = {"data_track_addressbar":true};
+  var addthis_share =
+  {
+  templates: {
+  twitter: "<%=@program.title%>"+ " " + window.location.href + " " + "<%=@program.try(:program_summary).try(:twitter_url).blank? ? "" : ( "@" + @program.try(:program_summary).try(:twitter_url).split("/").last) %>",
+  },
+  url: window.location.href,
+  title: "<%=@program.try(:title)%>",
+  description: "<%= strip_tags(@program.try(:program_summary).try(:overview).try(:html_safe))%>",
+  }
+</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-534e5859519dae8c"></script>
+<!-- AddThis Button END -->
+
+<script type="text/javascript">
+$(document).ready(function(){
+	// Jquery Sortable for drag and drop arrangment in program summary show page
+	<% if @program.try(:program_summary).try(:program_summary_order).try(:order).present? %>
+    var arrValuesForOrder = <%= program_summary_arrange_order %>;
+    var div = $("div.column"),
+        items = $("div.column div.portlet");
+
+    for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+        // arrValuesForOrder[i] element to move
+        // i = index to move element at
+        div.prepend(items.get(arrValuesForOrder[i] - 1));
+    }
+  <% end %>
+  $( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+  });
+  // Drag and Drop Sorting End
+
+	var windowWidth = $(window).width();
+  if (windowWidth <= 500) {
+  	var textHight = $('.company-description').height();
+		var boxHight = textHight+160;
+		$('.img-container').css("height",boxHight);
+	}
+	$(window).resize(function(){
+    $('.img-container').css("height","100%");
+	});
+
+$('.slider1').bxSlider({
+    slideWidth: 200,
+    minSlides: 1,
+    maxSlides: 5,
+    slideMargin: 10
+  });
+  
+  $("#partners-list").owlCarousel({
+  	items: 3,
+  	autoPlay:true
+  });
+  $("#owl-quotes").owlCarousel({
+  	items: 1,
+  });
+  $("#blog_items").owlCarousel({
+  	items: 3,
+  });
+});
+
+var lastHash = "";
+window.onload=function()
+{
+  if(location.hash != ""){
+    $("#anchor_"+ location.hash.split('#')[1]).addClass('active');
+  }
+  sessionStorage.setItem('againClicked', false);
+  hashChangeEventListener = setInterval("hashChangeEventHandler()", 50);
+}
+function hashChangeEventHandler()
+{
+    var newHash = location.hash.split('#')[1];
+
+    if(newHash != lastHash)
+    {   var y = $(window).scrollTop();
+        $(window).scrollTop(y-40);
+        lastHash = newHash;
+        if(newHash == "contact-us")
+        {
+          $("#contact_us_link").trigger('click');
+        }
+    }
+    if(sessionStorage.getItem('againClicked') == "true"){
+      var y = $(window).scrollTop();
+      $(window).scrollTop(y-40);
+      sessionStorage.setItem('againClicked', false);
+    }
+}
+
+$(document).on('click', '.anchor_links', function(e){
+  href = $(this).attr('href').split('#')[1];
+  if( href == "contact-us" && lastHash == "contact-us"){
+    $("#contact_us_link").trigger('click');
+  }
+  if( href == lastHash && href != "contact-us"){
+    sessionStorage.setItem('againClicked', true);
+  }
+});
+
+$(document).on('click', '.anchors_li', function(e){
+  $('.anchors_li').removeClass('active');
+  $(this).addClass('active');
+});
+
+</script>
+	<% image_url = @program.try(:program_summary).try(:lifestyle_background).present? ? @program.try(:program_summary).try(:lifestyle_background).try(:url) : "/images/company.jpg"  %>
+	<div class="img-container"  style="">
+		<div class="cover-pattern" style="background-image: <%= @program.try(:program_summary).try(:overlay_pattern).blank? ? "none" : "url(/images/cover.png) repeat scroll center center" %> !important;
+background-color:<%=hex_to_rgb(@program.try(:program_summary).try(:background_opacity), @program.try(:program_summary).try(:opacity_color), @program.try(:program_summary).try(:overlay_pattern) ) %> !important;"></div>
+		<div class="container">
+			<div class="row">  
+				<div class="span12">
+					<% image_url = @program.try(:program_summary).try(:lifestyle_background).present? ? @program.try(:program_summary).try(:lifestyle_background).try(:url) : "/images/company.jpg"  %>
+					<%= image_tag(image_url, class:"img img-responsive", style:"margin: 0 auto;") %>
+					<div class="company_about">
+						<div class="company-identity">
+							<p class="company-name"><%= @program.title %></p>
+						</div>
+						<p class="company-description">
+							<%= @program.program_summary.try(:overview).try :html_safe %>
+						</p>
+						<%= tag 'br', nil, nil%>
+						<%= tag 'br', nil, nil%>
+					<% if (!user_signed_in? or (!!context_program and (!need?(["mentor", "selector", "panellist"], context_program))) ) %>
+						<div class="company-btns">
+							<div id="error_registration_message" style="display: none;">
+                                <div class="">
+									<p>We're sorry. The registration period for this program has ended.</p>
+                                </div>
+							</div>
+							<% invitation_link_applicant = @program.try(:program_scope).try(:can_always_join) ? accept_invitation_url(User.new, :invitation_token => 0, :role => "participant", :for => @program.id, :from => "program") : "#error_registration_message" %>
+							<% if @program.try(:program_scope).try(:participant_scope) == "public" %>
+							<div <%= @program.try(:mentor_allowed?) ? "class=pull-left" : "" %> <%= @program.try(:mentor_allowed?) ? "style=width:50%" : "style=width:100%" %>>
+								<%= link_to invitation_link_applicant, :class => "fancybox" do %>
+									<button type="button" class="btn btn-default <%= @program.try(:mentor_allowed?) ? "pull-right" : "" %>" style="margin-right:1%;min-width: 65%;"><span class="glyphicon glyphicon-plus-sign"> </span> REGISTER AS <%= t("role_type:participant") %></button>
+									<div class="clear"></div>
+								<% end %>
+							</div>
+							<% end %>
+							<% if @program.try(:program_scope).try(:participant_scope) == "public" and @program.try(:mentor_allowed?) %>
+							    <% invitation_link_mentor = @program.try(:program_scope).try(:can_always_join) ? accept_invitation_url(User.new, :invitation_token => 0, :role => "mentor", :for => @program.id, :from => "program") : "#error_registration_message" %>
+								<div class="pull-right" style="width:50%">
+									<%= link_to invitation_link_mentor, :class => "fancybox" do %>
+										<button type="button" class="btn btn-default pull-left" style="margin-right:1%;min-width: 65%;"><span class="glyphicon glyphicon-plus-sign"> </span> REGISTER AS <%= t("role_type:mentor") %></button>
+										<div class="clear"></div>
+									<% end %>
+								</div>
+							<% end %>
+							<div class="clear"></div>
+						</div>
+					<% end %>
+							<div class="clear"></div>
+						<% if @program.faqs.where(relevant_page: "summary_page").any? %>
+							<div class="faq_cotainer">
+								<a href="#faq_content" class="faq_pop fancybox_large">FAQ</a>
+							</div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!--
+	<div class="jumbotron">
+		<div class="page-error-404">
+			<div class="error-symbol">
+				<i class="glyphicon glyphicon-warning-sign"></i>
+			</div>
+			<div class="error-text">
+				<h2>That's Annoying...</h2>
+				<p>The page you were looking for doesn't seem to exist.</p>
+				<span>You may have mistyped the address or the page may have moved.</span>
+			</div>
+		</div>	
+	</div>
+	-->
+	
+	
+	<!-- <div id="program_plans" class="jumbotron plan-container">
+		<div class="container content-wrap">
+			<h2 class="company-page-title">Blog</h2>
+			<div class="border-bottom-dark"></div>
+			<div class="other-data-container-data">
+		    <div id="blog_items" class="owl-carousel recent-posts row">
+			    <div class="col-md-12 blog_item">
+			    	<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">15</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+			    <div class="col-md-12 blog_item">
+			    	<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">16</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+					<div class="col-md-12 blog_item">
+						<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">17</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+					<div class="col-md-12 blog_item">
+						<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">18</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+					<div class="col-md-12 blog_item">
+						<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">19</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+					<div class="col-md-12 blog_item">
+						<img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg?1390241457" alt="Company">
+						<article>
+							<div class="date">
+								<span class="day">20</span>
+								<span class="month">Jan</span>
+							</div>
+							<h4><a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit vehicula est, in consequat libero. <a class="read-more" href="/">read more <i class="glyphicon glyphicon-chevron-right"></i></a></p>
+						</article>
+					</div>
+			  </div>
+			</div>
+		</div>
+	</div> -->
+	
+	
+	
+	
+  	<% if display_resources? %>
+		  <div id="resources" class="jumbotron plan-container">
+  			<div class="container content-wrap">
+  				<h2 class="company-page-title">Resources</h2>
+  				<div class="border-bottom-dark"></div>
+  				<div class="other-data-container-data res_data">
+  					<% if !@program.try(:resource_funding).blank? %>
+  						<h4>- Funding</h4>
+  				    <p><%= @program.resource_funding.join(",") %></p>
+  				    <br />
+  			    <% end %>
+  			    <% if !@program.try(:likelihood_of_success).blank? %>
+  				    <h4>- Additional Support</h4>
+  				    <p><%= @program.likelihood_of_success.join(",") %></p>
+  				    <br />
+  			    <% end %>
+  			    <% if !@program.try(:resource_mentoring).blank? %>
+  				    <h4>- Goal setting, monitoring &amp; support</h4>
+  				    <p><%= @program.resource_mentoring.join(",") %></p>
+  			    <% end %>
+  				</div>
+  			</div>
+		  </div>
+  	<% end %>
+	
+	<!-- This div is related to drag and drop positions. Classes are responsible for drag and drop are column and portlet. SO If you wants to add any of the codition inside the div, please add the condition inside the portlet class block and never add any thing outside the portlet class block. -->
+	<div class="column">
+    	<div class="portlet" id="program_plan">
+			<%= render "/programs/show/program_plan" %>
+		</div>
+		
+	    <div id="goal" class="portlet">
+			<% if display_goal?  %>
+				<div class="jumbotron goal-container">
+					<div class="container content-wrap">
+						<h2 class="company-page-title"><%= t("program_summary:goal") ? t("program_summary:goal") : "Goal"%></h2>
+						<div class="border-bottom"></div>
+						<div class="company-page-text">
+							<%= @program.program_summary.try(:goal).try(:html_safe) %>
+						</div>
+					</div>
+				</div>
+			<% end %>
+	    </div>
+    <div id="criteria" class="portlet">
+			<% if display_entry_criteria? %>
+				<div class="jumbotron metrics-container" id= "entry_criteria">
+					<div class="container content-wrap">
+						<h2 class="company-page-title"><%=t("program_summary:entry_criteria") ? t("program_summary:entry_criteria") : "Entry Criteria"%></h2>
+						<div class="border-bottom-dark"></div>
+						<div class="other-data-container-data ent_data">
+							<% if @program.program_summary.present? %>
+								<% @program.program_summary.entry_criteria.each do |ec| %>
+								  <h4 class="tagContainer">
+										- <%= ec %>
+									</h4>
+									<br />
+								<% end %>
+							<% end %>
+						</div>
+					</div>
+				</div>
+			<% end %>
+    </div>
+      <div id="terms_and_conditions" class="portlet">
+    		<% if display_terms_and_conditions? %>
+  				<div class="jumbotron other-data-container">
+  					<div class="container content-wrap data-wrap">
+  						<h2 class="company-page-title"><%=t("program_summary:terms") ? t("program_summary:terms") : "Terms &amp; Conditions".html_safe %></h2>
+  						<div class="border-bottom-dark"></div>
+  						<div class="other-data-container-data terms_data">
+  							<%= @program.program_summary.terms.try(:html_safe) if @program.program_summary.present?%>
+  						</div>
+  					</div>
+  				</div>
+    		<% end %>
+      </div>
+    <div id="our_partners" class="portlet">
+		<% if display_partners? %>
+				<div class="jumbotron partners-container" id="partners">
+					<h2 class="company-page-title partners-text"><%=t("program_summary:partners") ? t("program_summary:partners") : "Our Partners"%></h2>
+					
+			    <div id="partners-list" class="owl-carousel">
+            <% @program.program_summary.program_partners.each_with_index do |partner,index| %>
+              <div class="partner-item">
+                <% link = (partner.website.blank? ? partner.document.url : partner.website) %>
+                <a href="<%=link %>" target="_blank"><%= image_tag(partner.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10") %></a>
+              </div>
+            <% end %>
+				  </div>
+					
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+					  <!-- Indicators -->
+					  <ol class="carousel-indicators logo-ind">
+					  	<% slider_point = 0 %>
+					  </ol>	
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner">  
+						  <% @program.program_summary.program_partners.each_with_index do |partner,index| %>
+						    <% if index%5 == 0 %>
+						      <% if index != 0 %>
+						        </ul>
+						        </div>
+					 	        </div>
+					 	      <% end %>
+						      <div class="item <%= "active" if index == 0%>">
+					          <div class="logo_item">
+						      <ul class="logos_container">
+						    <% end %>
+						    	
+				     		<% if index == @program.program_summary.program_partners.size-1 %>
+				    		  </ul>
+						      </div>
+					 	  	  </div>
+					 	  	<% end %>
+						  <% end %> 
+						</div>
+								
+				  </div>
+				</div>
+			<% end %>
+    </div>
+    <div id="quotes" class="portlet">
+			<% if display_quotes? %>
+			  <div class="jumbotron metrics-container quotes-content">
+					<div class="container content-wrap">
+						<h2 class="company-page-title"><%=t("program_summary:quotes") ? t("program_summary:quotes") : "Quotes"%></h2>
+						<div class="border-bottom-dark"></div>
+						<div id="owl-quotes">
+						<% @program.program_summary.program_quotes.each_with_index do |quote| %>
+  						<div class="row quote_section">
+  						  <div class="client-img col-md-12">
+  								<div class="testimonialAuthor clearfix">
+  				        	<div class="author">
+  				        		<img height="80" alt="Gurpreet_Jagpal" class="attachment-client-img img-circle img-responsive img-circle-border" src="<%=quote.avatar.url %>">
+  				        	</div>
+  				        </div>
+  							</div>
+  							<div id="<%= quote.try(:name).parameterize('_')%>"class="col-md-12 testimonial new-section">
+  							  <div class="cbp-qtcontent" style="">
+  									<div class="client_info">
+  										<h5 class="name"><%= quote.name if quote.name.present? %>, <i><%= quote.organisation_name if quote.organisation_name.present? %></i></h5>
+  										<!--<p class="job pull-right">Client</p>-->
+  										<div class="clear"></div>
+  									</div>
+  					        <div class="testimonialContent">
+  					          <p><%= quote.content if quote.content.present? %></p>
+  					          <span class="arrowdown"></span>
+  					        </div>
+  						     </div>
+  						  </div>
+  					  </div>
+						<% end %>
+						</div>
+					</div>
+			  </div>
+			<% end %>
+    </div>
+    <div id="free_form" class="portlet">
+      <div id= "freeform">
+        <% if display_freeform? %>
+  				<% @section_title = 0 %>
+  				<% @program.program_summary.program_free_forms.sort_by(&:created_at).each do |free_form| %>
+  				  <% if free_form.section_id.present? && !free_form.section_title.blank?%>
+    					<div id="<%=free_form.try(:section_title).parameterize('_')%>"class="jumbotron <%= @section_title%2 == 0 ? "other-data-container" : "metrics-container" %>">
+    						<div class="container content-wrap data-wrap">
+    							<h2 class="company-page-title"><%= free_form.section_title %></h2>
+    							<div class="border-bottom-dark"></div>
+    							<% @program.program_summary.program_free_forms.sort_by(&:created_at).each do |free_form_field| %>
+    								<% if free_form_field.section_title.blank? && free_form_field.section_id == free_form.section_id %>
+                        <% if !free_form_field.try(:sub_title).blank? %>
+                          <ul class="nav nav-tabs" id="myTab">
+                            <li class="active"><a data-toggle="tab" href="#"><%= free_form_field.try(:sub_title) %></a></li>
+                          </ul>
+                        <% end %>
+                        <% if !free_form_field.try(:body).blank? %>
+                          <div class="other-data-container-data">
+                            <%= free_form_field.try(:body).try(:html_safe) if @program.program_summary.present? %>
+                          </div>
+                        <% end %>
+                    <% end %>
+                  <% end %>
+    						</div>
+    					</div>
+    					<% @section_title = @section_title+1 %>
+  					<% end %>
+  				<% end %>
+  			<% end %>
+      </div>
+      <div class="portlet">
+  		<% if @program.try(:program_summary).try(:program_summary_customization).present? && @program.program_summary.program_summary_customization.casestudy == true %>
+  		    <% if @program.program_summary.case_studies.present? %>
+  					<div class="jumbotron partners-container">
+  						<h2 class="company-page-title partners-text"><%= @program.program_summary.case_study_title %></h2>
+  						<div id="carousel-example-generic-case-study" class="carousel slide" data-ride="carousel">
+  						  <!-- Indicators -->
+  						  <ol class="carousel-indicators logo-ind">
+  						  	<% slider_point = 0 %>
+  						  	<% @program.program_summary.case_studies.each_with_index do |case_study,index| %>
+  						      <% if index%5 == 0 %>
+  						      	<li data-target="#carousel-example-generic" data-slide-to="<%=slider_point%>" class="<%= "active" if slider_point == 0%>"></li>
+  						  	  	<% slider_point = slider_point+1 %>
+  						  	  <% end %>
+  						  	<% end %>
+  						  </ol>	
+  							<!-- Wrapper for slides -->
+  							<div class="carousel-inner">  
+  							  <% @program.program_summary.case_studies.each_with_index do |case_study,index| %>
+  							    <% if index%5 == 0 %>
+  							      <% if index != 0 %>
+  							        </ul>
+  							        </div>
+  						 	        </div>
+  						 	      <% end %>
+  							      <div class="item <%= "active" if index == 0%>">
+  						          <div class="logo_item">
+  							      <ul class="logos_container">
+  							    <% end %>
+  							    	<% image_ext = ["jpg", "gif", "jpeg", "bmp", "png"] %>
+  							          <% if image_ext.detect{|w| w == case_study.try(:document).try(:file).try(:extension).try(:downcase)}.present? %>
+  							    	  <div id="case_study_document_<%= index %>" style="display:none;">
+  										<div class="partner-title">
+  										  <h2>Document</h2>
+  										</div>
+  							    	  	<%= image_tag(case_study.document.url) %>
+  							    	  </div>
+  							          <% else %>
+  							            <div id="case_study_document_<%= index %>" style="display:none;">
+  							            	<div class="partner-title">
+  											<h2>Document</h2>
+  											<p>Please Click the download button to download the document</p>
+  											</div>
+  											<div id="accordion" style="padding:20px;">
+  							          			<a href="<%=case_study.document.url%>" target="_blank" class="btn btn-default"><%= image_tag(case_study.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10", :style=>"height:20px;margin-right:10px;") %>Download</a>
+  							          		</div>
+  							          	</div>
+  							          <% end %>
+  							      <li><a href="#case_study_document_<%= index %>" class="fancybox_large"><%= image_tag(case_study.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10") %></a></li>
+  					     		<% if index == @program.program_summary.case_studies.size-1 %>
+  					    		  </ul>
+  							      </div>
+  						 	  	  </div>
+  						 	  	<% end %>
+  							  <% end %> 
+  							</div>
+  									
+  					  <!-- Controls -->
+  					  <a class="left carousel-control logo-control" href="#carousel-example-generic-case-study" data-slide="prev">
+  					    <img src="/images/left_arrow.png" />
+  					  </a>
+  					  <a class="right carousel-control logo-control" href="#carousel-example-generic-case-study" data-slide="next">
+  					    <img src="/images/right_arrow.png" />
+  					  </a>
+  					</div>
+  					</div>
+  		    <% end %>
+  			<% end %>
+      </div>
+    </div>
+
+      <div id="judging-criteria" class="portlet">
+        <% if display_judging_criteria? %>
+      		<div class="jumbotron metrics-container" id="judging_criteria">
+    				<div class="container content-wrap">
+    					<h2 class="company-page-title"><%= t("program_summary:judging_criteria") ? t("program_summary:judging_criteria") : "Judging Criteria"%></h2>
+    					<div class="border-bottom-dark"></div>
+    					<%= @program.try(:due_diligence_matrix).try(:matrices).present? ? (render "matrix") : "Matrix is not yet filled in" %>
+    				</div>
+      		</div>
+      	<% end %>
+      </div>
+    
+    <div id="blog-post" class="portlet">			
+    	<% if display_blog?%>
+			<div class="jumbotron other-data-container" id="blog">
+				<div class="container content-wrap">
+					<h2 class="company-page-title"><%= t("program_summary:blog") ? t("program_summary:blog") : "Blog"%></h2>
+					<div class="border-bottom-dark"></div>
+					<div class="other-data-container-data">
+						<div id="blog_items" class="owl-carousel recent-posts row owl-theme" style="opacity: 1; display: block;">
+						    <% program_blog_posts.each do |feed| %>
+							    <div class="col-md-12 blog_item">
+					                  <% if feed.link.present? %>
+				                        <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+				                              <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+				                              <% if is_image?(feed.link) %>
+				                                <%= link_to image_tag(feed.link, :class => "img img-responsive"), program_community_feeds_path(context_program), :target => "_blank" %>
+				                              <% else %>
+				                              	<% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+
+				                                <% emb_obj = emb_api.extract(:url => feed.link, :maxwidth => 525)%>
+				                                <%= show_attachment_on_summary(emb_obj)%>
+				                              <% end %>
+				                          <% end  %>
+				                        <% elsif feed.attachment.present?%>
+				                          <% if is_image?(feed.attachment.url) %>
+				                            <%= link_to image_tag(root_url.chomp('/') + feed.attachment_url, :class => "img img-responsive"), program_community_feeds_path(context_program), :target => "_blank"%>
+				                          <% else %>
+				                          	<% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+
+				                            <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + feed.attachment_url, :maxwidth => 525)%>
+				                            <%= show_attachment_on_summary(emb_obj)%>
+			                         	  <% end %>
+					                  <% else %>
+					                  	<a href="<%=program_community_feeds_path(context_program)%>"><img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg" alt="Company"></a>
+					                  <% end %>
+									<article>
+										<div class="date">
+											<span class="day"><%= feed.created_at.strftime("%d")%></span>
+											<span class="month"><%= feed.created_at.strftime("%b")%></span>
+										</div>
+										<% if !feed.subject.blank? %>
+											<h4><a href="<%=program_community_feeds_path(context_program)%>"><%= feed.try(:subject) %></a></h4>
+										<% end %>
+										<p><%= truncate_html(feed.try(:content).html_safe, length: 150, omission: '...') %> 
+											<% if user_signed_in? %>
+												<a class="read-more" href="<%= program_community_feeds_path(context_program)%>">read more <i class="glyphicon glyphicon-chevron-right"></i></a>
+											<% else %>
+												<a class="read-more fancybox" href="#blog-read-more">read more <i class="glyphicon glyphicon-chevron-right"></i></a>					
+											<% end %>
+										</p>
+									</article>
+								</div>
+							<% end %>
+						</div>
+					</div>
+				</div>
+			</div>			
+		<% end %>
+    </div>
+    
+    <% @program.program_summary.program_free_forms.where(:section_id => nil).order_by(:section_title => "ASC").each_with_index do |free_form, i| %>
+        <%case i%>
+          <%when 0%>
+            <%klass = "jumbotron goal-container"%>
+          <%when 1%>
+            <%klass = "jumbotron metrics-container"%>
+          <%when 2%>
+            <%klass = "jumbotron other-data-container"%>
+        <% end %>
+        <div id="<%=free_form.try(:section_title)%>" class="portlet">
+          <% if display_freeform_html? free_form.section_title%>
+            <div class="<%=klass%>">
+            <div class="container content-wrap">
+                <%= free_form.try(:body).try(:html_safe) if @program.program_summary.present? %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+    <% end if @program.program_summary%>
+    
+  </div>
+<!-- 				<div class="jumbotron social-container">
+					<div class="container content-wrap social-wrap">
+						<div class="row no-padding-row">
+							<div class="col-md-8">
+								<p class="twitter_title">@Accelerator</p>
+								<div>
+									
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="fb-like-box" data-href="http://www.facebook.com/FacebookDevelopers" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true" style="background: #fff;"></div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+
+<div class="partners_arrow"></div>
+<div class="jumbotron sayhi-container">
+	<p class="say_hi">Say Hi, Get In Touch</p>
+  <% if @program.program_scope.try(:facebook) or @program.program_scope.try(:twitter) or @program.program_scope.try(:linkedin)%>
+    <p class="contact_title">Contact us on <%=  "Facebook" if @program.program_scope.try(:facebook)%> <%= " Twitter" if @program.program_scope.try(:twitter) %> <%= " Linkedin" if @program.program_scope.try(:linkedin) %></p>
+  <% end if false%>
+	<div class="company_social_icon">
+		<div class="center_data">
+			<ul>
+				<% if @program.program_summary.present? %>
+					<li>
+						<%= link_to_if(@program.program_summary.facebook_url.present?, "", @program.program_summary.facebook_url, class: "icon28 icon-facebook facebook", target: "_blank") %>
+					</li>
+					<li>
+						<%= link_to_if(@program.program_summary.twitter_url.present?, "", @program.program_summary.twitter_url, class: "icon28 icon-twitter twitter", target: "_blank") %>
+					</li>
+					<li>
+						<%= link_to_if(@program.program_summary.linkedin_url.present?, "", @program.program_summary.linkedin_url, class: "icon28 icon-linkedin linkedin", target: "_blank") %>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+	<div class="company_footer" id="contact-us">
+		<p class="copy_rights">© 2014 <%= @program.try(:organisation).try(&:company_name)%>, All Rights Reserved.</p>
+		<%if @program.try(:program_summary).try(:program_summary_customization).try(:terms) and @program.try(:program_summary).try(:terms_to_footer) and (@program.try(:program_summary).try(:terms) != "<br>") %>
+			<a href="#terms" class="fancybox"><%=t("program_summary:terms") ? t("program_summary:terms") : "Terms"%></a>
+			<span> | </span>
+		<% end %>
+		<%if @program.try(:program_summary).try(:program_summary_customization).
+    try(:privacy_policy) and (@program.try(:program_summary).try(:privacy_policy) != "<br>") %>
+			<a href="#privacy" class="fancybox"><%=t("program_summary:privacy_policy") ? t("program_summary:privacy_policy") : "Privacy Policy"%></a>
+			<span> | </span>
+		<% end %>
+		<%#= mail_to(emails.join(','), "Contact Us") %>
+		<a href="#contact_us" class="fancybox" id="contact_us_link">Contact Us</a><%= render "contact_us", :program=> @program%>
+		<div>
+			<p class="pull-right">Powered by <a href="<%= root_url%>">Apptual.</a></p>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div id="faq_content" style="display: none;">
+	<div class="faq_title">
+		<h2>FAQ</h2>
+		<p>Frequently asked questions for <%= @program.title %></p>
+	</div>
+	<div class="panel-group" id="accordion">
+		<% @program.faqs.where(relevant_page: "summary_page").asc(:created_at).each_with_index do |faq, i| %>
+		  <div class="panel panel-default">
+		    <div class="panel-heading">
+		      <h4 class="panel-title">
+		        <a data-toggle="collapse" data-parent="#accordion" href="#collapse<%= i+1 %>">
+		          <span class="question_no"><%= i+1 %></span>
+								<span class="question_text">
+		          	<%= faq.question %>
+		          	</span>
+							<div class="clear"></div>
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapse<%= i+1 %>" class="panel-collapse collapse">
+		      <div class="panel-body">
+						<%= faq.answer.html_safe %>
+						<div>
+              <%= image_tag faq.attachment, :style => "width: 400px;" unless faq.attachment.url.nil? %>
+              <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+              <% if faq.link.present? %>
+                <% if !faq.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+									<% emb_obj = emb_api.extract(:url => faq.link, :maxwidth => 525)%>
+                  <%= show_attachment(emb_obj)%>
+                <% end  %>
+              <% elsif faq.attachment.present? %>
+								<% emb_obj = emb_api.extract(:url => root_url.chomp('/') + faq.attachment_url, :maxwidth => 525)%>
+								<%= raw(emb_obj[0].media.html)%>
+              <% end %>
+            </div>
+		      </div>
+		    </div>
+		  </div>
+		<% end %>
+	</div>
+</div>
+
+<div id="privacy" class="terms-conditions" style="display:none;">
+  <style type="text/css">   b {
+      color: #000000;
+    }
+  </style>
+  <div style="text-align:justify; margin-right: 5px; font-size: 14px;">
+    <div align="center"><h1 style="font-size: 18px;"><b><%=t("program_summary:privacy_policy") ? t("program_summary:privacy_policy") : "Privacy Policy"%></b></h1></div>
+    <%= content_tag :p do%>
+      <%= raw @program.try(:program_summary).try(:privacy_policy)%>
+    <% end %>
+  </div>
+</div>
+
+<div id="terms" class="terms-conditions" style="display:none;">
+  <style type="text/css">   b {
+      color: #000000;
+    }
+  </style>
+  <div style="text-align:justify; margin-right: 5px; font-size: 14px;">
+    <div align="center"><h1 style="font-size: 18px;"><b><%=t("program_summary:terms") ? t("program_summary:terms") : "Terms"%></b></h1></div>
+    <%= content_tag :p do%>
+      <%= raw @program.try(:program_summary).try(:terms)%>
+    <% end %>
+  </div>
+</div>
+
+<div id="blog-read-more" style="display: none;">
+    <div class="">
+		<p style="display: inline;">You need to login to read the article</p>
+		<% is_subdomain = valid_subdomain(current_subdomain)%>
+		<%= link_to "Login", (is_subdomain ? program_login_program_url(@program, subdomain: false) : program_login_program_url(@program)), style:"color: white; margin-right: 25px;",class: "btn btn-default pull-right" if controller_name == "programs" and !user_signed_in?%>
+    </div>
+</div>
+
+<style>
+.cover-pattern-x{
+
+}
+.recent-posts .date {
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+}
+.recent-posts .date .day {
+    background: none repeat scroll 0 0 #fff;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
+}
+.recent-posts .date .month{
+    border-radius: 0 0 2px 2px;
+    -webkit-border-radius: 0 0 2px 2px;
+    box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.07) inset;
+    -webkit-box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.07) inset;
+    color: #fff;
+    font-size: 0.9em;
+    padding: 0 10px 2px;
+}
+.recent-posts .read-more{
+    display: inline-block;
+    white-space: nowrap;
+}
+.recent-posts h4{
+	clear: none;
+}
+.recent-posts p{
+	font-size: 12px;
+	color: #3d3d3d;
+}
+.blog_item img{
+	border: 1px solid #e5e5e5;
+	padding: 5px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 10px !important;
+}
+</style>

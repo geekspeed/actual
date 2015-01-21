@@ -1,0 +1,15 @@
+<% if !@course.try(:link).blank? %>
+  <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+  <% emb_obj = emb_api.extract(:url => @course.link, :width=>"885px")%>
+  <%= course_attachment(emb_obj)%>
+  <style>
+    .fancybox-skin {
+        background-color: transparent;
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
+    }
+  </style>
+<% else %>
+  <div class="panel-title title_option" style="color: #cccccc;">
+    <h3 style="margin-bottom:10px;"><%= @course.try(:intro).try(:html_safe) %></h3>
+  </div>
+<% end %>

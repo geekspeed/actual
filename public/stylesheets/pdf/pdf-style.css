@@ -1,0 +1,49 @@
+#report-header img{ max-height:80px !important;width:auto !important;}
+#report-footer img{ max-height:80px !important;width:auto !important ;}
+.page-break { display:block !important; clear:both !important; page-break-after:always !important; }
+.jumbotron p {
+    color: #888888;
+    font-size: 21px;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+.container .jumbotron {
+    border-radius: 6px;
+    margin-top: 20%;
+}
+.no-margin {
+    margin-top: 0 !important;
+}
+#footer {
+    background-color: #F5F5F5;
+    bottom: 0;
+    height: 60px;
+    position: absolute;
+}
+.header {
+    margin-bottom: 30px;
+		border-bottom: 1px solid #E5E5E5;
+}
+.header h3 {
+    line-height: 40px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.container .text-muted {
+    margin: 20px 0;
+}
+#footer .text-muted{
+    color: #999;
+}
+.text-muted{
+    color: #000;
+}
+.text-muted span{
+    color: #999999;
+}
+.proj-field p{
+	color:#888;
+}
+.proj-field h6{
+	color:#777;
+}

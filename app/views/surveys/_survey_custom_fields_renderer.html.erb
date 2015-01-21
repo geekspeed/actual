@@ -1,0 +1,264 @@
+<% objekt = f.object;
+    klass = objekt.class;
+    ankor = ankor;
+    outer_wrap ||= {tag: :p, klass: ""};
+    label_wrap ||= {tag: "span", klass: ""};
+    field_wrap ||= {tag: "span", klass: ""};
+    field_class ||= "";
+    position ||= "" %>
+
+<% custom_fields.each do |custom_field| %>
+  <% required = (custom_field.present? and custom_field.required) ? "required" : false %>
+  <% branch_select_fields = custom_field.question_type == "branch_field" ? "branch_select_fields" : "" %>
+  <% label_mand_class = required == "required" ? "mend_field_label" : ""%>
+  <% if custom_field.question_type == "text-area" and !custom_field.parent_id.present?%>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <div class="row padding-0">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+            <div class="panel-heading relative_panel_head">
+              <div class="panel-title title_option" style= "width:100%">
+                <%= content_tag( label_wrap[:tag], :class => "#{label_wrap[:klass]} label-width", style: label_wrap[:style]) do %>
+                  <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.question_text, :class => "#{label_mand_class} label-width" , :style => "width:800px;font-size:20px;" %>
+                  <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                <% end %>
+                <div class="panel-options">
+                  <a href="#" class="ui-expander gn-icon gn-icon-chevron-up pull-right" data-rel="collapse"></a>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body" style=""> 
+              <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} label-width", style: field_wrap[:style]) do %>
+                <%= text_area_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.try(:answer).try(:answer_text), :class => "#{required} #{field_class}", :required => required, :"data-code" => custom_field.code, :cols => 90 %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% elsif custom_field.question_type == "numerical" and !custom_field.parent_id.present?%>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <div class="row padding-0">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+            <div class="panel-heading relative_panel_head">
+              <div class="panel-title title_option"  style= "width:100%" >
+                <%= content_tag( label_wrap[:tag], :class => "#{label_wrap[:klass]} label-width", style: label_wrap[:style]) do %>
+                  <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.question_text, :class => "#{label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                  <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                <% end %>
+                <div class="panel-options">
+                  <a href="#" class="ui-expander gn-icon gn-icon-chevron-up pull-right" data-rel="collapse"></a>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} label-width", style: field_wrap[:style]) do %>
+                <%= number_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.try(:answer).try(:answer_text), :class => "#{required} #{field_class}", :"data-code" => custom_field.code, :style => "width:600px;" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% elsif (custom_field.question_type == "dropdown" || custom_field.question_type == "dropdown_with_other" || custom_field.question_type == "dropdown_with_multiple_select" || custom_field.question_type == "branch_field")  and !custom_field.parent_id.present? %>
+    <% multiple = custom_field.question_type == "dropdown_with_multiple_select"  %>
+    <% if custom_field.question_type == "branch_field" %> 
+      <% options = custom_field.answer_options.map{|s| [s, s, {"field" => Question.where(:parent_id => custom_field.id, parent_option: s).map(&:id)}]} %>
+      <% select_option = "select_option" %>
+      <% custom_select_option = "custom_branch_dropdown" %>
+      <div class="row padding-0">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+            <div class="panel-heading relative_panel_head">
+              <div class="panel-title title_option"  style= "width:100%">
+                <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+                  <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.question_text, :class => "#{label_mand_class} label-width" ,:style => "width:800px;font-size:20px;"%>
+                  <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%> 
+                <% end %>
+                <div class="panel-options">
+                  <a href="#" class="ui-expander gn-icon gn-icon-chevron-up pull-right" data-rel="collapse"></a>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields} #{custom_select_option}") do %>
+                <% all_fields = "#{Question.where(:parent_id => custom_field.id).map(&:id)}"%>
+                <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+                  <%= select_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", options_for_select(options, custom_field.try(:answer).try(:answer_text)), :multiple => multiple, :prompt => "Select...", :required => required, :id => custom_field.id, "data-div" => all_fields,:class => "#{required} #{field_class} #{select_option}", :"data-code" => custom_field.code, "data-id" => custom_field.code, style: "width:277px;",:style => "width:600px;font-size:1.5em;" %>
+                <% end %>
+              <% end %>
+              <%Question.where(:parent_id => custom_field.id).each do |custom_branch_field|%>
+                <%branch_field_style = (custom_branch_field.parent_id.present? and !(custom_field.try(:answer).try(:answer_text) == custom_branch_field.parent_option)) ? "display:none;" : ""%>
+                <% branch_fields = custom_field.question_type == "branch_field" ? "branch_select_fields" : "" %>
+                <% bf_required = (custom_branch_field.present? and custom_branch_field.required) ? "required" : false %> 
+                <% bf_label_mand_class = bf_required == "required" ? "mend_field_label" : ""%>
+                <% if custom_branch_field.question_type == "text-area" %>
+                  <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", :id => custom_branch_field.id, style: branch_field_style) do %>
+                    <%= content_tag( label_wrap[:tag], :class => "#{label_wrap[:klass]} label-width", style: label_wrap[:style]) do %>
+                      <%= label_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.question_text, :class => "#{bf_label_mand_class} label-width",:style => "width:800px;font-size:20px;position:relative;top:75px;" %>
+                      <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                    <% end %>
+                      <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} label-width", style: field_wrap[:style]) do %>
+                        <%= text_area_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.try(:answer).try(:answer_text), :required => bf_required, :class => "#{required} #{field_class}", "data-code" => custom_field.code, :cols => 90 %>
+                    <% end %>
+                  <% end %> 
+                  
+                <% elsif custom_branch_field.question_type == "numerical" %>
+                  <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", :id => custom_branch_field.id, style: branch_field_style) do %>
+                    <%= content_tag( label_wrap[:tag], :class => "#{label_wrap[:klass]} label-width", style: label_wrap[:style]) do %>
+                      <%= label_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.question_text, :class => "#{bf_label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                      <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                    <% end %>
+                      
+                    <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} label-width", style: field_wrap[:style]) do %>
+                      <%= number_field_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.try(:answer).try(:answer_text), :required => bf_required, :class => "#{required} #{field_class}", "data-code" => custom_field.code, :style => "width:600px;"%>
+                    <% end %>
+                  <% end %> 
+                <% elsif custom_branch_field.question_type == "dropdown" || custom_branch_field.question_type == "dropdown_with_other" || custom_branch_field.question_type == "dropdown_with_multiple_select" || custom_branch_field.question_type == "branch_field" %>
+                  <% multiple = custom_branch_field.question_type == "dropdown_with_multiple_select"  %>
+                  <% if custom_branch_field.question_type == "branch_field" %> 
+                    <% options = custom_branch_field.answer_options%>
+                    <% select_option = "select_opt" %>
+                    <% custom_select_option = "custom_branch_dropdown" %>
+                  <%elsif custom_branch_field.question_type == "dropdown_with_other" %>
+                    <% options = custom_branch_field.answer_options << "Other"%>
+                    <% select_option = "with_other_select" %>
+                    <% custom_select_option = "" %>
+                  <%else%>
+                    <% options = custom_branch_field.answer_options %>
+                    <% select_option = "other_select" %>
+                    <% custom_select_option = "" %>
+                  <%end%>
+                  <%selected = options.include?(custom_branch_field.try(:answer).try(:answer_text)) ? custom_branch_field.try(:answer).try(:answer_text) : custom_branch_field.try(:answer).try(:answer_text).present? ? "Other": ""%>
+                  <%selected = custom_branch_field.try(:answer).try(:answer_text).present? ? JSON.parse(custom_branch_field.try(:answer).try(:answer_text)) : ""  if custom_branch_field.question_type == "dropdown_with_multiple_select"%>
+                  <%field_visible = (select_option == "with_other_select" and selected == "Other") ? "" : "display:none;"%>
+                  <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields} #{custom_select_option}", :id => custom_branch_field.id, style: branch_field_style) do %>
+                    <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+                      <%= label_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.question_text, :class => "#{bf_label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                      <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                    <% end %>
+                    
+                    <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+                    <%= select_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", options_for_select(options, selected), :multiple => multiple, :prompt => "Select...", :required => bf_required, :id => custom_branch_field.id, :class => "#{required} #{field_class} #{select_option}", :"data-code" => custom_branch_field.code, "data-id" => custom_branch_field.code, :style => "width:600px;font-size:1.5em;" %>
+                      <br>
+                      <br>
+                      <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.try(:answer).try(:answer_text), :id => "#{custom_branch_field.id}_other", :style => field_visible, :"data-code" => custom_branch_field.code, :size => 30  if select_option == "with_other_select" %>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", :id => custom_branch_field.id, style: branch_field_style) do %>
+                    <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+                      <%= label_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.question_text, :class => "#{bf_label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                    <% end %>
+                    
+                    <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+                      <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_branch_field.code}]", custom_branch_field.try(:answer).try(:answer_text), :required => bf_required, :class => "#{required} #{field_class}", :"data-code" => custom_field.code, :size => 30, :style => "width:600px;" %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <%elsif custom_field.question_type == "dropdown_with_other" %>
+      <% options = custom_field.answer_options << "Other"%>
+      <% select_option = "with_other_select" %>
+      <% custom_select_option = "" %>
+    <%else%>
+      <% options = custom_field.answer_options %>
+      <% select_option = "other_select" %>
+      <% custom_select_option = "" %>
+    <%end%>
+    <%unless custom_field.question_type == "branch_field"%>
+      <%selected = options.include?(custom_field.try(:answer).try(:answer_text)) ? custom_field.try(:answer).try(:answer_text) : custom_field.try(:answer).try(:answer_text).present? ? "Other": ""%>
+      <%selected = custom_field.try(:answer).try(:answer_text).present? ? JSON.parse(custom_field.try(:answer).try(:answer_text)) : ""  if custom_field.question_type == "dropdown_with_multiple_select"%>
+      <%field_visible = (select_option == "with_other_select" and selected == "Other") ? "" : "display:none;"%>
+      <% all_fields = "#{Question.where(:parent_id => custom_field.id).map(&:id)}"%>
+      <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields} #{custom_select_option}") do %>
+        <div class="row padding-0">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+              <div class="panel-heading relative_panel_head">
+                <div class="panel-title title_option"  style= "width:100%">       
+                  <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+                    <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.question_text, :class => "#{label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                    <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                  <% end %>
+                  <div class="panel-options">
+                    <a href="#" class="ui-expander gn-icon gn-icon-chevron-up pull-right" data-rel="collapse"></a>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+                  <%= select_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", options_for_select(options, selected), :multiple => multiple, :required => required, :prompt => "Select...", :id => custom_field.id, :class => "#{required} #{field_class} #{select_option}", "data-code" => custom_field.code, "data-id" => custom_field.code, :style => "width:600px;font-size:1.5em;" %>
+                  <br>
+                  <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.try(:answer).try(:answer_text), :id => "#{custom_field.id}_other", :class => "#{required}", :style => field_visible, "data-code" => custom_field.code, :size => 30  if select_option == "with_other_select" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <% unless custom_field.parent_id.present?%>
+      <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", :id => custom_field.id, style: (custom_field.parent_id.present? and !custom_field.try(:answer).try(:answer_text).present?) ? "display:none;" : "") do %>
+        <div class="row padding-0">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+              <div class="panel-heading relative_panel_head">
+                <div class="panel-title title_option"  style= "width:100%">               
+                  <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+                    <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.question_text, :class => "#{label_mand_class} label-width",:style => "width:800px;font-size:20px;" %>
+                    <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-url" => show_help_ques_program_help_contents_path(@program), :"data-field-name" => custom_field.id, :class => "show_help_text") if show_help_ques_icon(@program, custom_field.id)%>
+                  <% end %>
+                  <div class="panel-options">
+                    <a href="#" class="ui-expander gn-icon gn-icon-chevron-up pull-right" data-rel="collapse"></a>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-body">
+                 <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+                   <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.try(:answer).try(:answer_text), :class => "#{required} #{field_class}", :required => required, :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :size => 30, :style => "width:600px;" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div> 
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<script type= "text/javascript">
+  $(document).on("change", ".select_option", function(e){
+    id = "#" + $(this).attr('id');
+    selected = $(id + " :selected");
+    all_fields = JSON.parse($(this).attr("data-div"));
+    var arrayLength = all_fields.length;
+    for (var i = 0; i < arrayLength; i++) {
+      id = all_fields[i];
+      $('#' + id).hide();
+    }
+    show_fields = JSON.parse(selected.attr("field"));
+    var arrlength = show_fields.length;
+    for (var i = 0; i < arrayLength; i++) {
+      id = show_fields[i];
+      $('#' + id).show();
+    }
+  });
+
+  $(document).on("change", ".with_other_select", function(e){
+    field_id = "#" + $(this).attr('id') + "_other";
+    if($(this).val()=="Other"){
+      $(field_id).show().attr('value','' );
+    }
+    else{
+      $(field_id).hide().attr('value', $(this).val());
+    }
+  });
+  
+</script>

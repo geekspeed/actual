@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  <% community = params[:code] ? params[:code].titleize : "Community"%>
+  <%= "#{context_program.try(:title)} - Event" %>
+<% end %>
+
+<%= render "dashboards/shared/sidebar", :page => "events" %>
+
+<div id="rightcontent">
+	<div class="row ">
+		<div class="col-md-12">
+			<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+				<div class="panel-heading relative_panel_head ">
+					<div class="panel-title title_option">
+						<h3><label>Events list</label></h3>
+						
+					</div>
+					<div class="panel-options">
+						<a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+	          <thead>
+	            <tr role="row">
+	              <th rowspan="1" colspan="1" style="width: 400px;">Date &amp; Time</th>
+	              <th rowspan="1" colspan="1" style="width: 200px;">Event Title</th>
+	              <th rowspan="1" colspan="1" style="width: 200px;">Location</th>
+	              <th rowspan="1" colspan="1" style="width: 200px;">Description</th>
+	              <th rowspan="1" colspan="1" style="width: 200px;">Sign up</th>
+	              <th rowspan="1" colspan="1" style="width: 200px;">Ratings</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <% i = context_program.try(:event_sessions).try(:count) %>
+              <% context_program.event_sessions.each do |session| %>
+                <% unless session.program_event.try(:is_private)%>
+                  <%event_record = EventRecord.for_program(context_program.try(:id)).where(event_session_id: session.id, user_id: current_user.id ).first%>
+                  <tr id="session_<%=i%>">
+                    <td><%= session.date_to ? "#{session.date.try(:event_format)} / #{session.date_to.try(:event_format)}" : session.date.try(:event_format) %><br><%= "#{session.time_from} - #{session.time_to}" %></td>
+                    <td style="text-align: left"><%= session.try(:program_event).try(:title) %></td>
+                    <td><%=session.location %></td>
+                    <td><a href="#session_<%=session.id%>" class="fancybox">More Detail</a></td>
+                    <td>
+                      <%if event_record.try(:confirmed_at)%>
+                        Attended
+                      <% elsif (current_user and event_record) %>
+                        <%= event_record.rejected_at ? "Rejected" : "Registered" %>
+                      <% else %>
+                        <button type="button" class="btn btn-default" style="margin-right:1%;min-width: 65%;" onclick="window.location='<%=accept_program_event_path(context_program, session.try(:program_event), :for => session )%>'"><span class="glyphicon glyphicon-plus-sign"> </span> Click to Attend Event</button>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%if event_record.try(:confirmed_at) and event_record.program.try(:can_rate_events)%>
+                        <% rating = event_session_rating(session, current_user)%>
+                        <input value="<%= rating %>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">
+                      <%else%>
+                        -
+                      <%end%>
+                    </td>
+                    <%= render "programs/show/program_event_detail", :session => session %>
+                  </tr>
+                <%end%>
+                <%i-=1%>
+              <% end %>
+	          </tbody>
+	        </table>
+				</div><!-- panel-body -->
+			</div>
+		</div>
+	</div>
+</div>

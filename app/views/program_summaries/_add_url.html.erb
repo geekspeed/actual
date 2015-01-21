@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3>
+            <label for="add_url_avatar">Add URL</label> <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Define what the program front page navbar looks like"></i>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= link_to("+ Add URL", "#", :"data-toggle"=>"modal", :"data-target"=>"#add_nav_url") %>
+        <div class="modal fade" id="add_nav_url">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="myModalLabel"><b>Add a new links to navbar that you need</b></h2>
+              </div>
+                <%= form_tag generate_nav_links_program_summary_path(context_program), method: :put do %>
+                  <div class="modal-body" style='max-height: 300px; overflow-y: scroll;'>
+                      <div class="form-group">
+                        <div class="col-md-12" style="margin-top: 10px;">
+                          <h3> Add links for anchors or public URLs:</h3>
+                          <div class="url_div">
+                            <% custom_url_links = @program.program_nav_links.order_by(:order => "ASC")%>
+                            <% if @program.program_summary.present? and custom_url_links.any?%>
+                              <% custom_url_links.each_with_index do |link, indx|%>
+                                <%= render 'custom_url', link: link, first_entry:false, indx:indx+1 %>
+                              <%end%>
+                            <%else%>
+                              <%= render 'custom_url', first_entry: true%>
+                            <%end%>
+                          </div>
+                          <% if custom_url_links.count < 9 %>
+                            <div class="col-md-4">
+                              <%= link_to "+Add new URL", "#", id: "add_new_url" %>
+                            </div>
+                          <%end%>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <%= submit_tag "Submit", :id => "submit", class: "btn" %>
+                    <%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-right:10px;" %>
+                  </div>
+                <%end%>
+            </div>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<div id="url_div" style="display: none;">
+  <%= render 'custom_url', first_entry:false%>
+</div>
+  <br />
+
+<script>
+  $(document).on('change', '.links_dropdown', function(e){
+    $(this).attr('id', "links_dropdown");
+    selected = $("#links_dropdown :selected");
+    if(selected.attr('value') != "custom_url"){
+      $(this).prev().attr('value',false);
+      $(this).next().attr('value', selected.attr('value'));
+      $(this).next().hide();
+    }
+    else{
+      $(this).prev().attr('value', true);
+      $(this).next().attr('value', $(this).attr('custom_url'));
+      $(this).next().show();
+    }
+    $(this).removeAttr('id');
+  });
+  
+  $(document).on("click", "#add_new_url", function(e){
+    div = $(this).parent().prev();
+    div.append($('#url_div').html());
+    var i = 1
+    $('.url_div').find('.nav_link_order').each(function() {
+      $(this).attr('value', i);
+      i++;
+    });
+    if (div.find('input').length == 36){
+      $(this).hide();
+    }
+  });
+</script>

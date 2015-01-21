@@ -1,0 +1,14 @@
+<% field_name ||= locals[:field_name] 
+   custom_field_id ||= params[:custom_field_id]%>
+<% help_content = show_help_content(@program, custom_field_id, field_name, params[:ankor])%>
+<%= form_for [@program, help_content] do |f| %>
+  <%= content_tag :div do%>
+    <%= content_tag :h2, "Help Content"%>
+    <%= f.hidden_field :field_name, value: field_name%>
+    <%= f.text_area :content, :class => "form-control", :rows => 5%>
+    <%= f.hidden_field :text_for, value: params[:ankor]%>
+    <%= f.hidden_field :custom_field_id, value: custom_field_id%>
+    <%= f.submit "Save", :id => "submit"%>
+  <% end %>
+
+<% end %>

@@ -1,0 +1,12 @@
+<% if pitch.try(:program).try(:program_scope).try(:view_other_team_pitches) and pitch.try(:program).try(:program_scope).try(:pitch_privacy_some_fields) and ( need?(["company_admin", "program_admin"], current_organisation) || need?(["selector", "panellist"], context_program) || pitch.try(:team_and_mentor?, current_user)) or need?(["company_admin", "program_admin"], current_organisation) %>
+
+	 <%=hidden_field_tag :program_id, pitch.try(:program).try(:id).to_s %>
+	 <%=hidden_field_tag :private_pitch_id, pitch.try(:id).to_s %>
+	 <% private = pitch.pitch_privacies.find_or_initialize_by(custom_field_id: custom_field.id).try(:private) %>
+	 <a id="<%=custom_field.id%>_0" title="Private" data-toggle="tooltip" href="javascript:;" class="check-private pull-right private_pitch <%= private == true ? "show" : "hide" %> "><i class="icon-lock"></i></a>
+	 <a id="<%=custom_field.id%>_1" title="Public" data-toggle="tooltip" href="javascript:;" class="check-private pull-right private_pitch <%= private == false ? "show" : "hide" %> "><i class="icon-unlock-alt"></i></a>
+<style>
+.check-private.show{ display: inline !important;}
+</style>
+<% end %>
+

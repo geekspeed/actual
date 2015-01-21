@@ -1,0 +1,123 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "manage_phases"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<%#= render "shared/navbar", :page => "manage_program" %>
+<%#= render "phases/shared/sidebar", :page => "manage_phases" %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-manage gn-icon-large"></i>
+      Manage Phases
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Manage phases lets you manage which phases are on or off at any time"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Manage Phases</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+<%
+=begin
+%>
+<div class="block">
+<% @workflows.each do |phase| %>
+    <div style="margin-bottom: 10px; min-height: 30px;">
+      <label><%= phase.phase_name %></label>
+      <% if phase.active? %>
+        <%= link_to "Close", polymorphic_path([:toggle_status, @program, phase]), class: "button_small_red deactivatePhase pull_right", method: :put %>
+      <% else %>
+        <%= link_to "Activate", polymorphic_path([:toggle_status, @program, phase]), class: "button_small activatePhase", method: :put %>
+      <% end %>
+    </div>
+    <div class="clr"></div>
+  <% end %>
+</div>
+<%
+=end
+%>
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<a href="sec1" name="sec1" class="section_nav"></a>
+					<h3>Manage Phases</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+				<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+					<thead>
+						<tr role="row">
+							<th aria-label="Student Name: activate to sort column ascending" style="width: 400px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Phase</th>
+							<th aria-label="Actions: activate to sort column ascending" style="width: 30px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Actions</th>
+						</tr>
+					</thead>
+					
+					<tbody aria-relevant="all" aria-live="polite" role="alert">
+						<% @workflows.each do |phase| %>
+							<% if phase.active? %><tr class="odd active-phase-raw"><% else %><tr class="odd inactive-phase-raw"><% end %>
+							<td class=" "><%= phase.phase_name %></td>
+							<td class=" ">
+								<% if phase.active? %>
+					        <%= link_to "Close", polymorphic_path([:toggle_status, @program, phase]), class: "button_small_red deactivatePhase pull-left", method: :put %>
+					      <% else %>
+					        <%= link_to "Activate", polymorphic_path([:toggle_status, @program, phase]), class: "button_small activatePhase pull-left", method: :put %>
+					      <% end %>
+							</td>
+						</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+		
+</div>
+<div class="col-md-2 stick_me">
+	<ul class="navigator-menu">
+		<li id="nav_sec1" class="active-navigator-title">
+			<p>Main Section</p>
+			<ul>
+				<li><a href="#sec1">Manage phases</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	
+	jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

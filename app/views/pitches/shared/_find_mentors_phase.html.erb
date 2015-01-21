@@ -1,0 +1,19 @@
+<% if phase.complete?(@pitch)  %>
+	<% if phase.undoable? %>
+     <br/>
+      <ul class="tasks_list">
+        <li class="deliver">
+        	<%= link_to("Undo", polymorphic_path([:undo, @program, phase], pitch_id: @pitch.id), method: :put) %>
+        </li>
+    </ul>
+    <% else %>
+   	  <span class='label label-success pull-right'>Achieved</span>
+    <% end %>
+<% else %>
+    <br/>
+     <ul class="tasks_list">
+        <li class="deliver">
+  			<%= link_to phase.phase_name, people_dashboard_path(code: "mentor", match: @pitch.id), id: "submit" %>
+        </li>
+    </ul>
+<% end %>

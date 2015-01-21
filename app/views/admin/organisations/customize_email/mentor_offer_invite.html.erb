@@ -1,0 +1,32 @@
+<div id="mainnavi">
+	<%= render "admin/organisations/header" %>
+  <!-- Checking if company id not equal 766 (bcs program). Here can be added condition for default(newer) programs. -->
+  <div class="clr"></div>
+</div>
+
+<div id="mailfunctionAnker"></div>
+<div id="sidebar">
+ 	<%= render "admin/organisations/setup_header" %>
+</div>
+
+<div id="rightcontent" class="closable_h2 two_sided_right_content">
+<%= form_tag mentor_offer_invite_save_admin_organisations_customize_email_index_path, :method => :post  do %>
+    <%= render "messages/mentor_offer_form" %>
+<% end %>
+</div>
+
+<script>
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('feedback_mentor_offer');
+});
+$('#mentor-offer-hint').on('click', function(e){
+    $("#mentor-offer-hintbox").toggle();
+});
+$(".hint-title[rel=tooltip]").tooltip();
+</script>
+
+<style>
+.hint-title{padding:5px;font-weight:bold;}
+#mentor-offer-hintbox{border:2px solid;
+border-radius:25px;}
+</style>

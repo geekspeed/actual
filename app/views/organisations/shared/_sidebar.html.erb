@@ -1,0 +1,57 @@
+<% page ||= "programs" %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<%# content_for :sidebar do %>
+  <% if page == "programs" %>
+    <div class="gn-scroller">
+      <ul class="gn-menu">
+        <li class="active  menu_with_sub">
+          <%= link_to("Types", (is_subdomain ? organisation_url(@organisation, subdomain: false) : organisation_url(@organisation)), :class=>"gn-icon gn-icon-filter") %>
+	        <span class="glyphicon gn-arrow glyphicon-chevron-right"></span>
+          <ul class="gn-submenu" style="display: none;">
+            <li class="active-f text_under">
+              <span class="filter-ico"></span>
+		          <%= link_to("All", (is_subdomain ? organisation_url(@organisation, subdomain: false) : organisation_url(@organisation)), :class=>"gn-icon gn-icon-item") %>
+            </li>
+            <% ProgramType.all.each do |ptype| %>
+              <li>
+                <span class="filter-ico"></span>
+                <%= link_to(ptype.to_s, (is_subdomain ? organisation_url(@organisation, :program_type => ptype.id, subdomain: false) : organisation_url(@organisation, :program_type => ptype.id)), :class=>"gn-icon gn-icon-item") %>
+              </li>
+            <% end %>
+          </ul>
+          </li>
+      </ul>
+    </div>
+  <% elsif page == "ecosystem" %>
+    <div class="gn-scroller">
+      <ul class="gn-menu">
+        <% RoleType.on_programs.each do |role| %>
+          <% if active_role?(role.code) %>
+            <li class="<%= params[:role_code] == role.code ? "active" : "" %>">
+              <%= link_to(t("role_type:#{role.code}"), (is_subdomain ? members_organisation_url(@organisation, :role_code => role.code, subdomain: false) : members_organisation_url(@organisation, :role_code => role.code)), :class=>"gn-icon  gn-icon-#{role.code}") %>
+            </li>
+          <% end %>
+        <% end %>
+        <li class="menu_with_sub">
+          <% if !context_program.blank? && ProgramScope.where(:program_id => context_program.id).try(:first).try(:associated_organisation) %>  
+            <%= link_to "Organisations", user_signed_in? ? (is_subdomain ? organisations_dashboard_url(:ecosystem=>true, subdomain: false) : organisations_dashboard_url(:ecosystem=>true)) : (is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url), :class=>"gn-icon gn-icon-company" %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  <% elsif page == "buzz" %>
+    <% unless tags_for_filter_eco.empty?%>
+      <div class="gn-scroller">
+        <ul class="gn-menu">
+          <% if need?(["company_admin", "program_admin"], current_organisation) || need?(["selector", "panellist", "participant", "mentor"], context_program) || @pitch.try(:team_and_mentor?, current_user) %>
+            <% tags_for_filter_eco.each do |tag| %>
+              <li class="text_under">
+                <%= link_to tag, (is_subdomain ? polymorphic_path([:buzz, current_organisation], tag: tag, subdomain: false) : polymorphic_path([:buzz, current_organisation], tag: tag)), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params[:tag] == tag ? 'active' : ''} gn-icon gn-icon-item" %>
+              </li>
+            <% end %> 
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% end %>
+<%# end %>

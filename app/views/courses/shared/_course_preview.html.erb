@@ -1,0 +1,150 @@
+<div class="course-box-div-main">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+					<div class="panel-heading relative_panel_head">
+						<div class="tablecell pull-left" style="margin: 30px 0 5px 15px;">
+				    	<a href="">
+				    		<%= image_tag current_user.avatar, :width=>"40", :class=>"img-circle img-responsive img-circle-border" %>
+				    	</a>
+					  </div>
+						<div class="panel-title title_option">
+							<h3>Hi <%= current_user.full_name %></h3>
+							<span>Welcome to <%= @course.try(:title) %></span>
+						</div>
+						<div class="panel-options panel_options_text">
+							<p><b>0% complete</b></p>
+		          <p>Deadline in <%= course_deadline(@course) %></p> 
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="course-box-div">
+					      <div>
+					      	<%= @course.try(:intro).try(:html_safe) %></div>
+					      <div> 
+					      	<% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+						    <% if !@course.link.blank? %>
+						      <% if !@course.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+						          <% emb_obj = emb_api.extract(:url => @course.link)%>
+						          <%= course_attachment(emb_obj)%>
+						      <% end %>
+						    <% end %>   
+					  	  </div>
+				    	</div>
+					</div><!-- panel-body -->
+				</div>
+			</div>
+		</div>
+	  
+    <br/>
+    <% @modules.each_with_index do |course_module,index| %>
+      <% if !course_module.module_activities.blank? %>
+        <div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-default panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+							<div class="panel-heading relative_panel_head">
+								<div class="panel-title title_option">
+									<h3>Module <%= index+1 %></h3>
+									<span><%=course_module.title %></span>
+								</div>
+								<div class="panel-options panel_options_text">
+									<div class="add_activity_link">
+	  								<p>
+			                <b>Duration:</b>
+			                <%= module_duration(course_module) %>
+			              </p>
+			              <p>
+			                <b>Deadline:</b>
+			                <%= module_deadline(course_module) %>
+			              </p>
+			              <p>
+			                <b>Posted: </b><%= time_ago_in_words(course_module.try(:created_at)) %> ago
+			              </p>
+						      </div>
+								</div>
+							</div>
+							<div class="panel-body" style="">
+								<div class="summary_container">  
+						      <div class="inner_panel_head">
+						      	Summary<%= link_to "<span class='glyphicon glyphicon-chevron-up' style='color:rgba(55, 62, 74, 0.7);'></span>".html_safe, "#{polymorphic_path([@program, @course, course_module, :module_detail])}?page=preview", :class=>"summary_details pull-right", :remote=>true, :id=>"p_description_#{course_module.id}" %>
+						      </div>
+						      <div style="padding:12px;width:100%;border:1px #DDDDDD solid;border-top:1px #DDDDDD dashed;">
+		                <%=course_module.description %>
+		                <div id="p_big_p_description_<%=course_module.id%>">
+		                </div>
+		              </div>
+						    </div>
+						    <% if !course_module.module_activities.blank? %>
+						    <table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+									<thead>
+										<tr role="row">
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 70px;">Activity</th>
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 550px;">Title</th>
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;">Duration</th>
+		                  					<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;">Deadline</th>
+		                  					<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;">Posted</th>
+											<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 104px;">Actions</th>
+										</tr>
+									</thead>
+									<tbody role="alert" aria-live="polite" aria-relevant="all">
+										<% course_module.module_activities.each_with_index do |activity,index| %>
+										<tr class="odd">
+											<td><%= index+1 %></td>
+											<td><%= activity.try(:title) %></td>
+											<td><%= activity_duration(activity)%></td>
+                  		<td><%= activity_deadline(activity) %></td>
+                  		<td><%= time_ago_in_words(activity.try(:created_at)) %> ago</td>
+											<td>
+												<%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe,polymorphic_path([@program, @course, course_module, activity, :show_activity]), :remote=>true, :class=>"new_activity_box btn btn-success btn-sm btn-icon icon-left activity-loader" %>
+											</td>
+										</tr>
+										<% end %>
+									</tbody>
+								</table>
+								<% else %>
+					       <p class="no_activity">You have not added any activities yet</p> 
+					      <% end %>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+      <% end %>
+    <% end %> 
+</div>
+
+
+<style>
+  .course-box-div-main{
+    padding: 72px 24px 24px 24px;background:rgb(243, 243, 243);border-radius:0px;
+  }
+  .course-box-div-inner{
+    background:#ffffff;padding: 20px;border:1px rgb(197, 196, 196) solid
+  }
+  .course-page-action{
+    margin-top:40px;
+    overflow: auto;
+  }
+</style>
+
+<script>
+ $(function() {
+   $("a.activity-loader").bind("ajax:beforeSend", function(){
+      $.fancybox({ 
+      	helpers: {
+		    overlay: {
+		      locked: false
+		    }
+		  },
+		  content:"Loading Activity...   <img src='/images/bx_loader.gif' width='25'>" 
+	  });
+    })
+    $("a.activity-loader").bind("ajax:complete", function(){
+    })
+   });
+  $(".summary_details").click(function() {
+    if ($("#"+this.id+" span.glyphicon-chevron-down").length<1){
+      $("#p_big_"+this.id).show()
+      $("#p_big_"+this.id).html("Loading content.. <img src='/images/bx_loader.gif' width='20'>")
+    }
+  });
+</script>

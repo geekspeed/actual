@@ -1,0 +1,21 @@
+<span class="glyphicon glyphicon-chevron-right gn-arrow"></span>
+<ul class="gn-submenu mentor_custom_checkbox">
+<% if need?(["selector"], context_program) %>
+  <li class="text-under">
+    <%= link_to "Shortlisted #{t('pitch', 'p')}", shortlisted_pitches_dashboard_path, :class=>"gn-icon gn-icon-idea" %>
+  </li>
+<% end %>
+<% custom_fields = Pitch.custom_fields_with_anchor("pitch").enabled.for_program(get_program).filters %>
+<% custom_fields.each do |filter| %>
+  <% filter.options.each do |option| %>
+    <li>
+      <%= content_tag :div, :class => "col-md-8" do%>
+        <%= link_to "#{filter.label}  ::> #{option}", people_dashboard_path(:code => "mentor", "custom_fields.#{filter.code}" => option), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params['#{filter.code}'] == '#{option}' ? 'active' : ''}" %>
+      <% end %>
+      <%= content_tag :div, :class => "col-md-3" do%>
+        <%= check_box_tag "select", "", false, {:"data-option-code" => "#{filter.code}:#{option}", :"data-url" => filter_mentor_dashboard_path(:code => "mentor"), :class => "check_mentor_filter"}%>
+      <% end %>
+    </li>
+  <% end %>
+<% end %>
+</ul>

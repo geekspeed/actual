@@ -1,0 +1,310 @@
+<% content_for :title do %>
+  <%= "Edit User" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "about_me" %>
+<%#= render "devise/shared/sidebar", page: "basic" %>
+<% if notice %>
+  <div class="alert alert-info alert_top_spacing">
+    <button class="close" data-dismiss="alert" type="button">
+      &times;
+    </button>
+    <%= notice %>
+  </div>
+<%end %>
+<div id="rightcontent"  class="two_sided_right_content">
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :class => "registerForm reqForm" }) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-custom panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Basics</h3>
+							<span>Account basic info</span>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-up" id="toggle-setting-box" data-rel="collapse"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Salutation</div>
+              </div>
+              <div class="col-sm-8">
+              	<%= f.collection_select :salutation, User::SALUTATION, :to_s, :to_s ,{}, {:class => "form-control s form-style-1", :style => "width:70%;"}%>
+              </div>
+            </div>
+            <br />
+            <% if context_program.try(:program_scope).try(:offer_anonymous_login) %>
+              <div class="row">
+                <div class="col-sm-12 setting-font">
+                  <div style="line-height: 28px;">Click here if you want to remain anonymous?
+                  <%= f.check_box :anonymous, :class => "form-control pull-left", :style=>"height: 22px;margin-right: 5px;"%></div>
+                </div>
+              </div>
+              <div id="username_fields" style="display:none;">
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div style="line-height: 28px;">Username</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.text_field :first_name, :class => "required form-control form-style-1", :style=>"width:70%;", :id=>"username" %>
+                  </div>
+                </div>
+              </div>
+              <br />
+            <%  end %>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">First Name</div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_field :first_name, :class => "required form-control form-style-1", :style=>"display:#{'none' if !context_program.try(:program_scope).try(:offer_anonymous_login) && current_user.anonymous};width:70%;" %>
+                <%= f.text_field :first_name_hidden, :class => "form-control form-style-1", :style=>"display:#{'none' if context_program.try(:program_scope).try(:offer_anonymous_login) || !current_user.anonymous};width:70%;" %>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Last Name</div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_field :last_name, :class => "required form-control form-style-1", :style=>"display:#{'none' if !context_program.try(:program_scope).try(:offer_anonymous_login) && current_user.anonymous};width:70%;" %>
+                <%= f.text_field :last_name_hidden, :class => "form-control form-style-1", :style=>"display:#{'none' if context_program.try(:program_scope).try(:offer_anonymous_login) || !current_user.anonymous};width:70%;"%>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Email Address</div>
+              </div>
+              <div class="col-sm-8">
+              	<%= f.email_field :email, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+              </div>
+            </div>
+            <br />
+            <% if context_program.present? %>
+					    <% if ProgramScope.where(:program_id => context_program.id).try(:first).try(:associated_organisation) %>
+					      <%= render "shared/add_organisation", :f=>f, :organisation_id_name=>"user_organisation", :main_tag=>"div class='row'", :in_tag=>"div class='col-sm-4 setting-font'", :in_field_tag=>"div class='col-sm-8'", :label_tag=>"div style='line-height: 28px;'",:add_new_width=>"455px", :add_new_margin_left=>"45px", :@edit_form_class => "form-group", :@form_style_1=>'form-style-1', :@org_field =>"width:70%;"  %>
+					     <br/>
+              <% end %>
+					  <% end %>
+					
+					  <% if resource.provider.nil? %>
+				<div class="row">
+	              <div class="col-sm-4 setting-font">
+	                <div style="line-height: 28px;">Current Password</div>
+	              </div>
+	              <div class="col-sm-8">
+					        <%= f.password_field :current_password, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+	              	<i>(we need your current password to confirm your changes)</i>
+	              </div>
+	            </div>
+	            <br />
+				<div class="row">
+	              <div class="col-sm-4 setting-font">
+	                <div style="line-height: 28px;">Password</div>
+	              </div>
+	              <div class="col-sm-8">
+					        <%= f.password_field :password, :autocomplete => "off", :class => "form-control form-style-1", :style=>"width:70%;" %>
+	              	<i>(leave blank if you don't want to change it)</i>
+	              </div>
+	            </div>
+	            <br />
+	            <div class="row">
+	              <div class="col-sm-4 setting-font">
+	                <div style="line-height: 28px;">Confirm Password</div>
+	              </div>
+	              <div class="col-sm-8">
+	              	<%= f.password_field :password_confirmation, :class => "form-control form-style-1", :style=>"width:70%;" %>
+	              </div>
+	            </div>
+					  <% else %>
+					  	<br />
+	            <div class="row">
+	              <div class="col-sm-12 setting-font">
+	                <div style="line-height: 28px;">
+	                	<i>
+	                		You are authenticated using <b><%= resource.provider.nil? ? "Social Login" : resource.try(:provider)%></b>
+	                	</i>
+                	</div>
+	              </div>
+	            </div>
+	            <div class="row">
+	              <div class="col-sm-12 setting-font">
+	                <div style="line-height: 28px;">
+	                	<i>
+	                	  You can unlink your account: <%= link_to "Unlink account", "#unlink_account", class: " btn fancybox_small"%>
+	                	</i>
+                	</div>
+	              </div>
+	            </div>
+					  <% end %>
+					  <%if false%>
+					  <br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Company Name</div>
+              </div>
+              <div class="col-sm-8">
+				         <%= f.text_field :company_name, :class => "form-control form-style-1", :style=>"width:70%;" %>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Job Title</div>
+              </div>
+              <div class="col-sm-8">
+				         <%= f.text_field :job_title, :class => "form-control form-style-1", :style=>"width:70%;" %>
+              </div>
+            </div>
+						<br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Industry</div>
+              </div>
+              <div class="col-sm-8">
+				         <%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, :class => "form-control form-style-1", :style => "width:70%;", :include_blank => "Select Indstry" %>
+              </div>
+            </div>
+						<% end %>
+						<br />
+            <div class="row">
+              <div class="col-sm-12">
+                 <%= f.submit "Save", :name => "schritt", :id => "submit" %>
+              </div>
+            </div>
+            <% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%
+=begin
+%>
+
+
+		<div class="block">
+ 
+  <p class="form-group">
+      <%= f.label :salutation %>
+      <%= f.collection_select :salutation, User::SALUTATION, :to_s, :to_s ,{}, {:class => "form-control s"}%>
+	</p>
+
+	<p class="form-group">
+	  <%= f.label :first_name %>
+	  <%= f.text_field :first_name, :class => "required form-control" %>
+	</p>
+
+	<p class="form-group">
+	  <%= f.label :last_name %>
+	  <%= f.text_field :last_name, :class => "required form-control" %>
+	</p>
+
+  <p class="form-group">
+    <%= f.label :email, "Email Address" %>
+    <%= f.email_field :email, :class => "required form-control" %>
+  </p>
+  <% if context_program.present? %>
+    <% if ProgramScope.where(:program_id => context_program.id).try(:first).try(:associated_organisation) %>
+      <%= render "shared/add_organisation", :f=>f, :organisation_id_name=>"user_organisation", :main_tag=>"div", :in_tag=>"div", :add_new_width=>"312px", :add_new_margin_left=>"175px", :@edit_form_class => "form-group" %>
+    <% end %>
+  <% end %>
+
+  <% if resource.provider.nil? %>
+    <div class="form-group">
+      <%= f.label :password, :class=>"margin-lable" %>
+      <div>
+      <i>(leave blank if you don't want to change it)</i>
+          <%= f.password_field :password, :autocomplete => "off", :class => "form-control" %></div>
+    </div>
+  
+    <p class="form-group">
+      <%= f.label :password_confirmation, "Confirm Password" %>
+      <%= f.password_field :password_confirmation, :class => "form-control" %>
+    </p>
+  
+    
+    <div class="form-group">
+  
+      <%= f.label :current_password, :class=>"margin-lable" %>
+      <div>
+        <i>(we need your current password to confirm your changes)</i>
+         <%= f.password_field :current_password, :class => "required form-control" %></div>
+    </div>
+  <% else %>
+    <div class="form-group">
+  
+      <div>
+        <i>(There is no password as you have logged in via social media)</i>
+    </div>
+  </div>
+  <% end %>
+  <%if false%>
+  <p class="form-group"> 
+    <%= f.label :company_name %>
+    <%= f.text_field :company_name, :class => "form-control" %>
+	</p>
+    <p class="form-group">
+	  <%= f.label :job_title %>
+	  <%= f.text_field :job_title, :class => "form-control" %>
+	</p>
+
+  <p class="form-group">
+	  <%= f.label :industry %>
+	  <%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, :class => "form-control", :include_blank => "Select Indstry" %>
+	</p>
+	<% end %>
+	<p>
+	  <%= f.submit "Save", :name => "schritt", :id => "submit" %>
+	</p>
+	<div class="clr"></div>
+  <% end %>
+</div>
+<%
+=end
+%>
+    
+
+<!--
+<h3>Cancel my account</h3>
+
+<p>Unhappy? <%#= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %></p>
+-->
+
+<div style="display: none">
+  <div id="unlink_account">
+  	<h3 class='popup_heading'><b>Unlink from social login</b></h3>
+<br>
+<%= form_for resource, :url => social_update_path, :method => "PUT" do |f|%>
+    <div class="row">
+      <div class="col-sm-4 setting-font">
+        <div style="line-height: 28px;">New Password</div>
+      </div>
+      <div class="col-sm-8">
+        <%= f.password_field :password, :autocomplete => "off", :class => "form-control form-style-1", :style=>"width:50%;" %>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-4 setting-font">
+        <div style="line-height: 28px;">Confirm Password</div>
+      </div>
+      <div class="col-sm-8">
+      <%= f.password_field :password_confirmation, :class => "form-control form-style-1", :style=>"width:50%;" %>
+      </div>
+    </div>
+    <%= f.hidden_field :provider, value: resource.try(:provider)%>
+    <div class="row social_buttons" style="margin-top: 15px;margin-bottom: 10px;margin-left: 2px;">
+      <input type="submit" style="width:100px" class="pull-left" id="submit" value="Submit">
+      <input type="reset" style="width:100px" class="pull-left" id="cancel_btn" value="Cancel">
+    </div>
+    <div class="clear"></div>
+    </div>
+<% end %>
+
+  </div>
+</div>

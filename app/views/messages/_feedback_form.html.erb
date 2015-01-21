@@ -1,0 +1,208 @@
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec1" name="sec1" class="section_nav"></a>
+					<h3><label>Admin Feedback Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8"><%= text_field_tag "subject[admin]" ,feedback_email_subject("admin","feedback"),:class=>"form-control form-style-1"%></div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[admin]" ,feedback_email_description("admin","feedback"),:cols=>"40"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec2" name="sec2" class="section_nav"></a>
+					<h3><label>Participant Feedback Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8"><%= text_field_tag "subject[participant]" ,feedback_email_subject("participant","feedback"),:class=>"form-control form-style-1"%></div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[participant]",feedback_email_description("participant","feedback"),:cols=>"40"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec3" name="sec3" class="section_nav"></a>
+					<h3><label>Selector Feedback Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8"><%= text_field_tag "subject[selector]" ,feedback_email_subject("selector","feedback"),:class=>"form-control form-style-1"%></div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[selector]" ,feedback_email_description("selector","feedback"),:cols=>"40"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec4" name="sec4" class="section_nav"></a>
+					<h3><label>Mentor Feedback Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8"><%= text_field_tag "subject[mentor]" ,feedback_email_subject("mentor","feedback"),:class=>"form-control form-style-1"%></div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[mentor]" ,feedback_email_description("mentor","feedback"),:cols=>"40"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec5" name="sec5" class="section_nav"></a>
+					<h3><label>Panel Feedback Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8"><%= text_field_tag "subject[panel]" ,feedback_email_subject("panel","feedback"),:class=>"form-control form-style-1"%></div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[panel]" ,feedback_email_description("panel","feedback"),:class=>"40"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+
+<%
+=begin
+%>
+
+<%= link_to("#", :class => "open_div", :name => "new_mails") do %>
+  <h2 class="func">Click here to update the feedback mail</h2>
+<%- end -%>
+
+<div id="new_mails" class="closable_div" style="display:none;">
+  <div style="position: fixed;top: 213px;right: 189px;">
+    <a class="btn btn-info" id="feedback-hint">* Hint</a>
+  </div>
+  <div style="position: fixed;top: 247px;right: 158px;">
+    <div id="fedback-hintbox" style="display:none;margin-top:5px;background-color:#ffffff;padding:5px;">
+      <div class="hint-title" rel="tooltip" title="name of person providing feedback">#from</div> 
+      <div class="hint-title" rel="tooltip" title="name of person / people receiving feedback">#to</div> 
+      <div class="hint-title" rel="tooltip" title="content of the feedback">#feedback</div> 
+      <div class="hint-title" rel="tooltip" title="name of project receiving feedback">#projectname</div> 
+      <div class="hint-title" rel="tooltip" title="name of program">#programname</div> 
+      <div class="hint-title" rel="tooltip" title="name of company">#companyname</div> 
+    </div>
+  </div>
+  <div class="block">
+
+    <div class="inner">
+      <h3>Admin Feedback Mail</h3>
+      <p>Subject</p>
+      <%= text_field_tag "subject[admin]" ,feedback_email_subject("admin","feedback"),:cols=>"40"%>
+      <p>Body</p>
+      <%= text_area_tag "feedback[admin]" ,feedback_email_description("admin","feedback"),:cols=>"40"%>
+    </div>
+
+    <div class="inner"><br/>
+      <h3>Participant Feedback Mail</h3>
+      <p>Subject</p>
+      <%= text_field_tag "subject[participant]" ,feedback_email_subject("participant","feedback"),:cols=>"40"%>
+      <p>Body</p>
+      <%= text_area_tag "feedback[participant]",feedback_email_description("participant","feedback"),:cols=>"40"%>
+    </div>
+
+    <div class="inner"><br/>
+      <h3>Selector Feedback Mail</h3>
+      <p>Subject</p>
+      <%= text_field_tag "subject[selector]" ,feedback_email_subject("selector","feedback"),:cols=>"40"%>
+      <p>Body</p>
+      <%= text_area_tag "feedback[selector]" ,feedback_email_description("selector","feedback"),:cols=>"40"%>
+    </div>
+
+    <div class="inner"><br/>
+      <h3>Mentor Feedback Mail</h3>
+      <p>Subject</p>
+      <%= text_field_tag "subject[mentor]" ,feedback_email_subject("mentor","feedback"),:cols=>"40"%>
+      <p>Body</p>
+      <%= text_area_tag "feedback[mentor]" ,feedback_email_description("mentor","feedback"),:cols=>"40"%>
+    </div>
+
+    <div class="inner"><br/>
+      <h3>Panel Feedback Mail</h3>
+      <p>Subject</p>
+      <%= text_field_tag "subject[panel]" ,feedback_email_subject("panel","feedback"),:cols=>"40"%>
+      <p>Body</p>    
+      <%= text_area_tag "feedback[panel]" ,feedback_email_description("panel","feedback"),:cols=>"40"%>
+    </div> 
+
+  </div>
+
+  <p>
+    <%= submit_tag "Save", :id => "submit" %>
+  </p>
+
+</div>
+<%
+=end
+%>

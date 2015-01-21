@@ -1,0 +1,538 @@
+<%= link_to "Show", "#show_help_content_text", :style => "display:none;", class: "show_help_fancybox fancybox"%>
+<div style="display: none" id="show_help_content_text">
+  <div class="lightbox_box">
+    <%= render "show_help_content" %>
+  </div>
+</div>
+
+<% content_for :title do %>
+  <%= "About Me" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "about_me" %>
+<div id="rightcontent" class="two_sided_right_content" <% if !user_signed_in? %>style="float: none;"<% end %>>
+  <%= form_for(@user, :url => user_signed_in? ? update_about_me_registration_path : update_without_session_registration_path(@user, references: params[:references]), :html => { :method => :put, :class => "registerForm reqForm" }) do |f| %>
+    <%= devise_error_messages! %>
+    
+    <div class="row">
+			<div class="col-md-12">
+				<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Register</h3>
+							<span>Registration step two</span>
+						</div>
+						<div class="panel-options">
+							<a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+					  
+					  <% if params[:social_media] == "true" and !context_program.present?%>
+					    <% field, prog = check_social_media_fields(current_user)%>
+              <% @program = prog%>
+              <% program = prog.try(:id) %>
+					    <% ankor = get_social_user_ankor(field) %>
+					    <% @reg_process = true %>
+  				  <%else%>
+  						<% ankor = get_custom_field_anchor %>
+  				    <% program = get_program && (get_program.is_a?(String) ? get_program : get_program.id) %>
+  				    <% prog = @program || context_program %>
+  				  <%end%>
+				    <%= content_tag :div do%>
+				      <div class="form-group" style="margin: 0 0 20px 0;">
+				        <div class="col-sm-12">
+				          <h3><%= prog.context_messages.where(anchor: ankor).first.try(:context_message).try(:html_safe) if prog %></h3>
+				        </div>
+				        <div class="clear"></div>
+				      </div>
+				     <%end%>
+				     <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= hidden_field_tag "program_id", program unless params[:social_media] == "true" and !context_program.present?%>
+				          <%= hidden_field_tag "user_anchor", ankor %>
+				          <%= hidden_field_tag "social_media", params[:social_media]%>
+				          <%= content_tag :lable, tfp("user:upload_picture", prog) ? tfp("user:upload_picture", prog).html_safe : "Upload my Profile Picture".html_safe %>
+				          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "avatar", :class => "show_help_text") if show_help_icon(prog, ankor, "avatar")%>
+		            </div>
+		          </div>
+		          <div class="col-sm-8">
+		          	<div class="row">
+		          		<div class="col-sm-2">
+		          				<% required = @user.avatar_url.present? ? "" : "required" %>
+		          			<div class="browse-wrapper">
+		          				<%= f.file_field :avatar, :class => "file_field_width pull-left upload_img #{required}" %>
+		          			</div>
+		          		</div>
+		          		<div class="col-sm-4">
+		          			<%= image_tag((@user.avatar_url.present? ? @user.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-reponsive")%>
+		          		</div>
+		          	</div>
+		          </div>
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "upload", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "avatar" %>
+			      <% end %>
+		        <br>
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable,tfp("user:bio", prog) ? tfp("user:bio", prog) : "My Bio", class: "mend_field_label" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "bio", :class => "show_help_text") if show_help_icon(prog, ankor, "bio")%>
+		            </div>
+		          </div>
+		          <div class="col-sm-8">
+		          	<%= f.text_area :bio, :class=>"form-control pull-left required  form-style-1 autosize_textarea" %>
+		          </div>
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "bio", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "bio" %>
+			      <% end %>
+		        <br>
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable, "My Speciality" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "speciality", :class => "show_help_text") if show_help_icon(prog, ankor, "speciality")%>
+		            </div>
+		          </div>
+		          <div class="col-sm-8">
+		          	<%= f.text_field :speciality, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+		          </div>
+		        </div>
+		        <br / >
+		        <% end if show_basic_field(prog, "speciality", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "speciality" %>
+			      <% end %>
+		        <br>
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable, "My Skills" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "skill", :class => "show_help_text") if show_help_icon(prog, ankor, "skill")%>
+		            </div>
+		          </div>
+		          
+		          <div class="col-sm-8 tag_functionality">
+					    	<div class="container_tags">
+					        <div class="tagList" id="skillList">
+						        <div class="tagContainer">
+						          <% f.object.skills.each do |skill| %>
+					                <div class="tagContainer">
+					                  <%= link_to skill, "#", :class => "delTag" %>
+					                  <%= hidden_field_tag :"user[skills][]", skill %>
+					                </div>
+					              <% end  %>
+						        </div>
+						      </div>
+					        <div class="clr"></div>
+					      </div>
+					      <div class="quote_col_row container_add_tag">
+							  	<%= f.text_field :skills, :id => "skills", :value => "", :class => "autoSkills form-control pull-left form-style-1", :value => "", :placeholder=>"Add an item then press enter or click the Add button", :name => "skills[]", :"data-field-name" => "#{f.object_name}[skills][]" %>
+		      				<%= link_to "+ Add a skill", "#", :class => "addSkill pull-left module_box_submit low-padding", :id=>"submit" %> 
+							  </div>
+								<div class="clr"></div>
+					    </div>
+		          
+		          
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "skills", ankor) %>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "skills" %>
+			      <% end %>
+		        <br />
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable, "My Interests" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "interest", :class => "show_help_text") if show_help_icon(prog, ankor, "interest")%>
+		            </div>
+		          </div>
+		          
+		          <div class="col-sm-8 tag_functionality">
+					    	<div class="container_tags">
+					        <div class="tagList" id="interestsList">
+						        <div class="tagContainer">
+						          <% f.object.interests.each do |interest| %>
+					                <div class="tagContainer">
+					                  <%= link_to interest, "#", :class => "delTag" %>
+					                  <%= hidden_field_tag :"user[interests][]", interest %>
+					                </div>
+					              <% end  %>
+						        </div>
+						      </div>
+					        <div class="clr"></div>
+					      </div>
+					      <div class="quote_col_row container_add_tag">
+							  	<%= f.text_field :interests, :id => "interests", :value => "", :class => "autoInterests form-control pull-left form-style-1", :value => "", :placeholder=>"Add an item then press enter or click the Add button", :name => "interests[]", :"data-field-name" => "#{f.object_name}[interests][]" %>
+		      				<%= link_to "+ Add an interest", "#", :class => "addInterest pull-left module_box_submit low-padding", :id=>"submit" %> 
+							  </div>
+								<div class="clr"></div>
+					    </div>
+		          
+		          
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "interests", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "interests" %>
+			      <% end %>
+		        <br />
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable, "Highest Education Qualification" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "qualification", :class => "show_help_text") if show_help_icon(prog, ankor, "qualification")%>
+		            </div>
+		          </div>
+		          <div class="col-sm-8">
+								<%= f.text_field :education_qualification, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+		          </div>
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "qualifications", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "education_qualification" %>
+			      <% end %>
+		        <br />
+		        
+		        <%= content_tag :div do%>
+		        <div class="row">
+		          <div class="col-sm-4 setting-font">
+		            <div style="line-height: 28px;">
+		            	<%= content_tag :lable, "Linkedin Profile" %>
+          				<%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "profile", :class => "show_help_text") if show_help_icon(prog, ankor, "profile")%>
+		            </div>
+		          </div>
+		          <div class="col-sm-8">
+		          	<%= f.text_field :linkedin_profile, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+		          </div>
+		        </div>
+		        <br />
+		        <% end if show_basic_field(prog, "profile", ankor)%>
+			      <% if ankor.present? %>
+			        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"} %>
+			      <% end %>
+		        <br />
+		        
+		        <div class="row">
+		          <div class="col-sm-12">
+		             <%= f.submit "Next", :name => "schritt", :id => "submit" %>
+		          </div>
+		        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<% end %>
+		
+		<%
+=begin
+%>
+
+
+  <div class="block">
+    <% ankor = get_custom_field_anchor %>
+    <% program = get_program && (get_program.is_a?(String) ? get_program : get_program.id) %>
+    <% prog = @program || context_program %>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-12">
+          <h3><%= prog.context_messages.where(anchor: ankor).first.try(:context_message).try(:html_safe) if prog %></h3>
+        </div>
+        <div class="clear"></div>
+      </div>
+     <%end%>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-3">
+          <%= hidden_field_tag "program_id", program %>
+          <%= hidden_field_tag "user_anchor", ankor %>
+          <%= hidden_field_tag "social_media", params[:social_media]%>
+          <%= content_tag :b, tfp("user:upload_picture", prog) ? tfp("user:upload_picture", prog).html_safe : "Upload my <br>Profile Picture".html_safe %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "avatar", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "avatar", "")%>
+        </div>
+        <div class="col-sm-9">
+          <% required = @user.avatar_url.present? ? "" : "required" %>
+          <%= f.file_field :avatar, :class => "file_field_width pull-left upload_img #{required}" %>
+          <%= image_tag((@user.avatar_url.present? ? @user.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-reponsive")%>
+        </div>
+        <div class="clear"></div>
+      </div>
+    <% end if show_basic_field(prog, "upload", ankor)%>
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "avatar" %>
+      <% end %>
+    <div class="clear"></div>
+    <br/>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-3">
+          <%= content_tag :b,tfp("user:bio", prog) ? tfp("user:bio", prog) : "My Bio", class: "mend_field_label" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "bio", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "bio", "")%>
+        </div>
+        <div class="col-sm-9">
+          <%= f.text_area :bio, :class=>"form-control pull-left required" %>
+        </div>
+        <div class="clear"></div>
+    	</div>
+  
+    <% end if show_basic_field(prog, "bio", ankor)%>
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "bio" %>
+      <% end %>
+    
+    <div class="clear"></div>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-3">
+          <%= content_tag :b, "My Speciality" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "speciality", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "speciality", "")%>
+        </div>
+        <div class="col-sm-3">
+          <%= f.text_field :speciality, :class=>"form-control" %>
+        </div>
+        <div class="clear"></div>
+    	</div>
+    <% end if show_basic_field(prog, "speciality", ankor)%>
+  
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "speciality" %>
+      <% end %>
+    
+    <div class="clear"></div>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+      <div class="tag_functionality">
+        <div class="col-sm-3">
+          <%= content_tag :b, "My Skills" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "skill", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "skill", "")%>
+        </div>
+        <div class="tags_container"> 
+          <div class="container_tags">
+            <div class="tagList" id="skillList">
+              <% f.object.skills.each do |skill| %>
+                <div class="tagContainer">
+                  <%= link_to skill, "#", :class => "delTag" %>
+                  <%= hidden_field_tag :"user[skills][]", skill %>
+                </div>
+              <% end  %>
+            </div>
+            <div class="clr"></div>
+          </div>
+          <div class="container_add_tag">
+            <div class="col-sm-9">
+            <%= f.text_field :skills, :class => "autoSkills form-control pull-left", :placeholder => "One item at a time", :id => "skills", :name => "skills[]", :value => "", :"data-field-name" => "#{f.object_name}[skills][]" %>
+            </div>
+            <%= link_to "+ Add It", "#", :class => "addSkill text_underline pull-right" %>
+          <div class="clear"></div>      
+          </div>
+        </div> 
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+      </div>
+    <% end if show_basic_field(prog, "skills", ankor) %>
+  
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "skills" %>
+      <% end %>
+      <div class="clear"></div>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+      <div class="tag_functionality">
+        <div class="col-sm-3">
+          <%= content_tag :b, "My Interests" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "interest", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "interest", "")%>
+        </div>
+        <div class="tags_container">
+          <div class="container_tags">
+            <div class="tagList" id="interestsList">
+              <% f.object.interests.each do |interest| %>
+                <div class="tagContainer">
+                  <%= link_to interest, "#", :class => "delTag" %>
+                  <%= hidden_field_tag :"user[interests][]", interest %>
+                </div>
+              <% end  %>
+            </div>
+            <div class="clr"></div>
+          </div>
+          <div class="container_add_tag">
+            <div class="col-sm-9">
+              <%= f.text_field :interests, :class => "autoInterests form-control pull-left", :placeholder => "One item at a time", :id => "interests", :name => "interests[]", :value => "", :"data-field-name" => "#{f.object_name}[interests][]" %>
+            </div>
+            <%= link_to "+ Add It", "#", :class => "addInterest text_underline pull-right" %>
+            <div class="clear"></div>      
+          </div>
+        </div> 
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+      </div>
+    <% end if show_basic_field(prog, "interests", ankor)%>
+  
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "interests" %>
+      <% end %>
+      <div class="clear"></div>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-3">
+          <%= content_tag :b, "Highest Education Qualification" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "qualification", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "qualification", "")%>
+        </div>
+        <div class="col-sm-9">
+          <%= f.text_field :education_qualification, :class=>"form-control" %>
+        </div>
+        <div class="clear"></div>
+    	</div>
+    <% end if show_basic_field(prog, "qualifications", ankor)%>
+
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, position: "education_qualification" %>
+      <% end %>
+      <div class="clear"></div>
+    
+    <%= content_tag :div do%>
+      <div class="form-group" style="margin: 0 0 20px 0;">
+        <div class="col-sm-3">
+          <%= content_tag :b, "Linkedin Profile" %>
+          <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "profile", :"data-custom-field-id" => "", :class => "show_help_text") if show_help_icon(prog, ankor, "profile", "")%>
+        </div>
+        <div class="col-sm-9">
+          <%= f.text_field :linkedin_profile, :class=>"form-control" %>
+        </div>
+        <div class="clear"></div>
+    	</div>
+    <% end if show_basic_field(prog, "profile", ankor)%>
+      <% if ankor.present? %>
+        <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"} %>
+      <% end %>
+      <div class="clear"></div>
+	
+	<div class="clear"></div>
+</div>
+<p>
+	  <%= f.submit "Next", :name => "schritt", :id => "submit" %>
+	</p>
+  <% end %>
+  <%
+=end
+%>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    
+    $(".select_option").on("change", function(e){
+      var val = $(this).val();
+      var current_object = $(this);
+      var parent_div = $(this).parents("div.form-group");
+      var id = $('#program_id').val();
+      var anchor = $('#user_anchor').val();
+      path = '/programs/'+ id + '/pitch_branches/user_custom_branch_fields'
+      $.ajax({
+        url: path,
+        type: 'get',
+        data: "option_name="+val+"&option_id="+$(this).attr('data-id')+"&anchor="+anchor,
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          //var d = document.getElementsByClassName("branch_select_fields");
+          //while (d.length) d[0].parentElement.removeChild(d[0]);
+          next_div = parent_div.next('div')
+          while( next_div.hasClass("branch_select_fields")) {
+            next_div.remove();
+            next_div = parent_div.next('div')
+          }
+          current_object.parents('.custom_branch_dropdown').after(data);
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    });
+    
+    $(document).mouseup(function (e) {
+      if ($('.popover').has(e.target).length === 0) {
+          $('.popover').toggleClass('in').remove();
+          return;
+      }
+    });
+    
+    $(document).on('click', ".show_help_text", function(e){
+      e.preventDefault();
+      current_obj = $(this);
+      $.ajax({
+        url: $(this).data('url'),
+        type: 'get',
+        data: "field_name="+ $(this).data('field-name')+"&text_for="+$(this).data('text-for'),
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          current_obj.data('content', data.content);
+          current_obj.popover();
+          current_obj.popover('show');
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    });
+    
+    $(document).on('change', ".other_select", function(e){
+    	e.preventDefault();
+    	if($(this).val()=="other" || $(this).val()=="Other"){
+    		$(this).next().removeClass("hide");
+    		$(this).next().attr("disabled", false);
+    		if ($(this).hasClass('required')){ $(this).next().addClass('required'); }
+    	}
+    	else{
+    		$(this).next().addClass("hide");
+    		$(this).next().attr("disabled", true);
+    		if ($(this).next().hasClass('required')){ $(this).next().removeClass('required'); }
+    	}
+    });
+    
+  });
+
+function checkValidityOffile(file, types, field_id){
+ 	$("#" +field_id +"_error").html('');
+ 	if(file.value.split(".") && types != "All"){
+ 		if(file.value.split(".").length >= 1){
+ 			upload_type = file.value.split(".")[file.value.split(".").length-1]
+ 			if (types.indexOf(upload_type) == -1){
+ 				 text = "You tried to upload a " +upload_type + " file, only " + types + " files are accepted.";
+ 				$("#" +field_id +"").val("");
+ 				$("#" +field_id +"_error").html('<span style="color:red">'+ text +'</span>');
+ 			}
+ 		}
+ 	}
+ }
+			$(function(){
+				$('.autosize_textarea').autosize({append: "\n"});
+			});
+</script>

@@ -1,0 +1,42 @@
+*,
+*:after,
+*::before {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+}
+
+@font-face {
+		font-weight: normal;
+		font-style: normal;
+		font-family: 'icomoon_new';
+		src: url("../fonts/icomoon_new/icomoon_new.eot");
+		src: url("../fonts/icomoon_new/icomoon_new.eot?#iefix") format("embedded-opentype"), 
+		url("../fonts/icomoon_new/icomoon_new.woff") format("woff"), 
+		url("../fonts/icomoon_new/icomoon_new.ttf") format("truetype"), 
+		url("../fonts/icomoon_new/icomoon_new.svg#ecoicons") format("svg");
+}
+.gn-icon.gn-new::before {
+		display: inline-block;
+		width: 60px;
+		text-align: center;
+		text-transform: none;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-family: 'icomoon_new';
+		line-height: 0;
+		speak: none;
+		-webkit-font-smoothing: antialiased;
+		font-size: 16px;
+}
+
+.gn-icon-milestone-new:before{
+	content: "\e65c";
+}
+.gn-icon-feed-new:before{
+	content: "\e66d";
+}
+.gn-icon-targetting-new:before{
+	content: "\e6ae";
+}

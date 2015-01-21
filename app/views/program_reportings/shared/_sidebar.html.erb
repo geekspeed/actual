@@ -1,0 +1,38 @@
+<%# content_for :sidebar do %>
+  <div class="gn-scroller">
+    <ul class="gn-menu">
+      <li class="<%= 'active' if page == "reports" %>">
+        <%= link_to("Dashboard", program_reportings_path(context_program), :class=>"gn-icon gn-icon-dashboard") %>
+      </li>
+      <li class="<%= 'active' if page == "pie_chart" %>">
+        <%= link_to("Build Pie Chart", new_pie_chart_program_reportings_path(context_program), :class=>"gn-icon gn-icon-piechart") %>
+      </li>
+      <li class="<%= 'active' if page == "line_chart" %>">
+        <%= link_to("Build Time Line Chart", new_line_chart_program_reportings_path(context_program), :class=>"gn-icon gn-icon-linechart") %>
+      </li>
+      <li class="<%= 'active' if page == "saved_graphs" %>">
+        <%= link_to("Saved Graphs", saved_graphs_program_reportings_path(context_program), :class=>"gn-icon gn-icon-saved") %>
+      </li>      
+      <li class="<%= 'active' if page == "report_program" %>">
+        <%= link_to("Report Branding", report_branding_program_reportings_path(context_program), :class=>"gn-icon gn-new gn-icon-milestone-new") %>
+      </li>
+      <li class="<%= 'active' if controller_name == "custom_reports" and action_name == "new" %>">
+        <%= link_to("Build Report", polymorphic_path([:new, context_program, :custom_report]), :class=>"gn-icon gn-icon-illustrator") %>
+      </li>
+      <li class="<%= 'active' if controller_name == "custom_reports" and action_name == "index" %>">
+        <%= link_to("Saved Reports", polymorphic_path([context_program, CustomReport]), :class=>"gn-icon gn-icon-illustrator") %>
+      </li>
+    </ul>
+  </div>
+<%# end %>
+
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+    $(document).ready(function(){
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    })
+    </script>
+    
+<% end %>

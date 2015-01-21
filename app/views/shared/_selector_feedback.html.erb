@@ -1,0 +1,15 @@
+<div style="display: none">
+  <div id="<%= anchor_id %>">
+    <%= form_tag url, :method => :put do %>
+      In a few words please explain why you selected this pitch                       <hr>
+      <div class="met_row">
+        <div class="comment_row">
+          <%= text_area_tag "feedback[content]" %>
+        </div>
+      </div>
+      <br>
+      Your feedback will be visible in the FEEDBACK section after the winner selection phase is closed  
+      <%= submit_tag "Post", :id => "submit" %>
+    <% end %>
+  </div>
+</div>

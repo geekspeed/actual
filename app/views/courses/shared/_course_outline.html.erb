@@ -1,0 +1,110 @@
+<% @modules.each_with_index do |course_module,index| %>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+				<div class="panel-heading relative_panel_head">
+					<div class="panel-title title_option">
+						<h3>Module <%= index+1 %></h3>
+						<span><%=course_module.title %></span>
+					</div>
+					<div class="panel-options">
+						<a href="#-" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+						<div class="add_activity_link">
+			        <%= link_to "<span><b style='font-size:18px;'> + </b> Add new activity</span>".html_safe,polymorphic_path([@program, @course, course_module, :new_activity]), :remote=>true, :class=>"new_activity_box" %>
+			      </div>
+					</div>
+				</div>
+				<div class="panel-body" style="">
+					<div class="summary_container">  
+			      <div class="inner_panel_head">Summary<%= link_to "<span class='glyphicon glyphicon-chevron-up' style='color:rgba(55, 62, 74, 0.7);'></span>".html_safe, polymorphic_path([@program, @course, course_module, :module_detail]), :class=>"summary_details pull-right", :remote=>true, :id=>"description_#{course_module.id}" %></div>
+			      <div class="inner_panel_body">
+			        <%=course_module.description %>
+			        <div id="big_description_<%=course_module.id%>">
+			        </div>
+			      </div>
+			    </div>
+			    <% if !course_module.module_activities.blank? %>
+			    <table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 40px;" aria-label="">
+									<input type="checkbox" style="width:14px">
+								</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 130px;" aria-label="Student Name: activate to sort column ascending">Activity</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 190px;" aria-label="Average Grade: activate to sort column ascending">Title</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 700px;" aria-label="Curriculum / Occupation: activate to sort column ascending">Details</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 504px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+							</tr>
+						</thead>
+						
+						
+						<tbody class="sortable-activity" data-module-url="<%= polymorphic_path([@program, @course, course_module, :sort_activity])%>" role="alert" aria-live="polite" aria-relevant="all">
+							<% course_module.module_activities.each_with_index do |activity,index| %>
+							<tr  id="display_order_<%=activity.id%>" class="odd ui-state-default">
+								<td class="  sorting_1" style="width: 40px;">
+									<input type="checkbox" style="width:14px">
+								</td>
+								<td class=" " style="width: 130px;"><%= index+1 %></td>
+								<td class=" " style="width: 190px;"><%= activity.title %></td>
+								<td class=" " style="width: 700px;"><%= activity.description %></td>
+								<td class=" " style="width: 504px;">
+									<%= link_to "<i class='glyphicon glyphicon-pencil'></i> Edit".html_safe, polymorphic_path([@program, @course, course_module, activity, :edit_activity]), :remote=>true, :class=>"new_activity_box btn btn-default btn-sm btn-icon icon-left", :style=>"width:64px;border-radius:0px;"%>
+              						<%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, polymorphic_path([@program, @course, course_module, activity, :delete_activity]), :method=>"delete", :class=>"btn btn-danger btn-sm btn-icon icon-left" %>
+              						<%= link_to "<i class='glyphicon glyphicon-info-sign'></i> Info".html_safe, "#", :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+								</td>
+							</tr>
+							<% end %>
+						</tbody>
+					</table>
+					<% else %>
+		       <p class="no_activity">You have not added any activities yet</p> 
+		      <% end %>
+				</div><!-- panel-body -->
+			</div>
+		</div>
+	</div>	
+					
+<% end %> 
+<div id="add_new_activity" style="display:none;">
+  <div style="min-height:40em;"></div>
+</div>
+<script>
+    $(".summary_details").click(function() {
+      if ($("#"+this.id+" span.glyphicon-chevron-down").length<1){
+        $("#big_"+this.id).show()
+        $("#big_"+this.id).html("Loading content.. <img src='/images/bx_loader.gif' width='20'>")
+      }
+   });
+	$( ".sortable-activity" ).sortable({
+	  placeholder: "portlet-placeholder ui-corner-all",
+      revert: true,
+      opacity: 0.7, 
+      start: function( event, ui ) {
+      	$("tbody.sortable-activity tr.portlet-placeholder").height(ui.helper.height())
+      	$("tbody.sortable-activity tr.portlet-placeholder").html("<td colspan=5></td>")
+      },
+	  update: function(){
+	  	that = this
+		$.ajax({
+			type: 'post',
+			data: $(that).sortable('serialize'),
+			dataType: 'script',
+			complete: function(request){
+				$(that).effect('highlight');
+			},
+			url: $(that).data("module-url")})
+		}
+    });    
+    $( ".sortable-activity tbody, .sortable-activity tr" ).disableSelection();
+</script>
+
+<style>
+	.sortable-activity tr:hover {
+    	cursor: pointer;
+	}
+	tbody.sortable-activity tr.portlet-placeholder{border:2px dashed #DDDDDD !important;}
+
+	.sortable-activity tr.ui-sortable-helper{
+	    cursor: move;
+	}
+</style>

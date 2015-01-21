@@ -1,0 +1,42 @@
+<!-- lightboxes -->
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<style type="text/css">
+.form-control:focus {
+  border-color: <%= menubar_color %>;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.03), 0 0 8px rgba(0, 0, 0, 0.2);
+}
+.fancybox-close{
+    cursor: pointer;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 36px;
+    z-index: 8040; 
+	color: <%= menubar_color %>;
+	font-size: 18px;
+  }
+  .fancybox-close:hover{
+color: #D73800;
+}
+</style>
+<div style="display: none">
+  <div id="reviewthispitch">
+    <%= form_for @pitch.feedbacks.build(), :url => program_pitch_feedbacks_path(context_program, @pitch) do |f| %>
+      <p>In a few words please explain what you liked about the <%= t("pitch", "s") %> or write a question that you feel the team needs to address.</p>
+<br />      
+<div class="met_row">
+        <div class="comment_row">
+          <%= f.text_area :content, :class=>"form-control", :rows=>"5", :cols=>"53" %>
+          <%= f.hidden_field :private, :value => true%>
+        </div>
+      </div>
+      <br>
+      Your feedback will be visible by the team only
+      <%= f.submit "Post", :id => "submit" %>
+    <% end %>
+  </div>
+</div>

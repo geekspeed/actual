@@ -1,0 +1,61 @@
+<% content_for :title do %>
+  <%= "Edit Company" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "about_me" %>
+<%#= render "devise/shared/sidebar", page: "organisation" %>
+<%# content_for :stylesheets do %>
+  <%#= stylesheet_link_tag "jquery.minicolors", :media => "all" %>
+<%# end %>
+<%# content_for :javascript do %>
+<%= stylesheet_link_tag "jquery.minicolors", :media => "all" %>
+<%= javascript_include_tag "jquery.minicolors.js" %>
+
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+  if(!FlashDetect.installed){
+    jQuery('.avatar-handler').hide();
+      jQuery('.no-flash').show();
+    }
+  });
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  jQuery(document).ready(function() {
+    jQuery('input.manubar_color').minicolors({defaultValue: '#4AB2C0'});
+    jQuery('input.background_color').minicolors({defaultValue: '#a4a4a4'});
+    $( ".radioset" ).buttonset();
+    $('.collapses').collapsiblePanel();
+  });
+</script>
+<div id="rightcontent"  class="two_sided_right_content">
+  <%= form_for(@organisation, :html => { :method => :put, :class => "registerForm reqForm" }) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Platform Admins</h3>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <% admins = User.in(id: @organisation.try(:admins))%>
+          <% admins.each do |admin|%>
+            <div class="row">
+              <div class="col-sm-12 setting-font">
+               <%= link_to admin.full_name, user_path(admin)%>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

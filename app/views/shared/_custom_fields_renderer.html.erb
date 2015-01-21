@@ -1,0 +1,134 @@
+<% objekt = f.object;
+    klass = objekt.class;
+    ankor = ankor;
+    outer_wrap ||= {tag: :p, klass: ""};
+    label_wrap ||= {tag: "span", klass: ""};
+    field_wrap ||= {tag: "span", klass: ""};
+    field_class ||= "";
+    position ||= "" %>
+<% branch_select_fields = @custom_branch_field ? "branch_select_fields" : "" %>
+<% program = get_program || @program%>
+<% custom_fields = klass.custom_fields.enabled.for_program(program)
+  custom_fields = custom_fields.for_anchor(ankor).where(position: position) if ankor.present?
+  custom_fields = (@user and @user.confirmed? and !need?(["company_admin", "program_admin"], current_organisation) and @reg_process.blank?) ? 
+                  custom_fields.in(code: @user.custom_fields.keys) : custom_fields.where(parent_id: "")
+%>
+<% if klass == "Pitch".constantize%>
+  <% custom_fields = custom_fields.where(program_id: @program.id, :branch_id => nil, position: position, parent_id: "").select{|field| field if Workflow.where(program_id: @program.id.to_s, active: true, :code.in => field.phases).present?}%>
+<% end %>
+<% custom_fields.each do |custom_field| %>
+  <% required = (custom_field.present? && custom_field.required) ? "required" : "" %>
+  <% label_mand_class = required == "required" ? "mend_field_label" : ""%>
+  <% if custom_field.element_type == "text_area" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+        <%= text_area_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :cols => 40 %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "date" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code , :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+        <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "datepicker_std #{required} #{field_class}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :size => 30 %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "file_upload" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} browse-wrapper", style: "#{field_wrap[:style]}width:100px") do %>
+        <div id="<%=custom_field.id%>_error"></div>
+        <%= hidden_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}") %>
+        <%= file_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", :class=> "#{required} file_field_width upload_file pull-left", :id=>"#{custom_field.id}" , "onchange" => 'checkValidityOffile(this,'+"#{accepted_upload_type(custom_field)}"+',"'+ "#{custom_field.id}" +'")' %>
+        <%= link_to_if((!objekt.send(:"#{custom_field.code}").blank? && params[:action] == "about_me"), objekt.send(:"#{custom_field.code}"), objekt.send(:"#{custom_field.code}")) if params[:action] == "about_me" %>
+        <%= label_tag "accepted_value","Accepted File types: #{accepted_upload_type(custom_field)}", :class=>"accepted_value_label pull-left", :style=>"margin-left:10px;width: 50%;" %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "dropdown" || custom_field.element_type == "dropdown_with_other" || custom_field.element_type == "dropdown_with_multiple_select" || custom_field.element_type == "branch_field" %>
+    <% multiple = custom_field.element_type == "dropdown_with_multiple_select"  %>
+    <% select_option = custom_field.element_type == "branch_field" ? "select_option" : "other_select" %>
+    <% custom_select_option = custom_field.element_type == "branch_field" ? "custom_branch_dropdown" : ""%>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields} #{custom_select_option}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+        <% other = (!objekt.send(:"#{custom_field.code}").blank? && !custom_field.options.include?(objekt.send(:"#{custom_field.code}"))) %>
+        <%= select_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", options_for_select(custom_field.options, (other ? "Other" : objekt.send(:"#{custom_field.code}"))), :placeholder => custom_field.placeholder, :multiple => multiple, :prompt => "Select...", :class => "#{required} #{field_class} #{select_option}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, "data-id" => custom_field.id, style: "width:277px;" %>
+        <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{field_class} #{other ? '' : 'hide'}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :size => 30, "#{other ? '' :'disabled'}"=>"#{other}"  if select_option == "other_select" %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "gallery"%>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code , :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      
+      <%= content_tag( field_wrap[:tag], :class => "#{field_wrap[:klass]} browse-wrapper", style: "#{field_wrap[:style]}width:100px") do %>
+        <%= hidden_field_tag "#{custom_field.id}_browse_button",1 %>
+        <div id="<%=custom_field.id%>_gallery_error"></div>
+        <%= hidden_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}") %>
+        <div id="<%=custom_field.id%>_gallery_section">
+          <%= file_field_tag "gallery_custom_fields[#{custom_field.code}][]", :class=> "file_field_width pull-left", "onchange" => 'checkNoOfFiles(this,"'+"#{custom_field.id}_gallery_"+'","")', :multiple=>true %>
+          <%= link_to_if((!objekt.send(:"#{custom_field.code}").blank? && params[:action] == "about_me"), objekt.send(:"#{custom_field.code}"), objekt.send(:"#{custom_field.code}")) if params[:action] == "about_me" %>
+          <%= label_tag "accepted_value","Upload multiple photos, Accepted File types: [ png, jpg, jpeg ]", :class=>"accepted_value_label pull-left", :style=>"margin-left:10px;width: 50%;" %>
+        </div>
+        <div class="clr"></div>
+        <br/>
+        <a href="#" data-custom-field-id="<%=
+        custom_field.id%>" data-custom-field-code="<%=custom_field.code%>" class="addGalleryExtra text_underline">+ Add more pics</a> 
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "text_section"%>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+        <%= content_tag :div do%>
+          <%= raw custom_field.try(:text_section_content)%>
+        <% end %>
+        <%#= text_area_tag "#{f.object_name}[custom_fields][#{custom_field.co}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :cols => 40 %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}", style: outer_wrap[:style]) do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass], style: label_wrap[:style]) do %>
+        <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+        <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text") if show_help_icon(@program, ankor, custom_field.code, custom_field.id)%>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass], style: field_wrap[:style]) do %>
+        <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}", :"data-linked" => data_linked(custom_field, klass), :"data-code" => custom_field.code, :size => 30 %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+<script>
+  $(document).ready(function(){
+    $("[data-code]").on("focusout", function(e){
+      var code = $(this).data("code");
+      var value = $(this).val().toLowerCase();
+      $("[data-linked]").each(function(i, elem){
+        var d_json = $(elem).data("linked");
+        var v = d_json[code + "_" + value]
+        if(v != undefined && v.length > 0){
+          if($(elem).val() == undefined || $(elem).val().length <= 0){
+            $(elem).val(d_json[code + "_" + value]);
+          }
+        }
+      });
+    });
+  });
+</script>

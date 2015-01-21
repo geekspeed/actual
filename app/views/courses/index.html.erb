@@ -1,0 +1,323 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Courses" %>
+<% end %>
+
+<div class="course-index">  
+  <% page = "setup_program"; ppage = "course"%>
+  <%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+  <div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-create-course gn-icon-large"></i>
+      Create Course
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Create course lets you build an entire on line course made of modules, activities and tasks"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Create Course</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<a href="#sec1" name="sec1" class="section_nav"></a>
+		<div class="row">
+			<div class="col-md-12">
+				<div data-collapsed="0" class="panel panel-info panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Settings</h3>
+							<span>Course General Controls</span>
+						</div>
+						<div class="panel-options">
+							<a data-rel="collapse" id="toggle-setting-box" class="gn-icon gn-icon-chevron-up ui-expander" href="#-"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body" style="display: none;">
+						<%= form_tag polymorphic_path([@program, :general_controls]), :remote=> true, :id=>"general-setting" do %>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Select the first page the user will see on login</div>
+              </div>
+              <div class="col-sm-8">
+                <%= select_tag "setting[user_section]", options_for_select([["My Work - Community","my_work_community"], ["Buzz feed","/programs/#{context_program.id}/community_feeds"], ["Course Page","course_show"], ["Community section","/dashboard"], ["My Work - Project creation page","my_work_project"]], :selected=>@course_setting.try(:user_section)), :class=>"form-control", :style=>"width:70%;border-radius:0px;"%>
+              </div>
+            </div>
+            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel_form_heads">Reminders</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">If user is inactivite more than</div>
+                <div style="line-height: 28px;margin-top:10px;">Send this message</div>
+              </div>
+              <div class="col-sm-8">
+                <%= select_tag "setting[inactive_user]", options_for_select([["1 Day", "86400"],["2 Days", "172800"], ["3 Days","259200"], ["1 Week", "604800"]], :selected=>@course_setting.try(:inactive_user)), :class=>"form-control form-style-1", :style=>"width:70%;border-radius:0px;"%>
+                <%= text_area_tag "setting[inactive_user_message]", @course_setting.try(:inactive_user_message), :placeholder=>"Enter your message here", :class=>"form-control form-style-1", :style=>"width:70%;height:60px;;margin-top:10px;border-radius:0px;"%>
+              </div>
+            </div>  
+            <div class="row" style="margin-top:10px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Send automated email</div>
+              </div>
+              <div class="col-sm-8">
+                <div class="radioset">
+                    <%= radio_button_tag "setting[automated_inactive_email]", true, (true if @course_setting.try(:automated_inactive_email) == true) %>
+                    <%= label_tag :setting_automated_inactive_email_true, "Yes" %>
+                    <%= radio_button_tag "setting[automated_inactive_email]", false, @course_setting.blank? ? true : (true if @course_setting.try(:automated_inactive_email) == false) %>
+                    <%= label_tag :setting_automated_inactive_email_false, "No" %>
+                    <div class="clr"></div>
+                </div>
+              </div>
+            </div>
+            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel_form_heads">Privacy</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;">Keep participants personal profiles private</div>
+              </div>
+              <div class="col-sm-8">
+                <div class="radioset">
+                    <%= radio_button_tag "setting[user_privacy]", true, (true if @course_setting.try(:user_privacy) == true) %>
+                    <%= label_tag :setting_user_privacy_true, "Yes" %>
+                    <%= radio_button_tag "setting[user_privacy]", false, @course_setting.blank? ? true : (true if @course_setting.try(:user_privacy) == false) %>
+                    <%= label_tag :setting_user_privacy_false, "No" %>
+                    <div class="clr"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div style="font-size:14px;font-weight:bold;">
+                  <%= link_to "Apply Settings", "#-", :class=>"btn btn-default", :id=>"apply_setting", :style=>"text-transform:capitalize;float:right" %>
+                  <%= submit_tag "Apply", :class=>"hide", :id=>"apply-trigger"%>
+                </div>
+              </div>
+            </div>
+          <% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<%= form_tag polymorphic_path([@program, :courses]),class: "registerForm reqForm" do %>
+		<a href="#sec2" name="sec2" class="section_nav"></a>
+		<div class="row">
+			<div class="col-md-12">
+				<div data-collapsed="0" class="panel panel-warning panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Course intro</h3>
+							<span>Add an intro to your course</span>
+						</div>
+						<div class="panel-options">
+							<a data-rel="collapse" class="gn-icon gn-icon-chevron-down ui-expander" href="#-"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+		          
+							<div class="row">
+	              <div class="col-sm-4 setting-font">
+	                <div style="line-height: 28px;">Course intro title</div>
+	              </div>
+	              <div class="col-sm-8">
+	                <div class="quote_col_row"><%= text_field_tag "course[title]", @course.try(:title), :placeholder=>"Course title", :id=>"course_module_title_main",:class=>"form-control pull-left form-style-1", :style=>"width:60%" %></div>
+				          <div class="clr"></div>
+				        </div>
+             	</div>
+							<div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+							<div class="row">
+	              <div class="col-sm-12 setting-font">
+	                <div style="line-height: 28px;">Add an intro to your course</div>
+									<%= text_area_tag "course[intro]", @course.try(:intro), :placeholder=>"Course intro", :class=>"form-control summernote", :style=>"width:78%;height:60px;;margin-top:10px;border-radius:0px;" %>
+	              </div>
+	            </div>
+              <div style="margin-top:20px;margin-bottom:20px;"></div>
+              <div class="row">
+                <div class="col-sm-4 setting-font">
+                  <div style="line-height: 28px;">Intro video</div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="quote_col_row"><%= text_field_tag "course[link]", @course.try(:link), :placeholder=>"Youtube / Vimeo video url", :class=>"form-control pull-left form-style-1", :style=>"width:60%" %></div>
+                  <div class="clr"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 setting-font">
+                  <%= submit_tag "Save!", id: "submit",class: "add-course" %>
+                  <div class="clr"></div>
+                </div>
+              </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<% end %>
+		<% if !@course.nil? %>
+		<br>
+		<a href="#sec3" name="sec3" class="section_nav"></a>
+		<div class="row">
+			<div class="col-md-12">
+				<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Learning Module</h3>
+						</div>
+						<div class="panel-options">
+							<a data-rel="collapse" class="gn-icon gn-icon-chevron-down ui-expander" href="#-"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+						<div class="row">
+              <%= render 'courses/shared/module_form_new' %>
+           	</div>
+           	<hr class="mod_sep" />
+              <% if @course.course_modules.blank? %>
+                  <span>Set a list of Course module</span>
+                <% else %>
+                  <%= render 'courses/shared/modules' %>
+                <% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+		<a href="#sec4" name="sec4" class="section_nav"></a>
+		<h2 class="titleLine title-normal"><span style="font-weight:bold;">My Course Outline</span>
+      <div class="outline-action-links pull-right">
+        <%#= link_to "<span><b class='add-link-sign'> + </b> Add module</span>".html_safe,polymorphic_path([@program, @course, :new_module]), :class=>"add-module", :remote=>true %>
+        <%= link_to "<span style='margin-right: -16px;' class='gn-icon gn-icon-overview'></span> Preview".html_safe,polymorphic_path([@program, @course, :course_preview]), :class=>"course_preview", :remote=>true %>
+      </div>
+    </h2>
+    <div class="course-outline-box">
+      <%= render 'courses/shared/course_outline' %>
+    </div>
+		<% end %>
+  </div>
+  <div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1">Settings</a></li>
+          <li><a href="#sec2">Course Intro</a></li>
+          <li><a href="#sec3">Learning Module</a></li>
+          <li><a href="#sec4">My Course Outline</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+var textarea_user;
+var float_textarea = 0
+$("#setting_inactive_user_message").click(function(){
+  if (float_textarea == 0){
+    float_textarea = 1
+    $("#setting_inactive_user_message").animate({  height: "200px", width: "100%"}, { duration: "slow",complete: function(){
+      textarea_user = new nicEditor().panelInstance('setting_inactive_user_message');
+    }
+  });
+  }
+});
+
+$("#apply_setting").click(function(){
+    alertify.confirm("Proceed to save course settings", function (e) {
+      if (e) {
+        $("#apply-trigger").trigger("click")
+        if (textarea_user){
+          textarea_user.removeInstance('setting_inactive_user_message');
+          textarea_user = null;
+        }
+        $("#setting_inactive_user_message").animate({  height: "60px", width: "70%"}, { duration: "slow"});
+        float_textarea = 0
+      } else {
+        if (textarea_user){
+          textarea_user.removeInstance('setting_inactive_user_message');
+          textarea_user = null;
+        }
+        $("#setting_inactive_user_message").animate({  height: "60px", width: "70%"}, { duration: "slow"});
+        float_textarea = 0
+      }
+    return false;
+  });
+});
+
+</script>
+<script type="text/javascript">
+  $(function() {
+     $(".summernote").summernote()
+     $(".course_preview").bind("ajax:beforeSend", function(){
+        $.fancybox({ helpers: {
+      overlay: {
+        locked: false
+      }
+    },content:"Loading Activity...   <img src='/images/bx_loader.gif' width='25'>" });
+       })
+       $(".course_preview").bind("ajax:complete", function(){
+      })
+   });
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 305
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>
+<style>
+  /* CSS for course index page */
+  .course-index .block input{ margin-right:-2px;}
+  .course-index .block input{ width: 26em;}
+  .course-index .normal-font{ font-size: 13px;font-weight:normal;}
+  .course-index .block-trim{padding: 0px;border-radius:0px;}
+  .course-index .course-intro-box {background:rgb(255, 255, 223);padding: 25px;width:100%;font-weight:bold;}
+  .course-index .course-intro-setting {background:#e0f5ff;padding: 25px;width:100%;cursor:pointer;}
+  .course-index .course-intro-setting-save {background:green;}
+  .course-index .intro-text{font-size:20px;font-weight:bold;}
+  .course-index .intro-textarea{background:rgb(255, 255, 255);}
+  .course-index .title-box{padding: 25px;}
+  .course-index input#submit.add-course{padding:8px 20px;border-radius:4px 4px 4px 4px !important;}
+  .course-index .learning-module-box {padding: 15px;width:100%;}
+  .course-index .title-normal{font-size:20px;font-weight:normal;}
+  .course-index .outline-action-links{font-size:13px;}
+  .course-index .add-link-sign{font-size:18px;}
+  .course-index .setting-font{ color:rgb(165, 161, 161);}
+  body .ui-button-text-only .ui-button-text {
+    padding: 0.4em 17px;
+    }
+body .ui-button-text-only .ui-button-text {
+    padding: 5px 7px;
+font-size: 13px;
+}
+body .ui-button-text-only .ui-button-text .ui-button-text{
+padding: 0;
+}
+</style>

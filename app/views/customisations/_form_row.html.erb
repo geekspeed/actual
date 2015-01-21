@@ -1,0 +1,111 @@
+<% field ||= nil %>
+<% branch ||= nil%>
+<% display_options = (field.present? and ["dropdown","dropdown_with_other", "dropdown_with_multiple_select", "branch_field", "file_upload"].include?(field.element_type)) ? true : false %>
+<% display_text_section = (field.present? and (field.element_type == "text_section")) ? true : false %>
+<tr class="add_field_container">
+  <td <% @klass == "Pitch" ? "colspan=3" : "colspan=2" %> colspan="2" class="field_name">
+      Field Name
+      <span>
+      <%if field.present? %>
+        <%ankor = params[:ankor]%>
+        <%= link_to "Add Help", '#help_content_form', :class => "fancybox add_custom_help" , :"data-url" => add_custom_help_program_help_contents_path(@program, field_name: field.code, ankor: ankor, custom_field_id: field.id), :"data-field-name" => field.code, :"data-ankor" => ankor, :style => "margin-left: 75%;"%>
+      <%end%>
+    <%= link_to "Delete", "#", :"data-url" => (field.present? ? delete_custom_fields_program_customisations_path(:field_id => field.id) : ""), :id => "submit", :class => "remove_custom_field"%>
+	</span>
+	</td>
+</tr>
+<tr class="value_line add_field_container">
+  <td >
+		<div class="form-group">
+			<label>Name</label>
+    	<%= (hidden_field_tag "custom_fields[][id]", field.present? ? field.id : "") %>
+    	<%= text_field_tag "custom_fields[][label]", field.present? ? field.label : nil, :placeholder => "Field name", :class =>"form-control", :style => "width:80px;"  %>
+		</div>
+		<div class="form-group">
+			<label>Type</label>
+			<%= select_tag  "custom_fields[][element_type]", options_from_collection_for_select(App::CustomFields::Models::CustomField::TYPE, :to_s, :humanize, field.present? ? field.element_type : nil), :class =>"form-control", :style => "width:80px;" %>  
+		</div>
+		<div class="form-group options" style="<%= display_options ? '' : 'display:none;'%>">
+      <label class="chg_file_upload"><%= field.try(:element_type) == "file_upload" ? "File Type" : "Dropdown options" %></label>
+      <%= text_area_tag "custom_fields[][options]", field.present? ? field.formatted_options : nil, :style => "width: 120px; height: 50px;", :placeholder => "Comma separated options", :class => "form-control options_field_area" %>
+  	</div>
+  	
+  	<div class="form-group text_section" style="<%= display_text_section ? '' : 'display:none;'%>">
+      <label >Enter Text</label>
+      <%= text_area_tag "custom_fields[][text_section_content]", field.present? ? field.text_section_content : nil, :style => "width: 120px; height: 50px;", :class => "form-control text_sections summernote" %>
+    </div>
+  	
+  		<%unless field.try(:element_type) == "file_upload"%>
+			<div class="form-group options not_in_file_upload" style="<%= display_options ? '' : 'display:none;'%>">
+				<label>Dropdown type</label>
+				<div style="float: left;margin-top: 5px;">	
+					<%= check_box_tag "custom_fields[][use_as_filter]", true, field.present? ? field.use_as_filter : false, :style => "width: auto; margin-right: 2px;" %> Filter
+				</div>
+				<div class="clear"></div>
+			</div>
+		<% end %>
+		<div class="form-group place_holder" style="<%= display_options ? 'display:none;' : (display_text_section ? 'display:none' : '')%>">
+			<label>Placeholder</label>
+    	<%= text_field_tag "custom_fields[][placeholder]", field.present? ? field.placeholder : nil, :placeholder => "Place holder text", :class =>"form-control", :style => "width:80px;height:100px;" %>
+		</div>  	
+		<div class="form-group field_required" style="<%= display_text_section ? 'display:none;' : ''%>">
+			<label>Form control</label>
+			<div style="float: left;margin-top: 5px;">
+				<%= check_box_tag "custom_fields[][required]", true, field.present? ? field.required : false, :style => "width: auto; margin-right: 2px;" %> Required
+			</div> 
+			<div class="clear"></div>  
+			<%= hidden_field_tag "custom_fields[][disabled]", field.present? ? field.disabled : false %>
+		</div>
+		<div class="form-group field_private" style="<%= display_text_section ? 'display:none;' : ''%>">
+			<label>Visibility</label>
+			<div style="float: left;margin-top: 5px;">
+				<%= check_box_tag "custom_fields[][private_to_team]", true, field.present? ? field.private_to_team : false, :style => "width: auto; margin-right: 2px;" %> Private to the team
+			</div> 
+			<div class="clear"></div>  
+		</div>
+		<div class="form-group">
+			<label>Direction</label>
+    	<%= select_tag "custom_fields[][linked]", options_from_collection_for_select(@custom_fields.to_a, :code, :label, (field.present? ? field.linked : nil)), prompt: "linked to?", :class => "form-control", :style => "width: 80px" %>
+    </div>
+    
+    <div class="form-group" >
+      <label>Sequence</label>
+      <%= select_tag  "custom_fields[][sequence]", options_for_select(1..30, field.present? ? field.sequence.to_i : nil), prompt: "Select", :class => "form-control addPositionField", :style => "width: 50px" %>
+      <%= hidden_field_tag "custom_fields[][position]", field.present? ? field.position : nil %>
+    </div>
+    <% if @klass == "Pitch" %>
+      <div class="form-group">
+        <label>Phase</label>
+        <%= select_tag  "custom_fields[][phases]", options_from_collection_for_select(active_phase(@program), "code", "phase_name", (field.present? and field.attributes.has_key?("phases")) ? (field.phases.count > 1 ? ["all"] : field.phases) : ["all"]), prompt: "Select",:class => "form-control", :style => "width: 80px" %>
+        <%= hidden_field_tag "custom_fields[][branch_id]", branch.id if branch.present? %>
+      </div>
+    <% end %>
+	</td>
+  <td valign="middle" style="border-left:1px solid #ddd;width: 10%;" align="center">
+    <%#= link_to image_tag("ico-delete.png"), "#", :class => "deleteTableRow" %>
+    <% field_disabled = field.present? && field.disabled? %>
+    <%= link_to( field_disabled ? "Enable" : "Disable", "#", :class => "deleteTableRow", :style => "float: none;" ) %>
+  </td>
+  
+</tr>
+<% if field.present? and field.element_type == "branch_field" %>
+  <% field.options.each do |option| %>
+    <tr class="option_row add_field_container">
+      <td>
+        <h4 class="option_name" >Options for <%= option %></h4>
+      </td>
+      
+    </tr>
+    <% @custom_fields.where(parent_id: field.id.to_s, parent_option: option).each do |option_field|%>
+      <%= render "branch_option_form_row", field: option_field, parent_field: field, option: option %>
+    <% end %>
+    <%#= render "branch_option_form_row", parent_field: field, option: option %>
+    <tr class="option_row add_field_container">
+      <td>
+        <%= link_to("+ Insert new field for this option", "#", :class => "insert_option_field", :data_option_name => option ) %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+
+

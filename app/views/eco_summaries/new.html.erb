@@ -1,0 +1,133 @@
+<%= render "devise/shared/navbar", page: "eco_summary"  %>
+
+ <style>
+.input-size1 {
+    width: 196px;
+}
+.column .portlet .portlet-header{
+  cursor:pointer;
+}
+.column {
+width: 100%;
+overflow-y: hidden;
+}
+
+.portlet {
+margin-bottom:1em;
+border:0px;
+} 
+.portlet-header h2.titleLine {
+padding-top:6px;
+padding-bottom:6px;
+border-bottom: 0px;
+line-height: 0px;
+margin-bottom: 0px;
+margin-top: 0px;
+}
+.portlet-header {
+padding-right: 26px;
+border:0px;
+box-shadow: 1px 1px 5px #CCCCCC;
+-moz-box-shadow: 1px 1px 5px #CCCCCC;
+-webkit-box-shadow: 1px 1px 5px #CCCCCC;
+border-radius:0;1px 1px 5px #CCCCCC;
+position: relative;
+}
+.portlet-toggle {
+position: absolute;
+top: 50%;
+right: 0;
+margin-top: -8px;
+}
+.portlet-placeholder {
+border: 1px dotted black;
+margin: 0 1em 1em 0;
+height: 42px;
+}
+label.section-title{ font-size:18px;}
+.panel-title a:first-child{
+  float: left;
+  }
+</style>
+<script type="text/javascript" charset="utf-8">
+ $(function() {
+  $("#eco_summary_eco_summary_order_attributes_order").val("programs-1, eco_plan-2,goal-3,entry_criteria-4,terms-5,partners-6,quotes-7,freeform-8,casestudy-9, blog-10");
+  $('div.column').sortable({
+    stop: function(event, div) {
+      var order_list = $("div.column").sortable('toArray');
+        $("#eco_summary_eco_summary_order_attributes_order").val(order_list)
+      },
+  });
+  $( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+  });
+  $( ".portlet" )
+  .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+  .find( ".portlet-header" )
+  .addClass( "ui-widget-header ui-corner-all" )
+  .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+  $( ".portlet-toggle" ).click(function() {
+    var icon = $( this );
+    icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+    icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+    });
+  }); 
+  jQuery(document).ready(function() {
+    $('.container_tags').on('click', '.delTag', function(){
+      $(this).parent().remove();
+      return false;
+    });
+    $('.addResource').click(function(){
+      var value = $('#inputResource').val();
+      if(value!=""){
+        $('#resourceList').append('<div class="tagContainer"><a href="#" class="delTag">'+value+'</a><input type="hidden" value="'+value+'" name="resources[]" readonly="readonly" /></div>');
+        $('#inputResource').val('');
+      }
+      return false;
+    });
+    $('.addCriteria').click(function(){
+      var elem = $(this).siblings("input")
+      var value = elem.val()
+      if(value!=""){
+        $('#criteriaList').append('<div class="tagContainer"><a href="#" class="delTag">'+value+'</a><input type="hidden" value="'+value+'" name="tags[entry_criteria][]" readonly="readonly" /></div>');
+        elem.val('');
+      }
+      return false;
+    });
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('overview');
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('eco_summary_goal');
+  });
+    bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('eco_summary_welcome_message');
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('eco_summary_terms');
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('eco_summary_privacy_policy');
+  }); 
+  $("form").on("click", ".js_inline_edit", function(e){
+    $(this).siblings("input").show();
+    $(this).siblings("span").hide();
+    $(this).hide();
+    e.preventDefault();
+  });
+
+    $("form").on("click", ".click_focus", function(e){
+    $(this).focus();
+    e.preventDefault();
+  });
+</script>
+
+<div id="rightcontent" class="two_sided_right_content">
+  <%= form_for(@summary, :url => organisation_summary_path(@organisation), :html => {:class => "reqForm no_float", :style => "margin-left: 20px" }) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>

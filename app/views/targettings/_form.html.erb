@@ -1,0 +1,199 @@
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h4><%= type%></h4>
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Name</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.text_field :name, {:class => "form-controls form-style-1"}%>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Description</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.text_field :explaination, {:class => "form-controls form-style-1"}%>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Role</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:role, roles, :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+        </br>
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Project Phase Achieved</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:project_phase_achived, context_program.workflows.where(active: true).collect {|u| [u.phase_name, u.code]}, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Project Phase Not Achieved</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:project_phase_not_achived, context_program.workflows.on.collect {|u| [u.phase_name, u.code]}, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div>Last Activity</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:last_activity, [["-select-", 0],["Never", 1], ["Last 2 Days", 2],["Last Week", 3], ["Last 2 Weeks", 4], ["Last Month", 5]], :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+				<br />
+				<div class="row" id="pitch_filter_code">
+					<div class="col-sm-4 setting-font">
+						<div>Pitch Filter Fields</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:pitch_filter_code, pitch_filter, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+				<div class="row" id="pitch_filter">
+					<div class="col-sm-4 setting-font">
+						<div>Pitch Filter Fields</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.text_field :pitch_filter_option, {:class => "form-controls form-style-1"}%>
+					</div>
+				</div>
+				<div class="row" id="applicant_filter_code">
+					<div class="col-sm-4 setting-font">
+						<div>Applicant Filter Fields</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.select(:applicant_filter_code, applicant_filter, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+					</div>
+				</div>
+				<div class="row" id="applicant_filter">
+					<div class="col-sm-4 setting-font">
+						<div>Applicant Filter Fields</div>
+					</div>
+					<div class="col-sm-8">
+						<%= f.text_field :applicant_filter_option, {:class => "form-controls form-style-1"}%>
+					</div>
+				</div>
+				<br />
+        <div class="row" id="joined_team_filter">
+          <div class="col-sm-4 setting-font">
+            <div>Joined Team</div>
+          </div>
+          <div class="col-sm-8">
+            <%= f.select(:joined_team_filter, [["1 Week", 1], ["2 Week", 2], ["3 Week", 3], ["4 Week", 4], ["5 Week", 5]],{ include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-sm-6">
+		<%= link_to "Preview", "#targetting_preview", class:" btn message_user fancybox_small", id: "target_preview"%>
+	</div>
+	<div class="col-sm-6">
+		<%= f.submit "Save Filter", :id => "submit" %>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#applicant_filter").hide();
+
+		$("#pitch_filter_code").hide();
+		$("#targetting_pitch_filter_code").attr("disabled", true)
+
+		$("#pitch_filter").hide();
+		$("#targetting_pitch_filter_option").attr("disabled", true)
+		var role = $("#targetting_role").val();
+		change_filter(role);
+	});
+
+	$(document).on("change", "#targetting_role", function(){
+		var role = $(this).val();
+		change_filter(role);
+	});
+
+	$(document).on("change", "#targetting_pitch_filter_code", function(){
+		$("#targetting_pitch_filter_option").val($("#targetting_pitch_filter_code :selected").text());
+	});
+	
+	$(document).on("change", "#targetting_applicant_filter_code", function(){
+		$("#targetting_applicant_filter_option").val($("#targetting_applicant_filter_code :selected").text());
+	});
+
+	function change_filter(role){
+		if(role == "participant"){
+			$("#pitch_filter_code").hide();
+			$("#targetting_pitch_filter_code").attr("disabled", true)
+			$("#targetting_pitch_filter_option").attr("disabled", true)
+			
+			$("#applicant_filter_code").show();
+			$("#targetting_applicant_filter_code").attr("disabled", false)
+			$("#targetting_applicant_filter_option").attr("disabled", false)
+			
+			$("#joined_team_filter").show();
+			$("#targetting_joined_team_filter").attr("disabled", false)
+		}
+		else{
+				if(role == "pitch"){
+				$("#pitch_filter_code").show();
+				$("#targetting_pitch_filter_code").attr("disabled", false)
+				$("#targetting_pitch_filter_option").attr("disabled", false)
+				
+				$("#applicant_filter_code").hide();
+				$("#targetting_applicant_filter_code").attr("disabled", true)
+				$("#targetting_applicant_filter_option").attr("disabled", true)
+				
+				$("#joined_team_filter").hide();
+        $("#targetting_joined_team_filter").attr("disabled", true)
+			}
+			else{
+			  if(role == "mentor"){
+          $("#pitch_filter_code").hide();
+          $("#targetting_pitch_filter_code").attr("disabled", true)
+          $("#targetting_pitch_filter_option").attr("disabled", true)
+          
+          $("#applicant_filter_code").hide();
+          $("#targetting_applicant_filter_code").attr("disabled", true)
+          $("#targetting_applicant_filter_option").attr("disabled", true)
+          
+          $("#joined_team_filter").show();
+          $("#targetting_joined_team_filter").attr("disabled", false)
+        }
+        else{
+  				$("#pitch_filter_code").hide();
+  				$("#targetting_pitch_filter_code").attr("disabled", true)
+  				$("#targetting_pitch_filter_option").attr("disabled", true)
+  				
+  				$("#applicant_filter_code").hide();
+  				$("#targetting_applicant_filter_code").attr("disabled", true)
+  				$("#targetting_applicant_filter_option").attr("disabled", true)
+  				
+  				$("#joined_team_filter").hide();
+          $("#targetting_joined_team_filter").attr("disabled", true)
+  			}
+  		}
+		}
+	}
+</script>

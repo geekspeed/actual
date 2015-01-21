@@ -1,0 +1,107 @@
+<%#= content_tag :div, :class => "container" do%>
+
+<%star_system = pitch.program.due_diligence_matrix.star_system?%>
+<div style="page-break-before: always;" >
+  <br/>
+  <%= content_tag :div, :class => "header" do%>
+    <%= content_tag :h3, :class => "text-muted" do %>
+      <%= "Judging sheet: <br> #{pitch.try(:program).try(:title)} <br> #{pitch.try(:title)}".html_safe %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, :class => "row" do%>
+    <%= content_tag :div, :class => "col-lg-12" do%>
+      <%= content_tag :span, "Total Points: ____", class: "pull-right"%>
+    <% end %>
+    <%= content_tag :div, :class => "col-lg-12" do%>
+      <%= content_tag :table, :class => "table table-stripped" do%>
+        <%= content_tag :thead do%>
+          <%= content_tag :th, "#"%>
+          <%= content_tag :th, "Criteria ", :style => "width:26%;"%>
+          <%= content_tag :th, "Comments", :colspan => "5", :style => "width:26%;"%>
+          <%= content_tag :th, star_system ? "Range" : "Max points"%>
+          <%= content_tag :th, star_system ? "Stars" : "Points"%>
+        <%end%>
+        <%= content_tag :tbody do%>
+        <% i = 0 %>
+          <% if !pitch.try(:program).try(:due_diligence_matrix).blank? %>
+            <%pitch.program.due_diligence_matrix.matrices.each_with_index do |matrix, index|%>
+              <% i = i + 1 %>
+              <%= content_tag :tr, style:"height:125px;" do%>
+                <%= content_tag :td, i %>
+                <%= content_tag :td, matrix.description %>
+                <%= content_tag :td, "", :colspan => "5" %>
+                <%= content_tag :td, "0 star (#{matrix.one_star}) to 5 stars (#{matrix.five_star}) " if pitch.program.due_diligence_matrix.star_system? %>
+                <%= content_tag :td, "#{matrix.max_points}" if !pitch.program.due_diligence_matrix.star_system?%>
+                <%= content_tag :td, ""%>
+              <% end unless matrix.description.blank? %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    
+    <% end %>
+  <% end %>
+  
+</div>
+
+<div style="page-break-before: always;" >
+  <br/>
+  <%= content_tag :div, :class => "header" do%>
+    <%= content_tag :h3, :class => "text-muted" do %>
+      <%= "Team" %>
+    <% end %>
+  <% end %>
+  
+  <%= content_tag :div, :class => "row" do%>
+    <%= content_tag :div, :class => "col-lg-12 proj-field" do%>
+      
+      <% ids = (pitch.team - pitch.collaborate_requesters).uniq %>
+      <% User.find(ids).each do |member| %>
+        <%=content_tag :h4, member.full_name %>
+        <%=content_tag :p do %>
+          <%= "<strong>Bio:</strong>".html_safe %>
+          <%=member.bio%>
+        <% end %>
+        <%#=content_tag :h6, member.organisation %>
+      <% end %>
+      
+    <% end %>
+  <% end %>
+  
+</div>
+  
+<div style="page-break-before: always;" >
+      <%= content_tag :div, :class => "header" do%>
+        <%= content_tag :h3, :class => "text-muted" do %>
+          <%= pitch.try(:title) %>
+        <% end %>
+      <% end %>
+      
+      <%= content_tag :div, :class => "jumbotron no-margin", :style =>"padding: 5px 60px;" do%>
+        <%= content_tag :p, :class=> "lead", :style => "margin-bottom:0;" do %>
+          Summary
+        <% end %>
+      <% end %>
+      <%=content_tag :p, pitch.try(:summary).try(:content) %>
+    
+      <%= content_tag :p, "Comments:", :style => "margin:10px 0 50px 0;" %>
+      
+      <% custom_fields = Pitch.custom_fields_with_anchor("pitch").enabled %>
+      <% custom_fields.where(program_id: pitch.try(:program).try(:id)).or({branch_id: nil}, {branch_id: pitch.pitch_branch_id.to_s}).select{|field| field if Workflow.where(program_id: pitch.program.id.to_s, active: true, :code.in => field.phases).present?}.each do |custom_field| %>
+        <%= content_tag :div, :class => "row" do%>
+          <%= content_tag :div, :class => "col-lg-6 proj-field" do%>
+          
+              <%= content_tag :div, :class => "jumbotron no-margin", :style =>"padding: 5px 60px;" do%>
+                <%=content_tag :h4, custom_field.label%>
+              <% end %>
+            <%=content_tag :p, pitch.send(custom_field.code.to_sym)%>
+            <br>
+            <%=content_tag :p, "Comments:", :style => "margin:10px 0 50px 0;" %>
+          <% end %>
+          
+        <% end if pitch.custom_fields.keys.include?(custom_field.code)%>
+      <% end %>
+    </div>
+
+<%# end %>

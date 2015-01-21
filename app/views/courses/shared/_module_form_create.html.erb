@@ -1,0 +1,175 @@
+<div class="add-new-module">
+  <%= form_for @module, :url =>@action_path do |f| %> 
+    <div class="box-show-real" id="box1-show">
+      <div class="module-box-div-main">
+				<div class="module-box-div-main-content">
+					<div class="module-box-div module-title-container">
+		        <h3 class="module-title"><%= @page== "edit_module" ? "Update Module" : "Add New Module" %></h3>
+		      </div>
+					<div class="module-box-div-main-data">
+						<div id="rootwizard" class="form-horizontal form-wizard">
+							<div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+								<div class="progress-indicator"></div>
+							</div>
+							<ul>
+								<li class="active">
+									<a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Description</a>
+								</li>
+								<li class="">
+									<a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Source</a>
+								</li>
+							</ul>
+						</div>
+		        <div class="module-box-div">
+		          <%= f.text_field :title, :placeholder=>"Enter Module Title", :class=>"form-control form-style-1" %><br/>
+		          <div class="module-box-div-inner">
+		            <h2 class="module-title-main">Description</h2>
+		              <div>
+		                Provide a brief description about this module <i>(more 140 chars)</i>
+		              </div>
+		              <div class="module-description-field">
+		                <%= f.text_area :description, :placeholder=>"Enter brief description", :class=>"form-control form-style-1 autoresize-area", :rows=>"2", :style=>"width:100%" %>
+		              </div>
+		              <div>
+		                Describe in greater detail what your course participants can expect to learn from this module
+		              </div>
+		              <div class="module-description-sub-field">
+		                <%= f.text_area :greater_detail, :class=>"summernote", :style=>"width:100%" %>
+		              </div>
+		              <h2 class="module-keywords-title">Personalisation</h2>
+		              <div>
+		                Add keywords that will help your participants identify modules that pertain to their needs
+		              </div>
+		              <div class="module-description-sub-field">
+		                <div class="tags_container"> 
+		                  <div class="container_tags">
+		                    <div class="tagList" id="keywordList">
+		                      <% f.object.keywords.each do |keyword| %>
+		                        <div class="tagContainer">
+		                          <%= link_to keyword, "#", :class => "delTag" %>
+		                          <%= hidden_field_tag :"course_module[keywords][]", keyword %>
+		                        </div>
+		                      <% end  %>
+		                    </div>
+		                    <div class="clr"></div>
+		                  </div>
+		                  <div class="container_add_tag">
+		                  <div style="float:left;margin-right:10px;">
+		                  <%= f.text_field :keywords, :class => "autoSkills form-control pull-left form-style-1", :placeholder => "One item at a time", :id => "keywords", :name => "keywords[]", :value => "", :"data-field-name" => "#{f.object_name}[keywords][]" %>
+		                  </div>
+		                  <%= link_to "+ Add It", "#", :class => "addKeyword text_underline pull-right" %>
+		                  <div class="clear"></div>      
+		                </div>
+		              </div> 
+		            </div>
+		            <div class="clear"></div>
+		            <div class="module-page-action">
+		              <a href="#" id="box2" class="action-click btn btn-white pull-right">Next ></a>
+		            </div>
+		          </div>
+		        </div>
+					</div>
+				</div>
+      </div><!--  module-box-div-main -->
+    </div>
+    <div  style="display:none;" class="box-show-real" id="box2-show">
+      <div class="module-box-div-main">
+				<div class="module-box-div-main-content">
+	        <div class="module-box-div module-title-container">
+	          <h3 class="module-title"><%= @page== "edit_module" ? "Update Module" : "Add New Module" %></h3>
+	        </div>
+					<div class="module-box-div-main-data">
+						<div id="rootwizard" class="form-horizontal form-wizard">
+							<div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+								<div class="progress-indicator" style="width: 50%;"></div>
+							</div>
+							<ul>
+								<li class="completed">
+									<a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Description</a>
+								</li>
+								<li class="active">
+									<a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Source</a>
+								</li>
+							</ul>
+						</div>
+		        <div class="module-box-div">
+		          <div class="module-box-div-inner">
+		            <h2 class="module-title-main">Source</h2>
+		            <div>
+		            Choose the primary learning source that participant will use to understand how to achieve this module
+		            </div>
+		            <div style="padding: 15px 15px 15px 0;">
+		              <div style="margin-bottom: 10px;">
+		                What format is your source ?
+		              </div>
+		              <%= f.select :resource_format, options_for_select(["Video", "Image", "External URL", "PDF"], @module.resource_format), {},:class=>"form-control form-style-1", :style=>"width: 39%;" %>
+		              <div style="margin-top: 10px;">
+		                <div style="margin-bottom: 10px;">
+		                  Link your source
+		                </div>
+		                <div id="module-link" class="<%= @module.resource_format.blank? ? 'show' : ((@module.resource_format == 'External URL' || @module.resource_format == 'Video') ? 'show' : 'hide') %>">
+		                  <%= f.text_field :link, :placeholder=>"http://",:class=>"form-control form-style-1" %>
+		                </div>
+		                <div id="module-attachment" style="display:none;" class="<%= (@module.resource_format == 'Image' || @module.resource_format == 'PDF') ? 'show' : 'hide' %>">
+		                  <% if !@module.attachment.blank? %>
+		                  <br/><b>Attachment : <%= link_to @module.attachment.file.original_filename, @module.try(:attachment).try(:url), :style=>"font-weight:bold; btn btn-default" %></b>
+		                  <% end %>
+		                  <%= f.file_field :attachment %>
+		                </div>
+		              </div>
+		            </div>
+		            <div class="module-page-action">
+		              <a href="#" id="box1" class="action-click btn btn-white pull-left">< Previous</a>
+		              <%= submit_tag "Submit", id: "submit", :style=>"btn btn-default pull-right" %>
+		            </div>
+		          </div>
+		        </div>
+					</div>
+				</div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<script>
+  $(document).ready(function(){     
+    $(".autoresize-area").autosize()
+  	$(".summernote").summernote()
+    $( ".radioset" ).buttonset();
+    $(".action-click").click(function(e){
+      $(".box-show-real").hide()
+      $("#"+this.id+"-show").show()
+      $(".autoresize-area").height("100%")
+      e.preventDefault()
+    });
+    $(".add-study-material").click(function(){
+      var study_material_form = "<%= escape_javascript(render 'courses/shared/study_material') %>"
+      var study_material_form_uniq = study_material_form.replace(/-1-/g,new Date().getTime())
+      $(".study-materials").append(study_material_form_uniq)
+    });	
+    $("#course_module_resource_format").change(function(){
+      if (($("#"+this.id+" option:selected").val() == "Image") || ($("#"+this.id+" option:selected").val() == "PDF"))
+      {
+        $("#module-attachment").addClass("show")
+        $("#module-link").removeClass("show").addClass("hide")
+      }
+      else
+      {
+        $("#module-attachment").removeClass("show").addClass("hide")
+        $("#module-link").addClass("show")
+      }
+    });
+    $('.addKeyword').click(function(){
+    var value = $('#keywords').val();
+    var field_name = $('#keywords').data('field-name');
+    if(value!=""){
+      $('#keywordList').append('<div class="tagContainer"><a href="#" class="delTag">'+value+'</a><input type="hidden" value="'+value+'" name="'+field_name+'" readonly="readonly" /></div>');
+      $('#keywords').val('');
+    }
+    return false;
+    });  
+    $('.container_tags').on('click', '.delTag', function(){
+      $(this).parent().remove();
+      return false;
+    });
+  });
+</script>

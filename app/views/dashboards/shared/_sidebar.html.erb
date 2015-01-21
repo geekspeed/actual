@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag    "normalize", :media => "all" %>
+<%= stylesheet_link_tag    "demo", :media => "all" %>
+<%= stylesheet_link_tag    "component", :media => "all" %>
+<%= javascript_include_tag "modernizr.custom" %>
+<%= javascript_include_tag "jquery.sticky" %>
+
+<% page ||= "community" %>
+
+<% content_for :sidebar do %>
+	
+	<%= javascript_include_tag "classie" %>
+	<%= javascript_include_tag "gnmenu" %>
+	<script>
+		new gnMenu( document.getElementById( 'gn-menu' ) );
+	</script>
+<% end %>

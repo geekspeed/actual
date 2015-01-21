@@ -1,0 +1,55 @@
+<div class="block">
+  <h2 class="titleLine"><%= "Approval Status from #{t("role_type:selector", "p")}" %></h2>
+  <% @selectors.each do |selector| %>
+    <div class="row_div_data">
+      <div class="user_name pull-left"><%= name_or_email selector %></div>
+      <% if selector.invited_for?(:selector, @program) %>
+        <div class="pull-right">
+		<div class="user_status user_status_Pending">Pending</div>
+        <a href="#remind_<%= selector.id %>" class="send_reminder fancybox_small">Send Reminder</a>
+		</div>
+        <%= render "shared/reminder_lightbox", :user => selector, :program => @program, :code => "selector", :anchor_id => "remind_#{selector.id}" %>
+      <% else %>
+        <div class="user_status user_status_Yes pull-right" id="tag" style="cursor: auto;">Yes</div>
+      <% end %>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+</div>
+<div class="block">
+  <h2 class="titleLine">Agreement to participate from Due Diligence Panel</h2>
+  <% @panellists.each do |user| %>
+    <div class="row_div_data">
+      <div class="user_name pull-left"><%= name_or_email user %></div>
+      <% if user.invited_for?(:panellist, @program) %>
+		<div class="pull-right">
+        	<div class="user_status user_status_Pending">Pending</div>
+        	<a href="<%= "#remind_#{user.id}" %>" class="send_reminder fancybox_small">Send Reminder</a>
+		</div>
+        <%= render "shared/reminder_lightbox", :user => user, :program => @program, :code => "panellist", :anchor_id => "remind_#{user.id}" %>
+      <% else %>
+        <div class="user_status user_status_Yes pull-right" id="tag" style="cursor: auto;">Yes</div>
+      <% end %>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+</div>
+<div class="block">
+  <h2 class="titleLine"><%= "Agreement to participate from #{t("role_type:mentor", "p")}" %></h2>
+  <% @mentors.each do |user| %>
+    <div class="row_div_data">
+      <div class="user_name pull-left"><%= name_or_email user %></div>
+      <% if user.invited_for?(:mentor, @program) %>
+		    <div class="pull-right">
+        	<div class="user_status user_status_Pending">Pending</div>
+        	<a href="#remind_<%= user.id %>" class="send_reminder fancybox_small">Send Reminder</a>
+		    </div>
+        <%= render "shared/reminder_lightbox", :user => user, :program => @program, :code => "mentor", :anchor_id => "remind_#{user.id}" %>
+      <% else %>
+        <div class="user_status user_status_Yes pull-right" id="tag" style="cursor: auto;">Yes</div>
+      <% end %>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+</div>
+<div class="clr"></div>

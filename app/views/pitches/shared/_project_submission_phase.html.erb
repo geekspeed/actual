@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag    "alertifycss/alertify.default", :media => "all" %>
+<%= stylesheet_link_tag    "alertifycss/alertify.bootstrap", :media => "all" %>
+<%= stylesheet_link_tag    "alertifycss/alertify.core", :media => "all" %>
+<%= javascript_include_tag "alertifyjs/alertify.min" %>
+
+<input type="hidden" id="pitch_name" value="<%=@pitch.title%>"/>
+<input type="hidden" id="pitch_id" value="<%=@pitch.id%>"/>
+<input type="hidden" id="program_id" value="<%=@program.id%>"/>
+
+<% if phase.complete?(@pitch, current_user)  %>
+	<% if phase.undoable? %>
+     <br/>
+      <ul class="tasks_list">
+        <li class="deliver">
+        	<%= link_to("Undo", polymorphic_path([:undo, @program, phase], pitch_id: @pitch.id), method: :put) %>
+        </li>
+    </ul>
+    <% else %>
+   	  <span class='label label-success pull-right'>Achieved</span>
+    <% end %>
+<% else %>
+    <div class="hide"><%=link_to("Undo",polymorphic_path([:achieved, @program, phase], pitch_id: @pitch.id) ,id: "submission_phase_url" , method: "put")%></div>
+     <%= link_to phase.phase_name, "javascript:;" ,id: "submit", class: "submission_phase"%>
+<% end %>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    $(".submission_phase").on("click", function(e){
+      var path = $('#submission_phase_url').val();
+      var pitch_name = $('#pitch_name').val();
+      var location = 
+      alertify.confirm("Are you sure you want to submit your "+ pitch_name +"", function (e) {
+      	if (e) {
+		      path = '/programs/'+$('#program_id').val()+'/pitches/'+$('#pitch_id').val()+'/pitch_work_flow/check_required_fields'
+		      $.ajax({
+		        url: path,
+		        type: 'get',
+		        contentType: 'application/json; charser=utf-8',
+		        success: function(data){
+		        	if(data.status){
+		        		$("#submission_phase_url").click();
+		        	}
+		        	else{
+		        		alertify.alert("You cannot submit your "+ pitch_name +". Please fill in all mandatory fields.eg  "+ data.blank_fields +"");
+		        	}
+		        },
+		        error: function(){
+		          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+		        }
+		      });
+	      }
+	    });
+	  });
+  });
+</script>

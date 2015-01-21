@@ -1,0 +1,305 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Communty page" %>
+<% end %>
+
+<% page = "setup_program"; ppage = "Community Tab"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-dashboard gn-icon-large"></i>
+      Community Page
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customizable dashboard to visualize key facts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Community</a>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+    <h2 class="titleLine title-normal"><span>Main section</span></h2>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec1" name="sec1" class="section_nav"></a>
+              <h3><%= t("role_type:participant", "s") %></h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+              
+          <div class="panel-body">
+            <%= form_for(@custom_filter, :url => program_update_custom_filter_path(@program), :method=> "put", :html => {:class => "registerForm reqForm" })  do |f|%>
+              <%= hidden_field_tag "filter_id", "#{@custom_filter.id}"%>
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <div><%= t("role_type:participant", "s") %> filter for:</div>
+                </div>
+                <div class="col-sm-8">
+                  <%= f.select :rule_type, options_for_select([["None", "none"], ["Project Recomendation filter", "project_recomendation"], ["Custom Filter", "custom_filter"]], @custom_filter.rule_type), :class => "form-controls form-style-1"%>
+                </div>
+              </div>
+              <br />
+              <br />
+              <div class="custom_filter_fields" style="display: none">
+                <div class="row">
+                  <div class="col-sm-2">
+                    Custom Filter:
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="radioset">
+                      <%= f.radio_button :is_private, "true", :class => "option_match_mentors"  %>
+                      <%= f.label "Private", :for => "#{f.object_name}_is_private_true" %>
+            
+                      <%= f.radio_button :is_private, "false", :class => "option_match_mentors"  %>
+                      <%= f.label "Public", :for => "#{f.object_name}_is_private_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <a href="#" class="customRow slink">+ Add Rule</a>
+                  </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <% if @custom_filter.custom_rules.present? %>
+                  <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+                    <thead>
+                      <tr role="row">
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Rule Name</th>
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Role</th>
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">For Event</th>
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">For Field</th>
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Field Value</th>
+                        <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody aria-relevant="all" aria-live="polite" role="alert">
+                      <%@custom_filter.custom_rules.asc(:created_at).each do |custom_rule|%>
+                        <tr>
+                          <td><%= custom_rule.title%></td>
+                          <td><%= custom_rule.role%></td>
+                          <td><%= ProgramEvent.where(:id => custom_rule.event_for.to_s).first.try(:title)%></td>
+                          <td><%= custom_rule.field_name == "Tag" ? "Tag" : Pitch.custom_fields.where(:id => custom_rule.field_name.to_s).first.try(:label)%></td>
+                          <td><%= custom_rule.field_value%></td>
+                          <td>
+                            <%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#edit_rule", "id" => "update_rule", :"data-rule" => custom_rule.id, :class =>"btn btn-info btn-sm btn-icon icon-left" %>
+                            <%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe, program_delete_rule_path(@program, :custom_rule_id => custom_rule.id), :method=>:delete, :class=>"btn btn-danger btn-sm btn-icon icon-left", :confirm => "Are you sure" %>
+                          </td>
+                        </tr>
+                      <%end%>
+                    </tbody>
+                  </table>
+                <%end%>
+                <br>
+                <br>
+                <br>
+                <%= f.fields_for :custom_rules, @custom_filter.custom_rules.build do |rule| %>
+                  <div class="custom_fields">
+                  </div>
+                <% end -%>
+              </div>
+              <div class="row">
+                <%= f.submit "Update", :id => "submit" %>
+              </div>
+            <%end%>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec2" name="sec2" class="section_nav"></a>
+              <h3><%= t("role_type:mentor", "s") %></h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+              
+          <div class="panel-body" >
+            <%= form_for(@custom_filter_for_mentor, :url => program_update_custom_filter_path(@program), :method=> "put", :html => {:class => "registerForm reqForm" })  do |f|%>
+              <%= hidden_field_tag "filter_id", "#{@custom_filter_for_mentor.id}"%>
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <div><%= t("role_type:mentor", "s") %> filter for:</div>
+                </div>
+                <div class="col-sm-8">
+                  <%= f.select :rule_type, options_for_select([["None", "none"], ["Project Recomendation filter", "project_recomendation"]], @custom_filter_for_mentor.rule_type), :class => "form-controls form-style-1"%>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <%= f.submit "Update", :id => "submit" %>
+              </div>
+            <%end%>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="add_row" style="display: none">
+      <div class="row">
+        <div class="col-sm-4">
+          <div><h4><b>Add new rule:</b></h4></div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-4 setting-font">
+          <div>Rule name</div>
+        </div>
+        <div class="col-sm-8">
+          <%= text_field_tag "custom_filter[custom_rules_attributes][-1-][title]", "", :class => "form-controls form-style-1 filter_fields"%>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-4 setting-font">
+          <div>Role</div>
+        </div>
+        <div class="col-sm-8">
+          <%= select_tag "custom_filter[custom_rules_attributes][-1-][role]", options_for_select([["Participated In", "Participated In"], ["Not Participated In", "Not Participated In"]]), :class => "form-controls form-style-1 filter_fields"%>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-4 setting-font">
+          <div>Events</div>
+        </div>
+        <div class="col-sm-8">
+          <%= select_tag "custom_filter[custom_rules_attributes][-1-][event_for]", options_for_select(context_program.program_events.map{|cc| [cc.title, cc.id]}), {:class => "form-controls form-style-1 filter_fields"}%>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-4 setting-font">
+          <div>Pitch Field</div>
+        </div>
+        <div class="col-sm-8">
+          <%= select_tag "custom_filter[custom_rules_attributes][-1-][field_name]", options_for_select(Pitch.custom_fields.where(:program_id => context_program.id).map{|cc| [cc.label, cc.id]}) + options_for_select([["Tag", "Tag"]]), :class => "form-controls form-style-1 filter_fields"%>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-4 setting-font">
+          <div>value</div>
+        </div>
+        <div class="col-sm-8">
+          <%= text_field_tag "custom_filter[custom_rules_attributes][-1-][field_value]", "", :class => "form-controls form-style-1 filter_fields"%>
+        </div>
+      </div>
+      <br />
+      
+    </div>
+  </div>
+  
+  <div class="eventInsForm modal fade" id="edit_rule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel"><b>Edit Rule</b></h4>
+        </div>
+        <div class="modal-body" id="rule_data">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= hidden_field_tag "program_id", context_program.id%>
+  <div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1"><%= t("role_type:participant", "s") %></a></li>
+          <li><a href="#sec2"><%= t("role_type:mentor", "s") %></a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+  $(document).ready(function(){
+    var value = $("#custom_filter_rule_type").val();
+    if(value=="custom_filter"){
+      $(".custom_filter_fields").show();
+      $(".filter_fields").each(function(){ $(this).attr('disabled', false)})
+    }
+    else{
+      $(".custom_filter_fields").hide();
+      $(".filter_fields").each(function(){ $(this).attr('disabled', true)})
+    }
+  });
+
+  $(document).on('change', "#custom_filter_rule_type", function(){
+    var value = $(this).val();
+    
+    if(value=="custom_filter"){
+      $(".custom_filter_fields").show();
+      $(".filter_fields").each(function(){ $(this).attr('disabled', false)})
+    }
+    else{
+      $(".custom_filter_fields").hide();
+      $(".filter_fields").each(function(){ $(this).attr('disabled', true)})
+    }
+  });
+  
+  $('.customRow').click(function(){
+    var col = $('#add_row').html().replace(/-1-/g, new Date().getTime());
+    $(".custom_fields").append(col);
+    return false;
+  });
+  
+  $(document).ready(function($){
+    $('.collapses').collapsiblePanel();
+  });
+  
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+
+  $(document).on("click", "#update_rule", function(e){
+    e.preventDefault();
+    rule_id = $(this).attr("data-rule");
+    $.ajax({
+      url: "/programs/" + $("#program_id").val() + "/get_rule",
+      type: 'get',
+      data:{rule_id: rule_id},
+      success: function(data){
+        $("#rule_data").html(data);
+      },
+      error: function(){
+        alert('Request failed. Sorry, we are analyzing the cause of this problem');
+      }
+    });
+  });
+
+</script>

@@ -1,0 +1,82 @@
+<% content_for :title do %>
+  <%= "badge_authorty_details" %>
+<% end %>
+<%= render "devise/shared/navbar" %>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Organisation Badge Issuer Detail</h3>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <%=form_for @badge_auth, url: organisation_badge_authority_details_save_path, method: :post do |f|%>
+            
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= f.label :name %></p></div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_field :name, class: "form-control" , required: true%>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= f.label :url  %></div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_field :url, class: "form-control", required: true%>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= f.label :description %></div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_area :description, rows: "5", class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= f.label :email %></div>
+              </div>
+              <div class="col-sm-8">
+                <%= f.text_field :email, type: "email", class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= f.label :image%>(png)</div>
+              </div>
+              <div class="col-sm-4">
+                <div class="browse-wrapper">
+                 <%= f.file_field :image, class: "form-control upload_badge_img", accept: "image/png" %>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag( (@badge_auth.image.present? ? @badge_auth.image : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-reponsive")%>
+              </div>
+            </div>
+            
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-4 setting-font">
+                
+              </div>
+              <div class="col-sm-8">
+                <%= button_tag "submit", class: "btn btn-default"  %>
+              </div>
+            </div>
+          <%end%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

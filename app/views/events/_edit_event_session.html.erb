@@ -1,0 +1,49 @@
+<h2 class="titleLine title-normal"><span>Event sessions</span>
+  <div class="outline-action-links pull-right">
+    <a href="#" class="eventRow slink">+ Add new Session</a>
+  </div>
+</h2>
+
+<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+	<thead>
+		<tr role="row">
+			<th aria-label="Student Name: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Location</th>
+			<th aria-label="Average Grade: activate to sort column ascending" style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Seat no</th>
+			<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Date</th>
+			<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Timings</th>
+			<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+			<th aria-label="Actions: activate to sort column ascending" style="width: 100px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Seats Booked</th>
+			<th aria-label="Actions: activate to sort column ascending" style="width: 100px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Actions</th>
+		</tr>
+	</thead>
+	<tbody aria-relevant="all" aria-live="polite" role="alert">
+		<%= program_event.fields_for :event_sessions , program_event.object.event_sessions do |event_session | %>
+		<tr>
+			<td><%= event_session.text_field :location, :class => "autogrow form-control form-style-1", :placeholder => "Type location here" %></td>
+			<td><%= event_session.number_field :seat_no, :class => "autogrow form-control form-style-1", :placeholder => "Type seats no here" %></td>
+			<td>
+			  <%= event_session.text_field :date, :class => "datepicker_std form-control form-style-1", :placeholder => "Date from" %>
+			  <br>
+			  <%= event_session.text_field :date_to, :class => "datepicker_std form-control form-style-1", :placeholder => "Date to" %></td>
+			<td>
+			  <div class='input-append bootstrap-timepicker' style='display: inline;'>
+			    <%= event_session.text_field :time_from, :class => "timepicker input-small", :placeholder => "Type time here" %>
+			    <span class='add-on'><i class='icon-time'></i></span>
+        </div>
+			  <div class='input-append bootstrap-timepicker' style='display: inline;'>
+          <%= event_session.text_field :time_to, :class => "timepicker input-small", :placeholder => "Type time here", style: "margin-top:5px;" %>
+          <span class='add-on'><i class='icon-time'></i></span>
+        </div>
+      </td>
+      <td><%= event_session.text_area :description, :class => "autogrow form-control form-style-1", style: "height: 100px;"%></td>
+			<td><%=event_session.object.event_records.selected.count %></td>
+			<td>
+				<%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, program_event_event_session_path(@program, program_event.object, event_session.object), method: :delete, action: :destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+				<%= link_to "<i class='glyphicon glyphicon-export'></i> Export CSV".html_safe, export_event_session_program_event_event_session_path(@program, program_event.object, event_session.object), class: "btn btn-info btn-sm btn-icon icon-left"%>
+				<%= link_to "<i class='glyphicon glyphicon-print'></i> Print Presence Sheet".html_safe, print_event_session_program_event_event_session_path(@program, program_event.object, event_session.object), class: "btn btn-info btn-sm btn-icon icon-left"%>
+				<%= link_to("<i class='glyphicon glyphicon-list-alt'></i> Manage Participants".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#{event_session.object.id}", "id" => "manage_link_#{event_session.object.id}", "class" =>"manage_participent btn btn-info btn-sm btn-icon icon-left") %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>

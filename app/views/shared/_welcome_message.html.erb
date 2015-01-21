@@ -1,0 +1,69 @@
+<% if !!context_program && context_program.program_summary && context_program.program_summary.summary_welcome_message.present? %>
+  <div class="block">
+    <h2 class="titleLine">Welcome Message</h2>
+    <% if current_user and (current_user.role?("awaiting_participant",context_program) or current_user.role?("awaiting_mentor",context_program)) and context_program.present? and !need?(["mentor", "selector", "panellist", "participant"], context_program) %> 
+      <%= content_tag :p do%>
+        <%= "Hi #{current_user.full_name}! Thanks for signing up. Your application is awaiting approval. You will be notified by email if and when your application has been approved"%>
+      <% end %>
+    <% elsif current_organisation and need?(["ecosystem_member"], current_organisation) and context_program and !need?(["mentor", "selector", "panellist", "participant"], context_program) and (!current_user.role?("awaiting_participant",context_program) and !current_user.role?("awaiting_mentor",context_program)) %>
+        <%= content_tag :p do%>
+          <%= "Hi #{current_user.full_name}! Welcome to #{context_program.try(:title)}"%>
+        <% end %>
+        <%= tag 'br'%>
+        <% if need?(["participant"], context_program) and @count == 0%>
+          <%= link_to("+ Add #{t("pitch", "s")}", new_program_pitch_path(context_program), :id => "submit", :style => "font-weight:bold !important;font-size:medium !important;padding: 10px 20px !important;") %>
+        <% end %>
+        <%= tag 'br', nil, nil %>
+        <%= tag 'br', nil, nil %>
+        <%= render "dashboards/shared/ecomembers_button" %>
+    <% else %>
+      <%= welcome_message(context_program, current_user.roles_string_for(context_program.id)) %>
+      <%= tag 'br', nil, nil%>
+      <% if need?(["participant"], context_program) and @count == 0 and !context_program.workflows.where(:code => "submission_deadline").first.try(:active) and !context_program.try(:program_scope).try(:stop_adding_project_participants)%>
+        <%= link_to("+ Add #{t("pitch", "s")}", new_program_pitch_path(context_program), :id => "submit", :style => "font-weight:bold !important;font-size:medium !important;padding: 10px 20px !important;") %>
+      <% end %>
+      <% if action_name == "show"%>
+        <i>Note: This message will automatically fade in next sign in.</i>
+      <% end %>
+      <%= tag 'br', nil, nil %>
+      <%= tag 'br', nil, nil %>
+    <% end %>
+  </div>
+<% elsif current_user and (current_user.attributes.keys & ["_awaiting_participant", "_awaiting_mentor"]).present? and context_program.nil? %>
+  <div class="block">
+    <h2 class="titleLine">Welcome Message</h2>
+    <%= content_tag :p do%>
+      <%= "Hi #{current_user.full_name}! Thanks for signing up. Your application is awaiting approval. You will be notified by email if and when your application has been approved"%>
+    <% end %>
+  </div>
+<% elsif current_user and (current_user.role?("awaiting_participant",context_program) or current_user.role?("awaiting_mentor",context_program)) and context_program.present? and !need?(["mentor", "selector", "panellist", "participant"], context_program) and need?(["ecosystem_member"], current_organisation) %> 
+  <div class="block">
+    <h2 class="titleLine">Welcome Message</h2>
+    <%= content_tag :p do%>
+      <%= "Hi #{current_user.full_name}! Thanks for signing up. Your application is awaiting approval. You will be notified by email if and when your application has been approved"%>
+    <% end %>
+  </div>
+<% elsif current_user and (current_user.role?("awaiting_participant",context_program) or current_user.role?("awaiting_mentor",context_program)) and context_program.present? and !need?(["mentor", "selector", "panellist", "participant"], context_program) %> 
+  <div class="block">
+    <h2 class="titleLine">Welcome Message</h2>
+    <%= content_tag :p do%>
+      <%= "Hi #{current_user.full_name}! Thanks for signing up. Your application is awaiting approval. You will be notified by email if and when your application has been approved"%>
+    <% end %>
+  </div>
+<% elsif current_user and (current_organisation and !current_user.role?("company_admin", current_organisation)) %>
+  <div class="block">
+    <h2 class="titleLine">Welcome Message</h2>
+    <%= content_tag :p do%>
+      <%= "Hi #{current_user.full_name}! Welcome to #{context_program.try(:title)}"%>
+    <% end %>
+    <%= tag 'br'%>
+    <% if need?(["participant"], context_program) and @count == 0%>
+      <%= link_to("+ Add #{t("pitch", "s")}", new_program_pitch_path(context_program), :id => "submit", :style => "font-weight:bold !important;font-size:medium !important;padding: 10px 20px !important;") %>
+    <% end %>
+    <%= tag 'br', nil, nil %>
+    <%= tag 'br', nil, nil %>
+    <% if current_organisation and need?(["ecosystem_member"], current_organisation) and context_program and !need?(["mentor", "selector", "panellist", "participant"], context_program) %>
+      <%= render "dashboards/shared/ecomembers_button" %>
+    <% end %>
+  </div>
+<% end %>

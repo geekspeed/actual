@@ -1,0 +1,16 @@
+<div id="ecosystem-welcome-message" style="display:none">	
+	 <div class="faq_title">
+    	<h2>Welcome Message</h2>
+  	</div>    	
+  	<div class="panel-body">
+  		<%= @organisation.eco_summary.welcome_message.try(:html_safe) %>
+  	</div>
+</div>
+
+<a href="#ecosystem-welcome-message" id="eco-welcome-link" class="fancybox_large hide">Welcome Message</a>
+
+<script>
+  $(document).ready(function(){
+	$("#eco-welcome-link").trigger("click");
+  });
+</script>

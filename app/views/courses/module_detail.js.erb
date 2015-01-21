@@ -1,0 +1,23 @@
+<%if params[:page] == "preview"%>
+  <% @description = "p_description_"%>
+  <% @big_description = "p_big_p_description_"%>
+  <% @video_size = "870px" %>
+  <%if params[:show] == "true"%>
+    <% @video_size = "920px" %>
+  <% end %>
+<% else %>
+  <% @description = "description_"%>
+  <% @big_description = "big_description_"%>
+  <% @video_size = "920px" %>
+<% end %>
+
+if ($("#<%=@description%><%=@module.id%> span.glyphicon-chevron-down").length<1){
+  $("#<%=@big_description%><%=@module.id%>").hide()
+  $("#<%=@big_description%><%=@module.id%>").html("<%= escape_javascript(render 'courses/shared_info/module_detailed_description', :course_module => @module) %>").slideToggle(1000)
+  $("#<%=@description%><%=@module.id%> span").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")
+}
+else{
+  $("#<%=@description%><%=@module.id%> span").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up")
+  $("#<%=@big_description%><%=@module.id%>").slideToggle(1000)
+}
+

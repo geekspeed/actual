@@ -1,0 +1,13 @@
+<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+		<div class="panel-heading">
+			<div class="panel-title title_option">
+				<h3>Create Badge</h3>
+			</div>
+		</div>  
+		<div class="panel-body">
+			<%= form_for @app_badge, :url => program_badges_path do |f| %>
+	  	  <%render "form", f: f%>
+			<% end %>
+		</div>
+</div>
+		

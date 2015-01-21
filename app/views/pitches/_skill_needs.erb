@@ -1,0 +1,82 @@
+<% if context_program.try(:workspace).try(:right_skills_needed) || context_program.try(:workspace).try(:right_skills_needed).nil? %> 
+  <% if team_or_admin?(@pitch) %>
+    <br>
+    <div class="row ">
+      <div class="col-md-12">
+        <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+          <div class="panel-heading relative_panel_head ">
+            <div class="panel-title title_option">
+              <h3>
+              <label>Skills Needed</label>
+              </h3>
+            </div>
+            <div class="panel-options">
+              <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+            </div>
+          </div>
+          <div class="panel-body" style="">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="skill_list">
+                  <% @pitch.skills.each do |skill| %>
+                    <li class="late">
+                      <p>- <%= skill.capitalize %>
+                      <%= link_to '<i class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete skill"></i>'.html_safe, skills_needed_program_pitch_path(context_program, @pitch, do: "remove_from", skill: skill), method: :put, confirm: "Are you sure?" %></p>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+            <div class="row panel_bottom_link">
+              <%= link_to("+ Add new Skill", "#", :"data-toggle"=>"modal", :"data-target"=>"#add_skills_needed", "id" => "test_skill") %>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>  
+    <div class="eventInsForm modal fade" id="add_skills_needed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><b>Add a new skills that you need</b></h4>
+          </div>
+          <%= form_tag skills_needed_program_pitch_path(context_program, @pitch), method: :put do %>
+            <div class="modal-body">
+                <%= hidden_field_tag :do, "add_to" %>
+                <div class="form-group">
+                  <%= hidden_field_tag "typehead_data", context_program.pitches.collect(&:skills).flatten.uniq.to_json%>
+                  <%= content_tag :b, "Enter Skill:   "%>
+                  <%= text_field_tag :skill, "", :class=>"typeahead", style: "width:40%", :autocomplete => "off" %>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <%= submit_tag "Add", :id => "submit" %>
+              <%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-top:5px; margin-right:10px;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function(e){
+        $(".js_close_fancybox").on("click", function(e){
+          $.fancybox.close();
+          e.preventDefault();
+        })
+        
+        var data = JSON.parse($('#typehead_data').val());
+        $('.typeahead').typeahead({source: data});
+      
+      });
+    </script>
+  <% end %>
+<% end %>
+
+<style>
+.skill_list li a i {
+color: #999;
+float: right;
+font-size: 12px;
+}
+</style>

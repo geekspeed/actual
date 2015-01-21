@@ -1,0 +1,1174 @@
+<style>
+.link_tag {
+    color: #0000FF !important;
+    text-decoration: underline !important;
+}
+</style>
+<script type="text/javascript">
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+      e.preventDefault(); 
+    });
+})
+</script>
+<%= f.error_messages %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="col-md-12 panel-title title_option">
+          <div class="col-md-8">
+            <h4>Do you want to the ecosystem page to be visible to particpants?</h4>
+          </div>
+          <div class="col-md-4 radioset">
+            <%= f.radio_button :visible_to_participants, true, class: "pull-right" %>
+            <%= f.label :visible_to_participants_true, "Yes", class: "pull-right" %>
+            <%= f.radio_button :visible_to_participants, false, class: "pull-right" %>
+            <%= f.label :visible_to_participants_false, "No", class: "pull-right" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :ecosystem_navbar_button, "Ecosystem Navbar Homepage" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+       
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+      	 <% ecosystem_navbar_homepage = e("eco_summary:ecosystem_navbar_homepage") ? e("eco_summary:ecosystem_navbar_homepage") : "Programs" %>
+      	 <%= text_field_tag "semantics[eco_summary:ecosystem_navbar_homepage][singular]",ecosystem_navbar_homepage, class: "form-control input-size1" %>
+   	   </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :ecosystem_navbar_button, "Ecosystem Navbar Basic" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+       
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+      	 <% ecosystem_navbar_homepage = e("ecosystem:basic") ? e("ecosystem:basic") : "Basic" %>
+      	 <%= text_field_tag "semantics[ecosystem:basic][singular]",ecosystem_navbar_homepage, class: "form-control input-size1" %>
+   	   </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :ecosystem_navbar_button, "Ecosystem Navbar About Me" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+       
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+      	 <% ecosystem_navbar_homepage = e("ecosystem:about_me") ? e("ecosystem:about_me") : "About Me" %>
+      	 <%= text_field_tag "semantics[ecosystem:about_me][singular]",ecosystem_navbar_homepage, class: "form-control input-size1" %>
+   	   </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :ecosystem_navbar_company_button, " Company Name Navbar Configurable" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+       
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+      	 <% company_name_navbar_configurable = e("eco_summary:company_name_navbar_configurable") ? e("eco_summary:company_name_navbar_configurable") : "Company Name" %>
+      	 <%= text_field_tag "semantics[eco_summary:company_name_navbar_configurable][singular]",company_name_navbar_configurable, class: "form-control input-size1" %>
+   	   </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br />
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :ecosystem_name, "Ecosystem Name" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_field :ecosystem_name, :class => "form-control" %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :avatar, "Ecosystem Visual"%></h3>
+          <span>Change ecosystem visual</span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="">
+      	<div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>Ecosystem visual</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :avatar, :class => "file_field_width"%>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag(f.object.avatar.url, :class=>"img img-responsive", :style=>"padding-top:15px;") if !f.object.new_record? %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :lifestyle_background, "Ecosystem Lifesyle Background", :style=>"width:100%;" %></h3>
+          <span>Change ecosystem background</span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="">
+      	<div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>Ecosystem background</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :lifestyle_background, :class => "file_field_width"%>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag(f.object.lifestyle_background.url, :class=>"img img-responsive", :style=>"padding-top:15px;") if !f.object.new_record? %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :overview %></h3>
+          <span>A brief overview of the program</span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_area :overview, :id => "overview", :class => "required form-control", :style=>"width:100%;" %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3><%= f.label :join_ecosystem_button, "Join ecosystem button legend" %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_field :join_ecosystem_button, :class => "form-control" %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br />
+
+
+
+<!-- This div is related to drag and drop positions. Classes are responsible for drag and drop are column and portlet. SO If you wants to add any of the codition inside the div, please add the condition inside the portlet class block and never add any thing outside the portlet class block. 1 block of column and 8 block of portlet-->
+<div class="column">
+  <div id="programs-1" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% programs_field = e("eco_summary:programs") ? e("eco_summary:programs") : "Programs"%>
+                <span><%= content_tag :b, programs_field %></span>
+                <%= text_field_tag "semantics[eco_summary:programs][singular]", programs_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+              <span>
+              <div class="radioset" style="width: 300px;">
+                <div> 
+                  <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                    <%= eco_summary_customization.radio_button :programs, true %>
+                    <%= eco_summary_customization.label :programs_true, "Enable" %>
+                    <%= eco_summary_customization.radio_button :programs, false %>
+                    <%= eco_summary_customization.label :programs_false, "Disable" %>
+                  <% end %>
+                </div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <% count=1 ; @organisation.programs.each do |program| %>
+            <% if program.program_part_of_ecosystem %>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="panel panel-white panel-shadow ui-widget collapses" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+                    <!-- panel head -->
+                    <div class="panel-heading">
+                      <div class="panel-title title_option">
+                        <a class="user_name_panel pull-left"><%= program.title %></a> 
+                      </div>
+                      <div class="panel-options">
+                        <% if need?(["company_admin", "program_admin"], current_organisation) %>
+                          <%= link_to("", program_path(program), :class => "gn-icon icon-remove", method: :delete, confirm: "Are you sure. This can not be undone!", :style=>"font-size:12px;") %>
+                        <% end %>
+                        <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                      </div>
+                    </div>
+                    
+                    <!-- panel body -->
+                    <div class="panel-body">
+                      <div class="row user_data">
+                        <div class="pull-left user_data_img_cotainer"><a><%= image_tag(program.try(:program_summary).try(:avatar).try(:logo).try(:url)) %></a></div>
+                        <b>Goal:</b> <%= program.try(:program_summary).try(:goal).try(:html_safe) %>
+                      </div>
+                    </div>
+                    
+                  </div>
+                
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="eco_plan-2" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% eco_plan_field = e("eco_summary:eco_plan") ? e("eco_summary:eco_plan") : "Eco plan"%>
+                <span><%= content_tag :b, eco_plan_field %></span>
+                <%= text_field_tag "semantics[eco_summary:eco_plan][singular]", eco_plan_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+              </h3>
+            <span>
+              <div class="radioset" style="width: 300px;">
+                <div> 
+                      <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                        <%= eco_summary_customization.radio_button :eco_plan, true %>
+                        <%= eco_summary_customization.label :eco_plan_true, "Enable" %>
+                        <%= eco_summary_customization.radio_button :eco_plan, false %>
+                        <%= eco_summary_customization.label :eco_plan_false, "Disable" %>
+                      <% end %>
+                    </div>
+                    <div style="float: left;margin-left: 15px;">
+                      <%= f.radio_button :eco_plan_public, true %>
+                      <%= f.label :eco_plan_public_true, "Public" %>
+                      <%= f.radio_button :eco_plan_public, false %>
+                      <%= f.label :eco_plan_public_false, "Private" %>
+                      <div class="clr"></div>
+                    </div>
+                  </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="newRow slink">+ Add new activity</a> 
+              <!-- <a href="#" class="newCol slink">+ Add column</a> -->
+              <input type="hidden" id="act_col" value="5" /> 
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <table  id="programPlan" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 250px;" aria-label="Student Name: activate to sort column ascending">Date</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;" aria-label="Average Grade: activate to sort column ascending">Time</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 450px;" aria-label="Average Grade: activate to sort column ascending">Activity</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 450px;" aria-label="Average Grade: activate to sort column ascending">Description</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 200px;" aria-label="Average Grade: activate to sort column ascending">Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="copy_col" class="odd no_display">
+                <td class="">
+                  <input class="datepicker_std eco_plan_td1 form-control form-style-1" id="eco_summary_eco_plans_attributes_-1-_date" name="eco_summary[eco_plans_attributes][-1-][date]"  type="text" />
+                </td>
+                <td class=" ">
+                  <input class="eco_plan_td2 form-control form-style-1 time-picker" id="eco_summary_eco_plans_attributes_-1-_time_from" name="eco_summary[eco_plans_attributes][-1-][time_from]" placeholder="from"  type="text" />
+                  <input class="eco_plan_td2 form-control form-style-1 time-picker" id="eco_summary_eco_plans_attributes_-1-_time_to" name="eco_summary[eco_plans_attributes][-1-][time_to]" placeholder="to"  style="margin-top: 4px" type="text" />
+                        </td>
+                <td class=" ">
+                  <input class="eco_plan_td4 form-control form-style-1" id="eco_summary_eco_plans_attributes_-1-_activity" name="eco_summary[eco_plans_attributes][-1-][activity]"  type="text" />
+                </td>
+                <td class=" ">
+                  <input class="eco_plan_td4 form-control form-style-1" id="eco_summary_eco_plans_attributes_-1-_location" name="eco_summary[eco_plans_attributes][-1-][location]"  type="text"/>
+                </td>
+                <td class=" ">
+                  <input class="eco_plan_td5" id="eco_summary_eco_plans_attributes_-1-_attachment" name="eco_summary[eco_plans_attributes][-1-][attachment]" type="file">
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :eco_plans, @summary.eco_plans.descending('created_at') do |plan| %>
+              <tr class="odd">
+                <td>
+                  <%= plan.text_field :date, :class => "datepicker_std program_plan_td1 form-control form-style-1" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :time_from, :placeholder => "from", :class => "program_plan_td2 time-picker form-control form-style-1" %>
+                  <%= plan.text_field :time_to, :placeholder => "to", :class => "program_plan_td2 time-picker form-control form-style-1", :style => "margin-top: 4px" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :activity, :class => "program_plan_td4 form-control form-style-1", :style => "height:71px;" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :location, :class => "program_plan_td4 form-control form-style-1", :style => "height:71px;" %>
+                </td>
+                <td class=" ">
+                  <%= plan.file_field :attachment, :class => "program_plan_td5 small_browse" %>
+                </td>
+                <td class=" ">
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, eco_summaries_eco_plan_destroy_path(@program, eco_plan_id: plan.object), method: :delete, action: :eco_plan_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="newRow slink">+ Add new activity</a>  -->
+          <!-- <a href="#" class="newCol slink">+ Add column</a> -->
+          <input type="hidden" id="act_col" value="5" /> 
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="goal-3" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% goal_field = e("eco_summary:goal") ? e("eco_summary:goal") : "Goal"%>
+                <span><%= content_tag :b, goal_field %></span>
+                <%= text_field_tag "semantics[eco_summary:goal][singular]", goal_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+            </h3>
+            <span>
+              <div class="radioset">
+              <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                <%= eco_summary_customization.radio_button :goal, true %>
+                <%= eco_summary_customization.label :goal_true, "Enable" %>
+                <%= eco_summary_customization.radio_button :goal, false %>
+                <%= eco_summary_customization.label :goal_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <%= f.text_area :goal, :class => "required  form-control", :style=>"width:100%;" %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="entry_criteria-4" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">            
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% entry_criteria_field = e("eco_summary:entry_criteria") ? e("eco_summary:entry_criteria") : "Entry Criteria" %>
+                <span><%= content_tag :b, entry_criteria_field %></span>
+                <%= text_field_tag "semantics[eco_summary:entry_criteria][singular]", entry_criteria_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+            </h3>
+            <span>
+              <div class="radioset">
+              <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                <%= eco_summary_customization.radio_button :entry_criteria, true %>
+                <%= eco_summary_customization.label :entry_criteria_true, "Enable" %>
+                <%= eco_summary_customization.radio_button :entry_criteria, false %>
+                <%= eco_summary_customization.label :entry_criteria_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <div class="">
+            <div class="tag_functionality">
+             <div class="container_tags">
+                <div class="tagList" id="criteriaList">
+                  <% f.object.entry_criteria.each do |rf| %>
+                    <div class="tagContainer">
+                      <%= link_to rf, "#", :class => "delTag" %>
+                      <%= hidden_field_tag :"tags[entry_criteria][]", rf %>
+                    </div>
+                  <% end unless f.object.new_record? %>
+                          </div>
+                <div class="clr"></div>
+              </div>
+              <div class="container_add_tag">
+                <%= f.text_field :entry_criteria, :value => "", :class => "form-control" %>
+                <a href="#" class="addCriteria">+ Add New</a>
+              </div>
+            </div>
+          </div>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="terms-5"  class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option" style="width: 85%;">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% terms_field = e("eco_summary:terms") ? e("eco_summary:terms") : "Terms"%>
+                <span><%= content_tag :b, terms_field %></span>
+                <%= text_field_tag "semantics[eco_summary:terms][singular]", terms_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+            </h3>
+            <div style="float:left;">
+              <div class="radioset" style="float:right;">
+                <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                  <%= eco_summary_customization.radio_button :terms, true %>
+                  <%= eco_summary_customization.label :terms_true, "Enable" %>
+                  <%= eco_summary_customization.radio_button :terms, false %>
+                  <%= eco_summary_customization.label :terms_false, "Disable" %>
+                <% end %>
+                <div class="clr"></div>
+              </div>
+            </div>
+            <div class="form-inline" style="width: 44%;">
+              <%= f.label "Add to footer" , :style => "margin-left:15%; width:29%; padding:1px 0 0 0;"%> 
+              <%= f.check_box :terms_to_footer, {:style => "width:4%;"}%>
+            </div>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <%= f.text_area :terms, :class => "form-control form-style-1", :style=>"width:100%"  %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="partners-6" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% partners_field = e("eco_summary:partners") ? e("eco_summary:partners") : "Partners"%>
+                <span><%= content_tag :b, partners_field %></span>
+                <%= text_field_tag "semantics[eco_summary:partners][singular]", partners_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+            </h3>
+            <span>
+              <div class="radioset" style="float:right;">
+              <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                <%= eco_summary_customization.radio_button :partners, true %>
+                <%= eco_summary_customization.label :partners_true, "Enable" %>
+                <%= eco_summary_customization.radio_button :partners, false %>
+                <%= eco_summary_customization.label :partners_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="partnerRow slink">+ Add new partner</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <table  id="programPartner" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 250px;" aria-label="Student Name: activate to sort column ascending">Partner Logo</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 300px;" aria-label="Average Grade: activate to sort column ascending">Partner Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 300px;" aria-label="Average Grade: activate to sort column ascending">Partner Website</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="partner_col" class="odd no_display">
+                <td class="">
+                	<div class="browse-wrapper">
+                		<input class="program_partner_td2 file_field_width" id="partner_logo_-1-_locally" name="eco_summary[eco_partners_attributes][-1-][logo]" type="file">
+                	</div>
+                </td>
+                <td class=" ">
+                	<div class="browse-wrapper">
+                  <input class="program_partner_td2" id="partner_doc_-1-_locally" name="eco_summary[eco_partners_attributes][-1-][document]" type="file">
+                	</div>
+                </td>
+                <td class=" ">
+                  <input class="program_partner_td2" id="" name="eco_summary[eco_partners_attributes][-1-][website]" type="text">
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :eco_partners, @summary.eco_partners do |partner| %>
+              <tr class="odd">
+                <td>
+                  <%= image_tag(partner.object.logo.url, :class=>"img img-responsive", :style=>"max-width:200px;") %>
+                </td>
+                <td class=" ">
+                  <%= link_to("Document", partner.object.document.url, :class=>"btn btn-default") %>
+                </td>
+                <td colspan="2">
+                  <%= link_to("Website", partner.object.website, :class=>"btn btn-default") %>
+                </td>
+              </tr>
+              <tr class="even">
+                <td>
+                	<div class="browse-wrapper">
+                  <%= partner.file_field :logo, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td>
+                	<div class="browse-wrapper">
+                  <%= partner.file_field :document, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td>
+                  <%= partner.text_field :website, :class => "program_partner_td2" %>
+                </td>
+                <td>
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, eco_summaries_eco_partner_destroy_path(eco_partner_id: partner.object), method: :delete, action: :eco_partner_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="partnerRow slink">+ Add new partner</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="quotes-7" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+                <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+                <% quotes_field = e("eco_summary:quotes") ? e("eco_summary:quotes") : "Quotes"%>
+                <span><%= content_tag :b, quotes_field %></span>
+                <%= text_field_tag "semantics[eco_summary:quotes][singular]", quotes_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+              <% end %>
+            </h3>
+            <span>
+              <div class="radioset pull_right">
+              <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                <%= eco_summary_customization.radio_button :quotes, true %>
+                <%= eco_summary_customization.label :quotes_true, "Enable" %>
+                <%= eco_summary_customization.radio_button :quotes, false %>
+                <%= eco_summary_customization.label :quotes_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="quoteRow slink">+ Add new quote</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <table   id="programQuote" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Student Name: activate to sort column ascending">Profile Picture</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Average Grade: activate to sort column ascending">Name</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100;" aria-label="Average Grade: activate to sort column ascending">Organisation name</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 200px;" aria-label="Average Grade: activate to sort column ascending">Quote</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr  id="quote_col" class="odd no_display">
+                <td class="">
+                	<div class="browse-wrapper">
+                  <input class="quote_col_td2 pull-left" style="margin-left: -10px;" id="eco_summary_eco_quotes_attributes_-1-_avatar" name="eco_summary[eco_quotes_attributes][-1-][avatar]" type="file">
+                	</div>
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4  form-style-1" id="eco_summary_eco_quotes_attributes_-1-_name" name="eco_summary[eco_quotes_attributes][-1-][name]"  type="text" placeholder="Name">
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4  form-style-1" id="eco_summary_eco_quotes_attributes_-1-_organisation_name" name="eco_summary[eco_quotes_attributes][-1-][organisation_name]"  type="text" placeholder="Organisation Name">
+                </td>
+                <td>
+                  <textarea class="program_plan_td4 form-control form-style-1" style="width:100%;" id="eco_summary_eco_quotes_attributes_-1-_content" name="eco_summary[eco_quotes_attributes][-1-][content]" placeholder="Quote"></textarea>
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :eco_quotes, @summary.eco_quotes do |quote| %>
+              <tr class="odd">
+                <td>
+                   <%= image_tag(quote.object.avatar.url, :style=>"max-width:100px;", :class=>"img img-responsive") %>
+                   <br />
+                   <div class="browse-wrapper">
+                   <%= quote.file_field :avatar, :class => "quote_col_td2 pull-left"%>
+                   </div>
+                </td>
+                <td class=" ">
+                  <%= quote.text_field :name, :class => "program_plan_td4  form-style-1" %>
+                </td>
+                <td class=" ">
+                  <%= quote.text_field :organisation_name, :class => "program_plan_td4  form-style-1" %>
+                </td>
+                <td>
+                  <%= quote.text_area :content, :class => "program_plan_td4 form-control form-style-1", :style=>"width:100%" %>
+                </td>
+                <td class=" ">
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, eco_summaries_eco_quote_destroy_path(eco_quote_id: quote.object), method: :delete, action: :eco_quote_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="quoteRow slink">+ Add new quote</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="freeform-8" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;"><%= f.label :freeform, "Free Forms" %></h3>
+            <span>
+              <div class="radioset pull_right" style="width: 300px;">
+                 <div>
+                      <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                        <%= eco_summary_customization.radio_button :freeform, true %>
+                        <%= eco_summary_customization.label :freeform_true, "Enable" %>
+                        <%= eco_summary_customization.radio_button :freeform, false %>
+                        <%= eco_summary_customization.label :freeform_false, "Disable" %>
+                      <% end %>
+                   </div>
+                   <div style="margin-left: 15px; float:left;">
+                      <%= f.radio_button :eco_free_form_public, true %>
+                  <%= f.label :eco_free_form_public_true, "Public" %>
+                  <%= f.radio_button :eco_free_form_public, false %>
+                  <%= f.label :eco_free_form_public_false, "Private" %>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="freeformRowEco slink">+ Add New Free Form</a> 
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <table id="programFreeForm" class="table table-striped">
+            <tbody>
+                <tr id="freeform_col" class="no_display">
+                  <td>
+                    <div class="quote_col_row form-group">
+                      <label for="eco_summary_eco_quotes_attributes_-1-_section_title" class="section-title">Section Title</label>
+                      <input class="program_plan_td4 form-control" id="eco_summary_eco_free_forms_attributes_-1-_section_title" name="eco_summary[eco_free_forms_attributes][-1-][section_title]"  type="text" placeholder="Section Title">
+                      <input class="program_plan_td4 form-control" id="eco_summary_eco_free_forms_attributes_-1-_section_id" name="eco_summary[eco_free_forms_attributes][-1-][section_id]" type="hidden">
+                      <a href="#" id="-1-" class="freeformfieldsRow slink">+ Add New Field</a>
+                      <b>Sub Title </b><input type = "checkbox" id="sub_title_check_-1-" style="width:23px;">
+                      <b>Body </b><input type = "checkbox" id="body_check_-1-" style="width:23px;">
+                      <script>
+                      $('.freeformfieldsRow').click(function(){
+                        var time = new Date().getTime()
+                        if ($("#sub_title_check_"+this.id+":checked").length ==1)
+                        {
+                        var col_sub_title = $('#freeform_fields_col_sub_title').html().replace(/-2-/g, time);
+                         $("table>tbody>tr#fields_"+this.id+" td").append(col_sub_title);
+                          $("#eco_summary_eco_free_forms_attributes_"+time+"_section_id").val(this.id)
+                          $("#eco_summary_eco_free_forms_attributes_sub_title_"+time+"_section_id").val(this.id)
+                       }
+                       if ($("#body_check_"+this.id+":checked").length ==1) {
+                        var col_body = $('#freeform_fields_col_body').html().replace(/-2-/g, time);
+                         $("table>tbody>tr#fields_"+this.id+" td").append(col_body);
+                        new nicEditor().panelInstance("eco_summary_eco_free_forms_attributes_"+time+"_body");
+                      $("#eco_summary_eco_free_forms_attributes_body_"+time+"_section_id").val(this.id)
+                      }
+                         return false;
+                       });
+                       </script>
+                    </div>
+                  </td>
+                </tr>
+                <div id="freeform_fields_col_sub_title" class="no_display">
+                    <div class="quote_col_row">
+                      <label for="eco_summary_eco_quotes_attributes_-2-_sub_title">Sub Title</label>
+                      <input class="program_plan_td4 form-control" id="eco_summary_eco_free_forms_attributes_-2-_sub_title" name="eco_summary[eco_free_forms_attributes][-2-][sub_title]"  type="text" placeholder="Sub Title">
+                      <input class="program_plan_td4 form-control" id="eco_summary_eco_free_forms_attributes_sub_title_-2-_section_id" name="eco_summary[eco_free_forms_attributes][-2-][section_id]"  type="hidden">
+                    </div>
+                  </div>
+                  <div id="freeform_fields_col_body" class="no_display">
+                    <div class="quote_col_row">
+                      <label style="margin-bottom:8px;" for="eco_summary_eco_quotes_attributes_-2-_body">Body</label><br><br>
+                      <textarea class="program_plan_td4 form-control" style="display:inline;" id="eco_summary_eco_free_forms_attributes_-2-_body" name="eco_summary[eco_free_forms_attributes][-2-][body]" placeholder="Body" style="display:inline;"></textarea>
+                      <input class="program_plan_td4 form-control" id="eco_summary_eco_free_forms_attributes_body_-2-_section_id" name="eco_summary[eco_free_forms_attributes][-2-][section_id]"  type="hidden">
+                    </div>
+                  </div>
+                <%= f.fields_for :eco_free_forms, @summary.eco_free_forms.sort_by(&:created_at) do |free_form| %>
+                    <% if !free_form.object.section_title.blank? && !free_form.object.section_id.blank? %>
+                    <tr>
+                    <td>
+                    <div id="free_form_fields_append_<%= free_form.object.section_id %>">
+                      <div class="quote_col_row form-group">
+                        <%= free_form.label :section_title, :class=>"section-title" %>
+                        <%= free_form.text_field :section_title, :class => "program_plan_td4 form-control" %>
+                        <%= free_form.hidden_field :section_id %>                
+                        <%= link_to 'Delete Section', eco_summaries_eco_free_form_destroy_path(eco_free_form_section_id: free_form.object.section_id), method: :delete, action: :eco_free_form_destroy, class: "btn btn-xs btn-danger", style: "float:right;margin-top:-26px;"%> 
+                      </div>
+                        <%= f.fields_for :eco_free_forms, @summary.eco_free_forms.sort_by(&:created_at) do |free_form_field| %>
+                          <% if free_form_field.object.section_title.blank? && free_form_field.object.section_id == free_form.object.section_id %>
+                            <% if !free_form_field.object.sub_title.blank? %>
+                              <div class="quote_col_row form-group">
+                                <%= free_form_field.label :sub_title %>
+                                <%= free_form_field.text_field :sub_title, :class => "program_plan_td4 form-control" %>
+                              </div>
+                            <% end %>
+                            <% if !free_form_field.object.body.blank? %>
+                              <div class="quote_col_row">
+                                <%= free_form_field.label :body, :style=>"margin-bottom:8px;" %><br><br>
+                                <%= free_form_field.text_area :body, :id=>"program_summary_program_free_forms_attributes_#{free_form_field.object.id}_body",:class => "program_plan_td4 form-control", :style => "display:inline;" %>
+                                  <script>
+                                    bkLib.onDomLoaded(function() {
+                                      new nicEditor().panelInstance("program_summary_program_free_forms_attributes_<%=free_form_field.object.id%>_body");
+                                    });
+                                  </script>
+                                <%= free_form_field.hidden_field :section_id %>
+                              </div>
+                            <% end %>
+                            <div class="quote_delete">
+                              <%= link_to 'Delete', eco_summaries_eco_free_form_destroy_path(eco_free_form_id: free_form_field.object), method: :delete, action: :eco_free_form_destroy, class: "btn btn-xs btn-danger"%>
+                            </div>
+                          <% end %>
+                        <% end %>
+                        <a href="#" id="<%= free_form.object.section_id %>_section_id" class="freeformfieldsRowDynamic slink">+ Add New Field</a>
+                        <b>Sub Title </b><input type = "checkbox" id="sub_title_check_<%= free_form.object.section_id %>" style="width:23px;">
+                        <b>Body </b><input type = "checkbox" id="body_check_<%= free_form.object.section_id %>" style="width:23px;">
+                      </div>
+                      <hr style="height:2px;">
+                      </td>
+                      </tr>
+                    <% end %>
+                <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="freeformRowEco slink">+ Add New Free Form</a>  -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div id="casestudy-9" class="row portlet">
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;"><%= f.label :eco_case_studies %></h3>
+            <span>
+              <div class="radioset pull_left">
+              <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                <%= eco_summary_customization.radio_button :casestudy, true %>
+                <%= eco_summary_customization.label :casestudy_true, "Enable" %>
+                <%= eco_summary_customization.radio_button :casestudy, false %>
+                <%= eco_summary_customization.label :casestudy_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="caseStudyRow slink">+ Add new</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          <label for="program_summary_case_study_title" class="section-title">Section Title</label><%= f.text_field :case_study_title, :class => "form-control" %>
+          <table   id="programQuote" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Student Name: activate to sort column ascending">Logo</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Average Grade: activate to sort column ascending">Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="case_study_col"  class="odd no_display">
+                <td class="">
+                	<div class="browse-wrapper">
+                  <input class="program_partner_td2 form-style-1" id="eco_summary_eco_case_studies_attributes_-1-_logo" name="eco_summary[eco_case_studies_attributes][-1-][logo]" type="file">
+                	</div>
+                </td>
+                <td class=" ">
+                  <input class="program_partner_td2" id="eco_summary_eco_case_studies_attributes_-1-_document" name="eco_summary[eco_case_studies_attributes][-1-][document]" type="file">
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :eco_case_studies, @summary.eco_case_studies do |case_study| %>
+              <tr class="odd">
+                <td>
+                   <%= image_tag(case_study.object.logo.url, :style=>"max-width:100px;", :class=>"img img-responsive") %>
+                </td>
+                <td class=" " colspan="2">
+                  <%= link_to("Document", case_study.object.document.url, :class=>"btn btn-default") %>
+                </td>
+              </tr>
+              <tr class="even">
+                <td>
+                	<div class="browse-wrapper">
+                  <%= case_study.file_field :logo, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td>
+                	<div class="browse-wrapper">
+                  <%= case_study.file_field :document, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td>
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, eco_summaries_eco_case_study_destroy_path(eco_case_study_id: case_study.object), method: :delete, action: :eco_case_study_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+         <!--  <a href="#" class="caseStudyRow slink">+ Add new</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div class="row portlet" id="blog-10">
+    <a href="#sec15" name="sec15" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+            <h3 style="padding-bottom: 10px;">
+            <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+              <% jc_field = t("program_summary:blog") ? t("program_summary:blog") : "Blog"%>
+              <span><%= content_tag :b, jc_field %></span>
+              <%= text_field_tag "semantics[program_summary:blog][singular]", jc_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+            <% end %>
+            </h3>
+            <span>
+              <div class="radioset">
+                <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+                  <%= eco_summary_customization.radio_button :blog, true %>
+                  <%= eco_summary_customization.label :blog_true, "Enable" %>
+                  <%= eco_summary_customization.radio_button :blog, false %>
+                  <%= eco_summary_customization.label :blog_false, "Disable" %>
+                <% end %>
+                  <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link" style="width:180px">
+              To add blogs visit Link to <a href=<%=buzz_organisation_path(current_organisation)%>>Buzz</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :twitter_url %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+              <%= eco_summary_customization.radio_button :twitter_handle, true %>
+              <%= eco_summary_customization.label :twitter_handle_true, "Enable" %>
+              <%= eco_summary_customization.radio_button :twitter_handle, false %>
+              <%= eco_summary_customization.label :twitter_handle_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_field :twitter_url, :class => "form-control form-style-1", placeholder: "http://twitter.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :facebook_url %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+              <%= eco_summary_customization.radio_button :facebook_url, true %>
+              <%= eco_summary_customization.label :facebook_url_true, "Enable" %>
+              <%= eco_summary_customization.radio_button :facebook_url, false %>
+              <%= eco_summary_customization.label :facebook_url_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_field :facebook_url, :class => "form-control form-style-1", placeholder: "http://facebook.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :linkedin_url %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+              <%= eco_summary_customization.radio_button :linkedin_url, true %>
+              <%= eco_summary_customization.label :linkedin_url_true, "Enable" %>
+              <%= eco_summary_customization.radio_button :linkedin_url, false %>
+              <%= eco_summary_customization.label :linkedin_url_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_field :linkedin_url, :class => "form-control form-style-1", placeholder: "http://linkedin.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :welcome_message %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :eco_summary_customization, @summary.eco_summary_customization do |eco_summary_customization| %>
+              <%= eco_summary_customization.radio_button :welcome_message, true %>
+              <%= eco_summary_customization.label :welcome_message_true, "Enable" %>
+              <%= eco_summary_customization.radio_button :welcome_message, false %>
+              <%= eco_summary_customization.label :welcome_message_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_area :welcome_message, placeholder: "Welcome message for joiners", :style => "width:100%"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+<% if !@summary.try(:eco_summary_order).nil? %>
+  <%= f.fields_for :eco_summary_order, @summary.eco_summary_order do |eco_summary_order| %>
+    <%= eco_summary_order.hidden_field :order, :style=>"width:700px;" %>
+  <% end -%>
+<% else %>
+  <%= hidden_field_tag :eco_summary_eco_summary_order_attributes_order,"programs-1, eco_plan-2,goal-3,entry_criteria-4,terms-5,partners-6,quotes-7,freeform-8,casestudy-9,blog-10", :style=>"width:700px;" %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :privacy_policy %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :eco_summary_customization, @summary.privacy_policy do |privacy_policy| %>
+              <%= privacy_policy.radio_button :privacy_policy, true %>
+              <%= privacy_policy.label :privacy_policy_true, "Enable" %>
+              <%= privacy_policy.radio_button :privacy_policy, false %>
+              <%= privacy_policy.label :privacy_policy_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_area :privacy_policy, :style => "width:100%;"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>

@@ -1,0 +1,299 @@
+      <%= hidden_field_tag "program_id", @program.id%>
+      <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :name, "Badge Name" %></p></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :name, class: "form-control required" , required: true%>
+	      </div>
+	    </div>
+	    
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :description %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_area :description, class: "form-control ", rows: '5'%>
+	      </div>
+	    </div>
+
+	   
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :image%></div>
+	      </div>
+	      <div class="col-sm-4">
+		      <div class="browse-wrapper">
+		      	<%= f.file_field :image, class: "form-control required upload_badge_img", accept: "image/png", required: true %>
+		      </div>
+	      </div>
+	      <div class="col-sm-4">
+	      	<%= image_tag( (@app_badge.image.present? ? @app_badge.image : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-reponsive")%>
+	      </div>
+	    </div>
+
+
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :badge_type %></div>
+	      </div>
+	      <div class="col-sm-8 ">
+	      	<%= f.select(:badge_type, [["Internal", "Internal"],["Open Badge", "Open Badge"]], :class => "form-controls")%>
+	      </div>
+	    </div>
+	 
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :tags %></div>
+	      </div>
+	      <div class="col-sm-8 ">
+	        <div class="tag_functionality">
+            <div class="badge_tags">
+              <div class="tagList" id="tagList">
+                <div class="tagContainer">
+                  <% f.object.tags.each do |tag| %>
+                    <div class="tagContainer">
+                      <%= link_to tag, "#", :class => "delTag" %>
+                      <%= hidden_field_tag :"app_badge[tags][]", tag %>
+                    </div>
+                  <% end  %>
+                </div>
+              </div>
+              <div class="clr"></div>
+            </div>
+            <%= content_tag :i, "Add up to 10 Tags that will help describe your Badge" %>
+            <%= f.text_field :"tags", :placeholder => "e.g. Great Work", :name => "tags[]", :class => 'badgeTag form-control', :"data-field-name" => "#{f.object_name}[tags][]", :value => "", :"data-auto-options" => AppBadge.pluck(:tags).flatten.uniq.to_json %>
+            <%= link_to "+ Add a Tag", "#", :class => "addBadgeTag text_underline" %>
+	        </div>
+	      </div>
+	    </div>
+
+	   
+
+	    <%= f.fields_for :badge_rule do |criteria|  %>
+        <%= criteria.hidden_field "program_id", value: @app_badge.program_id%>
+		    <div class="row" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :criteria_description%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		      	<%= criteria.text_area :criteria_description, class: "form-control", rows: '5' %>
+		      </div>
+		    </div>
+
+		    <div class="row" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :criteria%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.collection_select :criteria, BadgeRule::Collection, :last, :first, {}, {class: "selectmenu ddl_width digest"}  %>
+		      </div>
+		    </div>
+
+		    <div class="row sub_criteria" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :sub_criteria%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.collection_select :sub_criteria,  BadgeRule::Events, :last, :first, {}, {class: "selectmenu ddl_width digest_value"}  %>
+		      </div>
+		    </div>
+
+		    <div class="row event" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :event%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.select(:program_event_id, @program.program_events.flatten.map{|pe| [pe.title, pe.id]}, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+		      </div>
+		    </div>
+		    <div class="row event_session" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :event_session%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.select(:event_session_id, @program.program_events.map(&:event_sessions).flatten.map{|es| [es.description.first(20), es.id]}, { include_blank: "-select-" }, :class => "form-controls form-style-1" ) %>
+		      </div>
+		    </div>
+
+		    <div class="row badge_iteration" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :instances%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		      	<%= criteria.number_field :instances, class: "form-control" %>
+		      </div>
+		    </div>
+
+		    <div class="row" style="margin-top: 20px;">
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :expiry%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		          <%= criteria.select(:expiry, [["Never", "never"],["Fixed Date", "fixed_date"], ["Relatve Date", "relative_date"]], :class => "form-controls")%>
+		      </div>
+		    </div>
+		    <% if @app_badge.badge_rule.expiry == 'fixed_date' %>
+		    	<div class="row expiry_date" style= "margin-top: 20px;">
+		    <% else %>
+		    	<div class="row expiry_date" style= "margin-top: 20px; display: none;">
+		    <%end%>
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :expiry_date%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.text_field :expiry_date, class: "form-control datepicker_std" %>
+		      </div>
+		    </div>
+		    <% if @app_badge.badge_rule.expiry == 'relative_date' %>
+		    	<div class="row expiry_day" style= "margin-top: 20px;">
+		    <% else %>
+		    	<div class="row expiry_day" style= "margin-top: 20px; display: none;">
+		    <%end%>
+		      <div class="col-sm-4 setting-font">
+		        <div style="line-height: 28px;"><%= f.label :expiry_day%></div>
+		      </div>
+		      <div class="col-sm-8 ">
+		        <%= criteria.number_field :expiry_day, class: "form-control" %>
+		      </div>
+		    </div>
+ 
+	    <%end%> 
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= button_tag "submit", class: "btn btn-default"  %>
+	      </div>
+	    </div>
+
+<script>
+  $(document).ready(function(){
+    
+    var element = $("select.digest_value").val();
+    var criteria = $("select.digest").val();
+    if(criteria == "manual"){
+      $(".sub_criteria").hide();
+      $("#app_badge_badge_rule_attributes_sub_criteria").prop("disabled", true);
+      $(".event_session").hide();
+      $(".event").hide();
+      $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", true);
+      $(".badge_iteration").hide();
+    }
+    else{
+      if(criteria == "events" && element == "Attend"){
+        $(".sub_criteria").show();
+        $("#app_badge_badge_rule_attributes_sub_criteria").prop("disabled", false);
+        $(".event").show();
+        $(".event_session").show();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", false);
+        $(".badge_iteration").hide();
+      }
+      else{
+        $(".sub_criteria").show();
+        $("#app_badge_badge_rule_attributes_sub_criteria").prop("disabled", false);
+        $(".event_session").hide();
+        $(".event").hide();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", true);
+        $(".badge_iteration").show();
+      }
+    }
+    
+    var criteria_field = {};
+    <% if @options.present? %>
+      $('.digest_value option').remove();
+      <% @options.each do |k,v|%>
+        criteria_field['<%=k%>'] = '<%=v%>'
+      <% end %>
+      $.each(criteria_field, function(key, value) {
+        if(key == "<%=@selected%>"){
+          $('.digest_value').append($("<option></option>")
+           .attr("value", value).text(key).attr("selected", "selected"));
+        }
+        else{
+          $('.digest_value').append($("<option></option>")
+           .attr("value", value).text(key));
+        }
+      });
+    <%end%>
+
+    var refreshOptions = function(elem, refreshElem){
+      var new_options = eval(elem.val());
+
+      refreshElem.empty(); // remove old options
+      $.each(new_options, function(key, value) {
+        refreshElem.append($("<option></option>")
+           .attr("value", value).text(key));
+      });
+      refreshElem.selectmenu("destroy").selectmenu({ style: "dropdown" });
+    }
+    var events = { "Signup" : "Signup", "Attend": "Attend", "Provide Feedback" : "Provide Feedback"}
+    var project = {"FeedBack":"Feedback", "Post in project feed":"Post in project feed", "Upload txt document":"Upload txt document", "Upload document image":"Upload document image"}
+    var buzzfeed = {"Post in buzz feed":"Post in buzz feed" }
+    var manual = {}
+
+    $("form").on("change", "select.digest", function(e){
+      var elem = $(this);
+      if(elem.val() == "manual"){
+        $(".sub_criteria").hide();
+        $("#app_badge_badge_rule_attributes_sub_criteria").prop("disabled", true);
+        $(".event_session").hide();
+        $(".event").hide();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", true);
+        $(".badge_iteration").hide();
+      }
+      else{
+        $(".sub_criteria").show();
+        $("#app_badge_badge_rule_attributes_sub_criteria").prop("disabled", false);
+        $(".event_session").hide();
+        $(".event").hide();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", true);
+        $(".badge_iteration").show();
+        var change_elem = $(".digest_value");
+        refreshOptions(elem, change_elem);
+      }
+    });
+
+    $("form").on("change", "select.digest_value", function(e){
+      var elem = $(this);
+      var criteria = $("select.digest").val();
+      if(criteria == "events" && elem.val() == "Attend"){
+        $(".event_session").show();
+        $(".event").show();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", false);
+        $(".badge_iteration").hide();
+      }
+      else{
+        $(".event_session").hide();
+        $(".event").hide();
+        $("#app_badge_badge_rule_attributes_event_session_id").prop("disabled", true);
+        $(".badge_iteration").show();
+      }
+    });
+
+		$(document).on('change', "#app_badge_badge_rule_attributes_program_event_id", function(){
+	    var event = [];    
+      var event_id = $(this).val();
+      $.ajax({
+          url: "/programs/" + $("#program_id").val() + "/custom_events/get_event_sessions_for_badge",
+          type: 'get',
+          data: {event_id: event_id},
+          success: function(data){
+            var $select = $('#app_badge_badge_rule_attributes_event_session_id').empty();
+            var i = 0;
+            $('#app_badge_badge_rule_attributes_event_session_id').append('<option value="">--select session--</option>'); 
+            while(i < data.event_sessions.length){
+               $('#app_badge_badge_rule_attributes_event_session_id').append('<option value="' + data.event_sessions[i][1] + '">' + data.event_sessions[i][0] + '</option>'); 
+              i++;
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        });
+    });
+
+  
+  });
+</script>

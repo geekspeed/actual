@@ -1,0 +1,689 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Program Designer" %>
+<% end %>
+<%= hidden_field_tag :page_name, "setup_page"%>
+<%= render "new_record", :f => f %>
+
+<a href="#sec3" name="sec3" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Program type</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>What type of program would you like to run on Apptual?</div>
+          </div>
+          <div class="col-sm-8">
+            <%= f.collection_select :type_of_program, Program::TYPE_OF_PROGRAM, :to_s, :to_s, {}, {:class => "option_light_program", :size => "1", :class => "form-style-1 form-control"} %>
+          </div>
+        </div>
+        <hr class="mod_sep">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <thead>
+            <tr role="row">
+              <th style="width: 400px;" colspan="1" rowspan="1">Feature</th>
+              <th style="width: 100px;" colspan="1" rowspan="1">Light touch</th>
+              <th style="width: 100px;" colspan="1" rowspan="1">Metric driven</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="odd">
+              <td>Customise registration / application forms</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Post an idea / project / startup</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Ability to filter applications (if necessary)</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Iterate and improve the idea / project / startup</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Provide mentoring support to individuals / teams behind ideas / projects / startups</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Evaluate idea / project / startup against due diligence metrics</td>
+              <td><i class="glyphicon glyphicon-ok"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Set milestone and tasks for participants</td>
+              <td><i class="glyphicon glyphicon-remove"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Evaluate the quality of work of participants</td>
+              <td><i class="glyphicon glyphicon-remove"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Track participant innovator behaviours</td>
+              <td><i class="glyphicon glyphicon-remove"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+            <tr class="odd">
+              <td>Program performance data analytics</td>
+              <td><i class="glyphicon glyphicon-remove"></i></td>
+              <td><i class="glyphicon glyphicon-ok"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+
+<a href="#sec4" name="sec4" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>What type of roles will form a part of your program?</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1"><%= "#{t("role_type:mentor", "p")} (Experts / advisors who will help the participants develop their ideas / projects / startups?" %></td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :mentor_allowed, "true", :class => "option_mentoring", :checked => "checked" %>
+                  <%= f.label :mentor_allowed, "Yes", :for => "#{f.object_name}_mentor_allowed_true" %>
+      
+                  <%= f.radio_button :mentor_allowed, "false", :class => "option_mentoring" %>
+                  <%= f.label :mentor_allowed, "No", :for => "#{f.object_name}_mentor_allowed_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Panel members (Experts who will evaluate the ideas / projects / startups against a set of investment metrics) Note: Turning this off disables due dilligence metrics</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :penallist_allowed, "true", :class => "option_panel_members", :checked => "checked" %>
+                  <%= f.label :penallist_allowed, "Yes", :for => "#{f.object_name}_penallist_allowed_true" %>
+      
+                  <%= f.radio_button :penallist_allowed, "false", :class => "option_panel_members" %>
+                  <%= f.label :penallist_allowed, "No", :for => "#{f.object_name}_penallist_allowed_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td><%= "#{t("role_type:selector", "p")} (Decision makers who will decide on which applicants should make it into your program)" %></td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :selectors_allowed, "true", :class => "option_selectors", :checked => "checked" %>
+                  <%= f.label :selectors_allowed, "Yes", :for => "#{f.object_name}_selectors_allowed_true"  %>
+      
+                  <%= f.radio_button :selectors_allowed, "false", :class => "option_selectors" %>
+                  <%= f.label :selectors_allowed, "No", :for => "#{f.object_name}_selectors_allowed_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-12">
+            <div class=" alert alert-info">
+            Note: The same people can have multiple roles, but specifying the types of roles will help you organise your innovation ecosystem and get the most out of it
+            </div>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+
+<a href="#sec5" name="sec5" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Role of mentoring</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Can mentors post their own pitches in addition to providing mentoring support?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :can_mentors_post_pitch, "true", :class => "people_who_peer_review_pitches_can_also_submit_pitches", :checked => "checked" %>
+                  <%= f.label :can_mentors_post_pitch, "Yes", :for => "#{f.object_name}_can_mentors_post_pitch_true" %>
+        
+                  <%= f.radio_button :can_mentors_post_pitch, "false", :class => "people_who_peer_review_pitches_can_also_submit_pitches" %>
+                  <%= f.label :can_mentors_post_pitch, "No", :for => "#{f.object_name}_can_mentors_post_pitch_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want the system to help you match mentors to projects?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :system_match_allowed, "true", :class => "option_match_mentors", :checked => "checked" %>
+                  <%= f.label :system_match_allowed, "Yes", :for => "#{f.object_name}_system_match_allowed_true" %>
+        
+                  <%= f.radio_button :system_match_allowed, "false", :class => "option_match_mentors" %>
+                  <%= f.label :system_match_allowed, "No", :for => "#{f.object_name}_system_match_allowed_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want to have courses part of your program?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :courses_part_of_program, "true", :class => "option_match_mentors", :checked => "checked" %>
+                  <%= f.label :courses_part_of_program, "Yes", :for => "#{f.object_name}_courses_part_of_program_true" %>
+        
+                  <%= f.radio_button :courses_part_of_program, "false", :class => "option_match_mentors" %>
+                  <%= f.label :courses_part_of_program, "No", :for => "#{f.object_name}_courses_part_of_program_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want to show events in community pages?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :show_events, "true", :class => "option_match_mentors"  %>
+                  <%= f.label "Yes", :for => "#{f.object_name}_show_events_true" %>
+        
+                  <%= f.radio_button :show_events, "false", :class => "option_match_mentors"  %>
+                  <%= f.label "No", :for => "#{f.object_name}_show_events_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want mentors / admin to track their meetings with participants?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :can_log_session, "true", :class => "option_match_mentors"  %>
+                  <%= f.label "Yes", :for => "#{f.object_name}_can_log_session_true" %>
+        
+                  <%= f.radio_button :can_log_session, "false", :class => "option_match_mentors"  %>
+                  <%= f.label "No", :for => "#{f.object_name}_can_log_session_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+
+<a href="#sec6" name="sec6" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Group behaviour management</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Do you want to issue virtual currency to gamify investment in projects and create competition?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :virtual_currency, "true", :class => "can_user_back_pitches", :checked => "checked" %>
+                  <%= f.label :virtual_currency, "Yes", :for => "#{f.object_name}_virtual_currency_true" %>
+        
+                  <%= f.radio_button :virtual_currency, "false", :class => "can_user_back_pitches" %>
+                  <%= f.label :virtual_currency, "No", :for => "#{f.object_name}_virtual_currency_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want to track and incentivise a culture of innovation among your participants?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :track_incentivise, "true", :class => "option_track_activity", :checked => "checked" %>
+                  <%= f.label :track_incentivise, "Yes", :for => "#{f.object_name}_track_incentivise_true" %>
+                  <%= f.radio_button :track_incentivise, "false", :class => "option_track_activity" %>
+                  <%= f.label :track_incentivise, "No", :for => "#{f.object_name}_track_incentivise_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want participants to evangelise their projects on Facebook and Twitter?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :social_share, "true", :class => "option_track_activity", :checked => "checked" %>
+                  <%= f.label :social_share, "Yes", :for => "#{f.object_name}_social_share_true" %>
+                  <%= f.radio_button :social_share, "false", :class => "option_track_activity" %>
+                  <%= f.label :social_share, "No", :for => "#{f.object_name}_social_share_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want the system to match participants to projects?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :match_pitches_for_participants, "true", :class => "option_track_activity" %>
+                  <%= f.label :match_pitches_for_participants, "Yes", :for => "#{f.object_name}_match_pitches_for_participants_true" %>
+                  <%= f.radio_button :match_pitches_for_participants, "false", :class => "option_track_activity" %>
+                  <%= f.label :match_pitches_for_participants, "No", :for => "#{f.object_name}_match_pitches_for_participants_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Do you want to facilitate collaboration between participants?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :collaboration_request, "true", :class => "option_track_activity", :checked => "checked" %>
+                  <%= f.label :collaboration_request, "Yes", :for => "#{f.object_name}_collaboration_request_true" %>
+                  <%= f.radio_button :collaboration_request, "false", :class => "option_track_activity" %>
+                  <%= f.label :collaboration_request, "No", :for => "#{f.object_name}_collaboration_request_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td class="radio-table-cell1">Restrict team management to team leader ?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :restrict_team_management, "true", :class => "option_delete_not_selected", :checked => "checked" %>
+                  <%= f.label :restrict_team_management, "Yes", :for => "#{f.object_name}_restrict_team_management_true" %>
+        
+                  <%= f.radio_button :restrict_team_management, "false", :class => "option_delete_not_selected" %>
+                  <%= f.label :restrict_team_management, "No", :for => "#{f.object_name}_restrict_team_management_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>  
+          </tbody>
+        </table>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+
+<a href="#sec7" name="sec7" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Managing candidates that do not make it from one phase to another i.e. general to shortlist / shortlist to finallist</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">If you do not select candidates, do you want to delete their accounts?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :delete_not_selected, "true", :class => "option_delete_not_selected", :checked => "checked" %>
+                  <%= f.label :delete_not_selected, "Yes", :for => "#{f.object_name}_delete_not_selected_true" %>
+        
+                  <%= f.radio_button :delete_not_selected, "false", :class => "option_delete_not_selected" %>
+                  <%= f.label :delete_not_selected, "No", :for => "#{f.object_name}_delete_not_selected_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd no_display">
+              <td>Do you want to terminate their access to the platform, but keep their data?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :option_keep_data, "true", :class => "option_keep_data", :checked => "checked" %>
+                  <%= f.label :option_keep_data, "Yes", :for => "#{f.object_name}_option_keep_data_true" %>
+                  <%= f.radio_button :option_keep_data, "false", :class => "option_keep_data" %>
+                  <%= f.label :option_keep_data, "No", :for => "#{f.object_name}_option_keep_data_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd no_display">
+              <td>Do you want to give them the ability to continue to develop their value proposition online?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :not_selected_can_continue, "true", :class => "option_not_selected_can_continue", :checked => "checked" %>
+                  <%= f.label :not_selected_can_continue, "Yes", :for => "#{f.object_name}_not_selected_can_continue_true" %>
+                  <%= f.radio_button :not_selected_can_continue, "false", :class => "option_not_selected_can_continue" %>
+                  <%= f.label :not_selected_can_continue, "No", :for => "#{f.object_name}_not_selected_can_continue_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd no_display">
+              <td>Do you want to offer them the virtual mentoring support?</td>
+              <td>
+                <div class="radioset no_display">
+                  <%= f.radio_button :virtual_mentoring, "true", :class => "option_virtual_ment_for_not_selected", :checked => "checked" %>
+                  <%= f.label :virtual_mentoring, "Yes", :for => "#{f.object_name}_virtual_mentoring_true" %>
+                  <%= f.radio_button :virtual_mentoring, "false", :class => "option_virtual_ment_for_not_selected" %>
+                  <%= f.label :virtual_mentoring, "No", :for => "#{f.object_name}_virtual_mentoring_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd no_display">
+              <td>Do you want to offer them peer to peer support?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :virtual_mentoring, "true", :class => "option_virtual_ment_for_not_selected", :checked => "checked" %>
+                  <%= f.label :virtual_mentoring, "Yes", :for => "#{f.object_name}_virtual_mentoring_true" %>
+                  <%= f.radio_button :virtual_mentoring, "false", :class => "option_virtual_ment_for_not_selected" %>
+                  <%= f.label :virtual_mentoring, "No", :for => "#{f.object_name}_virtual_mentoring_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+<% if current_user["_company_admin"] %>
+<a href="#sec8" name="sec8" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Payment</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Is this free program or paid ?</td>
+              <td>
+               <div class="radioset">
+                  <%= f.radio_button :is_paid, "true", :class => "option_track_activity", :checked => "checked" %>
+                  <%= f.label :is_paid, "Paid", :for => "#{f.object_name}_is_paid_true" %>
+                  <%= f.radio_button :is_paid, "false", :class => "option_track_activity" %>
+                  <%= f.label :is_paid, "Free", :for => "#{f.object_name}_is_paid_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>Is this program manually paid or paid online?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :is_manualy_paid, "true", :class => "option_track_activity", :checked => "checked" %>
+                  <%= f.label :is_manualy_paid, "Manualy", :for => "#{f.object_name}_is_manualy_paid_true" %>
+                  <%= f.radio_button :is_manualy_paid, "false", :class => "option_track_activity" %>
+                  <%= f.label :is_manualy_paid, "Online", :for => "#{f.object_name}_is_manualy_paid_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td>If this program is online what licenses do you offer?
+              </td>
+            </tr>
+            
+            
+          </tbody>          
+
+        </table>
+          <div class="row">
+            <div class="col-md-3">
+              <div>
+              <%selected_product_ids=context_program.try(:selected_product_list).reject(&:blank?) rescue []%>
+           
+              <% selected_products = current_organisation.subscriptions.in(id: selected_product_ids) %>
+                <p> My Product</p>
+              </div>
+              <div class="col-sm-8">
+                <%= select_tag "product_list", options_from_collection_for_select((current_organisation.subscriptions - selected_products), :id, :name), multiple: true, id: "from"%>
+              </div>
+            </div>
+             <div class="col-md-3">
+              <div style="height: 100px; width: 200px; margin-top: 30px;">
+                <div style="margin-left: 80px;">
+                  <a href="javascript:moveSelected('from', 'to')">&gt;&gt;</a>
+                </div>
+                <div style="margin-top:20px; margin-left: 80px;">
+                 <a href="javascript:moveSelected('to', 'from')">&lt;&lt;</a> 
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div>
+                <p>Selected Product</p>
+              </div>
+              
+                <%= f.select :selected_product_list, options_from_collection_for_select(selected_products, :id, :name), {}, multiple: true, id: "to" %>
+            </div>
+          </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+<%end%>
+
+<!-- <a href="#sec8" name="sec8" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3><label>Engagement Calculator</label></h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class=" alert alert-info">
+            Bringing the right resources to a program is critical to its success. There are 3 core areas where resources need to be brought in order to incentivise participants to engage and give it their best
+            </div>
+          </div>
+        </div>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>FUNDING: What funding resources do you offer participants on your program?</div>
+          </div>
+          <div class="col-sm-8 tag_functionality">
+            <div class="container_tags">
+              <div class="tagList">
+                <% f.object.resource_funding.each do |rf| %>
+                  <div class="tagContainer">
+                    <%= link_to rf, "#", :class => "delTag" %>
+                    <%= hidden_field_tag :"tags[resource_funding][]", rf %>
+                  </div>
+                <% end %>
+              </div>
+              <div class="clr"></div>
+            </div>
+            <div class="quote_col_row container_add_tag">
+              <%= f.text_field :resource_funding, :class => "inputTag form-control form-style-1 pull-left form-style-1", :value => "", :placeholder=>"Enter new source" %>
+              <%= link_to("+ Add new resource", "#", :class => "addTag pull-left module_box_submit low-padding", :id=>"submit") %>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <br />
+        <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Are your resources sufficient to take projects FROM and TO the stages you have specified above?</td>
+              <td>
+                <div class="radioset spaced_radioset">
+                  <%= f.radio_button :enough_resource_funding, "yes", :class => "resource_funding checkval", :checked => "checked" %>
+                  <%= f.label :enough_resource_funding, "Yes", :for => "#{f.object_name}_enough_resource_funding_yes" %>
+          
+                  <%= f.radio_button :enough_resource_funding, "no", :class => "resource_funding checkval" %>
+                  <%= f.label :enough_resource_funding, "No", :for => "#{f.object_name}_enough_resource_funding_no" %>
+          
+                  <%= f.radio_button :enough_resource_funding, "maybe", :class => "resource_funding checkval" %>
+                  <%= f.label :enough_resource_funding, "Not Sure", :for => "#{f.object_name}_enough_resource_funding_maybe" %>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>LIKELIHOOD OF SUCCESS: What resources do you offer participants to increase the likelihood of success to achieve the end stage?</div>
+          </div>
+          <div class="col-sm-8 tag_functionality">
+            <div class="container_tags">
+              <div class="tagList">
+                <% f.object.likelihood_of_success.each do |rf| %>
+                  <div class="tagContainer">
+                    <%= link_to rf, "#", :class => "delTag" %>
+                    <%= hidden_field_tag :"tags[likelihood_of_success][]", rf %>
+                  </div>
+                <% end %>
+              </div>
+              <div class="clr"></div>
+            </div>
+            <div class="quote_col_row container_add_tag">
+              <input type="hidden" class="code" value="likelihood_of_success" />
+              <%= f.text_field :likelihood_of_success, :class => "inputTag form-control form-style-1 pull-left form-style-1", :value => "", :placeholder=>"Enter new source" %>
+              <%= link_to("+ Add new resource", "#", :class => "addTag pull-left module_box_submit low-padding", :id=>"submit") %>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <br />
+        <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Are your resources sufficient to convince participants that they can achieve success?</td>
+              <td>
+                <div class="radioset spaced_radioset">
+                  <%= f.radio_button :enough_likelihood_of_success, "yes", :class => "resource_to_success checkval", :checked => "checked" %>
+                  <%= f.label :enough_likelihood_of_success, "Yes", :for => "#{f.object_name}_enough_likelihood_of_success_yes" %>
+          
+                  <%= f.radio_button :enough_likelihood_of_success, "no", :class => "resource_to_success checkval" %>
+                  <%= f.label :enough_likelihood_of_success, "No", :for => "#{f.object_name}_enough_likelihood_of_success_no" %>
+          
+                  <%= f.radio_button :enough_likelihood_of_success, "maybe", :class => "resource_to_success checkval" %>
+                  <%= f.label :enough_likelihood_of_success, "Not Sure", :for => "#{f.object_name}_enough_likelihood_of_success_maybe" %>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>GOAL SETTING, MONITORING &amp; SUPPORT: What types of people do you have in place to provide your participants with regular goals and police their achievement of the goals?</div>
+          </div>
+          <div class="col-sm-8 tag_functionality">
+            <div class="container_tags">
+              <div class="tagList">
+                <% f.object.resource_mentoring.each do |rf| %>
+                  <div class="tagContainer">
+                    <%= link_to rf, "#", :class => "delTag" %>
+                    <%= hidden_field_tag :"tags[resource_mentoring][]", rf %>
+                  </div>
+                <% end %>
+              </div>
+              <div class="clr"></div>
+            </div>
+            <div class="quote_col_row container_add_tag">
+              <input type="hidden" class="code" value="resource_mentoring" />
+              <%= f.text_field :resource_mentoring, :class => "inputTag form-control form-style-1 pull-left form-style-1", :value => "", :placeholder=>"Enter new source" %>
+              <%= link_to("+ Add new resource", "#", :class => "addTag pull-left module_box_submit low-padding", :id=>"submit") %>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <br />
+        <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+          <tbody>
+            <tr class="odd">
+              <td class="radio-table-cell1">Are these people engaged enough to spend the time providing and policing goals for the projects they're allocated to?</td>
+              <td>
+                <div class="radioset spaced_radioset">
+                  <%= f.radio_button :enough_resource_mentoring, "yes", :class => "resource_mentoring checkval", :checked => "checked" %>
+                  <%= f.label :enough_resource_mentoring, "Yes", :for => "#{f.object_name}_enough_resource_mentoring_yes" %>
+          
+                  <%= f.radio_button :enough_resource_mentoring, "no", :class => "resource_mentoring checkval" %>
+                  <%= f.label :enough_resource_mentoring, "No", :for => "#{f.object_name}_enough_resource_mentoring_no" %>
+          
+                  <%= f.radio_button :enough_resource_mentoring, "maybe", :class => "resource_mentoring checkval" %>
+                  <%= f.label :enough_resource_mentoring, "Not Sure", :for => "#{f.object_name}_enough_resource_mentoring_maybe" %>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>	 -->
+
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>
+
+<script>  
+    
+    function moveSelected(from, to) {
+        $('#'+from+' option:selected').remove().appendTo('#'+to); 
+    }
+    
+</script>

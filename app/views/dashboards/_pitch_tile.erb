@@ -1,0 +1,106 @@
+<% is_subdomain = valid_subdomain(current_subdomain) %>
+
+<% if context_program and (need?(["mentor", "selector", "panellist"], context_program) or need?(["company_admin", "program_admin"], current_organisation) or 
+      (current_user and current_user.super_admin?) or pitch.owner?(current_user) or (pitch.view_other_team_pitch?(current_user) and 
+      pitch.public?)) and (current_user ? !current_user.role?("awaiting_participant", context_program) : true) and (current_user ? !current_user.role?("awaiting_mentor", context_program) : true)%>
+  <% pitch_main_url = ( context_program.try(:course_setting).try(:user_section) == "course_show" && !context_program.course.blank? && context_program.courses_part_of_program) ? (is_subdomain ? polymorphic_url([context_program, pitch, context_program.course, :show], subdomain: false) : polymorphic_url([context_program, pitch, context_program.course, :show])) : (is_subdomain ? edit_program_pitch_path(context_program, pitch, subdomain: false) : edit_program_pitch_path(context_program, pitch)) %>
+  <div class="col-sm-4 pitch-col">
+    <div class="p_img" style="position: relative; left: 0; top: 0;">
+      <%= link_to_if(user_signed_in?, image_tag(pitch.avatar.logo.url, :class => "img-responsive img-pitch-logo", :style=>"position: relative; top: 0; left: 0;"), pitch_main_url) %>
+      <%= image_tag("/images/icons/lock_encrypted.png", :style =>"position:absolute; top:0px; left:220px;") if !pitch.public? %>
+    </div>
+		<div class="pitch-data">
+	    <h2 class="pitch-title">
+	      <%= link_to_if(user_signed_in?, pitch.title, pitch_main_url) %>
+	    </h2>
+	    <div class="pitch-content">
+	      <p class="pitch_summary_limit">
+	        <%= pitch.summary.try(:content) %>
+	      </p>
+	  <!--<div class="award">
+	        <div class="award-img pull-left">
+	            <img src="images/cup.png" class="cup" alt="award">
+	        </div>
+	          <div class="award-detail pull-left">
+	              <p class="award_rate pull-left">1st</p>
+	              <p class="award_virtual pull-left">
+	                Rating Community Approval
+	      <br> 
+	                (0 Virtual £££'s)
+	              </p>
+	    <div class="clr">
+	          </div>
+	          </div>
+	          <div class="clr">
+	          </div>
+	  </div>-->
+	    </div>
+		</div>
+    <!--<div class="pitch-content">
+      <p>
+        <b>Admin section</b>
+      </p>
+      <div class="admin_section_links">
+  <p>Potential: <a href="#">+Add New</a></p>
+  <p>Type of business: <a href="#">+Add New</a></p>
+  <div class="admin_section_feature_container">
+  <span class="glyphicon glyphicon-ok"></span>        
+  <a class="admin_section_feature" href="#">Feature</a>
+  </div>
+  </div>
+    </div>-->
+		<div class="pitch-user">
+      <div class="pitch-user-img pull-left">
+        <%= link_to(image_tag(pitch.try(:user).try(:avatar).try(:thumb).try(:url), :width => "40", :class => "img-circle img-responsive img-circle-border"), "#") %>
+      </div>
+      <div class="pitch-user-detail pull-left">
+        <%= link_to(["by", pitch.user.try(:full_name)].join(" "), user_path(pitch.user), :class => "pitch-by") -%>
+      	<div class="time_low">
+        	<%= time_in_words(pitch.created_at) %>
+      	</div>
+    	</div>
+    	<div class="clr"></div>
+    </div>
+    <%if current_user and (!need?(["participant"], context_program) or need?(["company_admin"], current_organisation))%>
+      <% star_system = context_program.try(:due_diligence_matrix).try(:star_system)%>
+      <% matrix_enable = context_program.try(:due_diligence_matrix).try(:matrix_enable)%>
+      <% val = show_pitch_rating(pitch, params[:option], star_system)%>
+      <%if val > 0 and matrix_enable %>
+        <a href="<%= context_program.try(:program_scope).try(:show_judging_score) ? '#' : polymorphic_path([context_program, pitch, :feedbacks])%>">
+          <div class="pitch_rating col-md-12">
+            <%if star_system%>
+              <%= content_tag :div, class: "col-md-7" do%>
+                <input value="<%= val%>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">
+              <% end %>
+            <%end%>
+            <%= content_tag :div, class: "col-md-5" do%>
+              <% mtd  = star_system ? "stars" : "points"%>
+              <%= content_tag :p, "#{number_with_precision(val, precision:2)} #{mtd}", style:"font-weight:bold;font-size:15px;margin-top:10px;"%>
+            <% end %>
+        </div></a>
+      <%end%>
+    <% end %>
+    <div class="pitch-content pitch-content-noborder">
+      <div class="text-center s_details">
+        <!--<div class="pull-left pitch-backer">
+  <%#= link_to image_tag("heart.png"), :title => "Backers" %>
+          <p>Backers(0)</p>
+        </div>
+        <div class="pull-left pitch-backer">
+        <%#= link_to image_tag("vote.png"),  :title => "Vote" %>
+          <p>Vote(0)</p>
+        </div>
+        <div class="pull-left pitch-backer">
+          <%#= link_to image_tag("help.png"),  :title => "Help" %>
+          <p>Help(0)</p>
+        </div>-->
+        <div class="pull-left pitch-backer">
+          <%#= link_to image_tag("posts_ico.png"),{}, :class=>"pull-left", "data-toggle"=>"tooltip", "data-placement"=>"bottom", "title"=>"Posts" %>
+          <p class="pull-left pitch-ico-calc"><%#= show_pitch_rating(pitch, params[:option])%></p>
+          <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+<% end %>

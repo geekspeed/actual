@@ -1,0 +1,21 @@
+<% content_for :title do %>
+  <%= "Subscriptions" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "payments" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+  <% @subscriptions.each do |plan| %>
+    <div class="block">
+      <p>
+        Plan Name: <%= plan.name %><br/>
+        Description: <%= plan.description %><br/>
+        Duration: <%= plan.interval %><br/>
+        Currency Code: <%= plan.currency_code %><br/>
+        Amount: <%= plan.amount_formatted %><br/>
+      </p>
+      <p>
+        <%= link_to "Subscribe", new_payment_path(sub: plan), class: "btn btn-primary" %>
+      </p>
+    </div>
+  <% end %>
+</div>

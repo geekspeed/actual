@@ -1,0 +1,52 @@
+<%= form_for(@custom_rule, :url => program_update_rule_path(@program, :rule_id => @custom_rule.id), :method => :put, :html => {:class => "registerForm reqForm" }) do |f| %>
+  <% field_names = Pitch.custom_fields.where(:program_id => context_program.id).map{|cc| [cc.label, cc.id]} %>
+  <% field_names << ["Tag", "Tag"]%>
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>Rule Name</div>
+    </div>
+    <div class="col-sm-8">
+      <%= f.text_field :title, {:class => "form-control form-style-1"}%>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>Role</div>
+    </div>
+    <div class="col-sm-8">
+      <%= f.select :role, options_for_select([["Participated In", "Participated In"], ["Not Participated In", "Not Participated In"]], @custom_rule.role), :class => "form-controls form-style-1"%>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>Events</div>
+    </div>
+    <div class="col-sm-8">
+      <%= f.select :event_for, options_for_select(context_program.program_events.map{|cc| [cc.title, cc.id]}, @custom_rule.event_for), {:class => "form-controls form-style-1 filter_fields"}%>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>Pitch Field</div>
+    </div>
+    <div class="col-sm-8">
+      <%= f.select :field_name, options_for_select(field_names, @custom_rule.field_name), :class => "form-controls form-style-1 filter_fields"%>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>value</div>
+    </div>
+    <div class="col-sm-8">
+      <%= f.text_field :field_value, :class => "form-controls form-style-1 filter_fields"%>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <%= submit_tag "Update", :id => "submit" %>
+    <%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-top:5px; margin-right:10px;" %>
+  </div>
+<% end %>

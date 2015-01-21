@@ -1,0 +1,34 @@
+#sidebar, #mainnavi, .feedback, .menu-right, #masthead, .print_link  {
+	display: none;
+}
+body #main, body #rightcontent{
+	width: 100% !important;
+	float: none;
+	margin: 0px;
+}
+body #page, body {
+	position: relative;
+	height: auto;
+	width: 100%;
+}
+.page-template-template-register-schritt1-php #programLaunchpad {
+	display: block;
+	width: 100%;
+}
+.page-template-template-register-schritt1-php #rightcontent .block {
+	display: none;
+}
+.page-template-template-register-schritt1-php #rightcontent  #programLaunchpad .block {
+	display: block;
+}
+
+.block {
+    background: none;
+    margin: 0 0 30px;
+    padding: 25px 0px 15px;
+}
+
+.block_scroll {
+	height: auto;
+	overflow: auto;
+}

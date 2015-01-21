@@ -1,0 +1,136 @@
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3>
+          <label>Tasks</label>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="">
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class="tasks_list">
+              <%if @pitch.team?(current_user) or need?(["company_admin", "program_admin"], current_organisation)%>
+                <% tasks = urgent_tasks(@pitch)%>
+                <% tasks.each do |task|%>
+                  <% btn_background  = color_scheme(task)%>
+                  <% task_class  = color_scheme_class(task)%>
+                  <% unless task_completed?(task)%>
+                    <% if task.task_option1 == "event" and task.milestone%>
+                      <li class="<%=task_class%>">
+                        <%= link_to "#{task.description}<i class='glyphicon glyphicon-star' style='text-align:right;'></i><br/><span class='tag tag-task label label-danger'>#{task.milestone.try(:description)}</span>".html_safe, (is_subdomain ? (task.task_option1 == "event" ? polymorphic_url([:recommended_events, @program, @pitch], subdomain: false) : polymorphic_url([@program, @pitch, Milestone], subdomain: false)) : (task.task_option1 == "event" ? polymorphic_url([:recommended_events, @program, @pitch]) : polymorphic_url([@program, @pitch, Milestone])))%>
+                      </li>
+                    <%else%>
+                      <li class="<%=task_class%>">
+                        <%= link_to "#{task.description}<i class='glyphicon glyphicon-star' style='text-align:right;'></i>".html_safe, (is_subdomain ? (task.task_option1 == "event" ? polymorphic_url([:recommended_events, @program, @pitch], subdomain: false) : polymorphic_url([@program, @pitch, Milestone], subdomain: false)) : (task.task_option1 == "event" ? polymorphic_url([:recommended_events, @program, @pitch]) : polymorphic_url([@program, @pitch, Milestone])))%>
+                        <%end%>
+                      </li>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% if @pitch.team_and_mentor?(current_user) or need?(["company_admin", "program_admin"], current_organisation) or need?(["selector", "panellist"], context_program)%> 
+                <% applicable_role = current_user.role_code_for(context_program.id, current_organisation.id)[0] %>         
+                <% prev_phase = nil%>
+                <% if @pitch.team_and_mentor_both?(current_user) %>
+                  <% workflows = @pitch.workflows.on.where(:applicable_role.in => [applicable_role,"participant"]) %>
+                <% else %>
+                  <% workflows = @pitch.workflows.on.role_specific(applicable_role) %>
+                <% end %>
+                <% workflows.each do |phase| %>
+                    <% if phase.active? and phase.code != "due_diligence"%>
+                      <% if phase_action_allowed?(phase.applicable_role, @pitch) or applicable_role == "company_admin"  %>
+                        <%= render "pitches/shared/todo_phase", phase: phase, prev_phase: prev_phase, applicable_role: applicable_role %>
+                      <% end %>
+                    <%elsif phase.code == "due_diligence"%>
+                      <% @diligence_phase = phase%>
+                    <% end %>
+                  <% prev_phase = phase %>
+                <% end %>
+              <% end %>
+              <% @program.surveys.each do|survey|%>
+                <% if survey_visible? survey%>
+                  <%text = survey.subject.present? ? survey.subject : survey.name%>
+                  <li class="done">
+                    <%= link_to "#{text}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, answers_program_survey_path(survey.program, survey) %>
+                  </li>
+                <% end %>
+              <% end %>
+              <% if need?(["company_admin", "program_admin"], current_organisation) && active_phase_of_pitch?(@pitch, "submission_deadline") %>
+                <li class="done">
+                  <%= link_to "Stops editing of entries<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, toggle_edit_status_program_pitch_edit_pitch_field_index_url(context_program, @pitch) if !@pitch.stop_editing %>
+                  <%= link_to "Start editing of entries<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, toggle_edit_status_program_pitch_edit_pitch_field_index_url(context_program, @pitch) if @pitch.stop_editing %>
+                </li>
+              <% end %>
+              <% if need?(["mentor"], context_program) && @pitch.mentor?(current_user) or need?(["company_admin", "program_admin"], current_organisation)%>
+                <li class="branded">
+                  <%= link_to "Nudge the team for a milestone update<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, nudge_program_pitch_url(context_program, @pitch, subdomain: false) %>
+                </li>
+                <% if @program.can_log_session%>
+                  <li class="branded">
+                    <%= link_to "Log #{t("role_type:mentor", "s")} session<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#log_mentor_session", "id" => "mentor_session" %>
+                  </li>
+                  <%= render "pitches/shared/log_mentor_session" %>
+                <% end%>
+              <% end %>
+              <% if need?(["company_admin", "program_admin"], current_organisation) %>
+                <% if @program.can_log_session%>
+                  <li class="branded">
+                    <%= link_to "Log admin session<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#log_admin_session", "id" => "admin_session" %>
+                  </li>
+                  <%= render "pitches/shared/log_admin_session" %>
+                <% end%>
+                <% if @program.mentor_allowed %>
+                  <li class="branded">
+                    <%= link_to "Assign #{t("role_type:mentor", "s")}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#assign_mentor", "id" => "pitch_assign_mentor" %>
+                  </li>
+                  <%= render "pitches/shared/assign_mentor" %>
+                <% end %>
+              <%end%>
+              <% if mentor_applications_open? %> 
+                <li class="branded">
+                  <%= link_to "I want to be #{t("role_type:mentor", "s")}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#be_mentor", :class => "fancybox_small" %>
+                </li>
+                <%= render "pitches/shared/be_mentor" %>
+              <% end %>
+              <% if need?(["mentor"], context_program) && @pitch.mentor?(current_user) or need?(["company_admin", "program_admin"], current_organisation) %>
+                <li class="branded">
+                  <%= link_to "Give the team a task<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#give_a_task", :class => "fancybox_small" %>
+                </li>
+                <% @task = Task.new %>
+                <%= render "shared/milestone_task" %>
+              <% end %>
+              <% if !@pitch.team?(current_user) %>
+                <% if @program.try(:program_scope).try(:peer_review_active) %>
+                  <li class="branded">
+                    <%= link_to "Review this #{t("pitch", "s")} privately<i class='glyphicon glyphicon-edit' style='text-align:right;'></i>".html_safe, "#reviewthispitch", :class => "fancybox_small" %>
+                  </li>
+                <% end %>
+                <%= render "shared/feedback_lightbox" %>
+                <%= render "pitches/shared/back_this_pitch" %>
+                <%= render "pitches/shared/download_voting_sheet", diligence_phase: @diligence_phase %>
+                <%= render "pitches/shared/join_team" if context_program.workspace.try(:to_do_list_join_this_team)%>
+                <%= render "pitches/shared/refer_to_some_one" %>
+                <%= render "pitches/shared/collaboration_request" %>
+              <% else %>
+                <!--<p>There is nothing for you right now.</p>-->
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div> 
+
+<style>
+.gn-icon-glyphicon-todo::before {
+width: auto !important;
+font-size: 12px !important;
+}
+</style>

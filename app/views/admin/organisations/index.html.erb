@@ -1,0 +1,58 @@
+<div id="mainnavi">
+  <%= render "header" %>       
+  <!-- Checking if company id not equal 766 (bcs program). Here can be added condition for default(newer) programs. -->
+  <div class="clr"></div>
+</div>
+<div id="mailfunctionAnker"></div>
+<div id="sidebar">
+  <ul id='leftmenu'>
+    <li class='active'>
+      <%= link_to("Manage Customers", polymorphic_path([:admin, Organisation])) %>
+    </li>
+  </ul>
+</div>
+<div id="rightcontent">
+  <%- @organisations.each_with_index do |organisation,index| -%>
+  	<% if !organisation.owner.nil? %>
+		<div class="panel-group manage_customers" id="accordion">
+		  <div class="panel panel-default">
+		    <div class="panel-heading">
+		      <h4 class="panel-title">
+		        <div class="pitch-user pull-left">
+				      <div class="pitch-user-img pull-left">
+				        <a href="#">
+									<%= image_tag("user_dummy.jpg",class:"img-circle img-responsive img-circle-border",width:"40") %>
+								</a>
+				      </div>
+				      <div class="pitch-user-detail pull-left">
+				        <a class="pitch-by" href="#"><%= organisation.company_name %></a>      	
+								<div class="time_low">
+				        	<%= organisation.owner.try(:full_name) %>
+				      	</div>
+				    	</div>
+				    	<div class="clr"></div>
+				    </div>
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne_<%= index %>" class="pull-right">
+		          Details
+		        </a>
+						<div class="clear"></div>
+		      </h4>
+		    </div>
+		    <div id="collapseOne_<%= index %>" class="panel-collapse collapse">
+		      <div class="panel-body">
+				<strong class="contact_person">Contact Person</strong>
+		        <p class="contact_person_info"><b>Name:</b>  <%= organisation.owner.try(:full_name) %></p>
+				<p class="contact_person_info"><b>Email:</b> <%= organisation.owner.try(:email) %></p>
+				<p class="contact_person_info"><b>Telephone Number:</b> <%= organisation.address.telephone.to_s %></p>
+				<p class="contact_person_info"><b>Type:</b> <%= organisation.type_of %></p>
+				<div class="clr"></div>
+		        <hr />
+		        <a href="#" class="button company_view">View</a>
+		        <%= link_to organisation.activate? ? "Deactivate Account" : "Activate Account", polymorphic_path([:toggle, :admin,organisation]), :class => "button", :method => :put %>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	<% end %>	
+  <%- end -%>
+</div><!-- #rightcontent -->

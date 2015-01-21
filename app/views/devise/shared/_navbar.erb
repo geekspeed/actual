@@ -1,0 +1,67 @@
+<% org_id = params[:for] || (params[:references] ? params[:references][:for] : nil) || nil%>
+<% org = getting_organisation(org_id)%>
+<% menubar_color = org.try(:manubar_color)%>
+<style type="text/css">
+  #mainnavi ul li.active.mainnav_link a{
+        background: <%= menubar_color %> !important;
+        color: white !important;
+      }
+  #mainnavi ul li.mainnav_link a:hover{
+        background: <%= menubar_color %> !important;
+        color: white !important;
+      }
+  #mainnavi ul li.mainnav_link a{
+        color: <%= menubar_color %> !important;
+      }
+</style>
+<% unless user_signed_in? %>
+  <% content_for :navigation do %>
+    <div id="mainnavi">
+      <nav class="navbar navbar-default main-navbar-inner" role="navigation">
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		    </button>
+        <div class="navbar-collapse collapse" style="border: none;">
+          <ul class="nav navbar-nav">
+          	<% if @program %>
+	            <li class="<%= 'active' if page == "basic" %>  mainnav_link">
+	              <a href="#"><%= "#{Semantic.t(@program, 'program:basic').present? ? Semantic.t(@program, 'program:basic') : 'Basics'}"%></a>
+	            </li>
+	            <li class="<%= 'active' if page == "about_me" %>  mainnav_link">
+	              <a href="#"><%="#{Semantic.t(@program, 'program:about_me').present? ? Semantic.t(@program, 'program:about_me') : 'About Me'}"%></a>
+	            </li>
+	         <% elsif org %>
+	            <li class="<%= 'active' if page == "basic" %>  mainnav_link">
+	              <a href="#"><%= "#{Semantic.e(org, 'ecosystem:basic').present? ? Semantic.e(org, 'ecosystem:basic') : 'Basics'}"%></a>
+	            </li>
+	            <li class="<%= 'active' if page == "about_me" %>  mainnav_link">
+	              <a href="#"><%="#{Semantic.e(org, 'ecosystem:about_me').present? ? Semantic.e(org, 'ecosystem:about_me') : 'About Me'}"%></a>
+	            </li>
+	         <%else%>
+	            <li class="<%= 'active' if page == "basic" %>  mainnav_link">
+	              <a href="#"><%= 'Basics'%></a>
+	            </li>
+	            <li class="<%= 'active' if page == "about_me" %>  mainnav_link">
+	              <a href="#"><%='About Me'%></a>
+	            </li>
+	         <% end %>
+           
+            <% if company_registration? %>
+              <li class="<%= 'active' if page == "organisation" %>  mainnav_link">
+                <a href="#">Company Account</a>
+              </li>
+            <% end %>
+            <li class="<%= 'active' if page == "finish" %>  mainnav_link">
+              <a href="#">Finish</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+<% else %>
+  <%= render "shared/bs_navbar", :page => "user_profile" %>
+<% end %>

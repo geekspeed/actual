@@ -1,0 +1,234 @@
+<%= content_tag :div, :id => "main", :class => "two_sided_right_content", :id=>"rightcontent" do%>
+  <div class="col-md-7" style="">
+  	<div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table program-login-panel" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<%= content_tag :h3, "Login"%>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="panel_form_heads" style="margin-bottom: 15px;">Social Login</div>
+							</div>
+						</div>
+						<div class="row">
+              <div class="col-sm-12 setting-font">
+                <%= link_to(image_tag("ico_facebook.png"), user_omniauth_authorize_path(:facebook, :program_id => @program.id)) if @program.program_scope.try(:facebook)%>
+      					<%= link_to(image_tag("ico_twitter2.png"), user_omniauth_authorize_path(:twitter, :program_id => @program.id)) if @program.program_scope.try(:twitter)%>
+      					<%= link_to( image_tag("ico_linkedin.png"), user_omniauth_authorize_path(:linkedin, :program_id => @program.id)) if @program.program_scope.try(:linkedin)%>
+              </div>
+            </div>
+            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-bottom:20px;margin-top:20px;"></div>
+            <div class="row">
+							<div class="col-sm-12">
+								<div class="panel_form_heads" style="margin-bottom: 15px;"><%= @program.title == "" ? "Apptual Account" : @program.title + " Account"%></div>
+							</div>
+						</div>
+						<%= content_tag :div do%>
+				      <%= form_for(:user, :url => session_path(:user), :id => "loginform") do %>
+				        <%= content_tag :div, :class => "form" do%>
+									<div class="row">
+			              <div class="col-sm-4 setting-font">
+			                <div>Email</div>
+			              </div>
+			              <div class="col-sm-8">
+			              	<%= text_field_tag "user[email]", "", :class => "input form-control form-style-1"%>
+			              </div>
+			            </div>
+			            <br />
+			            <div class="row">
+			              <div class="col-sm-4 setting-font">
+			                <div>Password</div>
+			              </div>
+			              <div class="col-sm-8">
+			              	<%= password_field_tag "user[password]", "", :class => "input form-control form-style-1" %>
+			              </div>
+			            </div>
+			            <br />
+			            <div class="row">
+			            	<div class="col-sm-4"></div>
+			              <div class="col-sm-8">
+			                <%= button_to "Login", "#", :class => "custom_btn btn submit program_login_btn", :id => "submit"%>
+			              </div>
+			            </div>
+			            <br>
+			            <div class="row">
+			            	<div class="col-sm-4"></div>
+			              <div class="col-sm-4 setting-font">
+			                <%= check_box_tag "user[remember_me]", "",  :class=>"pull-left" %>&nbsp;
+			                &nbsp;&nbsp; <%= content_tag :span, "Remember Me" %>
+			              </div>
+			              <div class="col-sm-4 setting-font">
+			                <%= link_to "Lost password", new_password_path("user"), :class => "lost_pass_link pull-right-lg" %>
+			              </div>
+			            </div>
+			            
+            		<% end %>
+      				<% end %>
+    				<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<%
+=begin
+%>
+		<div class="login" id="theme-my-login">
+      <%= content_tag :h2, "Login With", :class=>"titleLine"%>
+      <%= link_to(image_tag("ico_facebook.png"), user_omniauth_authorize_path(:facebook, :program_id => @program.id)) if @program.program_scope.try(:facebook)%>
+      <%= link_to(image_tag("ico_twitter2.png"), user_omniauth_authorize_path(:twitter, :program_id => @program.id)) if @program.program_scope.try(:twitter)%>
+      <%= link_to( image_tag("ico_linkedin.png"), user_omniauth_authorize_path(:linkedin, :program_id => @program.id)) if @program.program_scope.try(:linkedin)%>
+    
+    <br><br>
+    <%= content_tag :h2, "- OR - Login with Apptual account", :class=>"titleLine"%>
+    <%= content_tag :div do%>
+      <%= form_for(:user, :url => session_path(:user), :id => "loginform") do %>
+        <%= content_tag :div, :class => "form" do%>
+          <%= content_tag :div, :class => "form-group" do%>
+            <%= content_tag :label, "Email"%>
+            <%= text_field_tag "user[email]", "", :class => "input form-control", :size => 20 %>
+          <% end %>
+          
+          <%= content_tag :div, :class => "form-group" do%>
+            <%= content_tag :label, "Password"%>
+            <%= password_field_tag "user[password]", "", :class => "input form-control", :size => 20 %>
+          <% end %>
+          
+          <%= content_tag :div, :class => "form-group" do%>
+            <%= content_tag :label, ""%>
+            <%= check_box_tag "user[remember_me]" %>
+		        <%= content_tag :label, "Remember Me"%>
+			      <div class="clear"></div>
+          <% end %>
+
+          <%= content_tag :div, :class => "form-group" do%>
+			      <%= content_tag :label, ""%>
+            <%= button_to "Login", "#", :class => "submit pull-left", :id => "submit"%>
+			      <%= link_to "Lost password", new_password_path("user"), :class => "pull-left lost_pass_link" %>
+					  <div class="clear"></div>
+          <% end %>
+
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+	<%
+=end
+%>
+
+  </div>
+  <% if @program.try(:program_scope).try(:participant_scope) == "public" %>
+  	<%= content_tag :div, :class=> "col-md-4 col-md-offset-1", :style=>" width: 39.333%;margin-left: 2.333% !important;" do%>
+  		<div class="row">
+				<div class="col-md-12">
+					<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<%= content_tag :h3, "Register"%>
+							</div>
+							<div class="panel-options">
+								<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+							</div>
+						</div>
+								
+						<div class="panel-body">
+							<%= content_tag :div do%>
+					      <%= form_for(:user, :url => session_path(:user), :id => "loginform") do %>
+					        <%= content_tag :div, :class => "form" do%>
+										<div class="row">
+				              <div class="col-sm-4 setting-font">
+				                <div style="line-height: 28px;">As a/an</div>
+				              </div>
+				              <div class="col-sm-8">
+				              	<%= select_tag "role_type", options_for_select(@program.roles_allowed.collect{|r| [t("role_type:#{r.code}").present? ? t("role_type:#{r.code}") : r.name, r.code]}), :prompt => "Select..", :class=>"form-control form-style-1", :style=>"width:100%;"%>
+				              </div>
+				            </div>
+				            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-bottom:20px;margin-top:20px;"></div>
+				            <div class="row">
+											<div class="col-sm-12">
+												<div class="panel_form_heads" style="margin-bottom: 15px;">You can register with any of the following options</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<%= link_to(image_tag("ico_facebook.png"), user_omniauth_authorize_path(:facebook, :program_id => @program.id), :id => "fb_par") if @program.program_scope.try(:facebook) %>
+  											<%= link_to(image_tag("ico_twitter2.png"), user_omniauth_authorize_path(:twitter, :program_id => @program.id), :id => "tw_par") if @program.program_scope.try(:twitter) %>
+  											<%= link_to(image_tag("ico_linkedin.png"), user_omniauth_authorize_path(:linkedin, :program_id => @program.id), :id => "ln_par") if @program.program_scope.try(:linkedin) %>
+  											<%= link_to("Register without Social Media", "#{root_url}users/invitation/accept?for=#{@program.id}&invitation_token=0", :id => "email_ic", :class => "btn btn-default btn-xs btn-info", :style => "vertical-align:top")%>
+											</div>
+										</div>
+				            <br />
+	            		<% end %>
+	      				<% end %>
+	    				<% end %>
+						</div>
+					</div>
+				</div>
+			</div>
+  		<%
+=begin
+%>
+  		<%= content_tag :div, :style => "" do%>
+  			<%= content_tag :h2, "OR register as an", :class=>"titleLine"%>
+  			<%= content_tag :div, :style => "" do%>
+  				<%= select_tag "role_type", options_for_select(@program.roles_allowed.collect{|r| [t("role_type:#{r.code}").present? ? t("role_type:#{r.code}") : r.name, r.code]}), :prompt => "Select..", :class=>"form-control"%>
+  				<%= tag('br', nil, nil)%>
+  			<% end %>
+  			<%= content_tag :div, :style => "" do%>
+  		    <%= content_tag :p, "You can register with any of the following options", :style=>"font-size:12px;"%>
+  				<%= tag('br', nil, nil)%>
+  				<%= link_to(image_tag("ico_facebook.png"), user_omniauth_authorize_path(:facebook, :program_id => @program.id), :id => "fb_par") if @program.program_scope.try(:facebook) %>
+  				<%= link_to(image_tag("ico_twitter2.png"), user_omniauth_authorize_path(:twitter, :program_id => @program.id), :id => "tw_par") if @program.program_scope.try(:twitter) %>
+  				<%= link_to(image_tag("ico_linkedin.png"), user_omniauth_authorize_path(:linkedin, :program_id => @program.id), :id => "ln_par") if @program.program_scope.try(:linkedin) %>
+  				<%= link_to("Register without Social Media", "#{root_url}users/invitation/accept?for=#{@program.id}&invitation_token=0", :id => "email_ic", :class => "btn btn-default btn-xs btn-info", :style => "vertical-align:top")%>
+  			<% end %>
+  		<% end %>
+  		<%
+=end
+%>
+  	<% end %>
+  	
+  <% end %>
+<% end %>
+<script>
+
+jQuery(document).ready(function($) {
+    $(document).on('change', '#role_type', function(e){
+			e.preventDefault();
+			value = $(this).val();
+			if ($('#email_ic').attr('href').match('role')) {
+				$('#fb_par').attr('href', $('#fb_par').attr('href').split('&')[0] + '&role=' + value);
+				$('#tw_par').attr('href', $('#tw_par').attr('href').split('&')[0] + '&role=' + value);
+				$('#ln_par').attr('href', $('#ln_par').attr('href').split('&')[0] + '&role=' + value);
+				mail_url = $('#email_ic').attr('href', $('#email_ic').attr('href').split('&role')[0])
+				new_url = mail_url.attr('href')+ '&role=' + value;
+				$('#email_ic').attr('href', new_url);
+			}
+			else{
+				$('#fb_par').attr('href', $('#fb_par').attr('href') + '&role=' + value);
+				$('#tw_par').attr('href', $('#tw_par').attr('href') + '&role=' + value);
+				$('#ln_par').attr('href', $('#ln_par').attr('href') + '&role=' + value);
+				$('#email_ic').attr('href', $('#email_ic').attr('href') + '&role=' + value);
+			}
+		})
+		
+		$(document).on('click', '#fb_par, #tw_par, #ln_par, #email_ic', function(e){
+			if($('#role_type').val() == ""){
+				alert("please select the role from the above list");
+				return false;
+			}
+			else{
+				return true;
+			}
+    });
+});
+
+</script>

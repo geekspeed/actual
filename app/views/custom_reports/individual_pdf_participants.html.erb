@@ -1,0 +1,157 @@
+<%@custom_report = report%>
+<%users.each do |object|%>
+
+  <%= content_tag :div, class: "container" do%>
+    <%if object.present?%>    
+        <%= content_tag :div, :class => "row" do%>
+          <%= content_tag :div, :class => "col-md-12" do %>
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading">
+                <div class="panel-title title_option" >
+                  <h3><%= CustomReport.get_section_title(object)%></h3>
+                </div>
+                <div class="panel-options">
+                  <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                </div>
+              </div>
+              <div class="panel-body">
+                <% @custom_report.custom_report_elements.each do |element| %>
+                  <%element_type = element.type%>
+                  <% case element_type%>
+                    <% when "Text"%>
+                    
+                      <div class="row portlet">
+                        <div class="col-sm-12">
+                          <%= raw element.option%>
+                        </div>
+                      </div>
+                    
+                    <% when "Table"%>
+                      
+                      <%if @custom_report.type == "Participant" and element.option == "All fields"%>
+                        <% custom_fields = User.custom_fields.where(anchor: "participant", program_id: @custom_report.program_id.to_s).enabled%>
+                        
+                          <div class="row portlet">
+                            <div class="panel-title title_option" >
+                              <h3><%= "All Field"%></h3>
+                            </div>
+                            <div class="col-sm-4 setting-font">
+                              <div style="line-height: 28px;">Email</div>
+                            </div>
+                            <div class="col-sm-8">
+                             <div style="line-height: 28px;"> <%= object.email%></div>
+                            </div>
+                          
+                            <% custom_fields.in(code: object.custom_fields.keys).each do |custom_field|%>
+                              <%= content_tag :div, class: "row" do%>
+                                <div class="col-sm-4 setting-font">
+                                  <div style="line-height: 28px;"><%= custom_field.try(:label)%></div>
+                                </div>
+                                <div class="col-sm-8">
+                                  <div style="line-height: 28px;"><%= object.send(custom_field.code.to_sym)%></div>
+                                </div>
+                              <% end if object.custom_fields.keys.include?(custom_field.code)%>
+                            <% end %>
+                          </div>
+                        
+                      <%elsif @custom_report.type == "Participant" and element.option == "Events attended"%>
+                      
+                        <% attended_events =  EventRecord.in(program_id: @custom_report.program_id, user_id: object, :confirmed_at.ne => nil)%>
+                        <div class="row portlet">
+                          <div class="panel-title title_option" >
+                            <h3><%= "Events Attended"%></h3>
+                          </div>
+                          <% attended_events.each do |event|%>
+                              
+                              <div class="col-sm-12">
+                                  <%= event.event_session.program_event.title%>
+                              </div>
+                              
+                          <% end %>
+                        </div>
+                      
+                      <% end %>
+                      
+                    <% when "Graph"%>
+                    
+                      <div class="row portlet">
+                        <div class="panel-title title_option" >
+                          <h3><%= "Graph"%></h3>
+                        </div>
+                        <% @graph = Reporting.where(id: element.option).first%>
+                        <div id="show_chart<%= @graph.id %>"></div>
+                        <div class="col-sm-12" >
+                          <% @graph_data = chart_data(@graph.reporting, @graph.graph_type)%>
+                          <% chart_table(@graph.reporting, @graph.graph_type).each_with_index do |report| %>
+                            <%= report[0] %>
+                            <%= report[1] %>
+                          <% end %>
+                        </div>
+                      </div>
+                    
+                    <% when "Field"%>
+                      <% field = App::CustomFields::Models::CustomField.where(id: element.option).first%>
+                      <div class="row portlet">
+                        <div class="panel-title title_option">
+                          <h3>Field <%= field.try(:label)%></h3>
+                        </div>
+                        
+                          <% custom_fields = User.custom_fields.where(anchor: "participant", program_id: @custom_report.program_id.to_s).enabled%>
+                          <% custom_fields.where(id: element.option).each do |custom_field|%>
+                            <%= content_tag :div, :class => "row" do%>
+                              <div class="col-sm-4 setting-font">
+                                <div style="line-height: 28px;"><%= custom_field.try(:label)%></div>
+                              </div>
+                              <div class="col-sm-8">
+                                <div style="line-height: 28px;"><%= object.send(custom_field.code.to_sym)%></div>
+                              </div>
+                            <% end if object.custom_fields.keys.include?(custom_field.code)%>
+                          <% end %>
+                        
+                      </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <br />
+            <br />
+          <% end %>
+       <% end %>
+    <% end %>
+  <%end%>
+<% end %>
+
+
+<% if @custom_report.reload.custom_report_order.try(:order).present? %>
+   <% order = @custom_report.custom_report_order.order.gsub("-",",").split(",") %>
+   <% report_elements_arrange_order = Hash[*order].values %>
+   <% report_elements_arrange_order = (raw report_elements_arrange_order) %>
+<% end %>
+<script type="text/javascript" charset="utf-8">
+ $(function() {
+<% if @custom_report.custom_report_order.try(:order).present? %>
+  var arrValuesForOrder = <%= report_elements_arrange_order %>;
+  var divs = $("div.panel-body"),
+      items = $("div.portlet");
+
+  divs.each(function() {
+    var items = $(this).children().clone();
+    $(this).html('')
+    for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+        // arrValuesForOrder[i] element to move
+        // i = index to move element at
+        $(this).prepend(items.get(arrValuesForOrder[i] - 1));
+    }
+  })
+<% end %>
+
+})
+$(document).ready(function(){
+<% if @graph.try(:graph_type)=="Line Chart" %>
+  line_chart('#show_chart<%= @graph.id %>',0,0,'<%= raw @graph_data[1] %>', '<%= raw @graph_data[2] %>', <%=  raw @graph_data[0] %>, 75, 130, 30)
+<% elsif @graph.try(:graph_type)=="Pie Chart" %>
+  pie_chart('#show_chart<%= @graph.id %>',0,0,<%= raw @graph_data[0] %>)
+<% end %>
+
+})
+</script>

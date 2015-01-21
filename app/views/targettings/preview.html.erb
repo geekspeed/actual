@@ -1,0 +1,38 @@
+<% if @type == "user"%>
+<table class="table table-bordered table-striped datatable dataTable" id="table-2">
+	<thead>
+		<tr role="row">
+			<th style="width: 50px;" colspan="1" rowspan="1" >S.no</th>
+			<th style="width: 400px;" colspan="1" rowspan="1">First Name</th>
+			<th style="width: 400px;" colspan="1" rowspan="1">Last Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@users.each_with_index do |user, index|%>
+		<tr>
+			<td><%= index+1 %></td>
+			<td><%= user.first_name %></td>
+			<td><%= user.last_name %></td>
+		</tr>
+		<%end%>
+	</tbody>
+</table>
+
+<%elsif @type == "pitch" %>
+<table class="table table-bordered table-striped datatable dataTable" id="table-2">
+	<thead>
+		<tr role="row">
+			<th style="width: 50px;" colspan="1" rowspan="1" >S.no</th>
+			<th style="width: 400px;" colspan="1" rowspan="1">Title</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%@pitches.each_with_index do |pitch, index|%>
+			<tr>
+				<td><%= index+1 %></td>
+				<td><%= pitch.title %></td>
+			</tr>
+		<%end%>
+	</tbody>
+</table>
+<%end%>

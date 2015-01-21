@@ -1,0 +1,24 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Buzz" %>
+<% end %>
+
+<div id="rightcontent" class="full_content">
+  <%= hidden_field_tag :page_name, "activity_page"%>
+	<div class="smaller-feed">
+  	<%= render "shared/bs_feed_form", :community_feed => CommunityFeed.new %>
+  	<%= render "bs_feeds" %>
+	</div>
+</div><!-- #rightcontent -->
+
+ <style>
+ 	.sticky-post-link:hover, .blog-post-link:hover{ text-decoration:underline; }
+ 	.sticky-post-link, .blog-post-link{ font-size:12px;}
+ 	.tooltip {
+    position: fixed;
+}
+ </style>
+ <script>
+   $(document).ready(function(){
+  	$(".sticky-post-link[rel=tooltip], .blog-post-link[rel=tooltip]").tooltip();
+   });
+ </script>

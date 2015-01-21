@@ -1,0 +1,50 @@
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+<a href="sec3" name="sec3" class="section_nav"></a>
+<p class="second_level_title">My Events (<%= @program_events.count %>)</p>
+<% count = 1; @program_events.each do |program_event| %>
+	<% rate_arr = program_event.event_sessions.map(&:event_ratings).flatten.map(&:rating) %>
+	<% rate_avg = rate_arr.inject{ |sum, el| sum + el } / rate_arr.size  unless rate_arr.empty?%>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-custom panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3><%= program_event.title %>  </h3>
+					<input value="<%= rate_avg %>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">
+					
+				</div>
+				<div class="panel-options">
+					<a href="<%= edit_program_event_path(@program,program_event)%>" class="glyphicon glyphicon-edit" data-rel="collapse"></a>
+					<%= link_to "", program_event_path(@program, program_event), :title =>"Delete", :confirm => 'Are you sure?', :method => :delete, :class=>"glyphicon glyphicon-trash" %>
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+				<p><b>Description:</b> <%= program_event.description.try(:html_safe) %></p>
+				<hr class="mod_sep">
+<%
+=begin%>
+				<% if program_event.attachment.present? %>
+          <div class="post-media">
+            <div class="thumbnail no-border do-hover">
+              <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+              <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + program_event.attachment_url, :maxwidth => 525)%>
+              <%= show_attachment(emb_obj)%>
+            </div>
+          </div>
+        <% end %>
+<%
+=end%>
+				<%= render "program_event_session", :program_event => program_event %>
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<% count+=1 %>
+  <% end %>	
+	
+</div>
+</div>

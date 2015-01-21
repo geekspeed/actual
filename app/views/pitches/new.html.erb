@@ -1,0 +1,11 @@
+<%#= render "pitches/shared/bs_sidebar", :page => "pitch" %>
+<div id="rightcontent" style="float: none;">
+  <%= form_for(@pitch, :url => polymorphic_path([@program, @pitch]), :html => {:class => "reqForm no_float" }) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>
+
+
+<style>
+.browse-wrapper input[type=file]{padding: 0px !important;padding-top: 31px !important;overflow-y: hidden;overflow-x: hidden;}
+</style>

@@ -1,0 +1,140 @@
+<% page = "setup_program"; ppage = "surveys"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-manage gn-icon-large"></i>
+      Surveys
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Surveys lets you manage participation in the various surveys on the platform and their results"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Surveys</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		<%= form_for @program, :url => program_manage_form_save_path do |f| %>
+		  <%= content_tag :div, class: "block" do%>
+		    <div class="block">
+		    	<a href="sec1" name="sec1" class="section_nav"></a>
+		      <h2>My Surveys</h2>
+		    </div>
+		    <%= content_tag :table, class: "settings full_width_table" do%>
+		      <%= content_tag :tbody do%>
+		        <%= content_tag :tr do%>
+		          <%= content_tag :td, class: "lbl" do%>
+		            <%= f.label "Survey:" %>
+		          <% end %>
+		          <%= content_tag :td, class: "col_setting" do %>
+		            <% options = options_for_select(@program.surveys.map{|s| [s.name,s.id,{"audience" => s.target_audience, "category" => s.category,"recurring" => s.recurring_period,"time" => s.time}]}, @survey.try(:id)) %>
+		            <%= select_tag "survey_id", options, class: "survey_audience_select", "data-url" => program_change_feed_form_path(@program) %>
+		          <% end %>
+		        
+		          <%= content_tag :td, class: "lbl", :style => "padding-left:65px" do%>
+		            <%= f.label "Audience:" %>
+		          <% end %>
+		          <%= content_tag :td, class: "col_setting" do %>
+		            <%= text_field_tag "program[survey_id]", @survey.try(:target_audience), :disabled => true %>
+		          <% end %>
+		        <% end %>
+		
+		      <% end %> 
+		      <%end%>
+		  <% end %>
+		  <% style_div = @survey.try(:category) == "Recurring" ? "" : "display:none;"%> 
+		  <div class = "block" id="recurr_block" style = <%= style_div %>>
+		    <div class = "recurr">
+		      <div class="rec pull-left">
+		        <%= f.label "If recurring"%>
+		        <%= select_tag :recurring_period, options_for_select((1..12).to_a,@survey.try(:recurring_period))%>
+		      </div>
+		      <div class= "time pull-left" style="margin-left:65px;">
+		        <%= f.label "When"%>
+		        <%= text_field_tag :time, @survey.try(:time),:placeholder => "Time"%>
+		      </div>
+		        <br/></br/>
+		        <br/><br/>
+		      <%= f.submit "Save", id: "submit" %>
+		      <%= tag 'br'%>
+		    </div>
+		  </div>
+		<%end%>
+		
+		<%= content_tag :div, id:"feed_form_survey" do%>
+		  <%= render "programs/feed_form", :survey => @survey  if @survey%>
+		<%end%>
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">My Survey</a></li>
+					<li><a href="#sec2">Feeds</a></li>
+					<li><a href="#sec3"> Responses</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type ="text/javascript">
+  $(document).on("change", ".survey_audience_select", function() {
+    selected_var = $('.survey_audience_select :selected');
+    audience = selected_var.attr('audience');
+    $('#program_survey_id').attr("value", audience);
+    visibility = selected_var.attr('visibility');
+    $('#program_survey_id').attr("value", audience);
+    category = selected_var.attr('category');
+    if (category == "Recurring"){
+      $("#recurr_block").show();}
+    else{
+      $("#recurr_block").hide();
+    } 
+    recurring = selected_var.attr('recurring');
+    $('#recurring_period').val(recurring);
+     time = selected_var.attr('time');
+    $('#time').attr("value", time);
+    url = $(this).attr("data-url");
+    $.ajax({
+      type: "get",
+      url: url,
+      data: {survey_id: selected_var.val()},
+      success: function(data) {
+        $("#feed_form_survey").html(data);
+        new nicEditor().panelInstance('survey_content');
+      },
+      error: function() {
+        return alert("error");
+      }
+    });
+  });
+
+  $(document).on("click", ".message_user", function(e) {
+    e.preventDefault();
+    audience = $(this).attr("audience_type");
+    $('#audience_type_field').attr('value', audience)
+  });
+  
+    jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>
+

@@ -1,0 +1,91 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<a href="#sec1" name="sec1" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3 style="padding-bottom: 10px;"><label>Program Title</label></h3>
+					
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+				<div class="row">
+              <div class="col-sm-4 setting-font">
+                <div>Choose Program Title</div>
+              </div>
+              <div class="col-sm-8">
+              	<%= f.text_field :title, :class => "required fullinput form-control form-style-1" %>
+              </div>
+            </div>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br>
+<!-- <a href="#sec2" name="sec2" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Ecosystem</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="settings full_width table">
+					<tbody>
+						<tr class="show_option_match_mentors">
+							<td class="lbl">Do you want to list this program on the ecosystem summary page?</td>
+							<td class="col_setting">
+								<div class="radioset" class="pull_left">
+									<%= f.radio_button :program_part_of_ecosystem, "true", :class => "option_match_mentors", :checked => "checked" %>
+									<%= f.label :program_part_of_ecosystem, "Yes", :for => "#{f.object_name}_program_part_of_ecosystem_true" %>
+									<%= f.radio_button :program_part_of_ecosystem, "false", :class => "option_match_mentors" %>
+									<%= f.label :program_part_of_ecosystem, "No", :for => "#{f.object_name}_program_part_of_ecosystem_false" %>
+									<div class="clr"></div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<br /> -->
+
+<% if current_organisation.programs.count.zero? %>
+  <div class="block">
+    <h2 class="titleLine">Is this program a blueprint for future or a program in its own right?</h2>
+    <table class="settings full_width table">
+      <tbody>
+        <tr class="show_option_mentoring">
+          <td class="lbl">Are you designing the blue print for other programs you want to run in future?
+            <br>
+            YES - means that settings you choose here will be fixed for all programs run by your company.
+            <br>
+            No - means that each program you run will be able to define its own custom settings. e.g. registration forms etc.
+          </td>
+          <td class="col_setting">
+            <div class="radioset pull_left">
+              <%= f.radio_button :master_program, "true", :class => "option_master_program", :checked => "checked" %>
+              <%= f.label :master_program, "Yes", :for => "#{f.object_name}_master_program_true" %>
+
+              <%= f.radio_button :master_program, "false", :class => "option_master_program" %>
+              <%= f.label :master_program, "No", :for => "#{f.object_name}_master_program_false" %>
+              <div class="clr"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>

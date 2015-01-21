@@ -1,0 +1,89 @@
+
+<%= render "shared/bs_navbar", :ppage => "badge" %>
+<div class="row">
+  <div class="col-md-12">
+    <%= render "shared/flash"%>
+  </div>
+</div>
+<div id="rightcontent"  class="two_sided_right_content">
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div style="height: 20px">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>All Badges</h3>
+            <span></span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <thead>
+                <tr role="row">
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Active</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Type</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                </tr>
+              </thead>
+              
+              <tbody aria-relevant="all" aria-live="polite" role="alert">
+                <% @user_badges.each do |badge|%>
+                  <% unless badge.revoked %>
+                    <% app_badge = badge.app_badge %>
+                      <tr>
+                        <td><%= badge.active%></td>
+                        <td><%= app_badge.name%></td>
+                        <td><%= app_badge.description%></td>
+                        <td><%= app_badge.badge_type%></td>
+                        <td>
+                          <%= link_to "<i class='glyphicon glyphicon-edit'></i> Send Badge in Your BadgePack".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left user-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , id: badge.id%>
+                          <%= link_to "<i class='glyphicon glyphicon-edit'></i> Download Badge".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left bake-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , :"data-id" => badge.id%>
+                        </td>
+                      </tr>
+                  <%end%>
+                <%end%>
+              </tbody>
+            </table>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    
+    $(document).on('click', '.user-badge', function(){
+      var url = $(this).data("url")
+      OpenBadges.issue([url], function(errors, successes) { })
+    });
+ 
+   $(document).on('click', '.bake-badge', function(){
+    var url = $(this).data("url");
+    var id = $(this).data("id")
+    var bp_url= "http://backpack.openbadges.org/baker?assertion=<%= root_url %>bake_badges/"+id+ ".json"
+     $.ajax({
+            url: url,
+            data: {},
+            method: "get",
+            success: function(data) {
+                  window.open(bp_url, '_blank', "width=800, height=400"); 
+
+                }
+           });
+   });
+});
+    
+</script>

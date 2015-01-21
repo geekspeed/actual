@@ -1,0 +1,99 @@
+<style>
+  div.fancybox-wrap{
+    width: 90% !important;
+  }
+  div.fancybox-inner{
+    width: 98% !important;
+  }
+</style>
+<li class="branded">
+  <%= link_to "Due Diligence<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#diligencepitch", :class => "fancybox" %>
+</li>
+
+<div style="display: none">
+  <div id="diligencepitch">
+    <%= form_tag polymorphic_path([:due_diligence, @program, @pitch]), :id => "submitFeedbackDD" do%>
+      Please rate this <%= t("pitch", "p") %> according to the judging criteria. For each criteria you rate, please explain rationale for your score. You can edit this page and save your edits using the save edits buttons. Once you're finish with your voting press the Post button.<br> Thanks again for your contribution
+      <hr>
+      <%= content_tag :table, style: "width:100%" do %>
+        <thead>
+          <tr>
+            <th style="width:20%;"><label>Criteria</label></th>
+            <th style="width:20%;"><label>Score</label></th>
+            <th style="width:10%;"><label>Range</label></th>
+            <th style="width:45%;"><label>Comment</label></th>
+          </tr>
+        </thead>
+      <%end if !@program.try(:due_diligence_matrix).try(:star_system?)%>
+      <br>
+      <% @program.due_diligence_matrix.matrices.each do |matrix| %>
+        <%due_diligence_obj = @pitch.pitch_due_diligence_matrices.for_matrix(matrix).for_panellist(current_user).first %>
+        <% unless matrix.description.blank? %>
+          <% if !@program.due_diligence_matrix.star_system? %>
+            <% value = @pitch.pitch_due_diligence_matrices.for_matrix(matrix).for_panellist(current_user).first.try(:points) || 0 %>
+            <table class="dd_points" style="width:100%">
+              <tr>
+                <td style="width:20%;"><%= matrix.description %></td>
+                <td style="width:20%;">
+                  <div id="dd-slider-<%= matrix.id %>"></div>
+                </td>
+                <td style="width:10%;">
+                  <input type="text" class="amount-slider" id="amount_box-<%= matrix.id %>" name="due_diligence[<%= matrix.id %>][points]" value="<%= value %>" readonly="readonly" style="width:20px;"/> / <%= matrix.max_points %>
+                </td>
+                <td style= "width:45%">
+                  <textarea class="watermark autogrow form-control" name="due_diligence[<%= matrix.id %>][feedback]" placeholder="In a few words please explain your rating"><%= due_diligence_obj.try(:feedback)%></textarea>
+                </td>
+                
+              </tr>
+            </table>
+            <script type="text/javascript">
+              $(function() {
+                $( "#dd-slider-<%= matrix.id %>" ).slider({
+                  range: "max",
+                  min: 1,
+                  max: parseInt("<%= matrix.max_points %>"),
+                  value: parseInt("<%= value %>"),
+                  slide: function( event, ui) {
+                    $("#amount_box-<%= matrix.id %>").val(ui.value);
+                  }
+                });
+              });
+            </script>
+          <% else %>
+            <div class="met_row">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="rating_low_lbl"><%= matrix.one_star %></td>
+                    <td class="rating_middle_lbl"></td>
+                    <td class="rating_high_lbl"><%= matrix.five_star %></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="rating_row">
+                <div class="star_cont">
+                  <% value = due_diligence_obj.try(:points) || 0 %>
+               
+                  <div class="ratings" data-id="<%= matrix.id %>" data-average="<%= value %>"></div>
+                  <%= hidden_field_tag "due_diligence[#{matrix.id}][points]", value, :class => "stars" %>
+                            
+                </div>
+                <div class="rating_lbl"><%= matrix.description %></div>
+                <div class="clr"></div>
+              </div>
+              <div class="comment_row hidden_div" style="display: block;">
+                <textarea name="due_diligence[<%= matrix.id %>][feedback]" placeholder="In a few words please explain your rating" class="autogrow"><%=due_diligence_obj.try(:feedback)%></textarea>
+              </div>
+            </div>
+          <% end %>
+       <% end %>
+      <% end if @program.due_diligence_matrix.present? %>
+      <br>
+      Press save to save your vote. Post will save your vote with the team. Post should only be shown if judging results are shared with the teams
+      <%= submit_tag "Save", :id => "submit", :name => "save"%>
+      <% if @program.program_scope.try(:show_judging_score)%>
+        <%= submit_tag "Post", :id => "submit" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<%= form_tag((is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url), :role=>"form", id: "login_form") do %>
+  <%= content_tag :div, class: "form-group" do%>
+    <%= label_tag(:email, "E-Mail")%>
+    <%= text_field_tag(:email, nil, id: :user_login, class: "form-control", name: "user[email]") %>
+  <% end %>
+  <%= content_tag :div, class: "form-group" do%>
+    <%= label_tag(:password, "Password")%>
+    <%= password_field_tag(:password, nil, id: :user_pass, class: "form-control", name: "user[password]") %>
+  <% end %>
+  <%= content_tag :div, class: "form-group" do%>
+    <%= link_to "Lost password", (is_subdomain ? new_password_url("user", subdomain: false) : new_password_url("user")), style:"font-size: 12px;" %><br />
+  <% end %>
+  <%= submit_tag "Login", id: "submit", class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,41 @@
+<div class="jumbotron plan-container">
+  <div class="container content-wrap data-wrap">
+    <h2 class="company-page-title"><%= e("eco_summary:programs") ? e("eco_summary:programs") : "Programs" %></h2>
+    <div class="border-bottom-dark"></div>
+    <div class="other-data-container-data">
+      <% @programs.each do |program| %>
+        <% if program.program_part_of_ecosystem %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-white panel-shadow ui-widget collapses" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+                <!-- panel head -->
+                <div class="panel-heading">
+                  <div class="panel-title title_option">
+                    <a class="user_name_panel pull-left"><%= program.title %></a> 
+                  </div>
+                  <div class="panel-options">
+                    <% if need?(["company_admin", "program_admin"], current_organisation) %>
+                      <%= link_to("", program_path(program), :class => "gn-icon icon-remove", method: :delete, confirm: "Are you sure. This can not be undone!", :style=>"font-size:12px;") %>
+                    <% end %>
+                    <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+                  </div>
+                </div>
+                
+                <!-- panel body -->
+                <div class="panel-body">
+                  <div class="row user_data">
+                    <div class="pull-left user_data_img_cotainer"><a><%= image_tag(program.try(:program_summary).try(:avatar).try(:logo).try(:url)) %></a></div>
+                    <b>Goal:</b> <%= program.try(:program_summary).try(:goal).try(:html_safe) %>
+                    <%= link_to("View", program_path(program), :class => "button pull-right") %>
+                  </div>
+                </div>
+                
+              </div>
+            
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

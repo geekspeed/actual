@@ -1,0 +1,45 @@
+<% pitch_id ||= nil %>
+<% recipient ||= "N/A" %>
+<% @program ||= context_program %>
+<% url ||= polymorphic_path([:participants, @program, :messages])  %>
+<!-- lightbox -->
+<div class="modal fade" id="<%= anchor_id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  
+  <div class="modal-dialog" id="">
+    <div class="modal-content">
+			<%= form_tag url, :method => :put do %>
+      <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <h4 id="myModalLabel" class="modal-title"><b>Recipient:</b> <%= recipients %></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+          <div class="col-sm-12 setting-font">
+          	<%= hidden_field_tag :code, code %> 
+			      <% if pitch_id %>
+			        <%= hidden_field_tag :pitch_id, pitch_id %>
+			      <% end %>
+            <div>Subject</div>
+          </div>
+          <div class="col-sm-12">
+            <%= text_field_tag :subject,nil, :class=>"form-control form-style-1" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-12 setting-font">
+            <div>Message</div>
+          </div>
+          <div class="col-sm-12">
+            <%= text_area_tag :message,nil, :class=>"form-control form-style-1" %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= submit_tag "Send", :class => "button submitMessage", :id => "submit" %>
+      </div>
+			<% end %>
+    </div><!-- /.modal-content -->
+  </div>
+    
+</div>

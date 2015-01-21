@@ -1,0 +1,58 @@
+@import url(http://fonts.googleapis.com/css?family=Kalam);
+
+.tooltip {
+	display: inline;
+	position: relative;
+	z-index: 100;
+	opacity: 1;
+}
+
+.tooltip-content {
+	position: absolute;
+	background: url('../images/shape1.svg') no-repeat center bottom;
+	background-size: 100% 100%;
+	z-index: 9999;
+	width: 200px;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -100px;
+	padding: 50px 30px;
+	text-align: center;
+	color: #333;
+	opacity: 0;
+	cursor: default;
+	font-size: 12px;
+	line-height: 1.4;
+	pointer-events: none;
+	font-family: oswald,arial;
+	-webkit-transform: scale3d(0.1,0.2,1);
+	transform: scale3d(0.1,0.2,1);
+	-webkit-transform-origin: 50% 120%;
+	transform-origin: 50% 120%;
+	-webkit-transition: opacity 0.4s, -webkit-transform 0.4s;
+	transition: opacity 0.4s, transform 0.4s;
+	-webkit-transition-timing-function: ease, cubic-bezier(0.6,0,0.4,1);
+	transition-timing-function: ease, cubic-bezier(0.6,0,0.4,1);
+}
+
+.tooltip:hover .tooltip-content {
+	opacity: 1;
+	pointer-events: auto;
+	-webkit-transform: scale3d(1,1,1);
+	transform: scale3d(1,1,1);
+}
+
+/* Arrow */
+
+.tooltip-content::after {
+	content: '';
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	left: 50%;
+	margin-left: -8px;
+	top: 100%;
+	background: #d9edf7;
+	-webkit-transform: translate3d(0,-60%,0) rotate3d(0,0,1,45deg);
+	transform: translate3d(0,-60%,0) rotate3d(0,0,1,45deg);
+}

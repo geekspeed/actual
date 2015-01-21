@@ -1,0 +1,390 @@
+<% content_for :title do %>
+<%= "#{@course.try(:title)} - #{@activity.try(:title)}" %>
+<% end %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<%= hidden_field_tag :activity_performance_url,  polymorphic_path([@program, @course, @activity_performance, :activity_notes]) %>
+<%= hidden_field_tag :activity_notes_update_url,  polymorphic_path([@program, @course, @activity_performance, :update_activity_notes]) %>
+<%= hidden_field_tag :activity_notes_delete_url,  polymorphic_path([@program, @course, @activity_performance, :delete_activity_notes]) %>
+
+	<div class="video_container">
+		<div id="video_loader">
+			<div  style="position:absolute;left: 50%;top:49%">
+			<img src="/images/ajax-loader.gif" id="loader" style="position: initial;">
+			<p style="color:#aaa;margin-top: 10px;">Loading...</p>
+			</div>
+		</div>
+			<!-- Push Wrapper -->
+			<div class="mp-pusher mp-pushed" id="mp-pusher" style="transform: translate3d(300px, 0px, 0px);">
+				<div class="scroller" id="scroller"><!-- this is for emulating position fixed of the nav -->
+					<div class="row back_to_course_bar">
+						<div class="col-sm-12" style="padding-left: 0;"><a href="<%=(is_subdomain ? polymorphic_url([@program, @pitch, @program.course, :show], subdomain: false) : polymorphic_url([@program, @pitch, @program.course, :show]))%>" id="trigger" class="menu-trigger"><i class="icon-fullscreen"></i></a> <a href="<%=(is_subdomain ? polymorphic_url([@program, @pitch, @program.course, :show], subdomain: false) : polymorphic_url([@program, @pitch, @program.course, :show]))%>" class="back_to_course"><i class="icon-angle-left"></i>Back to course</a></div>
+					</div>
+					<div class="row video_topbar">
+						<div class="col-sm-8">
+						    <% if !@activity.blank? %>
+							 	<p class="next_video_title">
+							 		<span class="chapter_title"><%=count_module_number(@course, @activity.try(:course_module))%>: <%=count_activity_number(@activity.try(:course_module), @activity)%></span>
+							 		<br />
+							 		<span class="lesson_title">
+							 			<span class="cource_indicator <%=activity_status_class(@activity)%>"></span>
+							 		</span>
+							 		<a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>"><span class="custom-color"><%=@activity.try(:title)%></span></a>
+							 	</p>
+					        <% end %>		
+						</div>
+						<div class="col-sm-4 video_nav"> 
+							<%# if !@next_activity.blank? %>
+			                      <!-- <a href="<%#= "#{polymorphic_path([@program, @course, @activity.course_module, @next_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax">Next activity <i class="icon-angle-right"></i></a> -->
+			                  <%# end %>
+			                  <%# if !@prev_activity.blank? %>
+			                    <!--   <a href="<%#= "#{polymorphic_path([@program, @course, @activity.course_module, @prev_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax"><i class="icon-angle-left"></i> Previous activity</a> -->
+			                  <%# end %>
+						</div>
+					</div>
+					<div class="main-frame">
+						<div class="video_bg">
+							<div class="scroller-inner row" id="scroller-inner" style="width:70%;left:15%;">
+								<!-- Top Navigation -->
+									<div class="col-sm-12">
+										<div class="">
+										           <% if (@activity.resource_format == "Video" || @activity.resource_format == "External URL") && @activity.link.present? %>  
+										              <% provider = vimeo_protocol_specific_url(@activity.link) %>
+										              <% if !provider.blank? && provider[1] == "vimeo" %>
+										                <div class="video-container" id="video-container">
+										                	<%= render 'courses/shared/vimeo_video_frame', :provider=>provider %>
+										                </div>
+										              <% else %> 
+										                <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+										                <% if @activity.link.present? %>
+										                  <% if !@activity.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+										                    <% emb_obj = emb_api.extract(:url => @activity.link, :width=>"885px")%>
+										                    <%= course_attachment(emb_obj)%>
+										                  <% end  %>
+										                <% end %> 
+										                <% activity_watched %>
+										                <%= render 'courses/shared/play_activity_buttons' %>
+										              <% end %>
+										            <% else %> 
+										              <% if @activity.resource_format == "Image" %>
+										                <%= image_tag @activity.attachment, :width=>"100%" %>
+										              <% elsif @activity.attachment.present? %>
+										                <br/>
+										                <%= link_to "View Attachment", @activity.attachment.url %>      
+										              <% end %>
+										              <% activity_watched %>
+										               <%= render 'courses/shared/play_activity_buttons' %>
+										            <% end %>
+									        </div>
+								<!-- 		<div class="video-container">
+									        
+											<iframe width="100%" height="100%" src="http://www.youtube.com/embed/YUe-cF-h60Y" frameborder="0" allowfullscreen></iframe>
+										</div> -->
+									</div>
+							</div><!-- /scroller-inner -->
+						</div>
+						<section class="color-1">
+							<nav class="nav-slide">
+								<% if !@prev_activity.blank? %>
+			                      <a class="prev" href="<%= "#{polymorphic_path([@program, @course, @prev_activity.course_module, @prev_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>">
+			                      	<span class="icon-wrap"><i class="fa icon-angle-left"></i></span>
+									<div>
+										<h3><%= @prev_activity.title %> <span><%=count_module_number(@course, @prev_activity.try(:course_module))%>: <%=count_activity_number(@prev_activity.try(:course_module), @prev_activity)%></span></h3>											
+										<img src="<%=video_or_asset_image(@prev_activity)%>" style="width:100px;" alt="Previous thumb"/>
+									</div>
+								</a>
+			                  <% end %>
+			                  <% if !@next_activity.blank? %>
+			                      <a class="next" href="<%= "#{polymorphic_path([@program, @course, @next_activity.course_module, @next_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>">
+			                      	<span class="icon-wrap"><i class="fa icon-angle-right"></i></span>
+									<div>
+										<h3><%= @next_activity.title %> <span><%=count_module_number(@course, @next_activity.try(:course_module))%>: <%=count_activity_number(@next_activity.try(:course_module), @next_activity)%></span></h3>
+										<img src="<%=video_or_asset_image(@next_activity)%>" style="width:100px;" alt="Next thumb"/>
+									</div>
+								</a>
+			                  <% end %>
+							</nav>
+						</section>
+					</div>
+					<div class="row" id="vid_desc_only_video">
+						<div class="col-sm-12 vid_desc_container">
+							<!-- <p class="vid_desc_title">Activity Notes</p> -->
+							<p class="vid_desc"><%= @activity.description.try(:html_safe) %></p>
+							<%= '<br>'.html_safe if !@activity.description.blank? && !@activity.greater_detail.blank? %>
+							<p class="vid_desc"><%= @activity.greater_detail.try(:html_safe) %></p>
+						</div>
+					</div>	
+				</div><!-- /scroller -->
+				<!-- mp-menu -->
+				<nav id="mp-menu" class="mp-menu">
+					<div class="mp-level mp-level-open">
+						<h2>&nbsp;</h2>
+						<ul>
+							<li class="icon-angle-left">
+								<a class="icon icon-note" id="my-notes" href="#">My Notes</a>
+								<div class="mp-level sc-evel">
+									<h2 class="">My Notes</h2>
+									<a class="mp-back" href="#">back</a>
+									<div>
+										<textarea rows="20" id="add-notes" placeholder="Add your note here" style="margin: 5px 0;padding: 5px 0 5px 5px;width: 100%;"></textarea>
+									</div>
+									<ul>
+										<li class="">
+												<table id="activity-notes" class="table table-striped">
+													<thead>
+														<th style="width: 200px">Time</th>
+														<th style="width: 500px">Note</th>
+													</thead>
+													<tbody>
+														<% @activity_performance.try(:activity_notes).each do |activity_note| %>
+															<tr>
+																<td>
+																	<div class="video_time video-seek-time" data-seek-time="<%=activity_note.video_watch_duration%>" data-objectid="<%=activity_note.id%>">
+																		<i class="glyphicon glyphicon-time"></i> <%= notes_time_cal(activity_note.video_watch_duration) %>
+																	</div>
+																</td>
+																<td>
+																	<i data-objectid="<%=activity_note.id%>" class="glyphicon glyphicon-trash pull-right delete-note"></i>
+																	<p data-notes='<%= activity_note.notes %>' class="notes-editor" data-objectid="<%=activity_note.id%>">
+																		<%= activity_note.notes.gsub(/\n/, '<br/>').html_safe %>
+																	</p>
+																</td>
+															</tr>
+														<% end %>
+													</tbody>
+												</table>
+										</li>
+									</ul>
+								</div>
+							</li>          	
+							<%if !@activity.activity_project_fields.blank? || !@activity.try(:action).blank? %>
+								<li class="icon-angle-left">
+									<a class="icon icon-pen" href="#">Tasks</a>
+									<div class="mp-level sc-evel">
+										<h2 class="">Tasks</h2>
+										<a class="mp-back" href="#">back</a>
+										<ul class="excercise-list">
+											<% count = 0%>
+											<% if !@activity.try(:action).blank? %>
+										    	<a href="#" data-id="Text" data-href="<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, :show_exercise])}?pitch_id=#{params[:pitch_id]}"%>" class="check-course-task"><li><%= count = count+1 %>. Task Description</li></a> 
+										    <% end %>
+							                <% if !@activity.try(:activity_project_fields).blank? %>
+										    	<% project_fields = @project_fields.where(:id.in => @activity.activity_project_fields.map(&:custom_field_id)) %>
+				                    			<%= render 'courses/shared_info/pitch_custom_fields_title', :@custom_fields => project_fields,:count=>count %>
+				                    		<%end%>
+										</ul>
+									</div>
+								</li>	
+							<% end %>
+							<%if !@activity.study_materials.blank?%>
+								<li class="icon-angle-left">
+									<a class="icon icon-data" href="#">Additional Study Materials</a>
+									<div class="mp-level sc-evel">
+										<h2 class="">Additional Study Materials</h2>
+										<a class="mp-back" href="#">back</a>
+										<ul class="excercise-list">
+											<% @activity.study_materials.each_with_index do |study_material,index| %>
+												<a href="#" data-href="<%="#{polymorphic_path([@program, @course, @module, @activity, :show_activity_material])}?study_material_id=#{study_material.id}&pitch_id=#{params[:pitch_id]}"%>" class="check-course-material"><li><%=index+1%>- <%= study_material.try(:resource_description) %> ( <%= study_material.try(:resource_format) %> )</li></a> 
+											<% end %>
+										</ul>
+									</div>
+								</li>
+							<% end %>
+							<% if !@modules.blank? %>
+								<li class="icon-angle-left">
+									<a class="icon icon-display" href="#">Course Overview</a>
+									<div class="mp-level sc-evel">
+										<h2 class="">Course Overview</h2>
+										<a class="mp-back" href="#">back</a>
+										<% @modules.each_with_index do |course_module,index| %>
+										  <% if !course_module.module_activities.blank? %>
+										    <ul>
+												<li class="">
+													<div id="module_activities">
+												      <div class="row">
+												        <div class="col-sm-12">
+												          <table class="table table-striped course_lessons_table">
+												            <thead>
+												              <tr role="row" class="">
+												                <th><a href="<%=polymorphic_path([@program, @course, course_module, :play_module], :pitch_id=>params[:pitch_id])%>">Module <%=index+1%>: <%=course_module.title %></a></th>
+												              </tr>
+												            </thead>
+												            <tbody>
+												            	<% if !course_module.module_activities.blank? %>
+													                <% course_module.module_activities.each_with_index do |activity,count| %>
+													                <tr class="">
+													                  <td>
+													                    <a href="<%= "#{polymorphic_path([@program, @course, course_module, activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="lesson_title">
+													                      <span class="cource_indicator <%=activity_status_class(activity)%>"></span>
+													                      	<%= activity.try(:title) %>
+													                    </a>
+													                    <div class="lesson_data">
+													                      <a href="#"><i class="glyphicon glyphicon-time"></i><%= activity_duration(activity)%></a>
+													                    </div>
+													                  </td>
+													                </tr>
+													            <% end %>
+												            </tbody>
+												          </table>
+												        </div>
+												      </div>        
+													</div>
+												</li>
+											</ul>
+										    <% else %>
+										      <p class="no_activity">You have not added any activities yet</p> 
+										    <% end %>
+										  <% end %>
+										<% end %> 
+									</div>
+								</li>
+							<% end %>
+						</ul>
+							
+					</div>
+				</nav>
+				<!-- /mp-menu -->
+
+				
+
+			</div><!-- /pusher -->
+		</div><!-- /container -->
+
+
+<% if !params[:action_type].blank? %>
+	<script>	
+		$(document).ready(function(){
+			$.ajax({
+			    url: '<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, params[:action_type]])}?pitch_id=#{params[:pitch_id]}"%>',
+			    method: "get"
+			  });
+		});
+	</script>
+<% end %>
+
+<script>	
+	$(".check-course-task").click(function(e){
+		if ($("#course-exercise").length == 0){
+			send_ajax($(this));
+		}
+		else{ 
+			$(".last-iter-box").removeClass("border-custom")
+			$(".customArea"+($(this).attr("data-id"))+" .last-iter-box").addClass("border-custom")
+  			$("#"+($(this).attr("data-focus"))).focus()
+		}
+		e.preventDefault()
+	});
+
+	$(".check-course-material").click(function(e){
+		send_ajax($(this).attr("data-href"));
+		 $.fancybox({  
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },content:"Loading Study Material...   <img src='/images/bx_loader.gif' width='25'>" });
+		e.preventDefault()
+	});
+
+	function send_ajax(data){
+		$.ajax({
+	    url: $(data).attr("data-href"),
+	    data: {custom_id: $(data).attr("data-id")},
+	    method: "get"
+	  })
+	}
+</script>
+
+<script>
+$('#add-notes').keypress(function(event) {
+    if (event.keyCode == 13 && !event.shiftKey) {
+    	if ($("#add-notes").val().length>0) {
+	    	activity_performance_url = $("#activity_performance_url").val()
+	    	video_watch_duration = $(".video_status").val()
+	        $.ajax({
+	        	url: activity_performance_url,
+	        	data: {activity_notes: {notes: $("#add-notes").val(), video_watch_duration: video_watch_duration}},
+	        	method: "put",
+	        	success: function(data) {
+	    			$("table#activity-notes > tbody").prepend("<tr><td><div class=\"video_time video-seek-time\" data-seek-time="+data.video_watch_duration_in_sec+" data-objectid="+data.id+"><i class=\"glyphicon glyphicon-time\"></i>"+data.video_watch_duration+"</div></td><td><i data-objectid="+data.id+" class=\"glyphicon glyphicon-trash pull-right delete-note\"></i><p class=\"notes-editor\" data-notes=\'"+data.notes+"\' data-objectid="+data.id+">"+data.notes.replace(/\r?\n/g, '<br />')+"</p></td></tr>")
+	    			$("#add-notes").val("")
+	            }
+	        });
+    	}
+       event.preventDefault()   
+   }
+});
+
+$("#activity-notes").on('click', 'p.notes-editor', function() {
+   $(this).replaceWith("<textarea class=\"notes-edit-save\" style=\"width: 90%;height: "+($(this).height()+8)+"px;\" data-objectid="+$(this).attr("data-objectid")+" id=edit_"+$(this).attr("data-objectid")+"></textarea>");
+   $("#edit_"+$(this).attr("data-objectid")).focus().val($(this).attr("data-notes"));
+});
+
+$("body").on('focusout', '.notes-edit-save', function() {
+   	if ($(this).val().length>0) {
+    	activity_notes_update_url = $("#activity_notes_update_url").val()
+        that = this
+        $.ajax({
+        	url: activity_notes_update_url,
+        	data: {notes: $(that).val(), activity_notes_id: $(that).attr("data-objectid")},
+        	method: "put",
+        	success: function(data) {
+    			$(that).replaceWith("<p class=\"notes-editor\" data-notes=\'"+data.notes+"\' data-objectid="+data.id+">"+data.notes.replace(/\r?\n/g, '<br />')+"</p>")
+            }
+        });
+	}
+});
+
+$("#activity-notes").on('keypress', '.notes-edit-save', function(){
+    if (event.keyCode == 13 && !event.shiftKey) {
+	   	if ($(this).val().length>0) {
+	    	activity_notes_update_url = $("#activity_notes_update_url").val()
+	        that = this
+	        $.ajax({
+	        	url: activity_notes_update_url,
+	        	data: {notes: $(that).val(), activity_notes_id: $(that).attr("data-objectid")},
+	        	method: "put",
+	        	success: function(data) {
+	    			$(that).replaceWith("<p class=\"notes-editor\" data-notes=\'"+data.notes+"\' data-objectid="+data.id+">"+data.notes.replace(/\r?\n/g, '<br />')+"</p>")
+	            }
+	        });
+		}
+       event.preventDefault()   
+   }
+});
+
+$("#activity-notes").on('click', '.delete-note', function() {	        
+	    that = this	    	
+	    activity_notes_delete_url = $("#activity_notes_delete_url").val()
+		$.ajax({
+	        	url: activity_notes_delete_url,
+	        	data: {activity_notes_id: $(that).attr("data-objectid")},
+	        	method: "delete",
+	        	success: function(data) {
+	        		if (data){
+	    				$(that).parent().parent().remove()
+	    			}
+	    			else{
+	    				alert("There is some problem!")
+	    			}
+
+	        }
+	     });       
+	event.preventDefault()   
+});
+</script>
+
+<style>
+	.fancybox-close {
+	cursor: pointer;
+	height: 20px;
+	position: absolute;
+	right: 10px;
+	top: 15px;
+	width: 36px;
+	z-index: 8040;
+	color:#3d3d3d;
+	}
+	.fancybox-inner {
+    	height: auto !important;
+ 	}
+</style>

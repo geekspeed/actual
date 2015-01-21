@@ -1,0 +1,12 @@
+<%= form_for @program.pitch_branches.build, :url => program_pitch_branches_path(context_program) do |form| %>
+  <h2 class="titleLine">
+		<p><%= label_tag "What branches do you want to create?" %><p>
+		<div class="clear"></div>
+	</h2>
+	<p class="form-group">
+    <%= label_tag "Branch name"%>
+    <%= form.text_field :branch_name, :placeholder => "Enter your branch name", :class => "form-control", :style => "width: 195px;"%>
+    <%= form.submit "Save", :class => "form-control", :id => "submit", :style => "margin: -35px 23px 0 0" %>
+  </p>
+<% end %>
+<hr>

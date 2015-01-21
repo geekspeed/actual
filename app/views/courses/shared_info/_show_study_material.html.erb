@@ -1,0 +1,160 @@
+<div class="course-box-div-main">
+	<div class="row">
+		<div class="col-sm-12 vid_desc_container">
+      <p class="vid_desc_title"><%= link_to "<i class='icon-angle-left'></i> Back".html_safe, "#{polymorphic_path([@program, @course, @module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}", :class=>"back-course-link"%> <span style="margin-left: 15px;">Study Materials</span></p>      
+      <p class="vid_desc">    
+				<div class="panel-body exercise-area">
+					<% if !@activity.study_materials.blank? %>
+					<table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+						<thead>
+							<tr role="row">
+
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 250px;" aria-label="Student Name: activate to sort column ascending">Type</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 310px;" aria-label="Average Grade: activate to sort column ascending">Title</th>
+								<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 404px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+							</tr>
+						</thead>
+						
+						
+						<tbody role="alert" aria-live="polite" aria-relevant="all">
+							<% @activity.study_materials.each_with_index do |study_material,index| %>
+							<tr class="odd">
+								<td class=" "><%= study_material.try(:resource_format) %></td>
+								<td class=" "><%= study_material.try(:resource_description) %></td>
+								<td class=" ">
+									<%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe,"#{polymorphic_path([@program, @course, @module, @activity, :show_activity_material])}?study_material_id=#{study_material.id}&pitch_id=#{params[:pitch_id]}", :remote=>"true", :class=>"new_activity_box btn btn btn-success btn-sm btn-icon icon-left study-material-loader" %>
+								</td>
+							</tr>
+							<% end %>
+						</tbody>
+					</table>
+					<% else %>
+            <p class="no_activity">There is no study material for this activity</p>
+          <% end %>
+				</div>
+      </p>
+		</div>
+	</div>
+  
+</div>
+
+
+<style>  
+.course-box-div-main .col-md-12{
+    padding:0px;
+    border-radius:0px;
+  }
+  .course-box-div{background:#ffffff;padding: 20px;border:1px rgb(236, 236, 236) solid;"
+  }
+  .course-box-div-inner{
+    background:#ffffff;padding: 20px;border:1px rgb(197, 196, 196) solid
+  }
+  .course-page-action{
+    margin-top:40px;
+    overflow: auto;
+  }
+  .course-tag-container{
+    background: #ebebeb no-repeat right center;
+    padding: 6px 10px 6px 10px;
+    display: block;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #333;
+    margin:5px;
+  }
+  .numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    width: 18px;
+    height: 18px;
+    padding: 3px;
+    background: #fff;
+    color: #111;
+    text-align: center;
+    font-weight: bold;
+    float:right;
+    margin-left:5px;
+    font: 10px Arial, sans-serif;
+  }
+  .table-striped .content_flash td{ background: #c1e4f7 !important;}
+  .content_flash{ background: #c1e4f7 !important;}
+  .fancybox-inner {
+    height: auto !important;
+  }
+</style>
+
+<script>
+  $(function() {
+    $("#start-now").click(function(){
+      $("#start-action").slideToggle(1000)
+      $("#start-now span").toggleClass( "glyphicon-chevron-right, glyphicon-chevron-down" );
+    });
+  });
+
+  $(function() {
+   $("a.study-material-loader").bind("ajax:beforeSend", function(){
+      $.fancybox({  
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },content:"Loading Study Material...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $("a.study-material-loader").bind("ajax:complete", function(){
+    })
+  });
+</script>
+
+
+
+<style>
+.back-course-link{
+width: 50px;
+display: inline;
+background: #eee;
+outline: none;
+color: #777;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-family: helvetica;
+font-size: 11px;
+padding: 1em;
+-moz-transition: background 0.3s;
+}
+.exercise-area {
+  background: #eee;
+}
+.exercise-area label {
+  color: #3d3d3d;
+  font-size: 16px !important;
+  padding-right: 0;
+  padding-top: 25px;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+.exercise-area textarea, .exercise-area input {
+  border-radius:0;
+}
+.exercise-area .table-striped > tbody > tr > td {
+background-color: #ffffff;
+}
+.glyphicon:empty {
+width: auto;
+}
+.exercise-area  .table {
+margin-bottom: 0 !important;
+}
+
+.fancybox-close {
+cursor: pointer;
+height: 20px;
+position: absolute;
+right: 10px;
+top: 15px;
+width: 36px;
+z-index: 8040;
+color:#3d3d3d;
+}
+</style>

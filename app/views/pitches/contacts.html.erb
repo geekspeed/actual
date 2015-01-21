@@ -1,0 +1,63 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Contacts" %>
+<% end %>
+
+<%#= render "shared/navbar", :page => "pitch" %>
+<%#= render "pitches/shared/bs_sidebar", :page => "contact" %>
+<div id="rightcontent">
+	<div id="presscontainer">
+		<table class="tbl_values full_width">
+			<% @contacts.each do |contact| %>
+				<tr style="border:1px solid #FFF;">
+					<td>
+						<%= link_to(image_tag(User.find(contact).avatar.logo.url, :style => "width: 80px"), "#") %> 
+					</td>
+					<td>
+						<%= link_to(contact.full_name, user_path(contact), :class => "text_underline") %> would like to be a <%= t("role_type:mentor") %> of your team.<br/><br/><br/>
+					<div class="clr"></div>
+						<%= link_to("Add to Team", add_mentor_program_pitch_path(context_program, @pitch, :user_id => contact.id), :method => :put, :class => "button") %><br/><br/>
+          <div class="clr"></div>
+          <%= link_to("Remove Request", remove_mentor_program_pitch_path(context_program, @pitch, :user_id => contact.id), :method => :put, :class => "button") %>
+			 		</td>
+				</tr>
+			<% end %>
+			
+			
+			<% @membership_requesters.each do |membership_requester| %>
+				<tr style="border:1px solid #FFF;">
+					<td>
+						<%= link_to(image_tag(User.find(membership_requester).avatar.logo.url, :style => "width: 80px"), "#") %> 
+					</td>
+					<td>
+						<%= link_to(membership_requester.full_name, user_path(membership_requester), :class => "text_underline") %> would like to join this team.<br/><br/><br/>
+					<div class="clr"></div>
+						<%= link_to("Add to Team", add_membership_requester_program_pitch_path(context_program, @pitch, :user_id => membership_requester.id), :method => :put, :class => "button") %>
+          <br/><br/>
+          <div class="clr"></div>
+          <%= link_to("Remove Request", remove_membership_requester_program_pitch_path(context_program, @pitch, :user_id => membership_requester.id), :method => :put, :class => "button") %>
+					</td>
+				</tr>
+			<% end %>
+			
+			
+			<% @collaborater_requesters.each do |collaborater_requester| %>
+				<tr style="border:1px solid #FFF;">
+					<td>
+						<%= link_to(image_tag(User.find(collaborater_requester).avatar.logo.url, :style => "width: 80px"), "#") %> 
+					</td>
+					<td>
+						You have received a collaboration request from <%= link_to(collaborater_requester.full_name, user_path(collaborater_requester), :class => "text_underline") %><br/><br/><br/>
+					  <div class= "box-feeds">
+					  		<%= @pitch.collaborater_requests.where(user_id: collaborater_requester.id).first.try(:request_text).nil? ? "" : (raw (@pitch.collaborater_requests.where(user_id: collaborater_requester.id).first.try(:request_text).gsub("\r\n","<br>"))) %>
+							<%= link_to("Accept", add_collaborater_requester_program_pitch_path(context_program, @pitch, :user_id => collaborater_requester.id), :method => :put, :class => "button") %>
+            				<%= link_to("Ignore", remove_collaborater_requester_program_pitch_path(context_program, @pitch, :user_id => collaborater_requester.id), :method => :put, :class => "button") %>
+            				<div class="clr"></div>
+            		  </div>
+					</td>
+				</tr>
+			<% end %>
+			
+			
+		</table>
+	</div>
+</div>

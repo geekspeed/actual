@@ -1,0 +1,70 @@
+<%= render "shared/bs_navbar", :page => "search", :ppage => "search" %>
+<div id="rightcontent" class="two_sided_right_content">
+  <div class="">
+    <% if !@results.blank? %>
+    	<h2 class="titleLine title-normal"><span style="font-weight:bold;">Search Results Found:</span><span class="search_results_no"> <%= @total_lines %></span></h2>
+      <% @results.each_with_index do |result,index| %>
+        <% if result.class.name == "User" %>
+          <%= render 'search/shared/people', :index => index, :user => result %>
+        <% elsif result.class.name == "Pitch" %>
+          <%= render 'search/shared/pitch', :index => index, :pitch => result %>
+        <% elsif result.class.name == "CommunityFeed" %>
+          <%= render 'search/shared/community_feed', :index => index,  :feed => result %>
+        <% elsif result.class.name == "Organisation" %>
+          <%= render 'search/shared/organisations', :index => index,  :organisation => result %>
+        <% end %>
+      <% end %>
+      <br/>
+    <% else %>
+      <div style="font-size:16px;">
+        <%= search_details %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<div style="display: none">
+  <div id="contact_user">
+    <h3 class='popup_heading'><b>Your message to</b></h3>
+    <br>
+    <%= form_for current_user.contact_requests.new, :url => user_contact_requests_path do |f|%>
+        <div>
+        <p>Subject:</p>
+        <%= f.text_field :subject, class: "title form-control"%>
+        <%= f.hidden_field :receiver_id%>
+        <%= f.hidden_field :program_id, value: context_program.try(:id)%>
+        </div>
+        <br />
+        <div>
+        <p>Message:</p>
+        <%=f.text_area :message, class: "form-control", cols: "25", rows: "8", style:"height:100px;"%>
+        <br>
+        </div>
+
+        <div>
+        <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+        <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+        <div class="clear"></div>
+        </div>
+    <% end %>
+    </div>
+  </div>
+
+<script>
+  $(".contact_cancel").on("click", function(e){
+    $.fancybox.close();
+    e.preventDefault();
+  })
+  
+  $(document).on('click', '.request_popup', function(e){
+    e.preventDefault();
+    $('.popup_heading').html("Your message to "+ $(this).data('user-name'));
+    $('#user_contact_request_receiver_id').attr('value', $(this).data('user-id'));
+  });
+</script>
+
+<style>
+.row{ margin-left:0px;margin-right:0px;}
+.user-img{ border-radius:0px; padding:5px; }
+</style>

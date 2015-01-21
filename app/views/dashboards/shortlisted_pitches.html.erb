@@ -1,0 +1,75 @@
+<%= sidebar("dashboards/shared/sidebar") %>
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<style type="text/css">
+.pitch-by:hover, .pitch-title a{
+color:<%= menubar_color %>;
+}
+.s_details p {
+
+}
+.admin_section_feature{
+color: <%= menubar_color %> !important;
+}
+.admin_section_feature_container .glyphicon{
+color: <%= menubar_color %> !important;
+}
+.col-md-4 {
+    width: 32%;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function($) {
+var limit = 140;
+        $( ".pitch_summary_limit" ).each(function() {
+          var chars = $(this).html();
+        if (chars.length > limit) {
+            var visiblePart = $("<span> "+ chars.substr(0, limit-1) +"</span>");
+            var dots = $("<span class='dots'>... </span>");
+            var hiddenPart = $("<span class='pitch_more'>"+ chars.substr(limit-1) +"</span>");
+            var readMore = $("<span class='read-more scx'>More <span class='glyphicon glyphicon-forward'></span></span>");
+            var readLess = $("<span class='read-more scx'>Less <span class='glyphicon glyphicon-backward'></span>");
+            var $container = $('#masonry_container');
+            readLess.hide();
+            readMore.click(function() {
+                $(this).prev().hide(); // remove dots
+                $(this).next().show();
+                $(this).hide(); // remove 'read more'
+                $(this).next().next().show();
+                setTimeout(function(){ $container.masonry() }, 100);
+            });
+            readLess.click(function() {
+                $(this).prev().hide(); // remove extra
+                $(this).prev().prev().show(); //show more
+                $(this).prev().prev().prev().show(); //show dots
+                $(this).hide(); // remove 'less'
+                setTimeout(function(){ $container.masonry() }, 100);
+            });
+            $(this).empty()
+                .append(visiblePart)
+                .append(dots)
+                .append(readMore)
+                .append(hiddenPart)
+                .append(readLess);
+                setTimeout(function(){ $container.masonry() }, 100);
+              }
+        });
+    // var $container = $('#masonry_container');
+    // $(".read-more").click(function(){
+        // alert("ddd");
+        // $container.masonry('reload');
+        // setTimeout(function(){ $container.masonry() }, 100);
+    // });
+});
+</script>
+<div id="rightcontent">
+  <%= render "pitches/filter_form" %>
+  <div class="masonry js-masonry" id="masonry_container" data-masonry-options='{ "columnWidth":".pitch-col", "itemSelector": ".pitch-col", "gutter": 10 }'>
+    <% cache @pitches do %>
+      <% @pitches.each do |pitch| %>
+        <%= render "pitch_tile", pitch: pitch %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

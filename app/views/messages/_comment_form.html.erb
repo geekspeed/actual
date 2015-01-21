@@ -1,0 +1,1062 @@
+<div class="row main-row tabs_devided">
+	<div class="col-md-12 main-right-section">
+		<div class="col-md-10">
+		<ul class="nav nav-tabs" role="tablist" id="profTab">
+		  <li class="active"><a href="#admin_comments" role="tab" data-toggle="tab">Admin Comments</a></li>
+		  <li><a href="#participant_comments" role="tab" data-toggle="tab">Participant Comments</a></li>
+		  <li><a href="#selector_comments" role="tab" data-toggle="tab">Selector Comments</a></li>
+		  <li><a href="#mentor_comments" role="tab" data-toggle="tab">Mentor Comments</a></li>
+		  <li><a href="#panel_comments" role="tab" data-toggle="tab">Panel Comments</a></li>
+		</ul>
+		</div>
+		<div class="tab-content">
+			<div class="tab-pane active" id="admin_comments">
+				<div class="row main-row">
+					<div class="col-md-10 main-right-section">
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec1" name="sec1" class="section_nav"></a>
+											<h3><label>Admin Comment on Admin Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[admin][subject][admin]",comment_email_subject("admin","admin","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[admin][comment][admin]",comment_email_description("admin","admin","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec2" name="sec2" class="section_nav"></a>
+											<h3><label>Admin Comment on Participant Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[admin][subject][participant]" ,comment_email_subject("admin","participant","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[admin][comment][participant]",comment_email_description("admin","participant","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec3" name="sec3" class="section_nav"></a>
+											<h3><label>Admin Comment on Selector Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[admin][subject][selector]" ,comment_email_subject("admin","selector","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[admin][comment][selector]",comment_email_description("admin","selector","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec4" name="sec4" class="section_nav"></a>
+											<h3><label>Admin Comment on Mentor Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[admin][subject][mentor]" ,comment_email_subject("admin","mentor","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[admin][comment][mentor]",comment_email_description("admin","mentor","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec5" name="sec5" class="section_nav"></a>
+											<h3><label>Admin Comment on Panel Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[admin][subject][panel]" ,comment_email_subject("admin","panel","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[admin][comment][panel]",comment_email_description("admin","panel","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 stick_me_initialize">
+						<ul class="navigator-menu">
+							<li id="nav_sec1" class="active-navigator-title">
+								<p>Admin Comments</p>
+								<ul>
+									<li><a href="#sec1">Comment on Admin Mail</a></li>
+									<li><a href="#sec2">Comment on Participant Mail</a></li>
+									<li><a href="#sec3">Comment on Selector Mail</a></li>
+									<li><a href="#sec4">Comment on Mentor Mail</a></li>
+									<li><a href="#sec5">Comment on Panel Mail</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				
+		 	</div>
+			<div class="tab-pane" id="participant_comments">
+				<div class="row main-row">
+					<div class="col-md-10 main-right-section">
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec6" name="sec6" class="section_nav"></a>
+											<h3><label>Participant Comment on Admin Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[participant][subject][admin]",comment_email_subject("participant","admin","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[participant][comment][admin]",comment_email_description("participant","admin","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec7" name="sec7" class="section_nav"></a>
+											<h3><label>Participant Comment on Participant Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[participant][subject][participant]" ,comment_email_subject("participant","participant","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[participant][comment][participant]",comment_email_description("participant","participant","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec8" name="sec8" class="section_nav"></a>
+											<h3><label>Participant Comment on Selector Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[participant][subject][selector]" ,comment_email_subject("participant","selector","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[participant][comment][selector]",comment_email_description("participant","selector","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec9" name="sec9" class="section_nav"></a>
+											<h3><label>Participant Comment on Mentor Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[participant][subject][mentor]" ,comment_email_subject("participant","mentor","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[participant][comment][mentor]",comment_email_description("participant","mentor","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec10" name="sec10" class="section_nav"></a>
+											<h3><label>Participant Comment on Panel Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[participant][subject][panel]" ,comment_email_subject("participant","panel","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[participant][comment][panel]",comment_email_description("participant","panel","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 stick_me">
+						<ul class="navigator-menu">
+							<li id="nav_sec1" class="active-navigator-title">
+								<p>Participant Comments</p>
+								<ul>
+									<li><a href="#sec6">Comment on Admin Mail</a></li>
+									<li><a href="#sec7">Comment on Participant Mail</a></li>
+									<li><a href="#sec8">Comment on Selector Mail</a></li>
+									<li><a href="#sec9">Comment on Mentor Mail</a></li>
+									<li><a href="#sec10">Comment on Panel Mail</a></li>
+								</ul>
+							</li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="selector_comments">
+				<div class="row main-row">
+					<div class="col-md-10 main-right-section">
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec11" name="sec11" class="section_nav"></a>
+											<h3><label>Selector Comment on Admin Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[selector][subject][admin]",comment_email_subject("selector","admin","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[selector][comment][admin]",comment_email_description("selector","admin","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec12" name="sec12" class="section_nav"></a>
+											<h3><label>Selector Comment on Participant Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[selector][subject][participant]" ,comment_email_subject("selector","participant","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[selector][comment][participant]",comment_email_description("selector","participant","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec13" name="sec13" class="section_nav"></a>
+											<h3><label>Selector Comment on Selector Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[selector][subject][selector]" ,comment_email_subject("selector","selector","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[selector][comment][selector]",comment_email_description("selector","selector","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec14" name="sec14" class="section_nav"></a>
+											<h3><label>Selector Comment on Mentor Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[selector][subject][mentor]" ,comment_email_subject("selector","mentor","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[selector][comment][mentor]",comment_email_description("selector","mentor","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec15" name="sec15" class="section_nav"></a>
+											<h3><label>Selector Comment on Panel Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[selector][subject][panel]" ,comment_email_subject("selector","panel","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[selector][comment][panel]",comment_email_description("selector","panel","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 stick_me">
+						<ul class="navigator-menu">
+							<li id="nav_sec1" class="active-navigator-title">
+								<p>Selector Comments</p>
+								<ul>
+									<li><a href="#sec11">Comment on Admin Mail</a></li>
+									<li><a href="#sec12">Comment on Participant Mail</a></li>
+									<li><a href="#sec13">Comment on Selector Mail</a></li>
+									<li><a href="#sec14">Comment on Mentor Mail</a></li>
+									<li><a href="#sec15">Comment on Panel Mail</a></li>
+								</ul>
+							</li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="mentor_comments">
+				<div class="row main-row">
+					<div class="col-md-10 main-right-section">
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec16" name="sec16" class="section_nav"></a>
+											<h3><label>Mentor Comment on Admin Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[mentor][subject][admin]",comment_email_subject("mentor","admin","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[mentor][comment][admin]",comment_email_description("mentor","admin","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec17" name="sec17" class="section_nav"></a>
+											<h3><label>Mentor Comment on Participant Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[mentor][subject][participant]" ,comment_email_subject("mentor","participant","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[mentor][comment][participant]",comment_email_description("mentor","participant","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec18" name="sec18" class="section_nav"></a>
+											<h3><label>Mentor Comment on Selector Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[mentor][subject][selector]" ,comment_email_subject("mentor","selector","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[mentor][comment][selector]",comment_email_description("mentor","selector","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec19" name="sec19" class="section_nav"></a>
+											<h3><label>Mentor Comment on Mentor Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[mentor][subject][mentor]" ,comment_email_subject("mentor","mentor","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[mentor][comment][mentor]",comment_email_description("mentor","mentor","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec20" name="sec20" class="section_nav"></a>
+											<h3><label>Mentor Comment on Panel Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[mentor][subject][panel]" ,comment_email_subject("mentor","panel","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[mentor][comment][panel]",comment_email_description("mentor","panel","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 stick_me">
+						<ul class="navigator-menu">
+							<li id="nav_sec1" class="active-navigator-title">
+								<p>Mentor Comments</p>
+								<ul>
+									<li><a href="#sec16">Comment on Admin Mail</a></li>
+									<li><a href="#sec17">Comment on Participant Mail</a></li>
+									<li><a href="#sec18">Comment on Selector Mail</a></li>
+									<li><a href="#sec19">Comment on Mentor Mail</a></li>
+									<li><a href="#sec20">Comment on Panel Mail</a></li>
+								</ul>
+							</li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="panel_comments">
+				<div class="row main-row">
+					<div class="col-md-10 main-right-section">
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec21" name="sec21" class="section_nav"></a>
+											<h3><label>Panel Comment on Admin Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[panel][subject][admin]",comment_email_subject("panel","admin","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[panel][comment][admin]",comment_email_description("panel","admin","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec22" name="sec22" class="section_nav"></a>
+											<h3><label>Panel Comment on Participant Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[panel][subject][participant]" ,comment_email_subject("panel","participant","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[panel][comment][participant]",comment_email_description("panel","participant","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec23" name="sec23" class="section_nav"></a>
+											<h3><label>Panel Comment on Selector Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[panel][subject][selector]" ,comment_email_subject("panel","selector","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[panel][comment][selector]",comment_email_description("panel","selector","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec24" name="sec24" class="section_nav"></a>
+											<h3><label>Panel Comment on Mentor Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[panel][subject][mentor]" ,comment_email_subject("panel","mentor","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[panel][comment][mentor]",comment_email_description("panel","mentor","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row ">
+							<div class="col-md-12">
+								<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses panel-table">
+									<div class="panel-heading relative_panel_head ">
+										<div class="panel-title title_option">
+											<a href="sec25" name="sec25" class="section_nav"></a>
+											<h3><label>Panel Comment on Panel Mail</label></h3>
+										</div>
+										<div class="panel-options">
+											<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+										</div>
+									</div>
+									<div style="" class="panel-body">
+										<div class="row">
+								  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+								  		<div class="col-sm-8">
+								  			<%= text_field_tag "comments[panel][subject][panel]" ,comment_email_subject("panel","panel","comments"),:class=>"form-control form-style-1"%>
+								  		</div>
+								  	</div>
+								  	<br />
+								  	<div class="row">
+								  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "comments[panel][comment][panel]",comment_email_description("panel","panel","comments"),:cols=>"40"%></div>
+								  	</div>			
+									</div><!-- panel-body -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 stick_me">
+						<ul class="navigator-menu">
+							<li id="nav_sec1" class="active-navigator-title">
+								<p>Panel Comments</p>
+								<ul>
+									<li><a href="#sec21">Comment on Admin Mail</a></li>
+									<li><a href="#sec22">Comment on Participant Mail</a></li>
+									<li><a href="#sec23">Comment on Selector Mail</a></li>
+									<li><a href="#sec24">Comment on Mentor Mail</a></li>
+									<li><a href="#sec25">Comment on Panel Mail</a></li>
+								</ul>
+							</li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Tab panes -->
+
+<br />
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+<%
+=begin
+%>
+
+<%= link_to("#", :class => "open_div", :name => "new_mails") do %>
+  <h2 class="func">Click here to update the comment mail</h2>
+<%- end -%>
+<div id="new_mails" class="closable_div" style="display:none;">
+
+  <div style="position: fixed;top: 213px;right: 189px;">
+  <a class="btn btn-info" id="comment-hint">* Hint</a>
+  </div>
+  <div style="position: fixed;top: 247px;right: 158px;">
+    <div id="comment-hintbox" style="display:none;margin-top:5px;background-color:#ffffff;padding:5px;">
+      <div class="hint-title" rel="tooltip" title="name of person providing feedback">#from</div> 
+      <div class="hint-title" rel="tooltip" title="name of person / people receiving feedback">#to</div> 
+      <div class="hint-title" rel="tooltip" title="name of project receiving feedback">#projectname</div> 
+      <div class="hint-title" rel="tooltip" title="name of program">#programname</div> 
+      <div class="hint-title" rel="tooltip" title="name of company">#companyname</div> 
+      <div class="hint-title" rel="tooltip" title="the content being commented on">#originalcontent</div> 
+      <div class="hint-title" rel="tooltip" title="content of the comment">#comment</div> 
+    </div>
+  </div>
+
+<div class="block">
+<%= link_to("#", :class => "open_div_admin_comment", :name => "admin_comment_mails") do %>
+  <h2 class="func">Click here to update the Admin Comments mail</h2>
+<%- end -%>
+<div id="admin_comment_mails" class="closable_div_admin_comment" style="display:none;">
+      <div class="inner">
+      <h3>Admin Comment on Admin Mail</h3>
+        <p>Subject</p>
+          <%= text_field_tag "comments[admin][subject][admin]",comment_email_subject("admin","admin","comments"),:cols=>"40"%>
+        <p>Body</p>
+          <%= text_area_tag "comments[admin][comment][admin]",comment_email_description("admin","admin","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+      <h3>Admin Comment on Participant Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[admin][subject][participant]" ,comment_email_subject("admin","participant","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[admin][comment][participant]",comment_email_description("admin","participant","comments"),:cols=>"40"%>
+      </div>
+       <div class="inner"><br/>
+              <h3>Admin Comment on Selector Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[admin][subject][selector]" ,comment_email_subject("admin","selector","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[admin][comment][selector]",comment_email_description("admin","selector","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Admin Comment on Mentor Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[admin][subject][mentor]" ,comment_email_subject("admin","mentor","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[admin][comment][mentor]",comment_email_description("admin","mentor","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Admin Comment on Panel Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[admin][subject][panel]" ,comment_email_subject("admin","panel","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[admin][comment][panel]",comment_email_description("admin","panel","comments"),:cols=>"40"%>
+      </div><br/>
+        </div>
+
+<%= link_to("#", :class => "open_div_participant_comment", :name => "participant_comment_mails") do %>
+  <h2 class="func">Click here to update the Participant Comments mail</h2>
+<%- end -%>
+<div id="participant_comment_mails" class="closable_div_participant_comment" style="display:none;">
+      <div class="inner">
+      <h3>Participant Comment on Admin Mail</h3>
+        <p>Subject</p>
+          <%= text_field_tag "comments[participant][subject][admin]",comment_email_subject("participant","admin","comments"),:cols=>"40"%>
+        <p>Body</p>
+          <%= text_area_tag "comments[participant][comment][admin]",comment_email_description("participant","admin","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+      <h3>Participant Comment on Participant Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[participant][subject][participant]" ,comment_email_subject("participant","participant","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[participant][comment][participant]",comment_email_description("participant","participant","comments"),:cols=>"40"%>
+      </div>
+       <div class="inner"><br/>
+              <h3>Participant Comment on Selector Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[participant][subject][selector]" ,comment_email_subject("participant","selector","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[participant][comment][selector]",comment_email_description("participant","selector","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Participant Comment on Mentor Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[participant][subject][mentor]" ,comment_email_subject("participant","mentor","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[participant][comment][mentor]",comment_email_description("participant","mentor","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Participant Comment on Panel Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[participant][subject][panel]" ,comment_email_subject("participant","panel","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[participant][comment][panel]",comment_email_description("participant","panel","comments"),:cols=>"40"%>
+      </div><br/>
+        </div>
+
+
+<%= link_to("#", :class => "open_div_selector_comment", :name => "selector_comment_mails") do %>
+  <h2 class="func">Click here to update the Selector Comments mail</h2>
+<%- end -%>
+<div id="selector_comment_mails" class="closable_div_selector_comment" style="display:none;">
+      <div class="inner">
+      <h3>Selector Comment on Admin Mail</h3>
+        <p>Subject</p>
+          <%= text_field_tag "comments[selector][subject][admin]",comment_email_subject("selector","admin","comments"),:cols=>"40"%>
+        <p>Body</p>
+          <%= text_area_tag "comments[selector][comment][admin]",comment_email_description("selector","admin","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+      <h3>Selector Comment on Participant Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[selector][subject][participant]" ,comment_email_subject("selector","participant","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[selector][comment][participant]",comment_email_description("selector","participant","comments"),:cols=>"40"%>
+      </div>
+       <div class="inner"><br/>
+              <h3>Selector Comment on Selector Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[selector][subject][selector]" ,comment_email_subject("selector","selector","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[selector][comment][selector]",comment_email_description("selector","selector","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Selector Comment on Mentor Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[selector][subject][mentor]" ,comment_email_subject("selector","mentor","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[selector][comment][mentor]",comment_email_description("selector","mentor","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Selector Comment on Panel Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[selector][subject][panel]" ,comment_email_subject("selector","panel","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[selector][comment][panel]",comment_email_description("selector","panel","comments"),:cols=>"40"%>
+      </div><br/>
+
+        </div>
+
+
+<%= link_to("#", :class => "open_div_mentor_comment", :name => "mentor_comment_mails") do %>
+  <h2 class="func">Click here to update the Mentor Comments mail</h2>
+<%- end -%>
+<div id="mentor_comment_mails" class="closable_div_mentor_comment" style="display:none;">
+      <div class="inner">
+      <h3>Mentor Comment on Admin Mail</h3>
+        <p>Subject</p>
+          <%= text_field_tag "comments[mentor][subject][admin]",comment_email_subject("mentor","admin","comments"),:cols=>"40"%>
+        <p>Body</p>
+          <%= text_area_tag "comments[mentor][comment][admin]",comment_email_description("mentor","admin","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+      <h3>Mentor Comment on Participant Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[mentor][subject][participant]" ,comment_email_subject("mentor","participant","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[mentor][comment][participant]",comment_email_description("mentor","participant","comments"),:cols=>"40"%>
+      </div>
+       <div class="inner"><br/>
+              <h3>Mentor Comment on Selector Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[mentor][subject][selector]" ,comment_email_subject("mentor","selector","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[mentor][comment][selector]",comment_email_description("mentor","selector","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Mentor Comment on Mentor Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[mentor][subject][mentor]" ,comment_email_subject("mentor","mentor","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[mentor][comment][mentor]",comment_email_description("mentor","mentor","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Mentor Comment on Panel Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[mentor][subject][panel]" ,comment_email_subject("mentor","panel","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[mentor][comment][panel]",comment_email_description("mentor","panel","comments"),:cols=>"40"%>
+      </div><br/>
+        </div>
+
+<%= link_to("#", :class => "open_div_panel_comment", :name => "panel_comment_mails") do %>
+  <h2 class="func">Click here to update the Panel Comments mail</h2>
+<%- end -%>
+<div id="panel_comment_mails" class="closable_div_panel_comment" style="display:none;">
+      <div class="inner">
+      <h3>Panel Comment on Admin Mail</h3>
+        <p>Subject</p>
+          <%= text_field_tag "comments[panel][subject][admin]",comment_email_subject("panel","admin","comments"),:cols=>"40"%>
+        <p>Body</p>
+          <%= text_area_tag "comments[panel][comment][admin]",comment_email_description("panel","admin","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+      <h3>Panel Comment on Participant Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[panel][subject][participant]" ,comment_email_subject("panel","participant","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[panel][comment][participant]",comment_email_description("panel","participant","comments"),:cols=>"40"%>
+      </div>
+       <div class="inner"><br/>
+              <h3>Panel Comment on Selector Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[panel][subject][selector]" ,comment_email_subject("panel","selector","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[panel][comment][selector]",comment_email_description("panel","selector","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Panel Comment on Mentor Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[panel][subject][mentor]" ,comment_email_subject("panel","mentor","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[panel][comment][mentor]",comment_email_description("panel","mentor","comments"),:cols=>"40"%>
+      </div>
+      <div class="inner"><br/>
+              <h3>Panel Comment on Panel Mail</h3>
+          <p>Subject</p>
+          <%= text_field_tag "comments[panel][subject][panel]" ,comment_email_subject("panel","panel","comments"),:cols=>"40"%>
+          <p>Body</p>
+          <%= text_area_tag "comments[panel][comment][panel]",comment_email_description("panel","panel","comments"),:cols=>"40"%>
+      </div>
+        </div>
+</div>
+
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+</div>
+<%
+=end
+%>

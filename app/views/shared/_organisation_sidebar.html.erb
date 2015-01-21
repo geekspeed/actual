@@ -1,0 +1,52 @@
+<!-- This file is no more required -->
+<% content_for :navigation do %>
+  <div class="main-navbar" id="mainnavi">
+    <div  style="width: 60px;" class="pull-left">
+    <ul id="gn-menu" class="gn-menu-main">
+      <li class="gn-trigger">
+        <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+        <nav class="gn-menu-wrapper gn-open-part" id="left_stick">
+          <%= render "organisations/shared/sidebar", :page => ppage %>
+        </nav>
+      </li>
+    </ul>
+  </div>
+   <% is_subdomain = valid_subdomain(current_subdomain)%>
+    <nav class="navbar navbar-default main-navbar-inner" role="navigation">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-collapse collapse" style="border: none;">
+      <ul class="nav navbar-nav main-navi-bar">
+        <li class="<%= 'active' if page == "list_prgrams" %> mainnav_link">
+          <%= link_to("#{e('eco_summary:ecosystem_navbar_homepage').present? ? e('eco_summary:ecosystem_navbar_homepage') : 'Programs'}", organisation_path(@organisation)) %>
+        </li>
+        <li class="<%= 'active' if page == "ecosystem" %> mainnav_link">
+          <%= link_to("Ecosystem", members_organisation_path(@organisation, :role_code => "participant")) %>
+        </li>
+        <li class="<%= 'active' if controller_name == "dashboards" and action_name == "show"%> mainnav_link">
+	      <%= link_to("Community", user_signed_in? ? (is_subdomain ? dashboard_url(subdomain: false) : dashboard_url) : (@program ? (is_subdomain ? program_login_program_url(@program, :subdomain => false) : program_login_program_url(@program)) : (is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url))) %>
+	    </li>
+        <li class="<%= 'active' if page == "buzz" %> mainnav_link">
+          <%= link_to("Buzz", buzz_organisation_path(@organisation)) %>
+        </li>
+      </ul> 
+    </div>
+  </nav>
+  <div class="clr"></div>
+    
+  </div>
+<% end %>
+
+<% unless page == "list_prgrams" %>
+  <% content_for :sidebar do %>
+      <%= javascript_include_tag "classie" %>
+      <%= javascript_include_tag "gnmenu" %>
+      <script>
+        new gnMenu( document.getElementById( 'gn-menu' ) );
+      </script>
+      
+  <% end %>
+<% end%>

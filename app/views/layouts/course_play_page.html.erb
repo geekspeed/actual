@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><%= [yield(:title)].reject(&:blank?).join(" | ") %></title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<link rel="shortcut icon" href="/images/favicon.ico" />
+<link href='/stylesheets/css/font-awesome.css' rel="stylesheet" type="text/css" >
+<link href="/stylesheets/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/normalize.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/demo.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/icons.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/component.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/video_styles/jquery.mCustomScrollbar.css" />
+<link href="/stylesheets/css/custom.css" rel="stylesheet" type="text/css">
+<%= stylesheet_link_tag    "jquery.fancybox", :media => "all" %>
+<%= stylesheet_link_tag 'css/summernote'%>
+<%= stylesheet_link_tag 'css/summernote-bs2', :media => "all"%>
+<script src="/javascripts/video_script/modernizr.custom.js"></script>
+<%= javascript_include_tag "vimeo/froogaloop2.min.js" %>
+<%= javascript_include_tag "jquery-1.9.0" %>
+<%= javascript_include_tag "jquery.fancybox.pack" %>
+<%= javascript_include_tag "jquery_ujs" %>
+<%= javascript_include_tag "jquery.autosize" %>
+<%= javascript_include_tag 'js/summernote.min'%>
+<%= javascript_include_tag "jquery.mosaicflow" %>
+
+<%= csrf_meta_tag %>
+
+<!-- <script src="//f.vimeocdn.com/js/froogaloop2.min.js"></script>
+ -->
+<style>
+    /* This only works with JavaScript, 
+       if it's not present, don't show loader */
+    .no-js #loader { display: none;  }
+    .js #loader { display: block; position: absolute; left: 100px; top: 0; }
+  </style>
+</head>
+<body>        
+  <% field = (current_user ? ((current_user.try(:attributes).try(:keys) & ["_awaiting_participant", "_awaiting_mentor"]).first) : nil) %>
+    <% @prog = field.present? ? Program.where(id: current_user.try(field).try(:first)).first : nil%>
+		<% background_color = current_organisation.try(:background_color) || context_program.try(:organisation).try(:background_color) || @prog.try(:organisation).try(:background_color) || "#17a3bf" %>
+	<% menubar_color = current_organisation.try(:manubar_color) || context_program.try(:organisation).try(:manubar_color) || @prog.try(:organisation).try(:manubar_color) || "#17a3bf" %>
+	
+  <%= yield %>
+
+
+<style>
+  .video-centered-text {
+      display:none;
+      left: 0;
+      position:absolute;
+      text-align:center;
+      top: 70%;
+      width: 100%;
+      z-index:1000;
+  }  
+  .video-centered-text-big {
+      top: 60% !important;
+  }
+  .video-centered-text-all {
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+  }
+  .iframe{
+    position:relative;
+  }
+  .watched-video {
+      font-size: 22px !important;
+      text-align: center;
+      line-height: initial;
+  }
+  .watched-video a{
+      color: #8DC442 !important;
+    }
+	.todo_list a{
+	    background: <%= menubar_color %>;
+	}
+	.todo_list_big a{padding:15px;}
+	.video-data-aligned-big{ width:60% !important;}
+	.video-data-aligned{ width:88%; margin:auto;}  
+  .cource_indicator.yellwo_indi{
+    background:<%= menubar_color %>;
+  }
+  .cource_indicator.green_indi{
+    background:<%= menubar_color %>;
+  }
+  .mp-menu .course_lessons_table th a{
+    background: none repeat scroll 0 0 #ccc !important;
+    color: #3d3d3d !important;
+  }  
+  .mp-menu .course_lessons_table th a:hover{
+    background: none repeat scroll 0 0 #ccc !important;
+  }
+  .editCustomField i.icon-edit{color:<%= menubar_color %>;}
+  .main-play-button{
+  position: absolute;
+  text-align: center;
+  top: 36%;
+  width: 100%;
+  z-index: 1000;
+ }  
+ .course_play_vid{  
+   border: 1px solid <%= menubar_color %>; 
+   border-radius: 50%;
+   padding:24px;
+   opacity:0.8;
+   background:<%= background_color %>;
+   margin: auto;
+   width: 13%;
+  }
+ .completed-note{
+  font-size: 16px !important;
+  display: block;
+  line-height: 39px !important;
+  font-weight: bold;
+  margin-right: 26px;
+  color: <%= menubar_color %>;
+/*  text-shadow: 2px 0 0 <%#= menubar_color %>, -2px 0 0 <%#= menubar_color %>, 0 2px 0 <%#= menubar_color %>, 0 -2px 0 <%#= menubar_color %>, 1px 1px <#%= menubar_color %>, -1px -1px 0 <%#= menubar_color %>, 1px -1px 0 <%#= menubar_color %>, -1px 1px 0 <%#= menubar_color %>;*/
+} 
+.completed-note i{color: <%= menubar_color %>;}
+
+ul.excercise-list a li:hover{color:#ffffff;}
+.todo_list a:hover {
+  background: <%= background_color %>;
+}
+.border-custom{
+  border: 1px dashed  <%= background_color %>;
+}
+.remove-pic{
+  color: <%= menubar_color %>;  
+}
+.modal-backdrop{z-index:-1;}
+.custom-color{
+  color:<%= menubar_color %> !important;
+}
+</style>
+
+<script src="/javascripts/video_script/classie.js"></script>
+<script src="/javascripts/video_script/mlpushmenu.js"></script>
+<script src="/javascripts/video_script/jquery.mCustomScrollbar.concat.min.js"></script>
+<script>
+  new mlPushMenu( document.getElementById( 'mp-menu' ), document.getElementById( 'trigger' ) );
+</script>
+<script>
+  $(document).ready(function(){
+    $(".menu-trigger").click(function(){
+      $("#video-data-aligned").toggleClass( "video-data-aligned-big" );
+      $("#video-text-box").toggleClass( "video-centered-text-big" );
+      $(".todo_list").toggleClass( "todo_list_big" );
+    });
+  });
+</script>
+<script type="text/javascript">
+    // Wait for window load
+    $(window).load(function() {
+      // Animate loader off screen
+      $("#video_loader").animate({
+        top: -1000
+      }, 1500);
+      
+      $(".sc-evel").mCustomScrollbar();
+    });
+  window.onload = function ()
+{
+var w = window.innerWidth;
+          var scroller_width = w - 300;
+          document.getElementById( 'mp-pusher' ).style.width = scroller_width+"px";
+}
+</script>
+<script src="/javascripts/js/bootstrap.js"></script> 
+</body>
+</html>

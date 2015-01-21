@@ -1,0 +1,162 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Semantics" %>
+<% end %>
+<% page = "setup_program"; ppage = "settings"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "settings" %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-spinner gn-icon-large"></i>
+      Semantic
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Semantic lets you customize the semantic used in your program such as the name you want to give to the participants in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Semantic</a>
+  </div>
+</div>
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+	<%= render "shared/flash" %>
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <%= form_tag polymorphic_path([@program, :settings]), :class => "registerForm reqForm" do |f| %>
+    <div class="p_no_margin">
+    <% if context_program.master_program? %>
+      <% setting = MasterSetting.for(context_program).first %>
+      <a href="#sec1" name="sec1" class="section_nav"></a>
+      <div class="block">
+        <h2 class="titleLine">Set standard semantics across all programs</h2>
+        <table class="settings full_width table">
+          <tbody>
+            <tr class="show_option_mentoring">
+              <td class="lbl">Would you like to set standard semantics across all Programs?
+                <br>
+                YES - means that all programs will use these semantics.
+                <br>
+                No - means that administrators for each program will be able to set their own semantics
+              </td>
+              <td class="col_setting">
+                <div class="radioset pull_left cloneble_setting" data-url="<%= cloneable_program_settings_path(context_program) %>">
+                  <%= radio_button_tag :"settings[semantic_cloneable]", "true", setting.semantic_cloneable, :class => "option_cloneable" %>
+                  <%= label_tag :"settings[semantic_cloneable]", "Yes", :for => "settings_semantic_cloneable_true" %>
+
+                  <%= radio_button_tag :"settings[semantic_cloneable]", "false", !setting.semantic_cloneable, :class => "option_cloneable" %>
+                  <%= label_tag :"settings[semantic_cloneable]", "No", :for => "settings_semantic_cloneable_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+      <% @semantics.each_with_index do |semantic, indx| %>
+        <a href="#<%="sec#{indx+2}"%>" name="<%="sec#{indx+2}"%>" class="section_nav"></a>
+        <div class="row ">
+					<div class="col-md-12">
+						<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+							<div class="panel-heading relative_panel_head ">
+								<div class="panel-title title_option">
+									<h3><label> <%= "#{semantic.label} (Leave blank to stick with defaults)" %></label></h3>
+								</div>
+								<div class="panel-options">
+									<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+		              <div class="col-sm-4 setting-font">
+		                <div><%= label_tag "semantics[#{semantic.key}][singular]", "Singular" %></div>
+		              </div>
+		              <div class="col-sm-8">
+		              	<%= text_field_tag "semantics[#{semantic.key}][singular]", Semantic.t(@program, semantic.key, "s"), :class=>"form-control form-style-1 pull-left" %>
+		              	<br /><br />
+		              	<i>max 20 chars</i>
+		              </div>
+		            </div>
+		            <br />
+		            <%unless semantic.try(:key) == "program:my_work"%>
+  		            <div class="row">
+  		              <div class="col-sm-4 setting-font">
+  		                <div><%= label_tag "semantics[#{semantic.key}][plural]", "Plural" %></div>
+  		              </div>
+  		              <div class="col-sm-8">
+  		              	<%= text_field_tag "semantics[#{semantic.key}][plural]", Semantic.t(@program, semantic.key, "p"), :class=>"form-control form-style-1 pull-left" %>
+  		              	<br /><br />
+  		              	<i>max 20 chars</i>
+  		              </div>
+  		            </div>
+  		          <%end%>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+				<br />
+      <% end %>
+    </div>
+    <%= submit_tag "Save", id: "submit" %>
+  <% end %>
+</div>
+<div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <% if context_program.master_program? %>
+            <li><a href="#sec1">Standard Project Evaluation</a></li>
+          <% end %>
+          <li><a href="#sec2">Term for Applicants</a></li>
+          <li><a href="#sec3">Term for Mentors</a></li>
+          <li><a href="#sec4">Term for Panel</a></li>
+          <li><a href="#sec5">Term for Selectors</a></li>
+          <li><a href="#sec6">Term for Company Admins</a></li>
+          <li><a href="#sec7">Term for Pitches</a></li>
+          <li><a href="#sec8">Term for Interests</a></li>
+          <li><a href="#sec9">Term for Summary</a></li>
+          <li><a href="#sec10">Term for Organisation Name</a></li>
+          <li><a href="#sec11">Term for About Me</a></li>
+          <li><a href="#sec12">Term for Basic</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+  $(".cloneble_setting").on("click", function(){
+    var elem = $(this)
+    $.post( 
+      elem.data("url"), 
+      $(".cloneble_setting :checked").serialize(),
+      function( data ) {
+        console.log(data)
+      }
+    );
+  });
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 305
+    });
+    
+    $('.help-sign').tooltip();
+  })
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

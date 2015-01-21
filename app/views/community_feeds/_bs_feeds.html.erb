@@ -1,0 +1,128 @@
+<div id="community_stream">
+  <div style="position: relative;">
+    <div class="row timeline no-transition vline isotope" id="timeline" >    
+      <% @design_align = 0%>
+      <div id="feeds_div">
+        <% @cm_feeds.each do |feed| %>
+          <div class="feed_obj">
+            <% if !feed.blank? && !feed.try(:activity) %>
+              <% if feed.tags.first == params[:tag] || params[:tag].nil?%>
+                <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+                  <span class="dot"><i class="glyphicon"></i></span>  
+                  <article class="post-wrap thumbnail">
+                    <div class="post-authorx">
+                      <%= link_to image_tag(feed.created_by.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(feed.created_by) %>
+                      <% if need?(["company_admin", "program_admin"], current_organisation) or feed.created_by_id == current_user.id%>
+                        <%= link_to "<i class='glyphicon glyphicon-trash user_defined_color' style='color:#fff !important;'></i>".html_safe, polymorphic_path([@program, feed]), :method => :delete, :class => "delFeed pull-right" %>
+                      <% end %>
+                      <% if need?(["company_admin", "program_admin"], current_organisation) && @pitch.blank? %>
+                        <% if feed.sticky_post %>
+                          <%= link_to "<i title='Click to remove from top' class='user_defined_color sticky-post-link' rel='tooltip' style='color:#fff !important;'>Sticky Post</i>".html_safe, polymorphic_path([:non_sticky, @program, feed]), :method => :put, :class => "pull-right",:style=>'margin-right:8px;' %>
+                        <% else %>
+                          <%= link_to "<i title='Click to add that at top' class='user_defined_color sticky-post-link glyphicon glyphicon-pushpin' rel='tooltip' style='color:#fff !important;'></i>".html_safe, polymorphic_path([:sticky, @program, feed]), :method => :put, :class => "pull-right",:style=>'margin-right:12px;' %>
+                        <% end %>
+                        <% if feed.add_to_blog %>
+                          <%= link_to "<i title='Click to remove from blog' class='user_defined_color blog-post-link' rel='tooltip' style='color:#fff !important;'>Blog Post</i>".html_safe, polymorphic_path([:remove_from_blog, @program, feed]), :method => :put, :class => "pull-right",:style=>'margin-right:8px;' %>
+                        <% else %>
+                        <%= link_to "<i title='Click to add in blog' class='user_defined_color blog-post-link glyphicon glyphicon-th-large' rel='tooltip' style='color:#fff !important;'></i>".html_safe, polymorphic_path([:add_to_blog, @program, feed]), :method => :put, :class => "pull-right",:style=>'margin-right:12px;' %>
+                        <% end %>
+                      <% end %>
+                      <div class="post-author-data pull-left">
+                        <p class="post-aythor-name"><strong><%= link_to feed.created_by.full_name, polymorphic_path(feed.created_by), :style=>"color:#fff;"%></strong></p>
+                        <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                    <div class="post-body">
+                      <div class="post-excerpt">
+                        <% if !feed.subject.blank? %>
+                          <div style="margin-bottom:10px;">
+                            <b>Subject: </b>
+                            <%= feed.subject %>
+                            <%= link_to "<i class='user_defined_color'>View</i>".html_safe, polymorphic_path([@program, @pitch, feed]), :class => "pull-right feed_open",:style=>'margin-right:8px;' %>
+                          </div>
+                        <% end %>
+                        <%= feed.content.html_safe %>
+                        <% activity_note = ActivityNote.where(:community_feed_id => feed.id).try(:first)%>
+                        <% if !activity_note.blank? %>
+                          <% module_activity = activity_note.activity_performance.module_activity %>
+                          <br/>
+                          <i class="pull-right" style="font-size: 11px;">Notes left on <%= link_to activity_note.activity_performance.module_activity.try(:title), polymorphic_path([@program, module_activity.course_module.course, module_activity.course_module, module_activity, :start_activity], :pitch_id=>@pitch.try(:id), :video_watch_duration =>activity_note.video_watch_duration) %> at <%= notes_time_cal(activity_note.video_watch_duration) %> min</i>
+                          <div class="clear"></div>
+                        <% end %>
+                        <% if feed.tags.present? %>
+                        <div class="feed_tags">
+                          Tagged: <%= feed.tags.join(", ") %>
+                        </div>
+                      <% end %>
+                      </div>
+                    </div>
+                    <div class="post-media">
+                      <div class="thumbnail no-border do-hover">
+                        <% if feed.link.present? %>
+                          <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                              <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+                              <% if is_image?(feed.link) %>
+                                <%= link_to image_tag(feed.link, :height => "500", :width => "525"), feed.link, :target => "_blank" %>
+                              <% else %>
+                                 <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                                <% emb_obj = emb_api.extract(:url => feed.link, :maxwidth => 525)%>
+                                <%= show_attachment(emb_obj)%>
+                              <% end %>
+                          <% end  %>
+                        <% elsif feed.attachment.present?%>
+                          <% if is_image?(feed.attachment.url) %>
+                            <%= link_to image_tag(root_url.chomp('/') + feed.attachment_url, :height => "500", :width => "525"), (root_url.chomp('/') + feed.attachment_url), :target => "_blank"%>
+                          <% else %>
+                            <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                            <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + feed.attachment_url, :maxwidth => 525)%>
+                            <%= show_attachment(emb_obj)%>                       
+                          <% end %>
+                        <% end %>
+                      </div>
+                      <div class="post-meta clearfix">
+                         <span class="pull-left"><span class="post-date"><i class="glyphicon glyphicon-heart user_defined_color"></i> <span class="anzahl"><%= feed.likes_count %></span> people like </span> </span>
+                         <span class="pull-right"><%= feed_like_link(feed) %></span>
+                      </div>
+                    </div>
+                    <div class="post-main-comments">
+                        <div class="post-main-commment-title">
+                          <span class="post-comment-description-box" id="comments_box_<%= feed.id%>">
+                            <%= feed.comments.count==0 ? "No Comments" : "#{feed.comments.count==1 ? "View #{feed.comments.count} comment" : "View all #{feed.comments.count} comments"}".html_safe %>
+                          </span>
+                        </div>
+                        <div id="comments_box_<%= feed.id%>_show">
+                          <%= render "comments/bs_inline_comments", :commentable => feed %>
+                        </div>
+                        <div class="comment-input-container">
+                          <%= render "shared/bs_comment_form", :comment => Comment.new, :commentable_type => feed.class.to_s, :commentable_id => feed.id %>
+                        </div>
+                      </div>
+                  </article>
+                </div>
+                <% @design_align = @design_align +1 %>
+              <% end %>
+            <% else %>
+              <%= render "community_feeds/shared/activities", :feed => ActivityFeed.where(:community_feed_id => feed.id).try(:first) %><br/>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div class="hide">
+        <%= paginate @cm_feeds %>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .post-comment-description-box{ cursor:pointer;}
+  .feed_open{text-decoration:underline;}
+</style>
+
+<script>
+  $(".post-comment-description-box").click(function(){
+    $("#"+this.id+"_show").slideToggle("slow") 
+  });
+</script>

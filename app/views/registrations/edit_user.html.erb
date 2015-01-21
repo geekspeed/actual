@@ -1,0 +1,215 @@
+<%= form_for(@user, :url => admin_update_path(@user), :html => { :method => :put, :class => "registerForm reqForm" }) do |f| %>
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Edit User</h3>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <% ankor = get_custom_field_anchor_for_admin(@user) %>
+          <% program = get_program && (get_program.is_a?(String) ? get_program : get_program.id) %>
+          <% prog = @program || context_program %>
+          <%= hidden_field_tag "user_id", @user.id%>
+           <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= hidden_field_tag "program_id", program unless params[:social_media] == "true" and !context_program.present?%>
+                <%= hidden_field_tag "user_anchor", ankor %>
+                <%= hidden_field_tag "social_media", params[:social_media]%>
+                <%= content_tag :lable, tfp("user:upload_picture", prog) ? tfp("user:upload_picture", prog).html_safe : "Upload my Profile Picture".html_safe %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "avatar", :class => "show_help_text") if show_help_icon(prog, ankor, "avatar")%>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-4">
+                    <% required = @user.avatar_url.present? ? "" : "required" %>
+                  <div class="browse-wrapper">
+                    <%= f.file_field :avatar, :class => "file_field_width pull-left upload_img #{required}" %>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <%= image_tag((@user.avatar_url.present? ? @user.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-reponsive")%>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "upload", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "avatar" %>
+          <% end %>
+          <br>
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable,tfp("user:bio", prog) ? tfp("user:bio", prog) : "My Bio", class: "mend_field_label" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "bio", :class => "show_help_text") if show_help_icon(prog, ankor, "bio")%>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <%= f.text_area :bio, :class=>"form-control pull-left required  form-style-1 autosize_textarea" %>
+            </div>
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "bio", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "bio" %>
+          <% end %>
+          <br>
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable, "My Speciality" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "speciality", :class => "show_help_text") if show_help_icon(prog, ankor, "speciality")%>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <%= f.text_field :speciality, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+            </div>
+          </div>
+          <br / >
+          <% end if show_basic_field(prog, "speciality", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "speciality" %>
+          <% end %>
+          <br>
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable, "My Skills" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "skill", :class => "show_help_text") if show_help_icon(prog, ankor, "skill")%>
+              </div>
+            </div>
+            
+            <div class="col-sm-8 tag_functionality">
+              <div class="container_tags">
+                <div class="tagList" id="skillList">
+                  <div class="tagContainer">
+                    <% f.object.skills.each do |skill| %>
+                        <div class="tagContainer">
+                          <%= link_to skill, "#", :class => "delTag" %>
+                          <%= hidden_field_tag :"user[skills][]", skill %>
+                        </div>
+                      <% end  %>
+                  </div>
+                </div>
+                <div class="clr"></div>
+              </div>
+              <div class="quote_col_row container_add_tag">
+                <%= f.text_field :skills, :id => "skills", :value => "", :class => "autoSkills form-control pull-left form-style-1", :value => "", :placeholder=>"Add an item then press enter or click the Add button", :name => "skills[]", :"data-field-name" => "#{f.object_name}[skills][]" %>
+                <%= link_to "+ Add a skill", "#", :class => "addSkill pull-left module_box_submit low-padding", :id=>"submit" %> 
+              </div>
+              <div class="clr"></div>
+            </div>
+            
+            
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "skills", ankor) %>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "skills" %>
+          <% end %>
+          <br />
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable, "My Interests" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "interest", :class => "show_help_text") if show_help_icon(prog, ankor, "interest")%>
+              </div>
+            </div>
+            
+            <div class="col-sm-8 tag_functionality">
+              <div class="container_tags">
+                <div class="tagList" id="interestsList">
+                  <div class="tagContainer">
+                    <% f.object.interests.each do |interest| %>
+                        <div class="tagContainer">
+                          <%= link_to interest, "#", :class => "delTag" %>
+                          <%= hidden_field_tag :"user[interests][]", interest %>
+                        </div>
+                      <% end  %>
+                  </div>
+                </div>
+                <div class="clr"></div>
+              </div>
+              <div class="quote_col_row container_add_tag">
+                <%= f.text_field :interests, :id => "interests", :value => "", :class => "autoInterests form-control pull-left form-style-1", :value => "", :placeholder=>"Add an item then press enter or click the Add button", :name => "interests[]", :"data-field-name" => "#{f.object_name}[interests][]" %>
+                <%= link_to "+ Add an interest", "#", :class => "addInterest pull-left module_box_submit low-padding", :id=>"submit" %> 
+              </div>
+              <div class="clr"></div>
+            </div>
+            
+            
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "interests", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "interests" %>
+          <% end %>
+          <br />
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable, "Highest Education Qualification" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "qualification", :class => "show_help_text") if show_help_icon(prog, ankor, "qualification")%>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <%= f.text_field :education_qualification, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+            </div>
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "qualifications", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"}, position: "education_qualification" %>
+          <% end %>
+          <br />
+          
+          <%= content_tag :div do%>
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">
+                <%= content_tag :lable, "Linkedin Profile" %>
+                <%= link_to(image_tag("/images/icons/ico_Help.png"), "#", :"data-text-for" => ankor, :"data-url" => show_help_content_program_help_contents_path(prog), :"data-field-name" => "profile", :class => "show_help_text") if show_help_icon(prog, ankor, "profile")%>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <%= f.text_field :linkedin_profile, :class=>"form-control form-style-1", :style=>"width:70%;" %>
+            </div>
+          </div>
+          <br />
+          <% end if show_basic_field(prog, "profile", ankor)%>
+          <% if ankor.present? %>
+            <%= render "shared/custom_fields_renderer", f: f, ankor: ankor, outer_wrap: {tag: :div, klass: "form-group row help-fix"}, label_wrap: {tag: "div", klass: "col-sm-4"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-8", style: "margin: 0 0 20px 0;"} %>
+          <% end %>
+          <br />
+          <%= hidden_field_tag "admin_update", current_user.id, :name => "user[admin_update]"%>
+          <div class="row">
+            <div class="col-sm-12">
+               <%= f.submit "Save", :name => "schritt", :id => "submit" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

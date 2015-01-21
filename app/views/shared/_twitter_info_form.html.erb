@@ -1,0 +1,51 @@
+<%= content_tag :div, :class => "login", :id => "theme-my-login" do%>
+  <%= content_tag :h1, "Please fill the email"%>
+	<%= form_for @user, :url => {:controller => "omniauth_callbacks", :action => "create_twitter_user"} do |f|%>
+    <%= content_tag :table do%>
+		  <%= content_tag :tr do%>
+		    <%= content_tag :td do%>
+				  <%= content_tag :label, "Email"%>
+				<% end %>
+				<%= content_tag :td do%>
+				  <%= f.text_field :email, :required => true%>
+				<% end %>
+			<% end %>
+	    <%= content_tag :tr do%>
+        <%= content_tag :td do%>
+          <%= content_tag :label, "FirstName"%>
+        <% end %>
+        <%= content_tag :td do%>
+          <%= f.text_field :first_name, :required => true%>
+        <% end %>
+      <% end %>
+			<%= content_tag :tr do%>
+        <%= content_tag :td do%>
+          <%= content_tag :label, "LastName"%>
+        <% end %>
+        <%= content_tag :td do%>
+          <%= f.text_field :last_name, :required => true%>
+        <% end %>
+      <% end %>
+			<%= content_tag :tr do%>
+        <%= content_tag :td do%>
+          <%= content_tag :label, "Bio"%>
+        <% end %>
+        <%= content_tag :td do%>
+          <%= f.text_area :bio%>
+        <% end %>
+      <% end %>
+			<%= hidden_field_tag "user_id", params[:user]%>
+			<%= hidden_field_tag "program_id", params[:program_id]%>
+			<%= hidden_field_tag "role", params[:role]%>
+			<%= f.hidden_field :uid, :value => @user.uid%>
+			<%= f.hidden_field :provider, :value => @user.provider%>
+			<%= f.hidden_field :approved, :value => true%>
+			<%= f.hidden_field :password, :value => @user.password%>
+			<%= content_tag :tr do%>
+		    <%= content_tag :td do%>
+					<%= f.submit "Proceed"%>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% end %>
+<% end %>

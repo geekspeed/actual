@@ -1,0 +1,71 @@
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<a href="sec1" name="sec1" class="section_nav"></a>
+					<h3><label>Team mentor Invite Mail</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div style="" class="panel-body">
+				<div class="row">
+		  		<div class="col-sm-4 setting-font"><div>Subject</div></div>
+		  		<div class="col-sm-8">
+		  			<%= text_field_tag "subject[admin]" ,@team_mentor_subject,:cols=>"40", :class=>"form-control form-style-1"%>
+		  		</div>
+		  	</div>
+		  	<br />
+		  	<div class="row">
+		  		<div class="col-sm-12 setting-font"><div>Body</div> <%= text_area_tag "feedback[team_mentor_invite]",@team_mentor ,:cols=>"40", :class=>"form-control"%></div>
+		  	</div>			
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+<%
+=begin
+%>
+
+<%= link_to("#", :class => "open_div", :name => "new_mails") do %>
+  <h2 class="func">Click here to update the Team Mentor  Invite  mail</h2>
+<%- end -%>
+<div id="new_mails" class="closable_div" style="display:none;">
+  <div style="position: fixed;top: 213px;right: 189px;">
+      <a class="btn btn-info" id="team-hint">* Hint</a>
+  </div>
+  <div style="position: fixed;top: 247px;right: 158px;">
+    <div id="team-hintbox" style="display:none;margin-top:5px;background-color:#ffffff;padding:5px;">
+      <div class="hint-title" rel="tooltip" title="name of person providing feedback">#from</div> 
+      <div class="hint-title" rel="tooltip" title="name of person / people receiving feedback">#to</div> 
+      <div class="hint-title" rel="tooltip" title="name of project receiving feedback">#projectname</div> 
+      <div class="hint-title" rel="tooltip" title="name of program">#programname</div> 
+      <div class="hint-title" rel="tooltip" title="name of company">#companyname</div> 
+      <div class="hint-title" rel="tooltip" title="link to accept invite">#Accept</div>
+      <div class="hint-title" rel="tooltip" title="link to decline invite">#Decline</div>
+      <div class="hint-title" rel="tooltip" title=" link to view profile of invitor">#invitorprofile</div> 
+    </div>
+  </div>
+<div>
+      <div class="inner block">
+      <h2 class="titleLine">Team mentor Invite Mail</h2>
+        <p>Subject</p>
+          <%= text_field_tag "subject[admin]" ,@team_mentor_subject,:cols=>"40", :class=>"form-control"%>
+            <br />
+        <p>Body</p>  
+          <%= text_area_tag "feedback[team_mentor_invite]",@team_mentor ,:cols=>"40", :class=>"form-control"%>
+      </div>
+</div>
+</div>
+<p>
+  <%= submit_tag "Save", :id => "submit" %>
+</p>
+<%
+=end
+%>

@@ -1,0 +1,303 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Workflow" %>
+<% end %>
+
+<% page = "setup_program"; ppage = "workflows"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "workflows" %>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("form").on("click", ".js_insert_new_phase", function(e){
+      var elem = $(".js_duplicate_row tbody").html();
+      elem = elem.replace(/REPLACE/g,new Date().getTime());
+      $(this).parent().parent().before(elem);
+      console.log($(this).parents("tr").prev())
+      $("form tr .js_position").each(function(index, elem){
+        $(elem).val(index + 1);
+      });
+      e.preventDefault();
+    });
+    $("form").on("click", ".js_inline_edit", function(e){
+      $(this).siblings("input").show();
+      $(this).siblings("span").hide();
+      $(this).hide();
+      e.preventDefault();
+    });
+  });
+</script>
+<style>
+  .light_or_metric td{
+    vertical-align: top;
+    text-align: left;
+    padding: 10px 10px 0;
+  }
+  .block textarea {
+    margin-bottom: inherit;
+  }
+  select{
+    margin-right: auto;
+    width: 130px;
+  }
+  .radioset.ui-buttonset{
+    width:60px;
+	margin-right: 0;
+  }
+  .block input{
+    margin: 0 0 10px;
+  }
+</style>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-flip gn-icon-large"></i>
+      Program Workflows
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Program workflow lets you build the workflow through which participants will go through as part of the program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Program Workflows</a>
+  </div>
+</div>
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <% if context_program.master_program? %>
+    <% setting = MasterSetting.for(context_program).first %>
+    <div class="block">
+      <h2 class="titleLine">Set standard workflow across all programs</h2>
+      <a href="sec1" name="sec1" class="section_nav"></a>
+      <table class="settings full_width table">
+        <tbody>
+          <tr class="show_option_mentoring">
+            <td class="lbl">Would you like to set standard workflow across all Programs?
+              <br>
+              YES - means that all programs will use this workflow.
+              <br>
+              No - means that administrators for each program will be able to set their own workflow
+            </td>
+            <td class="col_setting">
+              <div class="radioset pull_left cloneble_setting" data-url="<%= cloneable_program_settings_path(context_program) %>">
+                <%= radio_button_tag :"settings[workflow_cloneable]", "true", setting.workflow_cloneable, :class => "option_cloneable" %>
+                <%= label_tag :"settings[workflow_cloneable]", "Yes", :for => "settings_workflow_cloneable_true" %>
+
+                <%= radio_button_tag :"settings[workflow_cloneable]", "false", !setting.workflow_cloneable, :class => "option_cloneable" %>
+                <%= label_tag :"settings[workflow_cloneable]", "No", :for => "settings_workflow_cloneable_false" %>
+                <div class="clr"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+  <table style="display:none" class="js_duplicate_row table table-striped">
+    <tbody>
+      <tr>
+		<td>
+          <%= hidden_field_tag :"workflow[REPLACE][position]", 0 , class: "js_position" %>
+          <%= text_field_tag "workflow[REPLACE][phase_name]", "", {:class=>"form-control form-style-1"} %>
+          
+        </td>
+        <td>
+          <%= select_tag "workflow[REPLACE][applicable_role]", options_from_collection_for_select(RoleType.on_programs_semantics(@program), :code, :name), :class=>"form-control form-style-1" %>
+        </td>
+        <td><%= "Status Button" %></td>
+        <td>
+          <%= text_field_tag "workflow[REPLACE][help_text]", nil, placeholder: "Help text to understand.", class: "form-control form-style-1" %>
+        </td>
+        <td>
+          <%= text_field_tag "workflow[REPLACE][target_url]", nil, placeholder: "http://", class: "form-control form-style-1" %>
+        </td>
+        <td>
+ 					&nbsp;
+        </td>
+		<td>
+			<div class="radioset">
+            <%= radio_button_tag :"workflow[REPLACE][on]", "true", false, id: "REPLACE_on_true" %>
+            <%= label_tag :"workflow[REPLACE][on]", "On", for: "REPLACE_on_true" %>
+
+            <%= radio_button_tag :"workflow[REPLACE][on]", "false", true, id: "REPLACE_on_false" %>
+            <%= label_tag :"workflow[REPLACE][on]", "Off", for: "REPLACE_on_false" %>
+            <div class="clr"></div>
+          </div>
+		</td>
+      </tr>
+    </tbody>
+  </table>
+  <%= form_tag polymorphic_path([@program, :workflows]),
+    class: "registerForm reqForm" do %>
+    <div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Learning Module</h3>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body">
+						<table class="table table-bordered table-striped datatable dataTable" id="table-2">
+							<thead>
+								<tr role="row">
+									<th style="width: 200px;" colspan="1" rowspan="1">Phase</th>
+									<th style="width: 100px;" colspan="1" rowspan="1">Role Involved</th>
+									<th style="width: 100px;" colspan="1" rowspan="1">Tracking</th>
+									<th style="width: 150px;" colspan="1" rowspan="1">User Help Text</th>
+									<th style="width: 150px;" colspan="1" rowspan="1">Target URL</th>
+									<th style="width: 250px;" colspan="1" rowspan="1">Conditions</th>
+									<th style="width: 100px;" colspan="1" rowspan="1">Status</th>
+									
+								</tr>
+							</thead>
+							
+							<tbody>
+								<% previous_phase_ids = [] %>
+          			<% @workflows.each_with_index do |workflow, i| %>
+          			<!-- use class workflow_on and workflow_off depending onn the phase status -->
+								<tr class="workflow_on">
+									<td>
+										<a href="#<%= "sec#{i+2}"%>" name="<%= "sec#{i+2}" %>" class="section_nav"></a>
+                		<%= hidden_field_tag :"workflow[#{workflow.id}][id]", workflow.id %>
+		                <% if !workflow.hardcode? %>
+		                  <%= hidden_field_tag :"workflow[#{workflow.id}][position]", workflow.position, class: "js_position" %>
+		                <% end %>
+		                <div style="font-weight: bold;font-size:13px; margin-bottom: 10px;overflow: hidden;">
+		                  <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+						          <span><%= workflow.phase_name %></span>
+		                  <%= text_field_tag :"workflow[#{workflow.id}][phase_name]", workflow.phase_name, style: "display:none", class: "form-control input-size1" %>
+		                </div>
+									</td>
+									<td>
+										<% if (workflow.hardcode? || !workflow.change_role?) %>
+		                  <% role_name = RoleType.find_by(code: workflow.applicable_role).name  %>
+		                  <% role_type = "role_type:#{role_name.parameterize('_')}"%>
+		                  <%= Semantic.t(@program, role_type, "s")%>
+		                <% else %>
+		                  <%= select_tag "workflow[#{workflow.id}][applicable_role]", options_from_collection_for_select(RoleType.on_programs_semantics(@program), :code, :name, workflow.applicable_role), :class=>"form-control form-style-1" %>
+		                <% end %>
+									</td>
+									<td><%= workflow.tracking %></td>
+									<td><%= text_field_tag "workflow[#{workflow.id}][help_text]", workflow.help_text, placeholder: "Help text to understand.", style: "width: 200px;height:40px;", :class=>"form-control form-style-1" %></td>
+									<td><%= text_field_tag "workflow[#{workflow.id}][target_url]", workflow.target_url, placeholder: "http://", style: "width: 200px;height:40px;", :class=>"form-control form-style-1" %></td>
+									<td>
+										<%= select_tag "workflow[#{workflow.id}][phase_conditions][]",options_from_collection_for_select(@workflows.where(:id.in => previous_phase_ids), "id", "phase_name", :selected => workflow.phase_conditions), :class=>"form-control form-style-1", :multiple=>"true", :title=>"Selected phases are required to be completed", :rel=>"tooltip" if workflow.on && !previous_phase_ids.blank? %>
+                		<% previous_phase_ids[i]=workflow.id if workflow.on %>
+									</td>
+									<td>
+										<% if !workflow.hardcode? %>
+		                  <div class="radioset" style="width: 80px;">
+		                    <%= radio_button_tag :"workflow[#{workflow.id}][on]", "true", workflow.on, id: "#{workflow.id}_on_true" %>
+		                    <%= label_tag :"workflow[#{workflow.id}][on]", "On", for: "#{workflow.id}_on_true" %>
+		
+		                    <%= radio_button_tag :"workflow[#{workflow.id}][on]", "false", !workflow.on, id: "#{workflow.id}_on_false" %>
+		                    <%= label_tag :"workflow[#{workflow.id}][on]", "Off", for: "#{workflow.id}_on_false" %>
+		                    <div class="clr"></div>
+		                  </div>
+		                <% end %>
+									</td>
+								</tr>
+              	<tr>
+                	<td colspan="7" class="new_phase_bar" align="right">
+										<% if !workflow.try(:workflow_milestone).present? %>
+                      <span class="glyphicon glyphicon-plus-sign menubar-color"></span>
+                      <%= link_to "Insert milestone", "#", "data-objectid" => workflow.id,class:"js_insert_new_milestone ", style:"margin-right:10px;" %>
+                    <% end %>
+                    <% unless @workflows.count == i + 1 %>
+                      <span class="glyphicon glyphicon-plus-sign menubar-color"></span>
+                  	  <%= link_to "Insert new phase", "#", class:"js_insert_new_phase " %> 
+                    <% end %>
+                	</td>
+              	</tr>
+                <% if workflow.try(:workflow_milestone).present? %>
+                  <tr>
+                    <td colspan="7">&nbsp;</td>
+                  </tr>
+                  <tr class="tasks_row task-row-main task-new ">
+                    <td><b>Milestone</b></td>
+                    <td>Name</td>
+                    <td colspan=2><%= text_field_tag "workflow[#{workflow.id}][workflow_milestone][title]", workflow.try(:workflow_milestone).try(:title), placeholder: "Name of your milestone", class:"form-control form-style-1" %></td>
+                    <td>Due Date</td>
+                    <td><%= text_field_tag "workflow[#{workflow.id}][workflow_milestone][due_date]", workflow.try(:workflow_milestone).try(:due_date), placeholder: "Date", class:"form-control form-style-1 datepicker_std" %>
+                    </td>
+                    <td>
+                      <a href="<%= polymorphic_path([:delete_milestone, @program, workflow])%>" data-method="delete"><i class="glyphicon glyphicon-trash menubar-color pull-right" style="text-align:right;"></i></a>
+                    </td>
+                  </tr>
+                  <% else %>
+                    <tr id="milestone-workflow-<%=workflow.id%>">
+                    </tr>
+                  <% end %>
+            		<tr>
+            			<td colspan="7">&nbsp;</td>
+            		</tr>
+          			<% end %>
+							</tbody>
+						</table>
+					</div>
+					<%= submit_tag "Save", id: "submit" %>
+  				<% end %>
+				</div>
+			</div>
+		</div>
+		
+    
+</div>
+  <div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <% if context_program.master_program? %>
+            <li><a href="#sec1">Set standard workflow</a></li>
+          <%end%>
+          <% @workflows.each_with_index do |workflow, i| %>
+            <li><a href="#<%= "sec#{i+2}"%>"><%= workflow.phase_name%></a></li>
+          <%end%>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+  $(".cloneble_setting").on("click", function(){
+    var elem = $(this)
+    $.post( 
+      elem.data("url"), 
+      $(".cloneble_setting :checked").serialize(),
+      function( data ) {
+        console.log(data)
+      }
+    );
+  });
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  $("[rel=tooltip]").tooltip();
+
+  $(".js_insert_new_milestone").on("click", function(e){
+    milestone = "<%= j render "workflows/milestone" %>".replace(/-1-/g,$(this).attr("data-objectid")) 
+    $("#milestone-workflow-"+$(this).attr("data-objectid")).replaceWith(milestone)
+    e.preventDefault()
+  });
+</script>

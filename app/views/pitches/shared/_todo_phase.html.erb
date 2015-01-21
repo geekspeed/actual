@@ -1,0 +1,9 @@
+<% if !phase.complete?(@pitch, current_user) && @pitch.phase_conditions_completed(phase) %>
+	<li class="done">
+	  <%= link_to "#{phase.phase_name}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, polymorphic_path([:achieved, @program, phase], pitch_id: @pitch.id), method: :put%>
+	</li>
+<% elsif phase.complete?(@pitch, current_user) && phase.undoable? %>	
+	<li class="deliver">
+  	  <%= link_to("Undo #{phase.phase_name}<i class='gn-icon gn-icon-undo gn-icon-glyphicon-todo' style='text-align:right;'></i>".html_safe, polymorphic_path([:undo, @program, phase], pitch_id: @pitch.id), method: :put) %>
+  	</li>
+ <% end %>

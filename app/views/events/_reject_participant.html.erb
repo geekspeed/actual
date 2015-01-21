@@ -1,0 +1,42 @@
+<div class="eventInsForm modal fade" id="reject_<%=event_record.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"><b>Message <%= event_record.user.try(:full_name)%></b></h4>
+			</div>
+
+			<form id= "form_<%=event_record.event_session.id%>" >
+				<div class="modal-body">
+						<input type="hidden" name="event_session_id" value="<%=event_record.event_session.id%>" />
+						<input type="hidden" name="program_id" value="<%=@program.id%>" />
+						<input type="hidden" name="event_record_id" value="<%=event_record.id%>" />
+						<input type="hidden" name="program_event_id" value="<%=event_record.event_session.program_event.id%>" />
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="col-sm-4 setting-font">Subject</div>
+							</div>
+							<div class="col-sm-12">
+								<input type="text" name="title" id="title" class="title form-control form-style-1" value="Oversubscription of event">
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="col-sm-4 setting-font">Description</div>
+							</div>
+							<div class="col-sm-12">
+								<textarea style="height: 100px; width: 300px;" name="description" class="description form-control form-style-1" cols="25" rows="8">We’re sorry, due to an over-subscription for this event we have had to reduce the number of participant.</textarea>
+							</div>
+						</div>
+					
+				</div>
+				
+				<div class="modal-footer">
+				  <%= link_to "Send", "#", id: "submit", :style => "margin-right:10px;", :"data-target"=>"#{event_record.event_session.id}", :class =>"reject_participant_button" %>
+					<%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal" %>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,13 @@
+
+input[type="file"]{
+  	width:160px !important;
+  	height: 31px;
+  	background: url("/images/browse.png") top left no-repeat;
+  	border: none;
+  	padding-top: 31px;
+  }
+  input[type="file"]:focus{
+  	width:160px !important;
+  	cursor: pointer;
+  	background: url("/images/browse_hover.png") top left no-repeat;
+  }

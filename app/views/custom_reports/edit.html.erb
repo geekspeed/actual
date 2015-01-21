@@ -1,0 +1,115 @@
+<%= javascript_include_tag "jquery.collapsiblepanel" %>
+<%= render "shared/bs_navbar"%>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+    <h2 class="titleLine title-normal"><span>Build Report</span></h2>
+    <%= nested_form_for [@program, @custom_report] do |f|%>
+      <%= render "form" , f: f%>
+    <% end %>
+  </div>
+</div>
+
+<div class= "select_graph_value" style="display:none;">
+  <%= select_tag "graph", options_for_select(context_program.reportings.map{|m| [m.graph_name, m.id]})%>
+</div>
+
+<div class= "select_table_value" style="display:none;">
+  <%= select_tag "table", options_for_select(["All fields", "Team", "Events attended", "Action list"]), class: "table_element"%>
+</div>
+
+<div class= "select_field_value" style="display:none;">
+  <%= select_tag "field", options_for_select(entity_fields(@custom_report.type))%>
+</div>
+
+<% if @custom_report.reload.custom_report_order.try(:order).present? %>
+   <% order = @custom_report.custom_report_order.order.gsub("-",",").split(",") %>
+   <% report_elements_arrange_order = Hash[*order].values %>
+   <% report_elements_arrange_order = (raw report_elements_arrange_order) %>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+ $(function() {
+<% if @custom_report.custom_report_order.try(:order).present? %>
+  var arrValuesForOrder = <%= report_elements_arrange_order %>;
+  var div = $("div.column"),
+      items = $("div.column div.portlet");
+
+  for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+      // arrValuesForOrder[i] element to move
+      // i = index to move element at
+      div.prepend(items.get(arrValuesForOrder[i] - 1));
+  }
+<% end %>
+
+  divs = $("div.portlet");
+  i =1;
+  divs.each(function() {
+    $(this).find('.panel-title').text("Element " + i);
+    i++;
+  })
+
+})
+
+$(document).ready(function(){
+    
+    var pitch_field = {};
+    <% @pitch_fields.each do |k,v|%>
+      pitch_field['<%=k%>'] = '<%=v%>'
+    <% end %>
+    
+    var user_field = {};
+    <% @user_fields.each do |k,v|%>
+      user_field['<%=k%>'] = '<%=k%>'
+    <% end %>
+
+    if($("#custom_report_type").val() == "Program"){
+      $('.element_option').find('option[value="Field"]').remove();
+    }
+    
+    $(document).on("change", "select.element_option", function(e){
+      var elem = $(this);
+      if(elem.val() == "Field"){
+        if($('#custom_report_type').val() == "Project"){
+          $.each(pitch_field, function(key, value) {
+            $('.field_element').append($("<option></option>")
+               .attr("value", value).text(key));
+          });
+        }
+        else if($('#custom_report_type').val() == "Participant"){
+          $.each(user_field, function(key, value) {
+            $('.field_element').append($("<option></option>")
+               .attr("value", value).text(key));
+          });
+        }
+      }
+    });
+  
+    $(document).on("change", "#custom_report_type", function(e){
+      if($(this).val() == "Project"){
+          if($('.element_option option[value="Field"]').length == 0){
+            $('.element_option').append('<option value="Field">Field</option>');
+          }
+          $('.field_element').find('option').remove();
+          $.each(pitch_field, function(key, value) {
+            $('.field_element').append($("<option></option>")
+               .attr("value", value).text(key));
+          });
+        }
+        else if($(this).val() == "Participant"){
+          if($('.element_option option[value="Field"]').length == 0){
+            $('.element_option').append('<option value="Field">Field</option>');
+          }
+          $('.field_element').find('option').remove();
+          $.each(user_field, function(key, value) {
+            $('.field_element').append($("<option></option>")
+               .attr("value", value).text(key));
+          });
+        }
+        else if($(this).val() == "Program"){
+          $('.element_option').find('option[value="Field"]').remove();
+        }
+    })
+  
+  })
+
+</script>

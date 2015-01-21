@@ -1,0 +1,8 @@
+  <ul id='leftmenu'>
+    <li class='<%= 'active' if params[:action] == "role_invitation" %>'>
+      <%= link_to("- Roles & Invitations", polymorphic_path([:role_invitation, :admin, Organisation])) %>
+    </li>
+    <li class='<%= 'active' if params[:action] == "customize_email" || params[:controller] == "admin/organisations/customize_email" %>'>
+      <%= link_to("- System Email Customizer", polymorphic_path([:customize_email,:admin, Organisation])) %>
+    </li>
+  </ul>

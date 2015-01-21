@@ -1,0 +1,210 @@
+<%= javascript_include_tag "readmore.js"%>
+<% content_for :title do %>
+  <% community = params[:code] ? params[:code].titleize : "Community"%>
+  <%= "#{context_program.try(:title)} - Community - #{community}" %>
+<% end %>
+<%#= render "shared/navbar", :page => "program_community" %>
+<%= render "dashboards/shared/sidebar", :page => params[:code] || "people" %>
+<% content_for :bs_sidebar do %>
+  <%= render "dashboards/shared/bs_sidebar", :page => params[:code] || "people" %>
+<% end %>
+<div id="rightcontent"  class="full_content">
+  <%= hidden_field_tag :page_name, "mentors_page" if params[:code] == "mentor"%>
+  <%= hidden_field_tag :page_name, "applicants_page" if params[:code] == "participant"%>
+  
+  <%if need?(["participant"], context_program) and params[:code] == "mentor"%>
+    <div class="block filter_block">
+      <h2 class="filter_title pull-left">Recommendations</h2>
+      <div class="recomendation_pack pull-right">
+        <%= select_tag :recomendation, content_tag(:option,'All',:value=>"all") + content_tag( :option,'Recommended for you',:value=>"recommended") + options_for_select(@match ? @match : []), {multiple: true, :"data-url"=> recommended_mentors_dashboard_path} %>
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  <% end %>
+  
+  <div class="innercontent people-row">
+    <% if show_button(@pitch, context_program, current_user)%>
+      <% ankor = get_custom_field_anchor %>
+        <% if can_create_pitch(ankor) %>
+          <%= link_to "#{workspace_sementic("to_do_list_join_this_team_txt","I would like to join this team")}<i class='gn-icon gn-icon-contacts gn-icon-glyphicon-todo' style='text-align:right;'></i>".html_safe, join_team_program_pitch_url(context_program, @pitch), class: "btn btn-default" %>
+      <%end%>
+      <br>
+      <br>
+      <br>
+    <%end%>
+    <%# cache @users do %>
+      <% if @users.present? %>
+        <% @users.each do |user| %>
+          <%= render "dashboards/person_tile", user: user %>
+        <% end %>
+      <% else %>
+        <div class="block">
+          <% term = params[:code].present? ? t("role_type:#{params[:code]}") : "member" %>
+          Sorry, but there is no <%= term %> that meets your requirements, please amend your selection criteria or contact your program administrator<a href="#missing_person" class="send_reminder fancybox_small pull-right">here</a>
+          <%= render "phases/shared/message_all", :code => "company_admins", pitch_id: params[:match] , :recipients => "#{t("role_type:company_admin", "s")}", :anchor_id => "missing_person" %>
+        </div>
+      <% end %>
+    <%# end %>
+    <div class="clr"></div>
+  </div>
+  <br/><br/>
+  <div class="clr"></div>
+</div><!-- #rightcontent -->
+
+<div style="display: none">
+  <div id="contact_user">
+    <h3 class='popup_heading'><b>Your message to</b></h3>
+    <br>
+    <%= form_for current_user.contact_requests.new, :url => user_contact_requests_path do |f|%>
+        <div>
+        <p>Subject:</p>
+        <%= f.text_field :subject, class: "title form-control"%>
+        <%= f.hidden_field :receiver_id%>
+        <%= f.hidden_field :program_id, value: context_program.try(:id)%>
+        </div>
+        <br />
+        <div>
+        <p>Message:</p>
+        <%=f.text_area :message, class: "form-control", cols: "25", rows: "8", style:"height:100px;"%>
+        <br>
+        </div>
+
+        <div>
+        <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+        <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+        <div class="clear"></div>
+        </div>
+    <% end %>
+    </div>
+  </div>
+
+<script type="text/javascript">
+ /* $(document).ready(function() {
+    var $container = $('.innercontent');
+    $container.imagesLoaded(function(){
+      $container.masonry({
+      itemSelector : '.box_310'
+      });
+    });
+  });*/
+ 
+ $('#recomendation').multiselect({
+    //hide: ["explode", 1000],
+    header: false,
+    selectedList: 4
+  });
+  
+
+    <% if @js_match.blank? %>
+	    $("select").multiselect("widget").find(":checkbox[value='all']").each(function() {
+	      this.click();
+	    });
+    <%else%>
+		<% @js_match.each do |match| %>
+	  	    $("select").multiselect("widget").find(":checkbox[value='<%=match%>']").each(function() {
+	  	      this.click();
+	  	    });
+	      <% end %>
+	      $("select").multiselect("widget").find(":checkbox[value='recommended']").click();
+    <% end %>
+
+  
+  $("select").on("multiselectclick", function(event, ui) {
+    var val = $(this).val();
+    checked = $("select").multiselect("widget").find("input:checked");
+    data = new Array();
+    for(i = 0; i < checked.length; i++){
+      data.push(checked[i].value);
+    }
+    if(ui.value == "recommended" && ui.checked){
+        rec_data = new Array();
+        <% @js_match.each do |match| %>
+          rec_data.push('<%=match%>');
+        <% end if !@js_match.blank?%>
+        $.ajax({
+          url: $(this).data("url"),
+          type: 'get',
+          data: {options: rec_data},
+          success: function(data){
+            if(data["status"] != "no"){
+               $("select").multiselect("widget").find("input:checked").prop('checked', false);
+               $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', true);
+               <% @js_match.each do |match| %>
+                $("select").multiselect("widget").find(":checkbox[value='<%=match%>']").prop('checked', true);
+                $("select").val('<%=match%>');
+               <% end if !@js_match.blank?%>
+               $("select").multiselect({selectedText: ""});
+              $('.innercontent').html(data);
+            }
+            else{
+              $("select").multiselect("widget").find("input:checked").prop('checked', false);
+              $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', true);
+              $('.innercontent').html('');
+              //window.location.reload();
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        })
+      }
+      else{
+        $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', false);
+        if(ui.value == "all" && ui.checked){
+          $("select").multiselect("widget").find('input:checked').prop('checked', false);
+          $("select").multiselect("widget").find(":checkbox[value='all']").prop('checked', true);
+        }
+        $.ajax({
+          url: $(this).data("url"),
+          type: 'get',
+          data: {options: data},
+          success: function(data){
+            if(data["status"] != "no"){
+              $('.innercontent').html(data);
+            }
+            else{
+              $('.innercontent').html('');
+              //window.location.reload();
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        })
+      }
+  });
+$('.bio-data').readmore({
+  speed: 75,
+  maxHeight: 75,
+  afterToggle: function(trigger, element, expanded) {
+    if(! expanded) { // The "Close" link was clicked
+      $('html, body').animate( { scrollTop: element.offset().top }, {duration: 100 } );
+    }
+  }
+});
+
+  $(".contact_cancel").on("click", function(e){
+    $.fancybox.close();
+    e.preventDefault();
+  })
+  
+   $(document).on('click', '.request_popup', function(e){
+     e.preventDefault();
+     $('.popup_heading').html("Your message to "+ $(this).data('user-name'));
+     $('#user_contact_request_receiver_id').attr('value', $(this).data('user-id'));
+   });
+
+</script>
+<style type="text/css">
+	input[type="checkbox"]{
+		width: 15px !important;
+	}
+	.ui-corner-all{
+		width: 165px !important;
+		font-weight: normal;
+	}
+	.ui-multiselect-menu{
+		width: 192px !important;
+	}
+</style>

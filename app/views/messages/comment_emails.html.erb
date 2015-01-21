@@ -1,0 +1,219 @@
+<script type="text/javascript" src="public/javascripts/nicEdit.js"></script>
+<% page = "setup_program"; ppage = "settings"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "settings" %>
+
+<div class="row page_head">
+  <div class="col-md-6">
+    <h3>
+      <i class="gn-icon gn-icon-envelope gn-icon-large"></i>
+      Comments Email
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Comment emails allows you to customize the email that participants receive when someone leaves a comment on one of their posts"></i>
+    </h3>
+  </div>
+  <div class="col-md-6 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href=<%= customize_email_messages_program_messages_path(context_program)%>>System Email Customizer</a> / <a href="#" class="active_bread"> Comments Email</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+	</div>
+</div>
+<%= form_tag comment_emails_save_program_messages_path, :method => :post do %>
+	<%= render "comment_form" %>
+<% end %>
+
+<script>
+         jQuery('.open_div_admin_comment').click(function(){
+                var cont = $(this).attr("name");
+                var has = $(this).hasClass("link_opened_div_in");
+                $(".open_div_admin_comment").removeClass("link_opened_div_in")
+                $(".closable_div_admin_comment").hide();
+                if(has != true){
+                        $(this).addClass("link_opened_div_in");
+                        $("."+cont).show();
+                        $("#"+cont).show();
+                }
+                return false;        
+        });
+
+         jQuery('.open_div_participant_comment').click(function(){
+                var cont = $(this).attr("name");
+                var has = $(this).hasClass("link_opened_div_in");
+                $(".open_div_participant_comment").removeClass("link_opened_div_in")
+                $(".closable_div_participant_comment").hide();
+                if(has != true){
+                        $(this).addClass("link_opened_div_in");
+                        $("."+cont).show();
+                        $("#"+cont).show();
+                }
+                return false;        
+        });
+
+
+         jQuery('.open_div_selector_comment').click(function(){
+                var cont = $(this).attr("name");
+                var has = $(this).hasClass("link_opened_div_in");
+                $(".open_div_selector_comment").removeClass("link_opened_div_in")
+                $(".closable_div_selector_comment").hide();
+                if(has != true){
+                        $(this).addClass("link_opened_div_in");
+                        $("."+cont).show();
+                        $("#"+cont).show();
+                }
+                return false;        
+        });
+
+        jQuery('.open_div_mentor_comment').click(function(){
+                var cont = $(this).attr("name");
+                var has = $(this).hasClass("link_opened_div_in");
+                $(".open_div_mentor_comment").removeClass("link_opened_div_in")
+                $(".closable_div_mentor_comment").hide();
+                if(has != true){
+                        $(this).addClass("link_opened_div_in");
+                        $("."+cont).show();
+                        $("#"+cont).show();
+                }
+                return false;        
+        });
+
+
+        jQuery('.open_div_panel_comment').click(function(){
+                var cont = $(this).attr("name");
+                var has = $(this).hasClass("link_opened_div_in");
+                $(".open_div_panel_comment").removeClass("link_opened_div_in")
+                $(".closable_div_panel_comment").hide();
+                if(has != true){
+                        $(this).addClass("link_opened_div_in");
+                        $("."+cont).show();
+                        $("#"+cont).show();
+                }
+                return false;        
+        });
+
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_admin_comment_admin');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_admin_comment_participant');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_admin_comment_selector');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_admin_comment_mentor');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_admin_comment_panel');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_participant_comment_admin');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_participant_comment_participant');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_participant_comment_selector');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_participant_comment_mentor');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_participant_comment_panel');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_selector_comment_admin');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_selector_comment_participant');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_selector_comment_selector');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_selector_comment_mentor');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_selector_comment_panel');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_mentor_comment_admin');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_mentor_comment_participant');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_mentor_comment_selector');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_mentor_comment_mentor');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_mentor_comment_panel');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_panel_comment_admin');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_panel_comment_participant');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_panel_comment_selector');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_panel_comment_mentor');
+});
+bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('comments_panel_comment_panel');
+});
+$('#comment-hint').on('click', function(e){
+    $("#comment-hintbox").toggle();
+});
+$(".hint-title[rel=tooltip]").tooltip();
+
+
+</script>
+
+<style>
+.hint-title{padding:5px;font-weight:bold;}
+#comment-hintbox{border:2px solid;
+border-radius:25px;}
+</style>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    $(".stick_me_initialize").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+    
+    $('.help-sign').tooltip();
+    
+  });
+  $(document).on( 'shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+  	var tab_id = ($(this).attr('href'));
+   $(tab_id+" .stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+});
+  $('#profTab a').click(function (e) {
+    $(".nicEdit-panelContain").parent().width('902px');
+    $(".nicEdit-panelContain").parent().next().width('900px');
+    $(".nicEdit-main").each(function(){ $(this).width("890px")});
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  $("[rel=tooltip]").tooltip();
+</script>

@@ -1,0 +1,43 @@
+<div id="mainnavi">
+	<%= render "header" %>
+  <!-- Checking if company id not equal 766 (bcs program). Here can be added condition for default(newer) programs. -->
+  <div class="clr"></div>
+</div>
+
+<div id="mailfunctionAnker"></div>
+<div id="sidebar">
+ 	<%= render "setup_header" %>
+</div>
+
+<div id="rightcontent"  class="two_sided_right_content invitees closable_h2" >
+  <%= form_for :program_invitations, :url =>role_invitation_save_admin_organisations_path(@program) do |f| %>
+    <%= render "program_invitations/form", :f => f %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+ bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('applicant_invitee');
+});
+  bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('applicant_welcome');
+});
+   bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('applicant_rejection');
+});
+$('#program-invitation-hint').on('click', function(e){
+    $("#program-invitation-hintbox").toggle();
+});
+$(".hint-title[rel=tooltip]").tooltip();
+</script>
+
+<style>
+.hint-title{padding:5px;font-weight:bold;}
+#program-invitation-hintbox{border:2px solid;
+border-radius:25px;}
+#program_invitations_invited_participants{ display:none;}
+#program_invitations_invited_participants{ display:none;}
+#program_invitations_invited_selectors{ display:none;}
+#program_invitations_invited_panellists{ display:none;}
+#program_invitations_invited_mentors{ display:none;}
+</style>

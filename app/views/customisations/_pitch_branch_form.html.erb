@@ -1,0 +1,50 @@
+<% @program.pitch_branches.where(:branch_name.ne => nil).ascending('created_at').each do |branch| %>
+  <table class="custom_field_duplicate_for_branch_<%=branch.id%> table table-striped" style="display:none">
+    <%= render "pitch_form_row", branch: branch %>
+  </table>
+  <%= content_tag :div, :class => "span10 well branch_form" do %>
+    <%= content_tag :div, :class => "edit_branch_name#{branch.id}" do%>
+      <%= content_tag :h2, branch.branch_name, :class=>"titleLine"%>
+      <%= link_to "Edit", "#", class: "editBranchName pull-right", style: "text-decoration: underline !important;", :data_custom_field_id => "#{branch.id}"%>
+    <% end %>
+    <div class="clear"></div>
+    <%= form_tag polymorphic_path([@program, :customisations]) do %>
+      <%= hidden_field_tag :ankor, @anchor %>
+      <%= hidden_field_tag :referee, @klass %>
+    
+      <table class="pitchcontent_<%=branch.id%>  table table-striped table-bordered" id="nrm_tbl">
+        <tbody>
+          <% @custom_fields.where(:branch_id => branch.id.to_s).each do |field| %>
+            <%= render "pitch_form_row", field: field, branch: branch %>
+          <% end %>
+          <%#= render "pitch_form_row", branch: branch %>
+        </tbody>
+      </table>
+    	<div>
+      	<%= link_to("+ Insert new field", "#", :class => "insert_custom_field_in_pitch pull-left", :data_branch_id => branch.id) %>
+      	<%= submit_tag "Save", :id => "submit" %>
+				<div class="clear"></div>
+			</div>
+    <% end %>
+  <% end %>
+  <%= content_tag :div, :style => "display:none", :class => "editable_branch_name_div#{branch.id}" do%>
+    <%= form_for branch, :url => program_pitch_branches_path(context_program, :branch_id => branch.id) do |form| %>
+      <p class="form-group">
+        <%= form.text_field :branch_name, :style => "width: 430px;"%>
+        <%= form.submit "Update", :id => "submit" %>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    $(document).on('click', ".editBranchName", function(e){
+      e.preventDefault();
+      $('.edit_branch_name'+$(this).attr("data_custom_field_id")).html($('.editable_branch_name_div'+$(this).attr("data_custom_field_id")).html());
+      $('.editable_branch_name_div'+$(this).attr("data_custom_field_id")).html('');
+    });
+  });
+
+</script>

@@ -1,0 +1,22 @@
+<% name = defined?(link) ? link.name : ''%>
+<% url = defined?(link) ? link.url : ''%>
+<% order = defined?(link) ? (link.order ? link.order : indx) : (first_entry ? 1 : '') %>
+<% custom_url = defined?(link) ? (!nav_links.include?(link.url) and link.custom_url) : false%>
+<% display_field = custom_url ? "" : "display:none;" %>
+<% selected = custom_url ? "custom_url" : url %>
+
+<div class="col-md-4" style="top:7px;">
+  <%= label_tag :menu%>
+</div>
+<div class="col-md-8">
+  <%= text_field_tag "navlinks[][name]", name, :class => "form-control form-style-1", :placeholder => "Enter the name of the menu item"%>
+</div>
+<div class="col-md-4" style="top:7px;">
+  <%= label_tag :link%>
+</div>
+<div class="col-md-8">
+  <%= hidden_field_tag "navlinks[][order]", order, class: "nav_link_order"%>
+  <%= hidden_field_tag "navlinks[][custom_url]", custom_url%>
+  <%= select_tag "dropdown", options_for_select(nav_links.map{|l| [l.titleize, l]}, selected), :prompt => "Select...", :custom_url => custom_url ? url : '', :class => "form-control form-style-1 links_dropdown", :style => "margin-bottom:10px;"%>
+  <%= text_field_tag "navlinks[][url]", url, :class => "form-control form-style-1 custom_url_field", :placeholder => "www.example.com", :style => display_field %>
+</div>

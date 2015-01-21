@@ -1,0 +1,23 @@
+<% page = page || "list_prgrams" %>
+<% content_for :title do %>
+  <%= @organisation.company_name %>
+<% end %>
+<% content_for :navigation do %>
+  <div id="mainnavi">
+<nav class="navbar navbar-default main-navbar-inner" role="navigation">
+<div class="navbar-collapse collapse" style="border: none;">
+
+    <ul class="nav navbar-nav">
+      <li class="<%= 'active' if page == "list_prgrams" %>">
+        <%= link_to("Programs", organisation_path(@organisation)) %>
+      </li>
+      <li class="<%= 'active' if page == "ecosystem" %>">
+        <%= link_to("Ecosystem", members_organisation_path(@organisation, :role_code => "participant")) %>
+      </li>
+    </ul>   
+
+</div>
+</nav>    
+    <div class="clr"></div>
+  </div>
+<% end %>

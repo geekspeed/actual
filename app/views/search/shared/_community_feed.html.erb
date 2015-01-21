@@ -1,0 +1,42 @@
+<div class="row people-row-inner">
+  <div class="col-md-3 col-user-img" style="text-align: center;">
+	<% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+	  <% if feed.link.present? %>
+	      <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+	          <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+	          <% emb_obj = emb_api.extract(:url => feed.link, :width => 235, height: 235)%>
+	          <%= show_attachment_search(emb_obj)%>
+	      <% end  %>
+	  <% elsif feed.attachment.present?%>
+	      <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + feed.attachment_url, :maxwidth => 525)%>
+	      <%= show_attachment_search(emb_obj)%>
+	  <% else %>
+	  	<%= image_tag("community_feed_msg.png", :class => "img-responsive user-img") %>
+	  <% end %>
+  </div>
+  <div class="col-md-8">
+  <h2 class="user-head">
+    <span class="user-name">
+      POST by <%= link_to feed.created_by.full_name, polymorphic_path(feed.created_by) %> ( <%= time_ago_in_words(feed.created_at) %> ago )
+    </span>
+    <span class="user_roles pull-right">
+      ( Content )
+    </span>
+  </h2>
+  <div class="user-content">
+    <p>	
+		<% if !feed.subject.blank? %>
+	      <span class="span-bio">Subject: </span>
+	      <span class="span-bio-content"><%= feed.subject %></span>
+	    <% end %>
+    </p>
+    <p style="margin-top:10px;">
+      <span class="span-bio-content"><%= feed.content.html_safe %></span>
+    </p>
+    <p style="margin-top:10px;">
+      <span class="span-bio-content"><%= link_to "Visit Post",polymorphic_path([feed.program, feed.pitch, feed]) %></span>
+    </p>
+    <!--<p class="user-admin-section"><b>Admin section</b></p>-->
+  </div>
+  </div>
+</div>

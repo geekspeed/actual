@@ -1,0 +1,646 @@
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+      e.preventDefault(); 
+    });
+})
+</script>
+<% if @organisation.try(:eco_summary).try(:eco_summary_order).try(:order).present? %>
+   <% order = @organisation.eco_summary.eco_summary_order.order.gsub("-",",").split(",") %>
+   <% eco_summary_arrange_order = Hash[*order].values %>
+   <% eco_summary_arrange_order = (raw eco_summary_arrange_order) %>
+<% end %>
+
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_32x32_style visible-lg" style="top:25%;width: 46px;">
+  <a class="addthis_button_facebook"></a>
+  <a class="addthis_button_twitter"></a>
+  <a class="addthis_button_linkedin"></a>
+  <a class="addthis_button_email"></a>
+  <a class="addthis_button_compact"></a>
+</div>
+<script type="text/javascript">
+  var addthis_config = {"data_track_addressbar":true};
+  var addthis_share =
+  {
+  templates: {
+  twitter: "<%=@organisation.try(:eco_summary).try(:ecosystem_name)%>"+ " " + window.location.href + " " + "<%=@organisation.try(:eco_summary).try(:twitter_url).blank? ? "" : ("@" + @organisation.try(:eco_summary).try(:twitter_url).split("/").last)%>",
+  },
+  url: window.location.href,
+  title: "<%=@organisation.try(:eco_summary).try(:ecosystem_name)%>",
+  description: "<%= strip_tags(@organisation.try(:eco_summary).try(:overview).try(:html_safe))%>",
+  }
+</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-534e5859519dae8c"></script>
+<!-- AddThis Button END -->
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // Jquery Sortable for drag and drop arrangment in program summary show page
+  <% if @organisation.try(:eco_summary).try(:eco_summary_order).try(:order).present? %>
+    var arrValuesForOrder = <%= eco_summary_arrange_order %>;
+    var div = $("div.column"),
+        items = $("div.column div.portlet");
+
+    for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+        // arrValuesForOrder[i] element to move
+        // i = index to move element at
+        div.prepend(items.get(arrValuesForOrder[i] - 1));
+    }
+  <% end %>
+  $( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+  });
+  // Drag and Drop Sorting End
+
+  var windowWidth = $(window).width();
+  if (windowWidth <= 500) {
+    var textHight = $('.company-description').height();
+    var boxHight = textHight+160;
+    $('.img-container').css("height",boxHight);
+  }
+  $(window).resize(function(){
+    $('.img-container').css("height","100%");
+  });
+
+$('.slider1').bxSlider({
+    slideWidth: 200,
+    minSlides: 1,
+    maxSlides: 5,
+    slideMargin: 10
+  });
+});
+</script>
+  <div class="img-container">
+    <div class="cover-pattern"></div>
+    <div class="container">
+      <div class="row">  
+        <div class="span12">
+          <% image_url = @organisation.try(:eco_summary).try(:lifestyle_background).present? ? @organisation.try(:eco_summary).try(:lifestyle_background).try(:url) : "/images/company.jpg"  %>
+          <%= image_tag(image_url, class:"img img-responsive", style:"margin: 0 auto;") %>
+          <div class="company_about">
+            <div class="company-identity">
+              <p class="company-name"><%= @organisation.eco_summary.try(:ecosystem_name) == "" ? @organisation.try(:company_name) : @organisation.eco_summary.try(:ecosystem_name) %></p>
+            </div>
+            <p class="company-description">
+              <%= @organisation.eco_summary.try(:overview).try :html_safe %>
+            </p>
+            <%= tag 'br', nil, nil%>
+            <%= tag 'br', nil, nil%>
+            <% if !user_signed_in? %>
+              <div class="company-btns">    
+                  <% if !user_signed_in? %>                 
+                  <div style="margin:auto;width:50%">
+                    <%= link_to  accept_invitation_url(User.new, :invitation_token => 0, :role => "ecosystem_member", :for => @organisation.id) do %>
+                      <button type="button" class="btn btn-default" style="min-width: 65%;"><span class="glyphicon glyphicon-plus-sign"> </span> <%= !@organisation.eco_summary.try(:join_ecosystem_button).blank? ? @organisation.eco_summary.join_ecosystem_button : "Join Ecosystem" %></button>
+                      <div class="clear"></div>
+                    <% end %>
+                  </div>
+                <% end %>
+                <div class="clear"></div>
+              </div>
+            <% end %>
+              <div class="clear"></div>
+            <% if @organisation.faqs.where(relevant_page: "eco_summary_page").any? %>
+              <div class="faq_cotainer">
+                <a href="#faq_content" class="faq_pop fancybox_large">FAQ</a>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- This div is related to drag and drop positions. Classes are responsible for drag and drop are column and portlet. SO If you wants to add any of the codition inside the div, please add the condition inside the portlet class block and never add any thing outside the portlet class block. 1 block of column and 8 block of portlet-->
+  <div class="column">
+      <div id="all-programs" class="portlet">
+        <% if @organisation.eco_summary.present? %>
+          <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.programs == true %>
+            <%= render "organisations/shared/programs" %>
+          <% end %>
+        <% else %>
+          <%= render "organisations/shared/programs" %>
+        <% end %>
+      </div>
+
+      <div class="portlet">
+      <% if @organisation.eco_summary.present? && @organisation.eco_summary.eco_plans.present? && ((@organisation.eco_summary.try(:eco_plan_public) && !user_signed_in?) || user_signed_in?) %>
+        <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.eco_plan == true %>
+          <div id="program_plans" class="jumbotron plan-container">
+            <div class="container content-wrap">
+              <h2 class="company-page-title">
+                <%= e("eco_summary:eco_plan") ? e("eco_summary:eco_plan") : "Eco plan" %>
+              </h2>
+              <div class="border-bottom-dark"></div>
+              <div class="bs-example bs-example-tabs">
+                <ul class="nav nav-tabs" id="myTab">
+                  <li class="active"><a data-toggle="tab" href="#home">Plan</a></li>
+             <!-- <li class=""><a data-toggle="tab" href="#profile">Tab two name</a></li> -->
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  <div id="home" class="tab-pane fade active in">
+                    <div class="table-responsive">
+                      <table class="table table-striped program_table table-bordered">
+                        <tr>
+                          <th width="20%">Date &amp; Time</th>
+                          <th width="40%">Activity</th>
+                          <th width="30%">Description</th>
+                          <th width="10%">Docs</th>
+                        </tr>
+                        <% i = @organisation.try(:eco_summary).try(:eco_plans).count %>
+                        <% @organisation.eco_summary.eco_plans.each do |plan| %>
+                          <tr id="plan_<%=i%>">
+                            <td><%= plan.date.try(:event_format) %><br><%= "#{plan.time_from} - #{plan.time_to}" %></td>
+                            <td style="text-align: left"><%= plan.activity %></td>
+                            <td><%= plan.location %></td>
+                            <td><%= plan.attachment.present? ? link_to("view", plan.attachment.url, :target => "_blank") : "N/A" %></td>
+                          </tr>
+                          <%i-=1%>
+                        <% end %>
+                      </table>
+                    </div>
+                  </div>
+      <!--                  <div id="profile" class="tab-pane fade">
+                          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                        </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      </div>
+      <div id="goal" class="portlet">
+  
+        <% if @organisation.eco_summary.present? && @organisation.eco_summary.try(:goal).present?  %>
+          <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.goal == true %>
+          <div class="jumbotron goal-container">
+            <div class="container content-wrap">
+              <h2 class="company-page-title">
+                <%= e("eco_summary:goal") ? e("eco_summary:goal") : "Goal" %>
+              </h2>
+              <div class="border-bottom"></div>
+              <div class="company-page-text">
+                <%= @organisation.eco_summary.try(:goal).try(:html_safe) %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div id="criteria" class="portlet">
+        <% if @organisation.eco_summary.present? && @organisation.eco_summary.try(:entry_criteria).present? %>
+          <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.entry_criteria == true %>
+            <div class="jumbotron metrics-container">
+              <div class="container content-wrap">
+                <h2 class="company-page-title">
+                  <%=e("eco_summary:entry_criteria") ? e("eco_summary:entry_criteria") : "Entry Criteria"%>
+                </h2>
+                <div class="border-bottom-dark"></div>
+                <div class="other-data-container-data ent_data">
+                  <% if @organisation.eco_summary.present? %>
+                    <% @organisation.eco_summary.entry_criteria.each do |ec| %>
+                      <h4 class="tagContainer">
+                        - <%= ec %>
+                      </h4>
+                      <br />
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div id="terms_and_conditions" class="portlet">
+        <% if @organisation.eco_summary.present? && @organisation.eco_summary.try(:terms).present? %>
+          <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.terms == true %>
+            <div class="jumbotron other-data-container">
+              <div class="container content-wrap data-wrap">
+                <h2 class="company-page-title">
+                  <%= e("eco_summary:terms") ? e("eco_summary:terms") : "Terms &amp; Conditions".html_safe %>
+                </h2>
+                <div class="border-bottom-dark"></div>
+                <div class="other-data-container-data terms_data">
+                  <%= @organisation.eco_summary.terms.try(:html_safe) if @organisation.eco_summary.present?%>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div id="our_partners" class="portlet">
+      <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.partners == true %>
+          <% if @organisation.eco_summary.eco_partners.present? %>
+            <div class="jumbotron partners-container">
+              <h2 class="company-page-title partners-text">
+                <%= e("eco_summary:partners") ? e("eco_summary:partners") : "Partners"%>
+              </h2>
+              <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators logo-ind">
+                  <% slider_point = 0 %>
+                  <% @organisation.eco_summary.eco_partners.each_with_index do |partner,index| %>
+                    <% if index%5 == 0 %>
+                      <li data-target="#carousel-example-generic" data-slide-to="<%=slider_point%>" class="<%= "active" if slider_point == 0%>"></li>
+                      <% slider_point = slider_point+1 %>
+                    <% end %>
+                  <% end %>
+                </ol> 
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">  
+                  <% @organisation.eco_summary.eco_partners.each_with_index do |partner,index| %>
+                    <% if index%5 == 0 %>
+                      <% if index != 0 %>
+                        </ul>
+                        </div>
+                        </div>
+                      <% end %>
+                      <div class="item <%= "active" if index == 0%>">
+                        <div class="logo_item">
+                      <ul class="logos_container">
+                    <% end %>
+                      <!--<% image_ext = ["jpg", "gif", "jpeg", "bmp", "png"] %>
+                          <% if image_ext.detect{|w| w == partner.try(:document).try(:file).try(:extension).try(:downcase)}.present? %>
+                        <div id="partner_document_<%= index %>" style="display:none;">
+                      <div class="partner-title">
+                        <h2>Partner's Document</h2>
+                      </div>
+                          <%= image_tag(partner.document.url) %>
+                        </div>
+                          <% else %>
+                            <div id="partner_document_<%= index %>" style="display:none;">
+                              <div class="partner-title">
+                        <h2>Partner's Document</h2>
+                        <p>Please Click the download button to download the document</p>
+                        </div>
+                        <div id="accordion" style="padding:20px;">
+                                <a href="<%=partner.document.url%>" class="btn btn-default"><%= image_tag(partner.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10", :style=>"height:20px;margin-right:10px;") %>Download</a>
+                              </div>
+                            </div>
+                          <% end %>
+                      <li><a href="#partner_document_<%= index %>" class="fancybox_large"><%= image_tag(partner.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10") %></a></li>-->
+                      <% link = (partner.website.blank? ? partner.document.url : partner.website) %>
+                    <li><a href="<%=link %>" target="_blank"><%= image_tag(partner.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10") %></a></li>
+                    <% if index == @organisation.eco_summary.eco_partners.size-1 %>
+                      </ul>
+                      </div>
+                      </div>
+                    <% end %>
+                  <% end %> 
+                </div>
+                    
+              <!-- Controls -->
+              <a class="left carousel-control logo-control" href="#carousel-example-generic" data-slide="prev">
+                <img src="/images/left_arrow.png" />
+              </a>
+              <a class="right carousel-control logo-control" href="#carousel-example-generic" data-slide="next">
+                <img src="/images/right_arrow.png" />
+              </a>
+            </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div id="quotes" class="portlet">
+        <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.quotes == true %>
+          <% if @organisation.eco_summary.eco_quotes.present? %>
+            <div class="jumbotron metrics-container quotes-content">
+            <div class="container content-wrap">
+              <h2 class="company-page-title">
+                <%= e("eco_summary:quotes") ? e("eco_summary:quotes") : "Quotes" %>
+              </h2>
+              <div class="border-bottom-dark"></div>
+              <% @organisation.eco_summary.eco_quotes.each_with_index do |quote| %>
+              <div class="row quote_section">
+                <div class="client-img col-md-2">
+                  <div class="testimonialAuthor clearfix">
+                    <div class="author">
+                      <img height="80" width="80" alt="Gurpreet_Jagpal" class="attachment-client-img" src="<%=quote.avatar.url %>">
+                    </div>
+                  </div>
+                </div>
+                <div id="<%= quote.try(:name).parameterize('_')%>"class="col-md-10 testimonial new-section">
+                  <div class="cbp-qtcontent" style="">
+                    <div class="client_info">
+                      <h5 class="name pull-left"><%= quote.name if quote.name.present? %>, <i><%= quote.organisation_name if quote.organisation_name.present? %></i></h5>
+                      <!--<p class="job pull-right">Client</p>-->
+                      <div class="clear"></div>
+                    </div>
+                    <div class="testimonialContent">
+                      <p><%= quote.content if quote.content.present? %></p>
+                      <span class="arrowdown"></span>
+                    </div>
+                   </div>
+                </div>
+              </div>
+              <% end %>
+            </div>
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div id="free_form" class="portlet">
+      <% if @organisation.eco_summary.try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.freeform == true && ((!user_signed_in? && @organisation.eco_summary.try(:eco_free_form_public) || user_signed_in? )) %>
+          <% if @organisation.eco_summary.eco_free_forms.present? %>
+                <% @section_title = 0 %>
+                <% @organisation.eco_summary.eco_free_forms.sort_by(&:created_at).each do |free_form| %>
+                   <% if !free_form.section_title.blank? && !free_form.section_id.blank? %>
+                  <div id="<%=free_form.try(:section_title).parameterize('_')%>"class="jumbotron <%= @section_title%2 == 0 ? "other-data-container" : "metrics-container" %>">
+                    <div class="container content-wrap data-wrap">
+                      <h2 class="company-page-title"><%= free_form.section_title %></h2>
+                      <div class="border-bottom-dark"></div>
+                      <% @organisation.eco_summary.eco_free_forms.sort_by(&:created_at).each do |free_form_field| %>
+                        <% if free_form_field.section_title.blank? && free_form_field.section_id == free_form.section_id %>
+                                        <% if !free_form_field.try(:sub_title).blank? %>
+                                          <ul class="nav nav-tabs" id="myTab">
+                                            <li class="active"><a data-toggle="tab" href="#"><%= free_form_field.try(:sub_title) %></a></li>
+                                          </ul>
+                                        <% end %>
+                                        <% if !free_form_field.try(:body).blank? %>
+                                            <div class="other-data-container-data">
+                                              <%= free_form_field.try(:body).try(:html_safe) if @organisation.eco_summary.present? %>
+                                            </div>
+                                        <% end %>
+                                    <% end %>
+                                  <% end %>
+                    </div>
+                  </div>
+                  <% @section_title = @section_title+1 %>
+                  <% end %>
+
+                <% end %>
+          <% end%>
+      <% end %>
+      </div>
+
+      <div class="portlet">
+      <% if @organisation.try(:eco_summary).try(:eco_summary_customization).present? && @organisation.eco_summary.eco_summary_customization.casestudy == true %>
+          <% if @organisation.eco_summary.eco_case_studies.present? %>
+            <div class="jumbotron partners-container">
+              <h2 class="company-page-title partners-text"><%= @organisation.eco_summary.case_study_title %></h2>
+              <div id="carousel-example-generic-case-study" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators logo-ind">
+                  <% slider_point = 0 %>
+                  <% @organisation.eco_summary.eco_case_studies.each_with_index do |case_study,index| %>
+                    <% if index%5 == 0 %>
+                      <li data-target="#carousel-example-generic" data-slide-to="<%=slider_point%>" class="<%= "active" if slider_point == 0%>"></li>
+                      <% slider_point = slider_point+1 %>
+                    <% end %>
+                  <% end %>
+                </ol> 
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">  
+                  <% @organisation.eco_summary.eco_case_studies.each_with_index do |case_study,index| %>
+                    <% if index%5 == 0 %>
+                      <% if index != 0 %>
+                        </ul>
+                        </div>
+                        </div>
+                      <% end %>
+                      <div class="item <%= "active" if index == 0%>">
+                        <div class="logo_item">
+                      <ul class="logos_container">
+                    <% end %>
+                      <% image_ext = ["jpg", "gif", "jpeg", "bmp", "png"] %>
+                          <% if image_ext.detect{|w| w == case_study.try(:document).try(:file).try(:extension).try(:downcase)}.present? %>
+                        <div id="case_study_document_<%= index %>" style="display:none;">
+                      <div class="partner-title">
+                        <h2>Document</h2>
+                      </div>
+                          <%= image_tag(case_study.document.url) %>
+                        </div>
+                          <% else %>
+                            <div id="case_study_document_<%= index %>" style="display:none;">
+                              <div class="partner-title">
+                        <h2>Document</h2>
+                        <p>Please Click the download button to download the document</p>
+                        </div>
+                        <div id="accordion" style="padding:20px;">
+                                <a href="<%=case_study.document.url%>" target="_blank" class="btn btn-default"><%= image_tag(case_study.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10", :style=>"height:20px;margin-right:10px;") %>Download</a>
+                              </div>
+                            </div>
+                          <% end %>
+                      <li><a href="#case_study_document_<%= index %>" class="fancybox_large"><%= image_tag(case_study.logo.url, :class=>"img img-responsive pull-left", :effect=>"mono", :inverse=>"true", :speed=>"10") %></a></li>
+                    <% if index == @organisation.eco_summary.eco_case_studies.size-1 %>
+                      </ul>
+                      </div>
+                      </div>
+                    <% end %>
+                  <% end %> 
+                </div>
+                    
+              <!-- Controls -->
+              <a class="left carousel-control logo-control" href="#carousel-example-generic-case-study" data-slide="prev">
+                <img src="/images/left_arrow.png" />
+              </a>
+              <a class="right carousel-control logo-control" href="#carousel-example-generic-case-study" data-slide="next">
+                <img src="/images/right_arrow.png" />
+              </a>
+            </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div id="blog-post" class="portlet">
+        <% if display_eco_blog?%>
+          <div class="jumbotron other-data-container" id="blog">
+            <div class="container content-wrap">
+              <h2 class="company-page-title"><%= t("program_summary:blog") ? t("program_summary:blog") : "Blog"%></h2>
+              <div class="border-bottom-dark"></div>
+              <div class="other-data-container-data">
+                <div id="owl-example" class="owl-carousel recent-posts row owl-theme" style="opacity: 1; display: block;">
+                  <% eco_blog_posts.each do |feed| %>
+                    <div class="col-md-12 blog_item">
+                      <% if feed.link.present? %>
+                        <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                          <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+                          <% if is_image?(feed.link) %>
+                            <%= link_to image_tag(feed.link, :class => "img img-responsive"), buzz_organisation_path(@organisation), :target => "_blank" %>
+                          <% else %>
+                            <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+
+                            <% emb_obj = emb_api.extract(:url => feed.link, :maxwidth => 525)%>
+                            <%= show_attachment_on_summary(emb_obj)%>
+                          <% end %>
+                        <% end  %>
+                      <% elsif feed.attachment.present?%>
+                        <% if is_image?(feed.attachment.url) %>
+                          <%= link_to image_tag(root_url.chomp('/') + feed.attachment_url, :class => "img img-responsive"), buzz_organisation_path(@organisation), :target => "_blank"%>
+                        <% else %>
+                          <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+
+                          <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + feed.attachment_url, :maxwidth => 525)%>
+                          <%= show_attachment_on_summary(emb_obj)%>
+                        <% end %>
+                      <% else %>
+                        <a href="<%=buzz_organisation_path(@organisation)%>"><img class="img img-responsive" style="margin: 0 auto;" src="/images/company.jpg" alt="Company"></a>
+                      <% end %>
+                      <article>
+                        <div class="date">
+                          <span class="day"><%= feed.created_at.strftime("%d")%></span>
+                          <span class="month"><%= feed.created_at.strftime("%b")%></span>
+                        </div>
+                        <% if !feed.subject.blank? %>
+                          <h4><a href="<%=buzz_organisation_path(@organisation)%>"><%= feed.try(:subject) %></a></h4>
+                        <% end %>
+                        <p><%= truncate_html(feed.try(:content).html_safe, length: 150, omission: '...') %> 
+                          <% if user_signed_in? %>
+                            <a class="read-more" href="<%= buzz_organisation_path(@organisation)%>">read more <i class="glyphicon glyphicon-chevron-right"></i></a>
+                          <% else %>
+                            <a class="read-more fancybox" href="#eco-blog-read-more">read more <i class="glyphicon glyphicon-chevron-right"></i></a>          
+                          <% end %>
+                        </p>
+                    </article>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+</div>
+<!--        <div class="jumbotron social-container">
+          <div class="container content-wrap social-wrap">
+            <div class="row no-padding-row">
+              <div class="col-md-8">
+                <p class="twitter_title">@Accelerator</p>
+                <div>
+                  
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="fb-like-box" data-href="http://www.facebook.com/FacebookDevelopers" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true" style="background: #fff;"></div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+<div class="partners_arrow"></div>
+<div class="jumbotron sayhi-container">
+  <p class="say_hi">Say Hi, Get In Touch</p>
+  <div class="company_social_icon">
+    <div class="center_data">
+      <ul>
+        <% if @organisation.eco_summary.present? %>
+          <li>
+            <%= link_to_if(@organisation.eco_summary.facebook_url.present?, "", @organisation.eco_summary.facebook_url, class: "icon28 icon-facebook facebook", target: "_blank") %>
+          </li>
+          <li>
+            <%= link_to_if(@organisation.eco_summary.twitter_url.present?, "", @organisation.eco_summary.twitter_url, class: "icon28 icon-twitter twitter", target: "_blank") %>
+          </li>
+          <li>
+            <%= link_to_if(@organisation.eco_summary.linkedin_url.present?, "", @organisation.eco_summary.linkedin_url, class: "icon28 icon-linkedin linkedin", target: "_blank") %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="company_footer">
+    <p class="copy_rights">© 2014 <%= @organisation.try(&:company_name)%>, All Rights Reserved.</p>
+    <%if @organisation.try(:eco_summary).try(:terms_to_footer) and (@organisation.try(:eco_summary).try(:terms) != "<br>") %>
+      <a href="#terms" class="fancybox">Terms</a>
+      <span> | </span>
+    <% end %>
+    <%if @organisation.try(:eco_summary).try(:eco_summary_customization).
+    try(:privacy_policy) and (@organisation.try(:eco_summary).try(:privacy_policy) != "<br>") %>
+      <a href="#privacy" class="fancybox">Privacy Policy</a>
+      <span> | </span>
+    <% end %>
+    <%#= mail_to(emails.join(','), "Contact Us") %>
+    <a href="#contact_us" class="fancybox">Contact Us</a><%= render "organisations/shared/contact_us", :organisation=> @organisation%>
+    <div>
+      <p class="pull-right">Powered by <a href="<%= root_url%>">Apptual.</a></p>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+<div id="faq_content" style="display: none;">
+  <div class="faq_title">
+    <h2>FAQ</h2>
+    <p>Frequently asked questions for <%= @organisation.title %></p>
+  </div>
+  <div class="panel-group" id="accordion">
+    <% @organisation.faqs.where(relevant_page: "eco_summary_page").asc(:created_at).each_with_index do |faq, i| %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse<%= i+1 %>">
+              <span class="question_no"><%= i+1 %></span>
+                <span class="question_text">
+                <%= faq.question %>
+                </span>
+              <div class="clear"></div>
+            </a>
+          </h4>
+        </div>
+        <div id="collapse<%= i+1 %>" class="panel-collapse collapse">
+          <div class="panel-body">
+            <%= faq.answer.html_safe %>
+            <div><% if faq.link.present? %>
+                    <% if !faq.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                      <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+                      <% if is_image?(faq.link) %>
+                        <%= link_to image_tag(feed.link, :style => "width: 400px;"), faq.link, :target => "_blank" %>
+                      <% else %>
+                         <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                        <% emb_obj = emb_api.extract(:url => faq.link, :maxwidth => 525)%>
+                        <%= show_attachment(emb_obj)%>
+                      <% end %>
+                  <% end  %>
+                <% elsif faq.attachment.present?%>
+                    <% if is_image?(faq.attachment.url) %>
+                      <%= link_to image_tag(root_url.chomp('/') + faq.attachment_url, :style => "width: 400px;"), (root_url.chomp('/') + faq.attachment_url), :target => "_blank"%>
+                    <% else %>
+                      <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                      <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + faq.attachment_url, :maxwidth => 525)%>
+                      <%= show_attachment(emb_obj)%>                       
+                    <% end %>
+                <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div id="privacy" class="terms-conditions" style="display:none;">
+  <style type="text/css">   b {
+      color: #000000;
+    }
+  </style>
+  <div style="text-align:justify; margin-right: 5px; font-size: 14px;">
+    <div align="center"><h1 style="font-size: 18px;"><b>Privacy Policy</b></h1></div>
+    <%= content_tag :p do%>
+      <%= raw @organisation.try(:eco_summary).try(:privacy_policy)%>
+    <% end %>
+  </div>
+</div>
+<div id="terms" class="terms-conditions" style="display:none;">
+  <style type="text/css">   b {
+      color: #000000;
+    }
+  </style>
+  <div style="text-align:justify; margin-right: 5px; font-size: 14px;">
+    <div align="center"><h1 style="font-size: 18px;"><b>Terms</b></h1></div>
+    <%= content_tag :p do%>
+      <%= raw @organisation.try(:eco_summary).try(:terms)%>
+    <% end %>
+  </div>
+</div>
+<div id="eco-blog-read-more" style="display: none;">
+    <div class="">
+    <p style="display: inline;">You need to login to read the article</p>
+    <% is_subdomain = valid_subdomain(current_subdomain)%>
+    <%= link_to "Login", (is_subdomain ? buzz_organisation_path(@organisation, :subdomain =>false) : buzz_organisation_path(@organisation)), style:"color: white; margin-right: 25px;",class: "btn btn-default pull-right" if controller_name == "organisations" and !user_signed_in?%>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<% content_for :title do %>
+  <%= "Ecosystem" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "about_me" %>
+<%#= render "devise/shared/sidebar", page: "ecosystem" %>
+<div id="rightcontent" class="two_sided_right_content">
+<div class="block">  
+<table class="tbl table table-striped" width="100%">
+    <thead>
+      <tr>
+        <th style="font-weight: bold">Ecosystem</th>
+        <th style="font-weight: bold">Location</th>
+        <th style="font-weight: bold">Market</th>
+        <th style="font-weight: bold"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @ecosystems.each do |ecosystem| %>
+        <tr>
+          <td><%= ecosystem.name %></td>
+          <td><%= ecosystem.location %></td>
+          <td><%= ecosystem.market %></td>
+          <td>
+            <%= link_to_if(current_user.super_admin?, image_tag("ico-delete.png", :alt => "Delete",  :style => "margin-top:-10px"), polymorphic_path([:ecosystems]), :method => :delete, :"data-confirm" => "Are you sure") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+  <%= link_to "Add Ecosystem", "#add_ecosystem", :class=>"button fancybox_small" %>
+  <div style="display: none">
+    <div id="add_ecosystem">
+        <%= form_for Ecosystem.new do |f| %>
+          <p>
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "required" %>
+          </p>
+          <p>
+            <%= f.label :description %>
+            <%= f.text_area :description, :style => "width: 200px" %>
+          </p>
+          <p>
+            <%= f.label :location %>
+            <%= f.text_field :location %>
+          </p>
+          <p>
+            <%= f.label :market %>
+            <%= f.text_field :market %>
+          </p>
+          <p>
+            <%= f.submit "Save", :id => "submit" %>
+          </p>
+        <% end %>
+    </div>
+  </div>
+</div>

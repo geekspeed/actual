@@ -1,0 +1,45 @@
+<% if context_program.collaboration_request %>
+   <li class="branded">
+    <%= link_to "Collaboration request<i class='gn-icon gn-icon-collaboration gn-icon-glyphicon-todo' style='text-align:right;'></i>".html_safe, "#collaboration", :class=>"fancybox_small" %>
+  </li>
+  <!-- lightboxes -->
+  <div style="display: none">
+    <div id="collaboration">
+    <% unless @pitch.collaborate_requesters.include?(current_user.id.to_s) %>
+	    <h3><b>Collaboration request</b></h3>
+	    <br>
+	    <%= form_tag be_collaborater_program_pitch_path(context_program, @pitch) do %>
+	        <div>
+	        <!--<p>Subject:</p>
+	        <input type="text" name="subject" id="title" class="title form-control" value="#SENDERFIRSTNAME #SENDERLASTNAME is inviting you to join #PROGRAMNAME as a #MENTORROLENAME for #PROJECTNAME">
+	        </div>
+	        <br />-->
+	        <div>
+	        <p>Message:</p>
+	        <textarea style="height: 100px;" name="message" class="form-control" cols="25" rows="8"></textarea>
+	        <br>
+	        </div>
+	
+	        <div>
+	        <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+	        <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+	        <div class="clear"></div>
+	        </div>
+	    <% end %>
+	    </div>
+	  </div>
+  <% else %>
+	<div>
+        <p>Your request is pending for consideration.</p>
+	</div>
+  <% end %>
+</div>
+<% end %>
+<script>
+  $(document).ready(function(e){
+    $(".contact_cancel").on("click", function(e){
+      $.fancybox.close();
+      e.preventDefault();
+    })
+  });
+</script>

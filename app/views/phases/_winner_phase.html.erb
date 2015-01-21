@@ -1,0 +1,9 @@
+<div class="block">
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "Have the #{t("role_type:selector", "p")} chosen the finalists?" %></div>
+    <a href="#winner_phase" class="send_reminder fancybox_small pull-right">Send Thank You</a>
+    <%= render "phases/shared/message_all", :code => "selectors", :recipients => "#{t("role_type:selector", "p")}", :anchor_id => "winner_phase" %>
+    <div class="user_status pull-right"><%= "Yes (#{@selectors.size})" %></div>
+    <div class="clr"></div>
+  </div>
+</div>

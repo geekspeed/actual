@@ -1,0 +1,75 @@
+<div class="row portlet" id=<%= field_id %>>
+  <div  class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header">
+        <div class="panel-title title_option" style="padding:10px 25px;">
+          Question <%=indx%>
+        </div>
+        <% if ques%>
+          <%= link_to "Delete",survey_question_path(@survey,ques),:method => "DELETE", :style => "margin-top:10px",:class => "delete_ques pull-right"%>
+        <%else%>
+          <%= link_to "Delete","#", :style => "margin-top:10px",:class => "hide_custom_field pull-right"%>
+        <% end %>
+        <%= link_to "Copy   ","#", :style => "margin: 10px 10px 0 0;",:class => "copy_custom_field pull-right"%>
+      </div>
+      <div class="panel-body form-horizontal">
+        <div class="ques_div"> 
+          <div class="row">
+            <%=content_tag :div, class: "col-md-2" do%>
+              <%= label_tag "Question Text" %>
+              <%= hidden_field_tag "question[][id]", ques.try(:id), class: "ques_id_field"%>
+            <%end%>
+            <%=content_tag :div, class: "col-md-8" do%>
+              <%= text_field_tag "question[][question_text]", ques.try(:question_text), class: "form-control"%>
+            <%end%>
+            <%=content_tag :div, class: "col-md-2" do%>
+              <%= link_to "Add Help", "#help_content_ques", :class => "fancybox add_custom_help pull-right" ,:"data-url" => add_custom_ques_program_help_contents_path(@program, field_name: ques.try(:id)), :"data-field-name" => ques.try(:id)%>
+            <%end%>
+          </div>
+          <div class="ques_select">
+            <div class="row">
+              <%=content_tag :div, class: "col-md-2" do%>
+                <%= label_tag "Question Type" %>
+              <%end%>
+              <%=content_tag :div, class: "col-md-8" do%>
+                <%= select_tag "question[][question_type]",content_tag(:option,'Choose Question Type',:value=>"")+options_from_collection_for_select(ques_type, :to_s, :humanize, ques.try(:question_type)), class: "form-control"%>
+              <%end%>
+              <br>
+            </div>
+          </div>
+          <div class= "answer_div options" style=<%=display_options(ques) ? "" : "display:none" %>>
+            <div class="row">
+              <%=content_tag :div, class: "col-md-2" do%>
+                <%= label_tag "Answer Options" %>
+              <% end %>
+              <%=content_tag :div, class: "col-md-8" do%>
+                <%= text_area_tag "question[][answer_options]", answer_options(ques), rows: 5, class: "options_field_area form-control", :placeholder => "Comma seperated options"%>
+              <% end %>
+          </div>
+            <br>
+          </div>
+          <% if ques.try(:question_type) == "branch_field" %>
+            <div class="options">
+              <% ques.answer_options.each do |option| %>
+                <%questions = @questions.where(parent_id: ques.id.to_s, parent_option: option)%>
+                <%if questions.any? %>
+                  <div class="option_row">
+                    <h4 class="option_name" >Options for <%= option %></h4>
+                    <% questions.each do |option_field|%>
+                      <%= render "surveys/options_question_form", field: option_field %>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+          <label for="question_required">
+            <%= check_box_tag "required", true, ques.try(:required), :class=>"question_required", :style => "width:20px; margin-right:0px;"%>
+            Required
+          <%= hidden_field_tag "question[][required]", ques.try(:required), class: "required_checkbox"%>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

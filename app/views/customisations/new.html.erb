@@ -1,0 +1,413 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - #{params[:ankor]} form builder" %>
+<% end %>
+
+<% page = "setup_program"; ppage = "applicant_form_builder"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "applicant_form_builder" %>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".insert_custom_field").on("click", function(e){
+      var text = $(".custom_field_duplicate tbody").html();
+      $("table.pitchcontent tr:last").after(text);
+      e.preventDefault();
+    });
+    $(".insert_between_fields").on("click", function(e){
+      e.preventDefault();
+      var text = $(".custom_field_duplicate tbody").html();
+      //$(this).prev().after(text);
+      //$(this).parent().find("table").append(text);
+      $(this).prev().append(text);
+    });
+    $(".insert_custom_field_in_pitch").on("click", function(e){
+      var text = $(".custom_field_duplicate tbody").html();
+      $("table.pitchcontent_"+$(this).attr("data_branch_id")+" tr:last").after(text);
+      e.preventDefault();
+    });
+    $(document).on("change blur", ".addPositionField", function(e){
+      e.preventDefault();
+      var parent_tr = $(this).parents("tr");
+      if(<%= params[:ankor] == "pitch"%>){
+        var set = parent_tr.parents("div.field_id").prev().find("input, textarea").attr("id");
+      }
+      else{
+        var set = parent_tr.parents("div.field_id").prev().prev().find("input:visible, textarea:visible").attr('id');
+      }
+      $(parent_tr).find("input[name='custom_fields[][position]'], input[name='custom_fields[][options_fields][][position]']").val(set);
+    });
+    $("form").on("click", "a.deleteTableRow", function(e){
+      var parent_tr = $(this).parents("tr");
+      if(parent_tr.find("input[name='custom_fields[][id]']").size() > 0){
+        var set = $(parent_tr).find("input[name='custom_fields[][disabled]']").val();
+        var text = set != "true" ? "Enable" : "Disable"
+        set = set == "true" ? "false" : "true";
+        $(parent_tr).find("input[name='custom_fields[][disabled]']").val(set)
+        $(this).text(text);
+      }else{
+        parent_tr.remove();
+      }
+      e.preventDefault();
+    });
+    $("form").on("change", "select[name='custom_fields[][element_type]']", function(e){
+      var parent_tr = $(this).parents("tr");
+      if($(this).val() == "dropdown" || $(this).val() == "dropdown_with_other" || $(this).val() == "dropdown_with_multiple_select" || $(this).val() == "branch_field" || $(this).val() == "file_upload"){
+        parent_tr.find(".options").show();
+        parent_tr.find(".text_section").hide();
+        parent_tr.find(".place_holder").hide();
+        parent_tr.find(".field_required").show();
+        parent_tr.find(".field_private").show();
+        parent_tr.find(".not_in_file_upload").show();
+        if ($(this).val() == "file_upload")
+        	{
+        		parent_tr.find(".not_in_file_upload").hide();
+        		parent_tr.find(".chg_file_upload").text("File Type");
+        	}
+      }
+      else if($(this).val() == "text_section"){
+        parent_tr.find(".options").hide();
+        parent_tr.find(".field_required").hide();
+        parent_tr.find(".field_private").hide();
+        parent_tr.find(".text_section").show();
+        $('.summernote').summernote();
+        parent_tr.find(".place_holder").hide();
+      }
+      else{
+        parent_tr.find(".options").hide();
+        parent_tr.find(".text_section").hide();
+        parent_tr.find(".field_required").show();
+        parent_tr.find(".field_private").show();
+        parent_tr.find(".place_holder").show();
+      }
+      next_tr = parent_tr.next('tr')
+      while( next_tr.hasClass("option_row")) {
+        next_tr.remove();
+        next_tr = parent_tr.next('tr')
+      }
+    });
+    
+    $("form").on("change", "select[name='custom_fields[][options_fields][][element_type]']", function(e){
+      var parent_tr = $(this).parents("tr");
+      if($(this).val() == "dropdown" || $(this).val() == "dropdown_with_other"  || $(this).val() == "dropdown_with_multiple_select" || $(this).val() == "branch_field" || $(this).val() == "file_upload" ){
+        parent_tr.find(".options").show();
+        parent_tr.find(".place_holder").hide();
+      }
+      else{
+        parent_tr.find(".options").hide();
+        parent_tr.find(".place_holder").show();
+      }
+    });
+    
+    $(document).on("change", ".options_field_area", function(e){
+      var parent_tr = $(this).parents("tr");
+      if (parent_tr.find("#custom_fields__element_type").val() == "branch_field") {
+        next_tr = parent_tr.next('tr')
+        while( next_tr.hasClass("option_row")) {
+          next_tr.remove();
+          next_tr = parent_tr.next('tr')
+        }
+        var option_values = $(this).val().split(",").reverse()
+        for (var i = 0; i < option_values.length; i++) {
+          $(".duplicate_options tbody").find('.option_name').html("Options for "+option_values[i]);
+          $(".duplicate_options tbody").find('.option_name_field').attr("value", option_values[i])
+          $(".duplicate_options tbody").find('.insert_option_field').attr("data_option_name", option_values[i])
+          var text = $(".duplicate_options tbody").html();
+          $(parent_tr).after(text);
+          e.preventDefault();
+        }
+      }
+    });
+
+    $(document).on("click", ".remove_custom_field", function(e){
+      e.preventDefault();
+      if($(this).data("url") != ""){
+      $.ajax({
+        url: $(this).data("url"),
+        type: 'delete',
+        success: function(data){
+          window.location.reload();
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+      }
+      else{
+        $(this).parents("tr").next().remove();
+        $(this).parents("tr").remove();
+      }
+    })
+
+    $(document).on("click", ".remove_basic_fields", function(e){
+      e.preventDefault();
+      $.ajax({
+        url: $(this).data("url"),
+        type: 'put',
+        data: {data: $(this).data("target"), type: $(this).data("type")},
+        success: function(data){
+          window.location.reload();
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    })
+
+    $("form").on("click", ".js_inline_edit", function(e){
+      $(this).siblings("input").show();
+      $(this).siblings("span").hide();
+      $(this).hide();
+      e.preventDefault();
+    });
+
+    $(".cloneble_setting").on("click", function(){
+      var elem = $(this)
+      $.post( 
+        elem.data("url"), 
+        $(".cloneble_setting :checked").serialize(),
+        function( data ) {
+          console.log(data)
+        }
+      );
+    });
+    $(".summernote").summernote()
+    
+    
+    $('body').on('hide.bs.modal', '.modal', function (e) {
+      $('body').removeClass('modal-open');
+    });
+    
+    $('body').on('click', '.close', function (e) {
+      if($('body').find('.modal').is(':visible')){
+        $('body').find('.modal:visible').modal('toggle');
+      }
+    });
+  });
+</script>
+<% if context_program.master_program? %>
+  <%= render "customisations/shared/#{params[:ankor]}_master_setting" %>
+<% end %>
+
+<%= link_to "Show", "#show_help_content_text", :style => "display:none;", class: "show_help_fancybox fancybox"%>
+<div style="display: none" id="show_help_content_text">
+  <div class="lightbox_box">
+    <%= render "show_help_content" %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_title">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "title"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_upload">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "upload"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_summary">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "summary"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_tag">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "tag"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_avatar">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "avatar"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_bio">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "bio"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_speciality">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "speciality"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_skill">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "skill"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_interest">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "interest"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_qualification">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "qualification"} %>
+  </div>
+</div>
+
+<div style="display: none" id="help_content_profile">
+  <div class="lightbox_box">
+    <%= render "help_content", locals: {field_name: "profile"} %>
+  </div>
+</div>
+
+<div style="display: none">
+  <div class="lightbox_box" id="help_content_form">
+  </div>
+</div>
+
+<div style="display: none" id="user_form_preview">
+  <div class="lightbox_box">
+    <h2>Form Preview</h2>
+    <%= render "user_form_preview" %>
+  </div>
+</div>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon <%= find_class(@anchor)%> gn-icon-large"></i>
+      <%= find_role(@anchor).try(:titleize)%> Form Builder
+      <% tool_tip = get_tool_tip(@anchor)%>
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title= '<%= tool_tip %>'></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread"><%= @anchor.try(:titleize)%> Form Builder</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<%= render "shared/flash" %>
+		<a href="sec1" name="sec1" class="section_nav"></a>
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		
+		<div class="row">
+		  <div class="col-md-12">
+		    <div data-collapsed="0" style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+		      <div class="panel-heading relative_panel_head">
+		        <div class="panel-title title_option">
+		          <h3>
+		            <label for="add_url_avatar">Form builder fields</label>
+		          </h3>
+		        </div>
+		        <div class="pull-right panel-links">
+							<ul>
+								<li>
+									<!--<a class="" href="#"><i class="glyphicon glyphicon-eye-open"></i> Form preview</a>-->
+								</li>
+							</ul>
+						</div>
+		      </div>
+		      <div style="padding-top:15px;" class="panel-body">
+					  <table class="custom_field_duplicate table table-striped" style="display:none">
+					    <%= render "form_row" %>
+					  </table>
+					  <table class="option_field_duplicate table table-striped" style="display:none">
+					    <%= render "branch_option_form_row" %>
+					  </table>
+					  <table class="duplicate_options" style="display:none;">
+					    <tbody>
+					      <tr class="option_row add_field_container">
+					        <td>
+					          <h4 class="option_name" >Options for a</h4>
+					        </td>
+					      </tr>
+					      <%#= render "branch_option_form_row" %>
+					      <tr class="option_row add_field_container">
+					        <td>
+					          <%= link_to("+ Insert new field for this option", "#", :class => "insert_option_field", :data_option_name => "" ) %>
+					        </td>
+					      </tr>
+					    </tbody>
+					  </table>
+					  <%#= render "new_branch", ankor: @anchor if @anchor == "pitch"%>
+					  <%= render "pitch_fields", ankor: @anchor %>
+					    <% if @anchor == "pitch"%>
+					      <%#= render "pitch_branch_form"%>
+					    <% else%>
+					      <%= form_tag polymorphic_path([@program, :customisations]) do %>
+					        <%= hidden_field_tag :ankor, @anchor %>
+					        <%= hidden_field_tag :referee, @klass %>
+					        <%= render "user_fields", ankor: @anchor %>
+					        <%= content_tag :div, :class => "" do%>
+					          <table class="pitchcontent table table-striped table-bordered" id="nrm_tbl">
+					            <tbody>
+					              <% @custom_fields.where(branch_id: nil, position: "").each do |field| %>
+					                <%= render "form_row", field: field %>
+					              <% end %>
+					              <%#= render "form_row" %>
+					            </tbody>
+					          </table>
+					          <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+					        <% end %>
+					        <%= submit_tag "Save", :id => "submit" %>
+					      <% end %>
+					    <% end %>
+					</div><!-- panel-body -->
+		    </div>
+		  </div>
+		</div>
+	
+	
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Form Builder</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+
+  $(document).on('click', ".add_custom_help", function(e){
+    current_obj = $(this);
+    url = $(this).data('url');
+    $.ajax({
+      url: url,
+      type: 'get',
+      dataType: 'html',
+      contentType: 'application/json; charser=utf-8',
+      success: function(data){
+       $("#help_content_form").html(data);
+      },
+      error: function(){
+       alert('Request failed. Sorry, we are analyzing the cause of this problem');
+      }
+    })
+  });
+  
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

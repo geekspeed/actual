@@ -1,0 +1,37 @@
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<% if need?(["company_admin", "program_admin"], current_organisation) %>
+  
+    <div class="row ">
+      <div class="col-md-12">
+        <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+          <div class="panel-heading relative_panel_head ">
+            <div class="panel-title title_option">
+              <h3>
+              <label>Admin Actions</label>
+              </h3>
+            </div>
+            <div class="panel-options">
+              <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+            </div>
+          </div>
+          <div class="panel-body" style="display:none;">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="tasks_list">
+                  <li class="late">
+                    <%= link_to "Delete this #{t("pitch")}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, (is_subdomain ? polymorphic_url([context_program, @pitch], subdomain: false) : polymorphic_url([context_program, @pitch])), method: "delete", confirm: "Are you sure? This can not be undone." %>
+                  </li>
+                  <% if active_phase_of_pitch?(@pitch, "submission_deadline") %>
+                    <li class="now">
+                      <%= link_to "Stops editing of entries<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, toggle_edit_status_program_pitch_edit_pitch_field_index_url(context_program, @pitch) if !@pitch.stop_editing %>
+                      <%= link_to "Start editing of entries<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, toggle_edit_status_program_pitch_edit_pitch_field_index_url(context_program, @pitch) if @pitch.stop_editing %>
+                    </li>
+                  <% end %> 
+                </ul>
+              </div>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>       
+<% end %>

@@ -1,0 +1,25 @@
+<% pitch_id ||= nil %>
+<% recipient ||= "N/A" %>
+<% phase_name ||= nil %>
+<% @program ||= context_program %>
+<% url ||= polymorphic_path([:participants, @program, :messages])  %>
+<!-- lightbox -->
+<div style="display: none">
+  <div id="<%= anchor_id %>">
+    <%= form_tag url, :method => :put do %>
+      <h2 class="recipient">Recipient: <%= recipients %></h2>
+      <%= hidden_field_tag :code, code %>
+      <%= hidden_field_tag :phase_name, phase_name %>
+      <%= hidden_field_tag :phase_type, phase_type %>
+      <% if pitch_id %>
+        <%= hidden_field_tag :pitch_id, pitch_id %>
+      <% end %>
+      Subject:<br />
+      <%= text_field_tag :subject,nil, :class=>"form-control" %><br />
+      Message:<br />
+      <%= text_area_tag :message,nil, :class=>"form-control" %><br />
+      <br />
+      <%= submit_tag "Send", :class => "button submitMessage", :id => "submit" %>
+    <% end %>
+  </div>
+</div>

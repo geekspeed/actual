@@ -1,0 +1,531 @@
+<div class="add-new-activity">  
+  <%= form_for @activity, :url =>@action_path do |f| %> 
+    <div class="box-show-real" id="box1-show">
+      <div class="module-box-div-main">
+        <div class="module-box-div-main-content">
+            <div class="activity-box-div module-title-container">
+              <h3 class="activity-title">
+                <%= @page== "edit_activity" ? "Update Activity" : "Add New Activity" %>
+              </h3>
+            </div>
+                    <div class="module-box-div-main-data">
+                        <div id="rootwizard" class="form-horizontal form-wizard visible-lg">
+                            <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+                                <div class="progress-indicator"></div>
+                            </div>
+                            <ul>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Time info</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Description</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab3" id="box3" class="action-click"><span>3</span>Source</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab4" id="box4" class="action-click"><span>4</span>Tasks</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab5" id="box5" class="action-click"><span>5</span>Additional Material</a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="activity-box-div">
+                  <%= f.text_field :title, :placeholder=>"Enter Activity Title", :class=>"form-control form-style-1" %>
+                            <hr class="mod_sep" />
+                  <div class="activity-box-div-inner">
+                    <h2 class="activity-menu-title">Time Info</h2>
+                    <div class="activity-menu-fields timepicker-fix">
+                      <%= f.label :time_taken %>
+                       <div class='input-append bootstrap-timepicker' style='display: inline;'>
+                        <%= f.text_field :time_taken, :class => "timepicker input-small form-control", :style=>"display:inline;", :placeholder => "HH:MM" %>
+                          <span class='add-on'><i class='icon-time'></i></span>
+                      </div>
+                    </div>
+                    <div class="activity-menu-fields">
+                      <%= f.label :deadline %>
+                                    <div class="pull-left">
+                          <span class="radioset">
+                            <%= f.radio_button :deadline_option, true, :class=>"deadline_option_action" %>
+                            <%= f.label :deadline_option_true, "Yes" %>
+                            <%= f.radio_button :deadline_option, false, :class=>"deadline_option_action" %>
+                            <%= f.label  :deadline_option_false, "No" %>
+                          </span>
+                                        <%= f.text_field :deadline, :class=>"form-control datepicker_std form-style-1", :style=>"#{"display:none;" if f.object.deadline.blank?} margin-top:15px;" %>
+                      </div>
+                    </div>
+                    <div class="activity-page-action">
+                      <a href="#" id="box2" class="action-click btn btn-white pull-right">Next ></a>
+                    </div>
+                  </div>
+                </div>
+                    </div>
+                </div>
+      </div><!--  module-box-div-main -->
+    </div>
+    <div style="display:none;" class="box-show-real" id="box2-show">
+      <div class="activity-box-div-main">
+                <div class="module-box-div-main-content">
+            <div class="activity-box-div module-title-container">
+              <h3 class="activity-title">
+                <%= @page== "edit_activity" ? "Update Activity" : "Add New Activity" %>
+              </h3>
+            </div>
+                    <div class="module-box-div-main-data">
+                        <div id="rootwizard" class="form-horizontal form-wizard visible-lg">
+                            <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+                                <div class="progress-indicator"></div>
+                            </div>
+                            <ul>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Time info</a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Description</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab3" id="box3" class="action-click"><span>3</span>Source</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab4" id="box4" class="action-click"><span>4</span>Tasks</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab5" id="box5" class="action-click"><span>5</span>Additional Material</a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="activity-box-div">
+                  <div class="activity-box-div-inner">
+                    <h2 class="activity-menu-title">Description</h2>
+                    <div>
+                      Provide a brief description about this module <i>(more 140 chars)</i>
+                    </div>
+                    <div class="description activity-menu-description">
+                      <%= f.text_area :description, :placeholder=>"Enter brief description", :class=>"form-control form-style-1 autoresize-area", :rows=>"2", :style=>"width:100%" %>
+                    </div>
+                    <div>
+                      Describe in greater detail what your course participants can expect to learn from this task
+                    </div>
+                    <div class="activity-menu-description">
+                      <%= f.text_area :greater_detail, :class=>"summernote", :style=>"width:100%"%>
+                    </div>
+                                <hr  class="mod_sep" />
+                    <h2 class="activity-menu-sub-title">Personalisation</h2>
+                    <div>
+                      Add keywords that will help your participants identify modules that pertain to their needs
+                    </div>
+                    <div class="tag-box">
+                      <div class="tags_container"> 
+                        <div class="container_tags">
+                          <div class="tagList" id="keywordList">
+                            <% f.object.keywords.each do |keyword| %>
+                              <div class="tagContainer">
+                                <%= link_to keyword, "#", :class => "delTag" %>
+                                <%= hidden_field_tag :"module_activity[keywords][]", keyword %>
+                              </div>
+                            <% end  %>
+                          </div>
+                          <div class="clr"></div>
+                        </div>
+                        <div class="container_add_tag">
+                          <div style="float:left;margin-right:10px;">
+                            <%= f.text_field :keywords, :class => "autoSkills form-control pull-left form-style-1", :placeholder => "One item at a time", :id => "keywords", :name => "keywords[]", :value => "", :"data-field-name" => "#{f.object_name}[keywords][]" %>
+                          </div>
+                          <%= link_to "+ Add It", "#", :class => "addKeyword text_underline pull-right" %>
+                          <div class="clear"></div>      
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="clear"></div>
+                    <div class="activity-page-action">
+                      <a href="#" id="box1" class="action-click btn btn-white pull-left">< Previous</a>
+                      <a href="#" id="box3" class="action-click btn btn-white pull-right">Next ></a>
+                    </div>
+                  </div>
+                </div>
+                    </div>
+                </div>
+      </div><!-- activity-box-div-main -->
+    </div>
+    <div  style="display:none;" class="box-show-real" id="box3-show">
+      <div class="activity-box-div-main">
+                <div class="module-box-div-main-content">
+            <div class="activity-box-div module-title-container">
+              <h3 class="activity-title">
+                <%= @page== "edit_activity" ? "Update Activity" : "Add New Activity" %>
+              </h3>
+            </div>
+                    <div class="module-box-div-main-data">
+                        <div id="rootwizard" class="form-horizontal form-wizard visible-lg">
+                            <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+                                <div class="progress-indicator"></div>
+                            </div>
+                            <ul>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Time info</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Description</a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab3" id="box3" class="action-click"><span>3</span>Source</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab4" id="box4" class="action-click"><span>4</span>Tasks</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab5" id="box5" class="action-click"><span>5</span>Additional Material</a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="activity-box-div">
+                  <div class="activity-box-div-inner">
+                    <h2 class="activity-menu-title">Source</h2>
+                    <div>
+                      Choose the primary learning source that participant will use to understand how to achieve this activity
+                    </div>
+                    <div style="padding: 15px 15px 15px 0;">
+                      <div style="margin-bottom: 10px;">
+                        What format is your source ?
+                      </div>
+                      <%= f.select :resource_format, options_for_select(["Video", "Image", "External URL", "PDF"], @activity.resource_format), {},:class=>"form-control form-style-1", :style=>"width: 39%;" %>
+                      <div style="margin-top: 10px;">
+                        <div style="margin-bottom: 10px;">
+                          Link your source
+                        </div>
+                        <div id="activity-link" class="<%= @activity.resource_format.blank? ? 'show' : ((@activity.resource_format == 'External URL' || @activity.resource_format == 'Video') ? 'show' : 'hide') %>">
+                          <%= f.text_field :link, :placeholder=>"http://",:class=>"form-control form-style-1" %>
+                        </div>
+                        <div id="activity-attachment" style="display:none;" class="<%= (@activity.resource_format == 'Image' || @activity.resource_format == 'PDF') ? 'show' : 'hide' %>">
+                        <% if !@activity.attachment.blank? %>
+                          <br/><b>Attachment : <%= link_to @activity.attachment.file.original_filename, @activity.try(:attachment).try(:url), :style=>"font-weight:bold;" %></b>
+                        <% end %>
+                          <%= f.file_field :attachment %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="activity-page-action">
+                      <a href="#" id="box2" class="action-click btn btn-white pull-left">< Previous</a>
+                      <a href="#" id="box4" class="action-click btn btn-white pull-right">Next ></a>
+                    </div>
+                  </div>
+                </div>
+                    </div>
+                </div>
+      </div><!-- activity-box-div-main -->
+    </div>
+    <div  style="display:none;" class="box-show-real" id="box4-show">
+      <div class="activity-box-div-main">
+                <div class="module-box-div-main-content">
+            <div class="activity-box-div module-title-container">
+              <h3 class="activity-title">
+                <%= @page== "edit_activity" ? "Update Activity" : "Add New Activity" %>
+              </h3>
+            </div>
+                    <div class="module-box-div-main-data">
+                        <div id="rootwizard" class="form-horizontal form-wizard visible-lg">
+                            <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+                                <div class="progress-indicator"></div>
+                            </div>
+                            <ul>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Time info</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Description</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab3" id="box3" class="action-click"><span>3</span>Source</a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab4" id="box4" class="action-click"><span>4</span>Tasks</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab5" id="box5" class="action-click"><span>5</span>Additional Material</a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="activity-box-div">
+                  <div class="activity-box-div-inner">
+                    <h2 class="activity-menu-title">Action</h2>
+                    <div>
+                      Recommended Tasks for this module
+                    </div>
+                    <div style="padding: 15px 15px 15px 0;">
+                      <div class="row">
+                        <div class="col-xs-8 col-sm-12 action-area-1">
+                          <div style="margin-bottom: 10px;">
+                            <b style="font-size:18px;">Task Description</b><i class="glyphicon glyphicon-question-sign help-sign admin-task-description" data-toggle="tooltip" data-placement="bottom" title="Use @ shortcode for adding the activity links"></i>
+                          </div>
+                          <%= f.text_area :action, :placeholder=>"Video (recommended)",:class=>"form-control", :rows=>"2", :placeholder=>"Describe a real world action you would like your course participants to undertake", :style=>"width:100%" %>
+                          <div id="my-popup" style="display:none;width: 100%;">
+                            <ul class="ui-my-popup" tabindex="0" style="z-index: 1;right: 0px;margin: auto;width: 100%;">
+                              <i style="font-size: 16px;display: block;padding: 12px;">Attach activity link with description</i>
+                              <% @course.try(:course_modules).try(:flatten).map(&:module_activities).try(:flatten).each do |activity| %>
+                                <a data-activity-id="<%=activity.id%>" data-activity-title="<%= activity.try(:title)%>" class="select-activity-link" href="#"><%= activity.try(:title)%></a>
+                              <% end %>
+                            </ul>
+                          </div>
+                        </div>     
+                      </div>
+                      <br/>
+                      <div class="row"> 
+                        <div class="col-xs-8 col-sm-12" style="margin-bottom: 10px;">
+                          <b style="font-size:18px;">Link to field in project form</b>
+                        </div> 
+                        <div class="col-xs-8 col-sm-5 action-area-2">
+                          <%= select_tag :link_fields, options_from_collection_for_select(@project_fields,"id","label"), multiple: true, style: "width: 100%", class: 'form-control ms-list' %>
+                        </div>
+                          <div class="col-xs-8 col-sm-2 l-controls" style="margin-top:20px;width:45px;">
+                            <a href="#" class="swap-left" id="swap-left"><b><<</b></a><br/>
+                            <a href="#" class="swap-right" id="swap-right"><b>>></b></a>
+                          </div>
+                        <div class="action-area-2 col-xs-8 col-sm-5">
+                            <%= select_tag :link_project_fields, options_from_collection_for_select(@activity_project_fields,"id","label"), multiple: true, name: "module_activity[activity_project_fields_attributes][][custom_field_id]", style: "width: 100%", class: 'form-control ms-list' %>
+                        </div>
+                      </div>
+                      <div class="activity-page-action">
+                        <a href="#" id="box3" class="action-click btn btn-white pull-left">< Previous</a>
+                        <a href="#" id="box5" class="action-click btn btn-white pull-right">Next ></a>
+                      </div>        
+                    </div>
+                  </div>
+                </div>
+                    </div>
+                </div>
+      </div><!-- activity-box-div-main -->
+    </div>
+    <div  style="display:none;" class="box-show-real" id="box5-show">
+      <div class="activity-box-div-main">
+                <div class="module-box-div-main-content">
+            <div class="activity-box-div module-title-container">
+              <h3 class="activity-title">
+                <%= @page== "edit_activity" ? "Update Activity" : "Add New Activity" %>
+              </h3>
+            </div>
+                    <div class="module-box-div-main-data">
+                        <div id="rootwizard" class="form-horizontal form-wizard visible-lg">
+                            <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+                                <div class="progress-indicator"></div>
+                            </div>
+                            <ul>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab1" id="box1" class="action-click"><span>1</span>Time info</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab2" id="box2" class="action-click"><span>2</span>Description</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab3" id="box3" class="action-click"><span>3</span>Source</a>
+                                </li>
+                                <li class="completed">
+                                    <a data-toggle="tab" href="#tab4" id="box4" class="action-click"><span>4</span>Tasks</a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab5" id="box5" class="action-click"><span>5</span>Additional Material</a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="activity-box-div">
+                  <div class="activity-box-div-inner">
+                    <h2 class="activity-menu-title">Additional Material</h2>
+                    <div>
+                    Add supplementary study material here
+                    </div>
+                    <div style="padding: 15px 15px 15px 0;">
+                      <div class="study-materials">
+                        <%= f.fields_for :study_materials do |ff| %>
+                          <div id="study-material-<%= ff.object.id %>">
+                            <div class="row">
+                              <div class="col-xs-12 col-sm-4">
+                                <div style="margin-bottom: 10px;">
+                                  Resource Description
+                                </div>
+                                <%= ff.text_area :resource_description, :class=>"form-control", :rows=>"2", :placeholder=>"Describe your source",:style=>"width:100%;" %>
+                              </div>
+                              <div class="col-xs-12 col-sm-4">
+                                <div style="margin-bottom: 10px;">
+                                  Resource Format
+                                </div>
+                                  <%= ff.select :resource_format, options_for_select(["Video", "Image", "External URL", "PDF"], ff.object.resource_format), {},:id=>"study-type-#{ff.object.id}",:class=>"form-control study_material_type", :style=>"width: 100%;" %>
+                              </div>
+                              <div class="clearfix visible-xs"></div>
+                              <div class="col-xs-12 col-sm-4">
+                                <div style="margin-bottom: 10px;">
+                                  Attachment 
+                                </div>                       
+                                <% if !StudyMaterial.where(:id=>ff.object.id).blank? %>
+                                  <%= link_to "  X",polymorphic_path([@program, @course, ff.object, :delete_study_material]), :method=>"delete", :remote=>true, :class=>"remove-material", :title=>"Remove" %>
+                                <% end %>
+                                <div id="link-study-type-<%=ff.object.id%>" class="<%= ff.object.resource_format.blank? ? 'show' : ((ff.object.resource_format == 'External URL' || ff.object.resource_format == 'Video') ? 'show' : 'hide') %>">
+                                  <%= ff.text_field :link, :placeholder=>"http://",:class=>"form-control", :style=>"width:100%;" %>
+                                </div>
+                                <div id="attachment-study-type-<%=ff.object.id%>" style="display:none;" class="<%= (ff.object.resource_format == 'Image' || ff.object.resource_format == 'PDF') ? 'show' : 'hide' %>">
+                                  <% if !ff.object.attachment.blank? %>
+                                    <%= link_to ff.object.attachment.file.original_filename, ff.object.try(:attachment).try(:url), :style=>"font-weight:bold;" %>      
+                                  <% end %>
+                                  <%= ff.file_field :attachment, :style=>"width:98px" %>  
+                                </div>  
+                              </div>
+                            </div>
+                          </div>
+                          <hr class="mod_sep" />
+                        <% end %>
+                      </div>
+                                    <br />
+                      <a href="#-" class="add-study-material"><span><b style="font-size:18px;"> + </b> Add new study material</span></a>  
+                    </div>
+                    <div class="activity-page-action">
+                      <a href="#" id="box4"class="action-click btn btn-white pull-left">< Previous</a>
+                      <%= submit_tag "Submit", id: "submit" %>
+                    </div>
+                  </div>
+                </div>
+                    </div>
+                </div>
+      </div><!-- activity-box-div-main -->
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+$(document).ready(function(){   
+  $(".autoresize-area").autosize()
+  $(".summernote").summernote()
+  $(".admin-task-description").tooltip()
+  $("#link_project_fields option").selected()
+  $( ".radioset" ).buttonset();
+  $(".action-click").click(function(e){
+    $(".box-show-real").hide()
+    $("#"+this.id+"-show").show()
+    $(".autoresize-area").height("100%")
+    e.preventDefault()
+  });
+  $(".deadline_option_action").click(function(){
+    if (this.id == "module_activity_deadline_option_true"){
+      $("#module_activity_deadline").show()
+    }
+    else{
+      $("#module_activity_deadline").hide()
+      $("#module_activity_deadline").val("")
+    }
+  });
+  $(".add-study-material").click(function(){
+    var study_material_form = "<%= escape_javascript(render 'courses/shared/study_material') %>"
+    var study_material_form_uniq = study_material_form.replace(/-1-/g,new Date().getTime())
+    $(".study-materials").append(study_material_form_uniq)
+    study_resource()
+  }); 
+  $("#module_activity_resource_format").change(function(){
+    if (($("#"+this.id+" option:selected").val() == "Image") || ($("#"+this.id+" option:selected").val() == "PDF"))
+    {
+      $("#activity-attachment").addClass("show")
+      $("#activity-link").removeClass("show").addClass("hide")
+    }
+    else
+    {
+      $("#activity-attachment").removeClass("show").addClass("hide")
+      $("#activity-link").addClass("show")
+    }
+  });
+  $('.addKeyword').click(function(){
+      var value = $('#keywords').val();
+      var field_name = $('#keywords').data('field-name');
+      if(value!=""){
+        $('#keywordList').append('<div class="tagContainer"><a href="#" class="delTag">'+value+'</a><input type="hidden" value="'+value+'" name="'+field_name+'" readonly="readonly" /></div>');
+        $('#keywords').val('');
+      }
+      return false;
+    });  
+  $('.container_tags').on('click', '.delTag', function(){
+    $(this).parent().remove();
+    return false;
+  });
+  function move_list_items(sourceid, destinationid)
+  {
+    $("#"+sourceid+"  option:selected").appendTo("#"+destinationid);
+    $("#link_project_fields option").selected()
+    // if ($("#link_project_fields option").length == 0)
+    // {
+      // $(".action-area-1 textarea").prop('disabled', false);
+    // }
+    // else{
+      // $(".action-area-1 textarea").prop('disabled', true);
+      // $("#module_activity_action").val("")
+    // }
+  }
+  $("#swap-left").click(function(){
+    move_list_items("link_project_fields", "link_fields")
+  });
+  $("#swap-right").click(function(){
+    move_list_items("link_fields", "link_project_fields")
+  });
+  // $("#module_activity_action").keyup(function(){
+  //   if ($("#module_activity_action").val() == "")
+  //   {
+  //     $(".action-area-2 select").prop('disabled', false);
+  //     $(".action-area-2 .swap-right").attr("id","swap-right");
+  //     $(".action-area-2 a").addClass("show")
+  //   }
+  //   else{console.log("asdasd");
+  //     $(".action-area-2 select").prop('disabled', true);
+  //     $(".action-area-2 a").removeClass("show").addClass("hide")
+  //     move_list_items("link_project_fields", "link_fields")
+  //   }
+  // });
+
+  $('#module_activity_action').summernote({
+    onkeyup: function(e) {
+      if(e.keyCode == 50){
+        $("#my-popup").show("slide",{direction: 'up'})
+      }
+      console.log('Key is released:', e.keyCode);
+    }
+  });
+
+  $(".select-activity-link").click(function(){
+    activity_link = "<a data-activity-id=\""+$(this).data("activity-id")+"\" data-title=\""+$(this).data("activity-title")+"\" class=\"select-activity-link\">"+$(this).data("activity-title")+"</a>"
+    $('#module_activity_action').code($('#module_activity_action').code().replace("@",activity_link+"&nbsp;"))
+    $("#my-popup").hide("slide",{direction: 'up'})
+  });
+
+  study_resource();
+  function study_resource(){
+    $(".study_material_type").change(function(){
+      if (($("#"+this.id+" option:selected").val() == "Image") || ($("#"+this.id+" option:selected").val() == "PDF"))
+      {
+        $("#attachment-"+this.id).addClass("show")
+        $("#link-"+this.id).removeClass("show").addClass("hide")
+      }
+      else
+      {
+        $("#attachment-"+this.id).removeClass("show").addClass("hide")
+        $("#link-"+this.id).addClass("show")
+      }
+    });
+  }
+});
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function($){
+    $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: false,
+                showMeridian: false,
+                defaultTime: "00:00"
+            });
+  });
+</script>
+
+<style>
+  i.help-sign.admin-task-description {
+    color: #666 !important;
+    font-size: 14px;
+    cursor: help;
+  }
+  table tr td i{color:#333 !important;}
+  .timepicker-fix{overflow: visible !important;}
+</style>

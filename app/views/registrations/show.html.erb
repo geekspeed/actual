@@ -1,0 +1,1441 @@
+<script src="https://backpack.openbadges.org/issuer.js"></script>
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Profile " %>
+<% end %>
+<%#= render "shared/navbar", :page => "program_community" %>
+<% content_for :bs_sidebar do %>
+  <%= render "dashboards/shared/bs_sidebar", :page => "people" %>
+<% end %>
+<!--<%#= render "dashboards/shared/bs_sidebar", :page => "people" %>-->
+
+<div class="row" style="margin-left: 60px; margin-top: 30px">
+	<div class="col-sm-4" id="ms-sec-left">
+		<div class="panel dashboard_panel  no-b profile p15">
+			<div class="row">
+				<div class="col-sm-12" id="left-pt-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-xs-12 col-sm-8">
+									<h4 class="mb0 user-name-x"><b><%= @user.full_name %></b>
+										<% if need?(["company_admin"], current_organisation) or (current_user and current_user.super_admin?)%>
+  										<%= link_to "", "#", :"data-toggle"=>"modal", :"data-target"=>"#update_user", "id" => "user_update_modal", :"data-user" => @user.id, :class => "fa icon-edit "%>
+  									<% end %>
+										<% if need?(["company_admin"], current_organisation) or (current_user and current_user.super_admin?)%>
+									  	<%= link_to "",destroy_user_dashboard_url(:id => @user.id), :class => "fa icon-trash", :method => :delete, :confirm => "Are you sure ?"%>
+  									<% end %>
+  									
+									</h4>
+										<small><%= @user.roles_string_for(context_program).collect{|code| t("role_type:#{code}")}.join(", ") %></small>
+										<ul class="user-meta">
+										<% company = Organisation.where(:id => @user.try(:organisation).try(:to_s)).try(:first)%>
+										<% if !!company.try(:company_name) %>
+											<li>
+												<i class="fa icon-building mr5"></i>
+												<%= link_to "#{company.try(:company_name)}", organisation_path(company.id)%>
+											</li>
+										<%end%>
+											<li>
+												<span><%= link_to_if(need?(["company_admin"], current_organisation), " #{@user.email}", "#contact_user", class: "fa icon-envelope mr5 gn_user_profile fancybox_small"){link_to " Contact", "#contact_user", class: "gn-icon gn-icon-mail-settings gn_user_profile fancybox_small"}%></span>
+											</li>
+											
+											<li>
+												
+											</li>
+										</ul>
+								</div>
+								
+								<div class="col-xs-12 col-sm-4 text-center ">
+									<figure>
+										<div class="tablecell profile-picture">
+											<%= image_tag(@user.avatar.logo.url, :style=>"width: 130px", :class=>"img-circle img-responsive img-circle-border",alt: "Logo_images") %>								    	
+									  </div>
+									</figure>
+									<div class="mt10 mb10 ml10">
+										<!--<a class="btn btn-social btn-xs btn-facebook mr5"><i class="fa icon-facebook"></i> </a>
+										<a class="btn btn-social btn-xs btn-twitter mr5"><i class="fa icon-twitter"></i> </a>-->
+										<% unless @user.try(:linkedin_profile).empty?%>
+											<a href= "<% @user.try(:linkedin_profile)%>" class="btn btn-social btn-xs btn-linkedin" target= "_blank"><i class="fa icon-linkedin"></i></a>
+										<%end%>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%ankor = @user.role?("participant", context_program) ? "participant" : (@user.role?("mentor", context_program) ? "mentor" : nil)%>
+						<!-- <p class="dashboard_panel_subtitle">My Badges</p>-->
+						<div class="badges_container dummy dummy-menu dummy-menu-icons">
+							<ul class="row">
+							<% @user_badges.each do |badge|%>
+              <% app_badge = badge.app_badge %>
+              	<%unless badge.revoked%>
+              	 	<% if app_badge.present?%>
+										<li class="col-sm-3">
+
+											<a class="tooltip" href="#"><%= image_tag(app_badge.image, width: "60px")%> <p><%= app_badge.name%></p><span class="tooltip-content"><%= app_badge.description%></span></a>
+											<div class="badge_actions">
+											  <%if app_badge.badge_type == "Open Badge" and (current_user == @user or need?(["company_admin", "program_admin"], current_organisation))%> 
+													<a href="#"  data-toggle="tooltip" data-placement="bottom" title="Send Badge in Your BadgePack" class= "user-badge"
+													data-url = <%= (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s %>  id= (<%= badge.id %>) >
+													 <img src="../images/openbadges-logo.png" width="14">
+													</a>
+													<a href="#" data-toggle="tooltip" data-placement="bottom" title="Download Badge" data-url = <%= (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s %> data-id = <%= badge.id %> 	class= "bake-badge" ><i class="fa fa-download"></i></a>											
+                      	<%end%>
+											</div>
+										</li>
+									<%end%>
+								<%end%>
+							<%end%>									
+							</ul>
+						</div>
+						
+						<div class="col-xs-12 mt15 text-center">
+							<ul class="nav nav-tabs" role="tablist">
+							  <li class="active"><a href="#bio" role="tab" data-toggle="tab"><%= t("user:bio") ? t("user:bio") : "Bio"%></a></a></li>
+							  <li><a href="#" id="more-info-ms">More info</a></li>
+							  <li><a href="#" id="private-fields-ms">Private Fields</a></li>
+							</ul>
+							<div class="tab-content">
+							  <div class="tab-pane active" id="bio">
+							  	<h6 class="heading-font mb10 mt10">About <%= @user.full_name %></h6>
+							  	 <%= content_tag :div do%>
+                      <p><%= raw(@user.bio.gsub("\r\n","<br>"))  if @user.bio %></p>
+                   <%end if show_basic_field(context_program, "bio", ankor)%>							  	
+							  </div>
+							  <div class="tab-pane" id="more_bio">...</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				 
+				<div class="col-sm-8" id="left-pt-2" style="display: none;">
+					<div class="row left-pt-2-title">
+						<p class="col-sm-10">More info</p>
+						<a href="#" class="col-sm-2 close-left-pt">X</a>
+					</div>
+					<table class="pitchcontent table table-striped table-bordered more-info-table" style="table-layout:fixed">
+              <% custom_fields = profile_custom_fields(@user, context_program, "avatar")%>
+              <%custom_fields.each do |custom_field|%>
+                <%= render "show_custom_fields", custom_field: custom_field%>
+              <% end %>
+              <% custom_fields = profile_custom_fields(@user, context_program, "bio")%>
+              <%custom_fields.each do |custom_field|%>
+                <%= render "show_custom_fields", custom_field: custom_field%>
+              <% end %>
+				  	  <%= content_tag :div do%>
+  							<tr>
+  								<td class="label_row">My Specialty</td>
+  								<td style="width:300px;"><p class="lighter_color_table"><%= @user.speciality %></p></td>
+  							</tr>
+  						<% end if show_basic_field(context_program, "speciality", ankor)%>
+  							<% custom_fields = profile_custom_fields(@user, context_program, "speciality")%>
+                <%custom_fields.each do |custom_field|%>
+                  <%= render "show_custom_fields", custom_field: custom_field%>
+                <% end %>
+                
+                <%= content_tag :div do%>
+    							<tr>
+    								<td class="label_row">Skills</td>
+    								<td class="tagList">
+    									<% @user.skills.each do |skill| %>
+    										<div class="tagContainer label label-success">
+    											<%= link_to skill, "#", :class => "" %>
+    										</div>
+    									<% end %>
+    								<div class="clr"></div>
+    								</td>
+    							</tr>
+    						<% end if show_basic_field(context_program, "skills", ankor)%>
+    						
+  							<% custom_fields = profile_custom_fields(@user, context_program, "skills")%>
+                <%custom_fields.each do |custom_field|%>
+                  <%= render "show_custom_fields", custom_field: custom_field%>
+                <% end %>
+							
+							<%=content_tag :div do%>
+  							<tr>
+  								<td class="label_row">Interests</td>
+  								<td class="tagList">
+  									<% @user.interests.each do |interest|  %>
+  										<div class="tagContainer label label-success">
+  											<%= link_to interest, "#", :class => "" %>
+  										</div>
+  									<% end  %>
+  								<div class="clr"></div>
+  								</td>
+  							</tr>
+  						<% end if show_basic_field(context_program, "interests", ankor)%>
+							
+							<% custom_fields = profile_custom_fields(@user, context_program, "interests")%>
+              <%custom_fields.each do |custom_field|%>
+                <%= render "show_custom_fields", custom_field: custom_field%>
+              <% end %>
+							
+							<%= content_tag :div do%>
+  							<tr>
+  								<td class="label_row">Education</td>
+  								<td><p class="lighter_color_table"><%= @user.education_qualification %></p></td>
+  							</tr>
+  						<% end if show_basic_field(context_program, "education_qualification", ankor)%>
+							
+							<% custom_fields = profile_custom_fields(@user, context_program, "education_qualification") %>
+              <%custom_fields.each do |custom_field|%>
+                <%= render "show_custom_fields", custom_field: custom_field%>
+              <% end %>
+							
+							<%= content_tag :div do%>
+  							<tr>
+  								<td class="label_row">Linked-in Profile</td>
+  								<td><p class="lighter_color_table"><%= link_to @user.linkedin_profile, add_url_protocol(@user.linkedin_profile), "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" unless @user.linkedin_profile.blank? %></p></td>
+  							</tr>
+  						<% end if show_basic_field(context_program, "linkedin_profile", ankor)%>
+							
+							<% custom_fields = profile_custom_fields(@user, context_program, "") %>
+              <%custom_fields.each do |custom_field|%>
+                <%= render "show_custom_fields", custom_field: custom_field%>
+              <% end %>
+							
+							<% custom_fields.for_program(get_program).each do |cf| %>
+								<tr>
+									<td class="label_row"><%= cf.label %></td>
+									<% user_code = @user.send(:"#{cf.code}").is_a?(Array) ? @user.send(:"#{cf.code}").join(', ') : @user.send(:"#{cf.code}")%>
+									<td><p class="lighter_color_table">
+										<% if (cf.element_type == "video_url" || cf.element_type == "image_url" || cf.element_type == "website" || cf.element_type == "sound_url") %>
+											<%= link_to user_code, user_code, "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" %>
+										<% else %>
+											<%= user_code %>
+										<% end %>
+									</p></td>
+								</tr>
+							<% end if false%>
+						</table>					
+				</div>
+			
+				<div class="col-sm-8" id="left-pt-3" style="display: none;">
+					<div class="row left-pt-2-title">
+					 <% if current_user == @user or need?(["company_admin", "program_admin"], current_organisation)%>
+						<p class="col-sm-10">private fields</p>
+						<a href="#" class="col-sm-2 close-left-pt">X</a>
+					 <%end%>
+					</div>
+					<p>
+						<% if current_user == @user or need?(["company_admin", "program_admin"], current_organisation)%>
+							<table class="pitchcontent table table-striped table-bordered private-fields-table" style="table-layout:fixed">
+								<% custom_fields = private_custom_fields(@user, context_program)%>
+								<%custom_fields.each do |custom_field|%>
+									<%= render "show_custom_fields", custom_field: custom_field%>
+								<% end %>
+							</table>
+						<%end%>
+					</p>
+				</div>
+
+
+			</div>
+		</div>
+		<div class="panel panel-trans panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-body p5">
+				<div class="row pitch-tags">
+					<% @user.skills.each do |skill|%>
+						<a href="#"><%= skill %></a>
+					<%end%>
+
+					<% @user.interests.each do |interests|%>
+						<a href="#"><%= interests %></a>
+					<%end%>
+				</div>
+				<div class='show-more-tags tags_switch' style="display: none;">Show all tags <i class="fa icon-angle-right"></i></div>
+				<div class='show-less-tags tags_switch' style="display: none;"><i class="fa icon-angle-left"></i> Show less</div>
+			</div>
+		</div>
+		<!-- <div class="panel panel-notifications panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Notifications</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<ul class="panel-list">
+   				<li>
+   					<div class="alert alert-info  fade in" role="alert">
+   						<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				      <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+   					</div>
+   				</li>
+   				<li>
+   					<div role="alert" class="alert alert-warning fade in">
+				      <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				      <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+				    </div>
+   				</li>
+   				<li>
+   					<div class="alert alert-success  fade in" role="alert">
+   						<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				      <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+   					</div>
+   				</li>
+   				<li>
+   					<div class="alert alert-danger  fade in" role="alert">
+   						<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				      <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+   					</div>
+   				</li>
+   			</ul>
+			</div>
+		</div> -->
+		<!-- <a class="start-activity-ajax main-activity-hover" href="/programs/52d7ccf128d8b882c8000004/courses/5356ec614c08aaa1f700000c/module/535c3bfc4c08aa6283000019/activity/535d78e74c08aa6283000098/start_activity?pitch_id=52d7cdc428d8b86e6e000008">
+	  	<div style="background: url('/uploads/program_summary/lifestyle_background/52d7cd0d28d8b88a78000003/Henri_Rousseau_-_Il_sogno.jpg') no-repeat;background-size:100%;" class="video_title_wrap dashboard-vid">
+	  		<div class="row video_title_overlay">
+	    		<p class="col-sm-12 next_video_title">
+	    			<span class="chapter_title">Module 1: Activity 1</span>
+	    			<br>
+	    			first activity: 
+	    			<br>
+	    			<span class="time_remaining"><b>Time remaining: </b> 5  hour 00 min</span>
+	    		</p>
+	  			<div class="col-sm-12  play_vid clearfix">
+	  				<span class="lesson_title pull-left">
+	    				<span class="cource_indicator yellwo_indi"></span> Continue with this activity
+	    			</span>
+	  				<i style="font-size:1.7em" class="glyphicon glyphicon-play pull-right"></i>
+	  			</div>
+	  		</div>
+	  	</div>
+		</a> -->
+	</div>
+	<div class="tab-pane" id="proj">
+		<div class="col-sm-4" id="ms-sec-mid">
+			<div class="panel panel-cus panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+						<h3>Pitches</h3>
+					</div>
+					<div class="panel-options">
+						<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				<div class="panel-body p0">
+					<div class="row panel-items-list">
+					<% @pitches.each do |pitch|%>
+						<div class="col-sm-6 panel-sec-item">
+							<div class="panel-sec-item-wrap">
+								<div class="panel-sec-item-img-container pull-left">
+								 <%= link_to_if(user_signed_in?, image_tag(pitch.avatar.logo.url, :class => "img img-responsive pull-left"), edit_program_pitch_path(context_program, pitch)) %>
+								</div>
+								<p class="panel-sec-item-title">
+									<%= link_to pitch.title, program_pitch_url(pitch.program, pitch)%>
+								</p>
+							</div>
+						</div>
+					<%end%>					
+					</div>
+				</div>
+			</div>
+		 <!-- <div class="panel panel-cus panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Courses</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<div class="row panel-items-list">
+					<a href="#" class="col-sm-6 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<img src="/uploads/program_summary/lifestyle_background/52d7cd0d28d8b88a78000003/Henri_Rousseau_-_Il_sogno.jpg" class="img img-responsive pull-left" />
+							</div>
+							<p class="panel-sec-item-title">
+								Course 1 title
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+					<a href="#" class="col-sm-6 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<img src="/uploads/program_summary/lifestyle_background/52d7cd0d28d8b88a78000003/Henri_Rousseau_-_Il_sogno.jpg" class="img img-responsive pull-left" />
+							</div>
+							<p class="panel-sec-item-title">
+								Course 2 title
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+					<a href="#" class="col-sm-6 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<img src="/uploads/program_summary/lifestyle_background/52d7cd0d28d8b88a78000003/Henri_Rousseau_-_Il_sogno.jpg" class="img img-responsive pull-left" />
+							</div>
+							<p class="panel-sec-item-title">
+								Course 3 title
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+					<a href="#" class="col-sm-6 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<img src="/uploads/program_summary/lifestyle_background/52d7cd0d28d8b88a78000003/Henri_Rousseau_-_Il_sogno.jpg" class="img img-responsive pull-left" />
+							</div>
+							<p class="panel-sec-item-title">
+								Course 4 title
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div> -->
+		 <!-- <div class="panel panel-cus panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Collaborations</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<div class="row panel-items-list">
+					<a href="#" class="col-sm-12 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<figure>
+									<div class="tablecell profile-picture">
+							    	<img alt="Logo_images" class="img-circle img-responsive img-circle-border" src="/uploads/user/avatar/52d7cc4728d8b823c3000001/logo_images.jpg?1391165874" style="width: 40px">
+								  </div>
+								</figure>
+							</div>
+							<p class="panel-sec-item-title">
+								Amy Johnson<br>
+								<span>Applicant</span>
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+					<a href="#" class="col-sm-12 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<figure>
+									<div class="tablecell profile-picture">
+							    	<img alt="Logo_images" class="img-circle img-responsive img-circle-border" src="/uploads/user/avatar/52d7cc4728d8b823c3000001/logo_images.jpg?1391165874" style="width: 40px">
+								  </div>
+								</figure>
+							</div>
+							<p class="panel-sec-item-title">
+								Amy Johnson<br>
+								<span>Applicant</span>
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+					<a href="#" class="col-sm-12 panel-sec-item">
+						<div class="panel-sec-item-wrap">
+							<div class="panel-sec-item-img-container pull-left">
+								<figure>
+									<div class="tablecell profile-picture">
+							    	<img alt="Logo_images" class="img-circle img-responsive img-circle-border" src="/uploads/user/avatar/52d7cc4728d8b823c3000001/logo_images.jpg?1391165874" style="width: 40px">
+								  </div>
+								</figure>
+							</div>
+							<p class="panel-sec-item-title">
+								Amy Johnson<br>
+								<span>Applicant</span>
+								<i class="fa icon-angle-right pull-right"></i>
+							</p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div> --> 
+		<% if !context_program.event_sessions.blank? and context_program.try(:show_events)  %>
+			<%event_records = EventRecord.in(program_id: context_program.id, user_id: @user)%>
+			<div class="panel panel-trans panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+						<h3><i class="fa icon-calendar"></i> Events</h3>
+					</div>
+					<div class="panel-options">
+						<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				<div class="panel-body p0">
+					<div class="row panel-items-list">
+						<%if event_records %>
+		  				<% event_records.sort_by{|cc| cc.event_session.date}.reverse.each do |event_record|%>
+								<div href="#" class="col-sm-12 panel-sec-item">
+									<div class="panel-sec-item-wrap">
+										<div class="panel-sec-item-img-container pull-left">
+											<p class="event-day"><%=	event_record.event_session.try(:date).strftime('%d')  %></p>
+											<p class="event-month"><%=	event_record.event_session.try(:date).strftime('%b')  %></p>
+										</div>
+										<p class="panel-sec-item-title">
+											<strong><%=	event_record.event_session.program_event.try(:title) %></strong>
+											<br>
+											<span class="panel-sec-item-desc">
+												<%= event_record.event_session.program_event.try(:description).html_safe%>
+												<% if need?(["company_admin"], current_organisation) %>
+	    	              				<%= (event_record.rejected_at ? "Rejected" : (event_record.confirmed_at ? "Attented" : "Registered"))  %>
+	    									<%end%>
+											</span>
+										</p>
+									</div>
+								</div>
+							<%end%>
+						<% else %>
+	    				<p>Not registered to any event yet.</p>
+						<%end%>						
+					</div>
+				</div>
+			</div>
+		<%end%>
+	</div>
+	
+	<div class="col-sm-4" id="ms-sec-right">
+		<!-- <div class="dropdown get-in-touch-dropdown">
+		  <button data-toggle="dropdown" id="dropdownMenux" type="button" class="col-sm-12 clearfix ">
+		    <a class="admin_dropdown pull-left" href="#">Get in Touch</a>
+		    <span class="pull-right"><i class="icon icon-hand-up"></i></span>
+		  </button>
+		  <ul aria-labelledby="dropdownMenux" role="menu" class="dropdown-menu right_admin_menu col-sm-12">
+          <li class="">
+             <a href="#"><i class="gn-icon gn-icon-auto gn-icon-envelope"></i> Send a message</a>
+          </li>
+          <li class="">
+            <a href="#"><i class="gn-icon gn-icon-auto gn-icon-mentor"></i> Ask to be a mentor</a>
+          </li>
+          <li class="">
+            <a href="#"><i class="gn-icon gn-icon-auto gn-icon-refere"></i> Send a collaboration request</a>
+          </li>
+          <li class="">
+            <a href="#"><i class="gn-icon gn-icon-auto gn-icon-contacts"></i> Assign to a team</a>
+          </li>
+		  </ul>
+		</div> -->
+		
+		<div class="panel panel-blue panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Get in touch</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			
+				<div class="panel-body p0">
+					<div class="row">
+						<%= form_for current_user.contact_requests.new, :url => user_contact_requests_path do |f|%>
+	          <div class="col-sm-12 get-in-touch-padding">
+	          	<%= f.hidden_field :receiver_id, value: @user.id%>
+              <%= f.hidden_field :program_id, value: context_program.try(:id)%>
+	          	<%= f.text_field :subject, class: "form-control form-style-1 show_submit show_submit_input", placeholder: "Subject"%>
+	          </div>
+	          <br /><br />
+	          <div class="col-sm-12 get-in-touch-padding2">
+	          	<%=f.text_area :message, class: "form-control form-style-1 show_submit show_submit_area", cols: "25", rows: "4", placeholder: "Enter your message here"%>
+	          </div>
+	        </div>
+	        <div class="row">
+	          <div class="col-sm-12 get-in-touch-padding2 hidden_submit send-message-btn" style="display:none;">
+	          	<i class="fa fa-envelope"></i> <%=f.submit "Send message", class: ""%>
+	          </div>
+	        </div>
+	        <% end if current_user%>
+	        <div class="dashboard_panel_footer">
+	        	<% if @user.role?("mentor", context_program.try(:id).try(:to_s)) and current_user.role?("participant", context_program.try(:id).try(:to_s))%>
+             	<% pitches_to_be_mentor = current_user.pitches_to_be_mentor(@user.id, context_program.id) %>
+							<a href="#send_invitation" class="col-sm-6 fancybox btn-info" ><i class="gn-icon gn-icon-auto gn-icon-mentor"></i><%= "Ask to be a #{t('role_type:mentor')} "%></a>
+							 <div style="display: none" id="send_invitation">
+		            <div class="lightbox_box">
+		              <% if pitches_to_be_mentor.any? %>
+		                <h2><%="Choose the #{t('pitch')} you would like support for"%></h2>
+		                <p class="form-group">
+		                  <%= label_tag "#{t('pitch')}"%>
+		                  <%= select_tag "pitch", options_for_select(pitches_to_be_mentor.collect{|r| [r.title, r.id]})%>
+		                  <%= link_to "Submit", "#", :class => "btn btn-info invite_mentor_btn", :id => "submit", :"data-program_id" => context_program.id, :"data-mentor_id" => @user.id%>
+		                </p>
+		              <% else %>
+		                <h2><%="Either you do not have any #{t('pitch')} you would like support for or #{t('pitch', 'p')} already mentored by this user"%></h2>
+		              <% end %>
+		            </div>
+		          </div>
+	        	<%end%>
+	        	<!--<a href="#" class="col-sm-6"><i class="gn-icon gn-icon-auto gn-icon-refere"></i> Send a collaboration request</a>-->
+	        </div>
+	      </div>
+    	
+		</div>
+		 <!-- <div class="panel panel-blue panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>To do list</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<ul class="panel-list">
+   				<li>
+   					<p class="to-do-item todo-late"><i class="fa icon-bell"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-warning"><i class="fa icon-time"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-normal"><i class="fa icon-chevron-sign-right"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-complete"><i class="fa icon-check"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   			</ul>
+			</div>
+		</div> -->
+		<!-- <div class="panel panel-green panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Recommended to do</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<ul class="panel-list">
+   				<li>
+   					<p class="to-do-item todo-reccommended-complete"><i class="fa icon-star"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-reccommended-incomplete"><i class="fa icon-star-empty"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-reccommended-complete"><i class="fa icon-star"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   				<li>
+   					<p class="to-do-item todo-reccommended-incomplete"><i class="fa icon-star-empty"></i> Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+   				</li>
+   			</ul>
+			</div>
+		</div> --> 
+		<div class="panel panel-trans panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3><i class="fa icon-comment"></i> <%= @user.first_name%> latest  post</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p5">
+
+			 <% if @buzz_feeds %>
+			 	<% @buzz_feeds.each do |buzz_feed|%>
+					<section class="bg-primary buzz-item">
+						<div href="#" class="buzz-me">
+							<a href="#">
+							<figure class="pull-left mr15">
+								<div class="tablecell profile-picture">
+						    	<%= image_tag(@user.avatar.logo.url, :style=>"width: 60px", :class=>"img-circle img-responsive img-circle-border", alt: "Logo_images")%>
+							  </div>
+							</figure>
+							<div class="overflow-hidden">
+								<b><%= @user.full_name %></b>
+								<small class="pull-right"><%= buzz_feed.created_at.strftime("%A")
+%>, <%= buzz_feed.created_at.strftime("%H:%M") %></small>
+								<div class="show small"><%= buzz_feed.subject %></div>
+								<div class="mt10"></div>
+
+								<blockquote class="small no-m no-p"><%= link_to buzz_feed.content.html_safe, program_community_feed_path(buzz_feed.program_id, buzz_feed.id)  %></blockquote>
+							</div>
+							</a>
+							<div class="buzz-me-social clearfix profile_feed-events "> 
+								<span class="pull-right"><i class="glyphicon glyphicon-heart"></i><span class="update_anzahl " style="margin-left: 1px"> <%= buzz_feed.likes_count %></span></span>
+								<span class="pull-right"><i class="glyphicon glyphicon-comment"></i><span class=" " style="margin-left: 2px"><%= buzz_feed.comments.count %></span></span>
+								<span class="pull-left"> <%= profile_feed_like_link(buzz_feed) %></span>
+								<a data-toggle="collapse" data-parent="#accordion" href="#<%= buzz_feed.id %>" class="pull-left"><i class="fa icon-comment"></i> Comment</a>
+							</div>
+						</div>
+						<div id="<%= buzz_feed.id %>" class="panel-collapse collapse">
+      				<div class="panel-body">						
+            		<div class="post-main-comments">
+              <div class="post-main-commment-title">
+                <span class="post-comment-description-box" id="comments_box_<%= buzz_feed.id%>">
+                  <%= buzz_feed.comments.count==0 ? "No Comments" : "#{buzz_feed.comments.count==1 ? "View #{buzz_feed.comments.count} comment" : "View all #{buzz_feed.comments.count} comments"}".html_safe %>
+                </span>
+              </div>
+              <div id="comments_box_<%= buzz_feed.id%>_show">
+                <%= render "comments/inline_comments", :commentable => buzz_feed %>
+              </div>
+              <div class="comment-input-container">
+                <%= render "shared/comment_form", :comment => Comment.new, :commentable_type => buzz_feed.class.to_s, :commentable_id => buzz_feed.id %>
+              </div>
+              	</div>
+              </div>
+            </div>
+					</section>
+				<%end%>
+			<%end%>	
+				
+			</div>
+		</div>
+
+		
+	</div>
+<%
+=begin
+%>
+	<div class="col-sm-12" id="ms-sec-mid">
+		<div class="panel panel-cus panel-shadow ui-widget collapses dashboard_panel" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Badges</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<div class="row panel-items-list">		
+				 <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+          <thead>
+            <tr role="row">
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Image</th>
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Type</th>
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Criteria Description</th>
+              <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+            </tr>
+          </thead>
+          
+          <tbody aria-relevant="all" aria-live="polite" role="alert">
+            <% @user_badges.each do |badge|%>
+              <% app_badge = badge.app_badge %>
+              <%unless badge.revoked%>
+                <% if app_badge.present?%>
+                  <tr>
+                    <td><%= image_tag(app_badge.image, height: "100px", width: "150pxpx")%></td>
+                    <td><%= app_badge.name%></td>
+                    <td><%= app_badge.description%></td>
+                    <td><%= app_badge.badge_type%></td>
+                    <td><%= app_badge.badge_rule.criteria_description%></td>
+                    <td>
+                      <%if app_badge.badge_type == "Open Badge" and (current_user == @user or need?(["company_admin", "program_admin"], current_organisation))%>
+                        <%= link_to "<i class='glyphicon glyphicon-edit'></i> Send Badge in Your BadgePack".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left user-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , id: badge.id%>
+                        <%= link_to "<i class='glyphicon glyphicon-edit'></i> Download Badge".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left bake-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , :"data-id" => badge.id%>
+                      <%else%>
+                      -
+                      <%end%>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <%end%>
+          </tbody>
+         </table>					
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="rightcontent">
+		<div class="profile-env">
+		<header class="row">
+			<div class="col-sm-2 profile_img_container">
+				<div class="tablecell profile-picture">
+		    	<%= image_tag(@user.avatar.logo.url, :style=>"width: 130px", :class=>"img-circle img-responsive img-circle-border") %>
+			  </div>
+			</div>
+			
+			<div class="col-sm-7 user_name_comp">
+				<ul class="profile-info-sections">
+					<li>
+						<div class="profile-name">
+	  				<% if need?(["company_admin"], current_organisation) or (current_user and current_user.super_admin?)%>
+	  					<%= link_to "",destroy_user_dashboard_url(:id => @user.id), :class => "gn-icon icon-remove2 pull-right icon-panel", :method => :delete, :confirm => "Are you sure ?"%>
+	  				<% end %>
+
+	  				<% if need?(["company_admin"], current_organisation) or (current_user and current_user.super_admin?)%>
+	  					<%= link_to "", "#", :"data-toggle"=>"modal", :"data-target"=>"#update_user", "id" => "user_update_modal", :"data-user" => @user.id, :class => "gn-icon icon-edit pull-right icon-panel"%>
+	  				<% end %>
+							<strong style="width: 175px">
+								<a href="#"><%= @user.full_name %></a>
+							</strong>
+							<span><a href="#"><%= Organisation.where(:id => @user.try(:organisation).try(:to_s)).try(:first).try(:company_name) %></a></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="col-sm-3">
+				<div class="profile-buttons">
+					<% if @user.role?("mentor", context_program.try(:id).try(:to_s)) and current_user.role?("participant", context_program.try(:id).try(:to_s))%>
+	          <% pitches_to_be_mentor = current_user.pitches_to_be_mentor(@user.id, context_program.id) %>
+	          <div class="pull-right col-md-4">
+	            <a href="#send_invitation" class="fancybox btn btn-info" id="submit"><%= "Invite #{t('role_type:mentor')} "%></a>
+	          </div>
+	          <div style="display: none" id="send_invitation">
+	            <div class="lightbox_box">
+	              <% if pitches_to_be_mentor.any? %>
+	                <h2><%="Choose the #{t('pitch')} you would like support for"%></h2>
+	                <p class="form-group">
+	                  <%= label_tag "#{t('pitch')}"%>
+	                  <%= select_tag "pitch", options_for_select(pitches_to_be_mentor.collect{|r| [r.title, r.id]})%>
+	                  <%= link_to "Submit", "#", :class => "btn btn-info invite_mentor_btn", :id => "submit", :"data-program_id" => context_program.id, :"data-mentor_id" => @user.id%>
+	                </p>
+	              <% else %>
+	                <h2><%="Either you do not have any #{t('pitch')} you would like support for or #{t('pitch', 'p')} already mentored by this user"%></h2>
+	              <% end %>
+	            </div>
+	          </div>
+	        <% end %>
+				</div>
+			</div>
+		</header>
+		
+		<section class="profile-info-tabs">
+			<div class="row">
+				<div class="col-sm-offset-2 user_data_btm col-sm-10">
+					<ul class="user-details">
+						<li>
+						  <%= link_to_if(need?(["company_admin"], current_organisation), " #{@user.email}", "#contact_user", class: "gn-icon gn-icon-mail-settings gn_user_profile fancybox_small"){link_to " Contact", "#contact_user", class: "gn-icon gn-icon-mail-settings gn_user_profile fancybox_small"}%>
+						</li>
+						
+						<li>
+							<% unless @user.linkedin_profile.blank? %>
+								<a href="<%=add_url_protocol(@user.linkedin_profile)%>" target="_blank" class="gn-icon gn-icon-linkedin gn_user_profile">
+								LinkedIn
+								</a>
+							<% end %>
+						</li>
+					</ul>
+					<br />
+					
+					<!-- tabs for the profile links -->
+					<ul class="nav nav-tabs" id="profTab">
+						<li class="active"><a href="#bio"><%= t("user:bio") ? t("user:bio") : "Bio"%></a></li>
+						<li><a href="#comp">More Info</a></li>
+						<li><a href="#proj">Projects</a></li>
+						<% if !context_program.event_sessions.blank? and context_program.try(:show_events)  %>
+								<li><a href='#even'>Events</a></li>
+						<%end%>		
+						<% if current_user == @user or need?(["company_admin", "program_admin"], current_organisation)%>
+							<li><a href="#private">Private Fields</a></li>
+						<%end%>
+						<li><a href="#badges">Badges</a></li>
+					</ul>
+						
+				</div>
+				
+			</div>
+		  <%ankor = @user.role?("participant", context_program) ? "participant" : (@user.role?("mentor", context_program) ? "mentor" : nil)%>
+			<div class="row">
+				<div class="tab-content user_prof_tab_cont">
+			  		<div class="tab-pane active" id="bio">
+	            
+	            <%= content_tag :div do%>
+	              <p style="font-size: 12px;"><%= raw(@user.bio.gsub("\r\n","<br>"))  if @user.bio %></p>
+	            <%end if show_basic_field(context_program, "bio", ankor)%>
+			  		</div>
+					  <div class="tab-pane" id="comp">
+					  	<table class="pitchcontent table table-striped table-bordered" style="table-layout:fixed">
+	              <% custom_fields = profile_custom_fields(@user, context_program, "avatar")%>
+	              <%custom_fields.each do |custom_field|%>
+	                <%= render "show_custom_fields", custom_field: custom_field%>
+	              <% end %>
+	              <% custom_fields = profile_custom_fields(@user, context_program, "bio")%>
+	              <%custom_fields.each do |custom_field|%>
+	                <%= render "show_custom_fields", custom_field: custom_field%>
+	              <% end %>
+					  	  <%= content_tag :div do%>
+	  							<tr>
+	  								<td class="label_row">My Specialty</td>
+	  								<td style="width:300px;"><p class="lighter_color_table"><%= @user.speciality %></p></td>
+	  							</tr>
+	  						<% end if show_basic_field(context_program, "speciality", ankor)%>
+	  							<% custom_fields = profile_custom_fields(@user, context_program, "speciality")%>
+	                <%custom_fields.each do |custom_field|%>
+	                  <%= render "show_custom_fields", custom_field: custom_field%>
+	                <% end %>
+	                
+	                <%= content_tag :div do%>
+	    							<tr>
+	    								<td class="label_row">Skills</td>
+	    								<td class="tagList">
+	    									<% @user.skills.each do |skill| %>
+	    										<div class="tagContainer label label-success">
+	    											<%= link_to skill, "#", :class => "" %>
+	    										</div>
+	    									<% end %>
+	    								<div class="clr"></div>
+	    								</td>
+	    							</tr>
+	    						<% end if show_basic_field(context_program, "skills", ankor)%>
+	    						
+	  							<% custom_fields = profile_custom_fields(@user, context_program, "skills")%>
+	                <%custom_fields.each do |custom_field|%>
+	                  <%= render "show_custom_fields", custom_field: custom_field%>
+	                <% end %>
+								
+								<%=content_tag :div do%>
+	  							<tr>
+	  								<td class="label_row">Interests</td>
+	  								<td class="tagList">
+	  									<% @user.interests.each do |interest|  %>
+	  										<div class="tagContainer label label-success">
+	  											<%= link_to interest, "#", :class => "" %>
+	  										</div>
+	  									<% end  %>
+	  								<div class="clr"></div>
+	  								</td>
+	  							</tr>
+	  						<% end if show_basic_field(context_program, "interests", ankor)%>
+								
+								<% custom_fields = profile_custom_fields(@user, context_program, "interests")%>
+	              <%custom_fields.each do |custom_field|%>
+	                <%= render "show_custom_fields", custom_field: custom_field%>
+	              <% end %>
+								
+								<%= content_tag :div do%>
+	  							<tr>
+	  								<td class="label_row">Education</td>
+	  								<td><p class="lighter_color_table"><%= @user.education_qualification %></p></td>
+	  							</tr>
+	  						<% end if show_basic_field(context_program, "education_qualification", ankor)%>
+								
+								<% custom_fields = profile_custom_fields(@user, context_program, "education_qualification") %>
+	              <%custom_fields.each do |custom_field|%>
+	                <%= render "show_custom_fields", custom_field: custom_field%>
+	              <% end %>
+								
+								<%= content_tag :div do%>
+	  							<tr>
+	  								<td class="label_row">Linked-in Profile</td>
+	  								<td><p class="lighter_color_table"><%= link_to @user.linkedin_profile, add_url_protocol(@user.linkedin_profile), "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" unless @user.linkedin_profile.blank? %></p></td>
+	  							</tr>
+	  						<% end if show_basic_field(context_program, "linkedin_profile", ankor)%>
+								
+								<% custom_fields = profile_custom_fields(@user, context_program, "") %>
+	              <%custom_fields.each do |custom_field|%>
+	                <%= render "show_custom_fields", custom_field: custom_field%>
+	              <% end %>
+								
+								<% custom_fields.for_program(get_program).each do |cf| %>
+									<tr>
+										<td class="label_row"><%= cf.label %></td>
+										<% user_code = @user.send(:"#{cf.code}").is_a?(Array) ? @user.send(:"#{cf.code}").join(', ') : @user.send(:"#{cf.code}")%>
+										<td><p class="lighter_color_table">
+											<% if (cf.element_type == "video_url" || cf.element_type == "image_url" || cf.element_type == "website" || cf.element_type == "sound_url") %>
+												<%= link_to user_code, user_code, "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" %>
+											<% else %>
+												<%= user_code %>
+											<% end %>
+										</p></td>
+									</tr>
+								<% end if false%>
+							</table>
+					</div>
+					<% if !context_program.event_sessions.blank? and context_program.try(:show_events)  %>
+					<%event_records = EventRecord.in(program_id: context_program.id, user_id: @user)%>
+						<div class="tab-pane" id="even">
+						<p>
+							<table class="table table-bordered">
+	  								<tr>
+	  									<th>Date</th>
+	  									<th>Event Name</th>
+	  									<% if need?(["company_admin"], current_organisation)%>
+	  									  <th>Status</th>
+	  									<%end%>
+	  								</tr>
+								  <tbody>
+								    <%if event_records%>
+	  								  <% event_records.sort_by{|cc| cc.event_session.date}.reverse.each do |event_record|%>
+	    									<tr>
+	    										<td>
+	    											<%=	event_record.event_session.try(:date) %>
+	    										</td>
+	    										<td>
+	    											<%=	event_record.event_session.program_event.try(:title) %>
+	    										</td>
+	    										<% if need?(["company_admin"], current_organisation) %>
+	    											<td>
+	    	              				<%= (event_record.rejected_at ? "Rejected" : (event_record.confirmed_at ? "Attented" : "Registered"))  %>
+	    											</td>
+	    										<%end%>
+	    									</tr>
+	    								<%end%>
+	    							<%else%>
+	    							  Not registered to any event yet.
+	    							<%end%>
+	  							</tbody>
+								 		
+
+							</table>
+						</p>
+						</div>
+					<%end%>
+					<div class="tab-pane" id="proj">
+						<% @pitches.each do |pitch|%>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="panel panel-white panel-shadow ui-widget collapses prof-proj-panel" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+										<!-- panel body -->
+										<div class="panel-body">
+											<div class="row user_data">
+												<div class="pull-left user_data_img_cotainer"><%= link_to_if(user_signed_in?, image_tag(pitch.avatar.logo.url, :class => "img-responsive img-pitch-logo", :style=>"position: relative; top: 0; left: 0;"), edit_program_pitch_path(context_program, pitch)) %></div>
+												<b><%= link_to pitch.title, program_pitch_url(pitch.program, pitch)%></b>
+												<br /><br />
+												<b>Bio:</b> <%= pitch.summary.try(:content)%>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<%end%>
+					  </div>
+					<% if current_user == @user or need?(["company_admin", "program_admin"], current_organisation)%>
+						<div class="tab-pane" id="private">
+							<table class="pitchcontent table table-striped table-bordered" style="table-layout:fixed">
+								<% custom_fields = private_custom_fields(@user, context_program)%>
+								<%custom_fields.each do |custom_field|%>
+									<%= render "show_custom_fields", custom_field: custom_field%>
+								<% end %>
+							</table>
+						</div>
+					<%end%>
+					<div class="tab-pane" id="badges">
+					  <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+	            <thead>
+	              <tr role="row">
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Image</th>
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Type</th>
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Criteria Description</th>
+	                <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+	              </tr>
+	            </thead>
+	            
+	            <tbody aria-relevant="all" aria-live="polite" role="alert">
+	              <% @user_badges.each do |badge|%>
+	                <% app_badge = badge.app_badge %>
+	                <%unless badge.revoked%>
+	                  <% if app_badge.present?%>
+	                    <tr>
+	                      <td><%= image_tag(app_badge.image, height: "100px", width: "150pxpx")%></td>
+	                      <td><%= app_badge.name%></td>
+	                      <td><%= app_badge.description%></td>
+	                      <td><%= app_badge.badge_type%></td>
+	                      <td><%= app_badge.badge_rule.criteria_description%></td>
+	                      <td>
+	                        <%if app_badge.badge_type == "Open Badge" and (current_user == @user or need?(["company_admin", "program_admin"], current_organisation))%>
+	                          <%= link_to "<i class='glyphicon glyphicon-edit'></i> Send Badge in Your BadgePack".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left user-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , id: badge.id%>
+	                          <%= link_to "<i class='glyphicon glyphicon-edit'></i> Download Badge".html_safe,"#", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left bake-badge", :"data-url" => (assertion_api_user_badges_url(program_id:  context_program.id, id: badge.id)).to_s , :"data-id" => badge.id%>
+	                        <%else%>
+	                        -
+	                        <%end%>
+	                      </td>
+	                    </tr>
+	                  <% end %>
+	                <% end %>
+	              <%end%>
+	            </tbody>
+	          </table>
+					</div>
+				</div>
+			</div>
+			
+		</section>
+		
+	</div>
+<%
+=end
+%>
+
+
+  <!-- lightboxes -->
+<div style="display: none">
+  <div id="contact_user">
+    <h3><b>Your message to <%=@user.full_name%></b></h3>
+    <br>
+    <%= form_for current_user.contact_requests.new, :url => user_contact_requests_path do |f|%>
+        <div>
+        <p>Subject:</p>
+        <%= f.text_field :subject, class: "title form-control"%>
+        <%= f.hidden_field :receiver_id, value: @user.id%>
+        <%= f.hidden_field :program_id, value: context_program.try(:id)%>
+        </div>
+        <br />
+        <div>
+        <p>Message:</p>
+        <%=f.text_area :message, class: "form-control", cols: "25", rows: "8", style:"height:100px;"%>
+        <br>
+        </div>
+
+        <div>
+        <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+        <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+        <div class="clear"></div>
+        </div>
+    <% end if current_user%>
+    </div>
+  </div>
+  <div class="eventInsForm modal fade" id="update_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel"><b>Edit User</b></h4>
+        </div>
+        <div class="modal-body" id="edit_user_body">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="display: none" id="show_help_content_text">
+    <div class="lightbox_box">
+      <%= render "show_help_content" %>
+    </div>
+  </div>
+<script>
+  $(document).ready(function(e){
+    $(".contact_cancel").on("click", function(e){
+      $.fancybox.close();
+      e.preventDefault();
+    })
+  });
+
+  $(document).ready(function(e){
+    $(".invite_mentor_btn").on("click", function(e){
+      $.fancybox.close();
+    })
+  });
+</script>
+
+
+
+<%
+=begin
+%>
+
+	<div class="leftcol_no_bg">
+		<div class="block">
+			<div style="display: none">
+            <a href="#invitation_sent" class="fancybox invitation_sent_link"></a>
+            </div>
+            <div style="display: none" id="invitation_sent">
+                <div class="lightbox_box">
+                    <h2>The mentor has been invited and you will be notified if they have accepted the invitation</h2>
+                </div>
+            </div>
+			<div class="user-profile-image pull-left">
+				 <%= image_tag(@user.avatar.logo.url, :style => 'width: 100px') %>
+			</div>
+			<div class="pull-left">
+				<h1><%#= current_organisation.company_name if current_organisation%></h1>
+					<%= @user.full_name %>
+					<br/><%= @user.email %>
+			</div>
+			<% if need?(["company_admin", "program_admin"], current_organisation) or current_user.super_admin?%>
+				 <%= link_to "Delete", '#', "data-url" => account_info_dashboard_path(:id => @user), "data-del-url" => delete_account_dashboard_path(:id => @user), :class => "delete_user_account", :id => "submit"%>
+			<% end %>
+			<% if current_user and @user.role?("mentor", context_program.id.to_s) and current_user.role?("participant", context_program.id.to_s)%>
+              <% pitches_to_be_mentor = current_user.pitches_to_be_mentor(@user.id) %>
+              <div class="pull-right col-md-4">
+                <a href="#send_invitation" class="fancybox btn btn-info" id="submit"><%= "Invite #{t('role_type:mentor')} "%></a>
+              </div>
+              <div style="display: none" id="send_invitation">
+                <div class="lightbox_box">
+                  <% if pitches_to_be_mentor.any? %>
+                    <h2><%="Choose the #{t('pitch')} you would like support for"%></h2>
+                    <p class="form-group">
+                      <%= label_tag "#{t('pitch')}"%>
+                      <%= select_tag "pitch", options_for_select(pitches_to_be_mentor.collect{|r| [r.title, r.id]})%>
+                      <%= link_to "Submit", "#", :class => "btn btn-info invite_mentor_btn", :id => "submit", :"data-program_id" => context_program.id, :"data-mentor_id" => @user.id%>
+                    </p>
+                  <% else %>
+                    <h2><%="Either you do not have any #{t('pitch')} you would like support for or #{t('pitch', 'p')} already mentored by this user"%></h2>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+			<div class="clr"></div>
+		</div>
+		<div class="block">
+			<h2 class="titleLine">Bio</h2>
+			<p><%= raw(@user.bio.gsub("\r\n","<br>"))  if @user.bio %></p>
+		</div>
+		<div class="block">
+			<h2 class="titleLine">Competencies</h2>
+			<table class="pitchcontent table table-striped table-bordered">
+				<tr>
+					<td class="label_row">My Specialty</td>
+					<td><p class="lighter_color_table"><%= @user.speciality %></p></td>
+				</tr>
+				<tr>
+					<td class="label_row">Skills</td>
+					<td class="tagList">
+						<% @user.skills.each do |skill| %>
+							<div class="tagContainer label label-success">
+								<%= link_to skill, "#", :class => "" %>
+							</div>
+						<% end %>
+					<div class="clr"></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="label_row">Interests</td>
+					<td class="tagList">
+						<% @user.interests.each do |interest|  %>
+							<div class="tagContainer label label-success">
+								<%= link_to interest, "#", :class => "" %>
+							</div>
+						<% end  %>
+					<div class="clr"></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="label_row">Education</td>
+					<td><p class="lighter_color_table"><%= @user.education_qualification %></p></td>
+				</tr>
+				<tr>
+					<td class="label_row">Linked-in Profile</td>
+					<td><p class="lighter_color_table"><%= link_to @user.linkedin_profile, @user.linkedin_profile, "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" unless @user.linkedin_profile.blank? %></p></td>
+				</tr>
+				<% custom_fields = @user.class.custom_fields.enabled.for_program(get_program)
+  				custom_fields = custom_fields.for_anchor(get_custom_field_anchor(@user)) if get_custom_field_anchor(@user).present?
+				%>
+				<% custom_fields.for_program(get_program).each do |cf| %>
+					<tr>
+						<td class="label_row"><%= cf.label %></td>
+						<% user_code = @user.send(:"#{cf.code}").is_a?(Array) ? @user.send(:"#{cf.code}").join(', ') : @user.send(:"#{cf.code}")%>
+						<td><p class="lighter_color_table">
+							<% if (cf.element_type == "video_url" || cf.element_type == "image_url" || cf.element_type == "website" || cf.element_type == "sound_url") %>
+								<%= link_to user_code, user_code, "target"=>"_blank", :style=>"color: #0000FF;text-decoration: underline !important;" %>
+							<% else %>
+								<%= user_code %>
+							<% end %>
+						</p></td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+	</div>
+	<%
+=end
+%>
+</div><!-- #rightcontent -->
+<script type="text/javascript">
+    $(document).ready(function() {
+      $(document).on('click', ".invite_mentor_btn", function(e){
+        e.preventDefault();
+        data_url = '/programs/'+$(this).attr('data-program_id')+'/pitches/'+$('#pitch').val()+'/invite_mentor?mentor_id='+$(this).attr('data-mentor_id')
+        $.ajax({
+          url: data_url,
+          type: 'PUT',
+          success: function(data){
+            $('#send_invitation').hide()
+            $('.invitation_sent_link').trigger('click');
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        });
+      });
+      
+      $('#profTab a').click(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show')
+			});
+			
+			
+			function stretch_cols (){
+				$('#ms-sec-mid').removeClass('col-sm-4');
+				$('#ms-sec-mid').addClass('col-sm-6');
+				
+				$('#ms-sec-right').removeClass('col-sm-4');
+				$('#ms-sec-right').addClass('col-sm-6');
+			}
+			function shrink_cols (){
+				$('#ms-sec-mid').removeClass('col-sm-6');
+				$('#ms-sec-mid').addClass('col-sm-4');
+				
+				$('#ms-sec-right').removeClass('col-sm-6');
+				$('#ms-sec-right').addClass('col-sm-4');
+			}
+			
+			var leftSec = $('#ms-sec-left');
+    	curWidth = leftSec.width();
+			
+			$('#private-fields-ms').click(function(e){
+			  e.preventDefault();
+			  if ($(this).hasClass("active_more_link")) {
+			  	$(this).removeClass('active_more_link');
+			  	$('#left-pt-3').hide(500);
+					$("#ms-sec-left").animate({
+			      width:curWidth
+			    },'slow');
+			    $('#left-pt-1').removeClass('col-sm-4');
+				  $('#left-pt-1').addClass('col-sm-12');
+				  shrink_cols ();
+			  }else{
+			  	$('#left-pt-2').hide(500);
+			  	$('#more-info-ms').removeClass('active_more_link');
+			  	$(this).addClass('active_more_link');
+				  $("#ms-sec-left").animate({
+			      width:'100%'
+			    },'slow');
+			    $('#left-pt-3').slideDown(2000);
+				  $('#left-pt-1').removeClass('col-sm-12');
+				  $('#left-pt-1').addClass('col-sm-4');
+				  stretch_cols ();
+			  }
+			});
+			
+			$('#more-info-ms').click(function(e){
+			  e.preventDefault();
+			  if ($(this).hasClass("active_more_link")) {
+			  	$(this).removeClass('active_more_link');
+			  	$('#left-pt-2').hide(500);
+					$("#ms-sec-left").animate({
+			      width:curWidth
+			    },'slow');
+			    $('#left-pt-1').removeClass('col-sm-4');
+				  $('#left-pt-1').addClass('col-sm-12');
+				  shrink_cols ();
+			  }else{
+			  	$('#left-pt-3').hide(500);
+			  	$('#private-fields-ms').removeClass('active_more_link');
+			  	$(this).addClass('active_more_link');
+				  $("#ms-sec-left").animate({
+			      width:'100%'
+			    },'slow');
+			    $('#left-pt-2').slideDown(2000);
+				  $('#left-pt-1').removeClass('col-sm-12');
+				  $('#left-pt-1').addClass('col-sm-4');
+				  stretch_cols ();
+			  }
+			});
+			
+			$('.close-left-pt').click(function(){
+				$('#more-info-ms').removeClass('active_more_link');
+				$('#private-fields-ms').removeClass('active_more_link');
+				$('#left-pt-2').hide(500);
+				$('#left-pt-3').hide(500);
+				$('#left-pt-4').hide(500);
+				$("#ms-sec-left").animate({
+		      width:curWidth
+		    },'slow');
+		    $('#left-pt-1').removeClass('col-sm-4');
+			  $('#left-pt-1').addClass('col-sm-12');
+			  shrink_cols ();
+			})
+			
+		   $('.show-more-tags').on('click', function(){
+		       $('.pitch-tags a:gt(3)').show(500);
+		       $('.show-less-tags').show(500);
+		       $('.show-more-tags').hide(500);
+		    });
+		    $('.show-less-tags').on('click', function(){
+		       $('.pitch-tags a:gt(3)').hide(500);
+		       $('.show-more-tags').show(500);
+		       $('.show-less-tags').hide(500);
+		    });
+		    //Show only ten items
+		    if ( $('.pitch-tags a').length > 4 ) {
+		        /*$('.lia-list-standard li:gt(3)').hide();
+		        $('.show-more').removeClass('hidden');
+		        */
+		    $('.show-less-tags').click();
+		    }
+    });
+    
+    $(document).on("click", "#user_update_modal", function(e){
+      e.preventDefault();
+      user = $(this).attr("data-user");
+      $.ajax({
+        url: "/users/edit_user",
+        type: 'get',
+        data:{user_id: user},
+        success: function(data){
+          $("#edit_user_body").html(data);
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      });
+    });
+    
+      $(function(){
+        $('.autosize_textarea').autosize({append: "\n"});
+      });
+    
+    $(document).on('click', ".show_help_text", function(e){
+      e.preventDefault();
+      current_obj = $(this);
+      $.ajax({
+        url: $(this).data('url'),
+        type: 'get',
+        data: "field_name="+ $(this).data('field-name')+"&text_for="+$(this).data('text-for'),
+        contentType: 'application/json; charser=utf-8',
+        success: function(data){
+          current_obj.data('content', data.content);
+          current_obj.popover();
+          current_obj.popover('show');
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      })
+    });
+    
+    $(document).ready(function(){
+    
+    $(document).on('click', '.user-badge', function(){
+      var url = $(this).data("url")
+      OpenBadges.issue([url], function(errors, successes) { })
+    });
+ 
+   $(document).on('click', '.bake-badge', function(){
+    var url = $(this).data("url");
+    var id = $(this).data("id")
+    var bp_url= "http://backpack.openbadges.org/baker?assertion=<%= root_url %>bake_badges/"+id+ ".json"
+     $.ajax({
+            url: url,
+            data: {},
+            method: "get",
+            success: function(data) {
+                  window.open(bp_url, '_blank', "width=800, height=400"); 
+
+                }
+           });
+   });
+
+	$(function(){
+		if ($('.show_submit_input').val() == '' && $('.show_submit_area').val() == '') { //Check to see if there is any text entered
+               //If there is no text within the input ten disable the button
+               $('.hidden_submit').hide();
+          } else {
+               //If there is text in the input, then enable the button
+               $('.hidden_submit').show();
+          }
+     $('.show_submit').keyup(function(){
+          if ($('.show_submit_input').val() == '' && $('.show_submit_area').val() == '') { //Check to see if there is any text entered
+               //If there is no text within the input ten disable the button
+               $('.hidden_submit').hide("500");
+          } else {
+               //If there is text in the input, then enable the button
+               $('.hidden_submit').show("500");
+          }
+     });
+	});     
+});
+</script>

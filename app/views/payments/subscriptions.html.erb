@@ -1,0 +1,28 @@
+<% content_for :title do %>
+  <%= "Subscriptions" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "payments" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+  <% @subscriptions.each do |sub| %>
+    <div class="block">
+      <p>
+        Product Purchased: <%= sub.subscription %>
+      </p>
+      <p>
+        Date Purchased: <%= sub.start_date %>
+      </p>
+      <p>
+        Expiry Date: <%= sub.end_date %>
+      </p>
+        <p>
+      <% if sub.due? %>
+      
+          <%= link_to "Renew/Change Subscription", edit_payment_path(sub, sub: sub.subscription), class: "btn btn-primary" %>
+        
+      <% end %>
+      <%= link_to "Cancel Subscription", deactivate_account_organisations_path(sub, payment: sub), class: "btn btn-primary" %>
+    </p>
+    </div>
+  <% end %>
+</div>

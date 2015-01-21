@@ -1,0 +1,21 @@
+  <div class="block">
+    <% role = RoleType.find_by(code: params[:role]);
+        program = Program.where(id: params[:for]).first 
+    %>
+    <%if program %>
+      <h2>Invitation as: <%= role.name %></h2>
+      You've been invited to participate at the "<u>
+        <%= link_to program.title, program_path(program) if program%>
+      </u>" program as <%= role.name %>. Click <u>
+        <%= link_to "here", program_path(params[:for]) %>
+      </u> to find out more about the program. Please indicate if you wish to accept or decline this invite. 
+    <br><br>
+    <% else%>
+      <% organisation = Organisation.where(id: params[:for]).first%>
+      <%= "You have been invited to become an admin for #{organisation.try(:company_name)}, do you Accept this responsiblity?"%>
+      <%= tag 'br'%>
+      <%= tag 'br'%>
+    <% end %>
+    <%= f.submit "Accept", :class=>"applyProgram btn_left" %>
+    <%= f.submit "Decline", :class=>"declineProgram btn_left" %>
+</div>

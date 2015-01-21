@@ -1,0 +1,19 @@
+$.fancybox({
+  fitToView:false,
+  width:'95%',
+  height:'auto',
+  autoSize:false,
+  closeClick  : false,
+  openEffect:'fade',
+  closeEffect:'fade',
+  openSpeed:200,
+  closeSpeed:200,
+  padding: 0,
+  helpers: {
+    overlay: {
+      locked: false
+    }
+  },
+  content:"<%= escape_javascript(render 'courses/shared_info/start_activity') %>"
+});
+  

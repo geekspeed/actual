@@ -1,0 +1,228 @@
+<% klass = "Pitch".constantize;
+    ankor = "pitch";
+    outer_wrap = {tag: :tr, klass: "value_line custom_tr"};
+    label_wrap = {tag: :td, klass: "label_row"};
+    field_wrap = {tag: :td, klass: ""}; 
+    field_class = "form-control"%>
+<% branch_select_fields = @custom_branch_field ? "branch_select_fields" : "" %>
+<% @custom_fields.each do |custom_field| %>
+  <% required = (custom_field.present? && custom_field.required) ? "required" : "" %>
+  <% label_mand_class = required == "required" ? "mend_field_label" : ""%>
+  <% custom_field_content = @pitch.send(custom_field.code.to_sym)%>
+  <% if custom_field.element_type == "text_area" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <p class="last-iter-box">
+            <i class="fa icon-quote-left"></i>
+              <%= custom_field_content %>
+              <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <i class="fa icon-quote-right"></i>
+          </p>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                  <%= text_area_tag "pitch[custom_fields][#{custom_field.code}]", custom_field_content, :placeholder => custom_field.placeholder, :class => "#{required} #{field_class} pitch_feedback_text" %>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "date" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "#pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <p class="last-iter-box">
+            <i class="fa icon-quote-left"></i>
+              <%= custom_field_content %>
+              <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <i class="fa icon-quote-right"></i>
+          </p>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                  <%= text_field_tag "pitch[custom_fields][#{custom_field.code}]", custom_field_content, :placeholder => custom_field.placeholder, :class => "datepicker_std #{required} #{field_class}", :size => 30 %>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>  
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "dropdown" || custom_field.element_type == "dropdown_with_other" || custom_field.element_type == "dropdown_with_multiple_select" %>
+    <% multiple = custom_field.element_type == "dropdown_with_multiple_select"  %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <p class="last-iter-box">
+            <i class="fa icon-quote-left"></i>
+              <%= custom_field_content.is_a?(Array) ? custom_field_content.join(", ") : custom_field_content %>
+              <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <i class="fa icon-quote-right"></i>
+          </p>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                  <% other = !custom_field.options.include?(custom_field_content) %>
+                  <%= select_tag "pitch[custom_fields][#{custom_field.code}]", options_for_select(custom_field.options, selected: (other ? "Other" : custom_field_content)), :placeholder => custom_field.placeholder, :multiple => multiple, :class => "#{'other_select' if custom_field.element_type == "dropdown_with_other"} #{required} #{field_class}", :style => "width:277px;" %>
+                    <% if custom_field.element_type == "dropdown_with_other"%>
+                      <%= text_field_tag "new_other_content#{custom_field.id}","#{other ?   custom_field_content : ''}" , :class => "new_other_val form-control #{other ? '' : 'hide'}", :size => 30, "#{other ? '' :'disabled'}"=>"#{other}", "data-id"=>custom_field.id, :style=>"width: 277px;margin-top:15px;" %>
+                    <% end %>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div> 
+      <% end %>
+    <% end %>
+  
+  <% elsif custom_field.element_type == "file_upload" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <p class="last-iter-box">
+            <i class="fa icon-quote-left"></i>
+              <%= link_to custom_field_content.split("/").last, custom_field_content, target: '_blank' unless custom_field_content.blank? %>
+              <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <i class="fa icon-quote-right"></i>
+          </p>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                   <div id="pitch_custom_fields_<%=custom_field.code%>_error"></div>
+                    <%= file_field_tag "pitch[custom_fields][#{custom_field.code}]", :class => "file_field_width pull-left check-valid-file-type", "onchange" => 'checkValidityOffile(this,'+"#{accepted_upload_type(custom_field)}"+',"'+ "pitch_custom_fields_#{custom_field.code}" +'")' %>
+                    <%= label_tag "accepted_value","Accepted File types: #{accepted_upload_type(custom_field)}", :class=>"accepted_value_label pull-left", :style=>"margin-top: -32px;margin-left: 231px;" %>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div> 
+      <% end %>
+    <% end %>  
+
+  <% elsif custom_field.element_type == "gallery" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <div class="last-iter-box">
+            <br/>
+            <div class="mosaicflow" data-item-height-calculation="attribute">
+                <% custom_field_content.each_with_index do |item,count| %>
+                  <div class="mosaicflow__item" id="gallery_view_<%=count%>_<%=custom_field.id%>">
+                    <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) and !@program.program_scope.try(:stop_editing_fields) or need?(["company_admin", "program_admin"], current_organisation) %>
+                      <i data-toggle="tooltip" data-placement="bottom" title="Click to remove" data_delete="gallery_view_<%=count%>_<%=custom_field.id%>" data_url="<%=polymorphic_url([:gallery_pic_remove, context_program, @pitch])%>" data_custom_field_code="<%=custom_field.code%>"  data_custom_field_value="<%=item%>" class="gallery-remove-pic glyphicon glyphicon-remove remove-pic"></i>
+                    <% end %>
+                    <a href="#" data-toggle="modal" data-target="#imgLarge<%=count%>_<%=custom_field.id%>">
+                      <img width="300" height="300" src="<%=item%>"  alt="">
+                      <p>Image <%=count+1%></p>
+                    </a>
+                    <div class="modal fade" id="imgLarge<%=count%>_<%=custom_field.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel"><%= custom_field.label %></h4>
+                          </div>
+                          <div class="modal-body">
+                            <img width="" height="" src="<%=item%>"  alt="">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end if !custom_field_content.blank?%>
+              </div>              
+            <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <div class="clear"></div>
+          </div>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                  <%= hidden_field_tag "pitch_custom_fields_#{custom_field.code}_browse_button",1 %>
+                  <div id="pitch_custom_fields_<%=custom_field.code%>_error"></div>
+                  <div id="pitch_custom_fields_<%=custom_field.code%>_section">
+                    <%= file_field_tag "pitch[custom_fields][#{custom_field.code}][]", :class => "file_field_width pull-left check-no-of-file #{custom_field.code}_galleries", "onchange" => 'checkNoOfFiles(this,"'+"pitch_custom_fields_#{custom_field.code}_"+'","")' , :multiple=>true %>
+                    <%= label_tag "accepted_value","Upload multiple photos, Accepted File types: [ png, jpg, jpeg ]", :class=>"accepted_value_label pull-left", :style=>"margin-top: -32px;margin-left: 231px;" %>
+                  </div>
+                  <div class="editcustomfieldvalue">
+                    <div class="clr"></div>
+                    <br/>
+                    <a href="#" data-custom-field-id="<%=
+                    custom_field.code%>" class="addGalleryExtra text_underline">+ Add more pics</a>                       
+                    <div class="clr"></div>
+                  </div>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div> 
+      <% end %>
+    <% end %>  
+  <% else %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <div class="customArea<%=custom_field.id%>">
+          <p class="last-iter-box">
+            <i class="fa icon-quote-left"></i>
+              <% if custom_field.element_type == "website" || custom_field.element_type == "video_url" ||  custom_field.element_type == "image_url" ||  custom_field.element_type == "sound_url" %>
+                <%= link_to custom_field_content, add_url_protocol(custom_field_content), target: '_blank' unless custom_field_content.blank? %>
+              <% else %>
+                <%= custom_field_content %>
+              <% end %>
+              <%= link_to "<i class=\"icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+            <i class="fa icon-quote-right"></i>
+          </p>
+        </div>
+        <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+          <div class="">  
+            <div class="editcustomfieldvalue">
+              <div class="met_row">
+                <div class="comment_row">
+                  <%= text_field_tag "pitch[custom_fields][#{custom_field.code}]", custom_field_content, :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}", :size => 30 %>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div> 
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

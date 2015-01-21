@@ -1,0 +1,62 @@
+<% if (active_phase_of_pitch?(@pitch, "due_diligence") and (need?(["selector", "panellist"], context_program) or need?(["company_admin", "program_admin"], current_organisation)) ) %>
+  <li class="branded">
+    <%= link_to "Download voting sheet<i class='glyphicon glyphicon-download' style='text-align:right;'></i>".html_safe, "#download_voting_sheet", :class => "fancybox_small" %>
+  </li>
+
+  <% if phase_action_allowed?("panellist", @pitch) and @pitch.phase_conditions_completed(diligence_phase) and 
+          (context_program.try(:workspace).try(:right_workflow) or context_program.try(:workspace).try(:right_workflow).nil?)%>
+      <%= (render "pitches/shared/due_diligence_phase", phase: diligence_phase) rescue (render "pitches/shared/default_phase", phase: diligence_phase if need?(["panellist"], context_program)) %>
+      <div class="clr"></div>
+  <% end if diligence_phase%>
+  <!-- lightboxes -->
+  <div style="display: none">
+    <div id="download_voting_sheet">
+      <p>The <%=@pitch.workflows.on.where(code: "due_diligence").try(:first).try(:phase_name) %> has been activated you can now start voting for the various <%= t("pitch", "p") %> you can download all <%= t("pitch", "p") %> for offline review by clicking here</p>
+      <br>
+      <%= form_tag download_program_voting_sheets_path(context_program) do %>
+        <input type="hidden" name="pitch_id" value="<%= @pitch.id%>" />
+        <div class="col-md-10">
+          <%= content_tag :div, class: "col-md-1" do%>
+            <%= radio_button_tag :"pitch_selected", "current", false, :class => "radio-sheet pull-right" %>
+          <% end %>
+          <%= content_tag :div, class: "col-md-8" do%>
+            <%= label_tag :"all", "Current #{t('pitch', 's')}", :for => "pitch_selected_current", class: "radio-lbl-sheet" %>
+          <% end %>
+        </div>
+        <br>
+        <div class="col-md-10">
+          <%= content_tag :div, class: "col-md-1" do%>
+            <%= radio_button_tag :"pitch_selected", "submit_phase",true, :class => "radio-sheet pull-right" %>
+          <% end %>
+          <%= content_tag :div, class: "col-md-8" do%>
+            <%= label_tag :"selected", "Only the  #{t('pitch', 'p')} that have passed the submit phase", :for => "pitch_selected_submit_phase", class: "radio-lbl-sheet" %>
+          <% end %>
+        </div>
+        <br>
+        <div class="col-md-10">
+          <%= content_tag :div, class: "col-md-1" do%>
+            <%= radio_button_tag :"pitch_selected", "all", false, :class => " radio-sheet pull-right" %>
+          <% end %>
+          <%= content_tag :div, class: "col-md-8" do%>
+            <%= label_tag :"all", "All  #{t('pitch', 'p')}", :for => "pitch_selected_all", class: "radio-lbl-sheet" %>
+          <% end %>
+        </div>
+          <br><br><br>
+  
+          <div class="pull-right">
+          <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Download">
+          <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+          <div class="clear"></div>
+          </div>
+      <% end %>
+      </div>
+    </div>
+<% end %>
+<script>
+  $(document).ready(function(e){
+    $(".contact_cancel").on("click", function(e){
+      $.fancybox.close();
+      e.preventDefault();
+    })
+  });
+</script>

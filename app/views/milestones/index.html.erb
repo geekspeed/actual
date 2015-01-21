@@ -1,0 +1,552 @@
+
+
+
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - #{workspace_sementic("left_milestone","Milestones")}" %>
+<% end %>
+
+<% background_color = current_organisation.try(:background_color) || "#333" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#07b291" %>
+<%#= render "shared/navbar", :page => "pitch" %>
+<%#= render "pitches/shared/bs_sidebar", :page => "milestone" %>
+<div id="rightcontent">
+<script type="text/javascript">
+  $(document).ready(function(){
+    
+    var refillOptions = function(elem, refreshElem){
+      var new_options = eval(elem.val());
+
+      refreshElem.find('option').remove();
+      $.each(new_options, function(key, value) {
+        refreshElem.append($("<option></option>")
+           .attr("value", value).text(key));
+      });
+    }
+    var social = {"Select..": "select", "Buzz": "buzz", "Other Project": "other_project"}
+    //var formal = {"Select..": "select", "Course": "course", "Event": "event"}
+    var formal = {"Select..": "select", "Event": "event"}
+    var action = {"Select..": "select", "Workflow": "workflow", "Project": "project"}
+    var project = {"Select..": "select", "Iterate Field": "iterate_field", "Iterate": "iterate", "Ask for feedback": "ask_for_feedback"};
+    var workflow = {};
+    <% @workflows.each do |k,v|%>
+      workflow['<%=k%>'] = '<%=v%>'
+    <% end %>
+    
+    var iterate_field = {};
+    <% @pitch_fields.each do |k,v|%>
+      iterate_field['<%=k%>'] = '<%=k%>'
+    <% end %>
+    
+    var event = {};
+    <% @program_events.each do |k,v|%>
+      event['<%=k%>'] = '<%=v%>'
+    <% end %>
+    
+    $("form").on("change", "select.first_select_menu", function(e){
+      var elem = $(this);
+      var change_elem = elem.parents('.col-sm-8').parent().next().next().find('select')
+      refillOptions(elem, change_elem);
+    });
+    
+    $("form").on("change", "select.second_select_menu", function(e){
+      var elem = $(this);
+      $('.fourth_select_menu').find('option').remove();
+      var change_elem = elem.parents('.col-sm-8').parent().next().next().find('select')
+      refillOptions(elem, change_elem);
+    });
+    
+    $("form").on("change", "select.third_select_menu", function(e){
+      var elem = $(this);
+      var change_elem = elem.parents('.col-sm-8').parent().next().next().find('select')
+      refillOptions(elem, change_elem);
+    });
+    
+    $(document).on('click', '#system_task_submit', function(e){
+      var new_date = $(this).parents('.col-sm-12').parent().prev().find('input.date_field').val();
+      $('.extra_date_field').append('<input type="hidden" id="task_deadline" name="task[deadline]" value="'+new_date+'" />')
+    })
+    
+    $(document).on('click', '.create_new_task', function(e){
+      var count = "<%= @milestones.map(&:id).count %>";
+      var milestone_ids = "<%= @milestones.map(&:id)%>".replace(/&quot;/g, '"');
+      var value = $(this).parents().find('select').val();
+      var description = $(this).parents().find('input#task_description').val();
+      if(($.inArray(value, JSON.parse(milestone_ids)) > -1) &&  $('#task_milestone_flag').is(':checked')){
+        $('#milestone_description').val(description);
+        $('.create_milestone').trigger('click');
+        return false
+      };
+    });
+    
+  });
+  
+  $(document).ready(function() {
+$('.add_event_pan').click(function(e) {
+	if ( $(this).hasClass("event_pan_active") ){
+	$(this).children('.glyphicon').removeClass('glyphicon-minus-sign');
+	$(this).children('.glyphicon').addClass('glyphicon-plus-sign');
+	$(this).removeClass('event_pan_active');
+	}else{
+	$(this).children('.glyphicon').removeClass('glyphicon-plus-sign');
+	$(this).children('.glyphicon').addClass('glyphicon-minus-sign');
+	$(this).addClass('event_pan_active');
+	}
+	
+ $('.toggle_tasks').animate({
+ height: 'toggle'
+ }, 500,function() {
+});
+ });
+});
+</script>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= context_program.workspace.try(:todo_list_help).try(:html_safe)%>
+  </div>
+</div>
+<br />
+<br />
+<div class="row">
+	<div class="col-md-12">
+		<a href="#" class="add_event_pan"><i class="glyphicon glyphicon-plus-sign"></i> Add new <%= t("pitch:task", "s")%></a>
+	</div>
+</div>
+<div class="toggle_tasks" style="display: none;">
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-body">
+				<%= form_for @task, :url => polymorphic_path([@program, @pitch, Task]), html: { :role=>"form", class:"form-inline"} do |task| %>
+				<div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= t("pitch:task", "s")%> title</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+            	<%= task.text_field :description, :placeholder => "Write the title of your #{t("pitch:task", "s")}", :class=>"form-control pull-left form-style-1", :style=> "width:70%;" %>
+            	Objective <%= task.check_box :milestone_flag, size: "20", :style=> "background-color:#fff;width:20px;" %>
+            	<i title="To reach an objective you might need to achieve several tasks To link tasks to an objective you can tag the task using this particular objective's name" data-placement="bottom" data-toggle="tooltip" class="glyphicon glyphicon-question-sign help-sign"></i>
+            </div>
+	          <div class="clr"></div>
+	        </div>
+       	</div>
+				<div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+				<div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= t("pitch:task", "s")%> tag</div>
+          </div>
+          <div class="col-sm-8" id = "milestone_select_div">
+            <div class="quote_col_row" id="select_box_div">
+            	<%= task.select :milestone_id, options_from_collection_for_select(@pitch.milestones, :id, :description) + content_tag(:option,'ADD NEW TAG',:value=>"new_tag", style: "font-weight:bold !important;", class: "add_new_tag"), {}, {:class=>"form-control form-style-1 create_new_tag",:style=>"width:70%;"}%>
+            </div>
+	          <div class="clr"></div>
+	        </div>
+       	</div>
+        <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Due date</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+            	<%= task.text_field :deadline, :class => "datepicker_std form-style-1", size: "20" %>
+            </div>
+	          <div class="clr"></div>
+	        </div>
+       	</div>
+       	<% if need?(["company_admin"], current_organisation) or @pitch.mentor?(current_user.id.to_s) %>
+         	<div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="quote_col_row">
+                  <h2><b>Recommendations</b></h2>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </div>
+         	<div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= t("pitch:task", "s")%> type</div>
+              </div>
+              <div class="col-sm-8">
+                <div class="quote_col_row">
+                  <%= task.select :task_label, options_for_select([["Select Type"], ["Formal", "formal"]]), {}, {class: "first_select_menu form-control form-style-1", style: "width:70%;"}%>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </div>
+            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= t("pitch:task", "s")%> Option 1</div>
+              </div>
+              <div class="col-sm-8">
+                <div class="quote_col_row">
+                  <%= task.select :task_option1, "", {}, {class: "second_select_menu form-control form-style-1", style:"width:70%;"}%>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </div>
+            <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div style="line-height: 28px;"><%= t("pitch:task", "s")%> Option 2</div>
+              </div>
+              <div class="col-sm-8">
+                <div class="quote_col_row">
+                  <%= task.select :task_option2, "", {}, {class: "third_select_menu form-control form-style-1", style: "width:70%;"}%>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </div>
+        <%end%>
+       	<div class="row">
+          <div class="col-sm-12">
+            <div style="font-size:14px;font-weight:bold;">
+              <input value="Add <%= t("pitch:task", "s")%>" class="btn btn-default btn-large pull-right create_new_task" type="submit" id="user_task_submit"/>
+            </div>
+          </div>
+        </div>
+        <%end%>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<br />
+
+<!-- <div class="row tasks_div">
+  <div class="col-md-10">
+  </div>
+  <div class="col-md-2">
+    <%= link_to "Download as pdf",  "#{polymorphic_path([:download_action_plan, @program, @pitch, Milestone ])}.pdf",:class=>"star_button btn sub-btn" %>
+  </div>
+</div> -->
+<div class="row tasks_div">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses" style="margin-bottom:2px;">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<a href="#" class="gn-icon gn-icon-stack pull-left icon-panel"></a>
+					<p class="pull-left"><%= t("pitch:task", "p")%> </p> 
+					<span class="pull-left user_rol"> (<%= @tasks.count%>)</span>
+				</div>
+				<div class="pull-right panel-links">
+					<ul>
+						<li>
+							<%= link_to "<i class='glyphicon glyphicon-save'></i> Download as pdf".html_safe,  "#{polymorphic_path([:download_action_plan, @program, @pitch, Milestone ])}.pdf",:class=>"" %>
+						</li>
+						<li>
+							<%= link_to "<i class='glyphicon glyphicon-floppy-disk'></i> Save in Document".html_safe,  save_to_document_program_pitch_milestones_url(@program, @pitch), :method => :post, :class=>"" %>
+						</li>
+						<li>
+							<form class="form-inline" role="form">
+		            <div class="form-group pull-right">
+		              <label class="sr-only" for="filter2">Filter 2</label>
+		              <%= select_tag :filter, content_tag(:option, 'All', :value=>"all")+options_from_collection_for_select(@milestones, :id, :description), class: "form-style-1 filter_tasks task_panel_filter", prompt: "Filter by Tag", :"data-url" => polymorphic_path([:filter_tasks, @program, @pitch, Milestone ])%>
+		            </div>
+		          </form>
+						</li>
+						<li>
+							<form class="form-inline" role="form">
+		            <div class="form-group pull-right">
+		              <label class="sr-only" for="filter2">Filter 2</label>
+		              <%= select_tag :filter2, options_for_select([["Chronological", "chronological"], ["By Objective", "by_objective"]]), class: "form-style-1 filter_in_order task_panel_filter", prompt: "Sort By", :"data-url" => polymorphic_path([:filter_by_order, @program, @pitch, Milestone ])%>
+		            </div>
+		          </form>
+						</li>
+					</ul>
+				</div>
+        <!-- <div class="outline-action-links pull-right">
+          <form class="form-inline" role="form">
+            <div class="form-group pull-right">
+              <label class="sr-only" for="filter2">Filter 2</label>
+              <%= select_tag :filter, content_tag(:option, 'All', :value=>"all")+options_from_collection_for_select(@milestones, :id, :description), class: "form-style-1 filter_tasks", prompt: "Filter by Tag", :"data-url" => polymorphic_path([:filter_tasks, @program, @pitch, Milestone ])%>
+            </div>
+          </form>
+        </div>
+        <div class="outline-action-links pull-right">
+          <form class="form-inline" role="form">
+            <div class="form-group pull-right">
+              <label class="sr-only" for="filter2">Filter 2</label>
+              <%= select_tag :filter2, options_for_select([["Chronological", "chronological"], ["By Objective", "by_objective"]]), class: "form-style-1 filter_in_order", prompt: "Sort By", :"data-url" => polymorphic_path([:filter_by_order, @program, @pitch, Milestone ])%>
+            </div>
+          </form>
+        </div> -->
+			</div>
+					
+			<div class="panel-body">
+				
+				<div class="task_master">
+				    <% i = 0 %>
+            <%milestone = nil%>
+						<%@tasks.each do |task|%>
+  							<% btn_background  = color_scheme(task)%>
+  							<% color  = color_type(task)%>
+  							<% task_complete = task_completed?(task)%>
+  							<%task_completed = task_complete ? "line_over_text" : ""%>
+  							<%milestone = task.milestone_id if task.milestone_flag%>
+  							<div class="row tasks_row task-row-main <%= color %> <%= task_completed%> <%= (milestone and !task.milestone_flag and task.milestone_id == milestone) ? "second_level_task" : ""%>" style=<%= task.milestone_flag ? "background-color:#d3edf5;box-shadow: 0 1px 2px #bbb;" : "" %>>
+  								<div class="col-md-5 clearfix">
+  									<div class="checkbox checkbox-replace neon-cb-replacement pull-left">
+  										<label class="cb-wrapper"><%= check_box_tag "mark_task_completed", "", task_complete, :"data-url" => complete_program_pitch_task_path(@program, @pitch, task), class: "mark_task_completed", !(!need?(["company_admin", "program_admin"], current_organisation) and (task.event_record_id.present? or task.task_type == "system_task" or task.session)) ? "" : "disabled" => "true" %><div class="checked"></div></label>
+  									</div>
+  									<%= link_to task.description, "#", :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "pull-left open_milestone task-title" %>
+  								</div>
+  								<div class="col-md-7">
+  									<div class="task_actions pull-right">
+  									<%= link_to "", program_pitch_task_url(@program, @pitch, task.id), method: :delete, class: "gn-icon icon-remove2  icon-panel date_tag"%>
+  									</div>
+  									<%= link_to "#",  :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "open_milestone" do %>
+  										<div class="date-tag pull-right">
+  											<span><%= task.deadline.strftime("%d-%m-%y") if task.deadline%></span> 
+  										</div>
+  									<%end%>
+  									<%= link_to "#",  :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "open_milestone pull-right" do %>
+  										<p class="task_user_name">By <%= task.try(:user).try(:full_name)%> <span><%= time_ago_in_words(task.created_at)%></span></p>
+  									<%end%>
+  									<div class="task_tag_container pull-right">
+  										<span class="tag tag-task label label-danger"><%= task.milestone.description%></span>
+  										<%= "<span class='tag tag-task label label-danger'>Objective</span>".html_safe if task.milestone_flag %>
+  									</div>
+  								</div>
+  							</div>
+						<%end%>
+						<!-- email list -->
+					<a href="#new_milestone_div" class="gn-icon fancybox_small create_milestone" style=""></a>
+				</div><!-- task-master -->
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="new_milestone_div" class="add-new-milestone" style="display:none;">
+  <div id="box2-show" class="box-show-real" style="display: block;">
+    <div class="activity-box-div-main">
+      <div class="module-box-div-main-content">
+        <div class="activity-box-div module-title-container">
+        </div>
+        <div class="block">
+          <%= render "form" %>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="edit_task" class="add-new-activity" style="display:none;">
+  <div id="box2-show" class="box-show-real" style="display: block;">
+    <div class="activity-box-div-main">
+			<div class="module-box-div-main-content">
+        <div class="activity-box-div module-title-container">
+          <h3 class="activity-title">
+            Edit Task
+          </h3>
+        </div>
+				<div class="module-box-div-main-data">
+	        <div class="activity-box-div">
+	          <div class="activity-box-div-inner">
+	            <div>
+                <div style="margin-bottom: 10px;">
+                  Task title
+                </div>
+                <div class="show" id="activity-link">
+                  <input type="text" size="30" placeholder="Write the title of your task" name="module_activity[link]" id="module_activity_link" class="form-style-1" style="auto;" />
+                </div>
+              </div>
+              <br>
+	            <div>
+	              Add tags to task
+	            </div>
+	            <div class="tag-box">
+	              <div class="tags_container"> 
+	                <div class="container_tags">
+	                  <div id="keywordList" class="tagList">
+	                  </div>
+	                  <div class="clr"></div>
+	                </div>
+	                <div class="container_add_tag">
+                    <div class="form-group">
+							        <label for="Tags" class="sr-only">Tags</label>
+											<select class="form-style-1 dds">
+												<option  data-imagesrc="tag-urgent">Urgent</option>
+												<option  data-imagesrc="tag-success">HR Dep.</option>
+												<option  data-imagesrc="tag-warning">Misc</option>
+											</select>
+							      </div>
+	                </div>
+	                <div class="bootstrap-tagsinput" style="margin: 0px; padding: 0px;">
+										<span class="tag label label-danger">Urgent<span data-role="remove"></span></span> 
+										<span class="tag label label-success">HR Dep.<span data-role="remove"></span></span>
+										<span class="tag label label-warning">Misc<span data-role="remove"></span></span>
+									</div>
+	                <br>
+	                <div>
+		                <div style="margin-bottom: 10px;">
+		                  Due date
+		                </div>
+		                <div class="show" id="activity-link">
+		                  <input type="text" value="Due Date" size="30" name="program_summary[program_plans_attributes][1][date]" id="program_summary_program_plans_attributes_1_date" class="form-style-1 datepicker_std program_plan_td1 hasDatepicker datepick2" />
+		                </div>
+		              </div>
+	              </div> 
+	            </div>
+	            <div class="clear"></div>
+	          </div>
+	        </div>
+				</div>
+			</div>
+    </div><!-- activity-box-div-main -->
+  </div>
+</div>
+
+<%= content_tag :div, :id => "show_milestone_div", style: "display:none"  do%>
+  <%=content_tag :p, "Milestone"%>
+<% end %>
+<%#= link_to "", "#", class: 'open_div', style: "display:none"%>
+  <%= hidden_field_tag :page_name, "milestone_page"%>
+  <div class="" style="margin: 0 0 10px;">
+	<div class="single-right-link">
+		<%#= link_to "+ Add a task to a milestone", "#give_a_task", :class=>"fancybox_small pull-right" %>
+	</div>
+<style>
+  .milestone_actions{
+    padding: 10px 0px;
+  }
+  .title .for_edit input.for_save{
+    width: 400px;
+  }
+  .form-control:focus {
+    border-color: <%= menubar_color %> !important;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.03), 0 0 8px rgba(0, 0, 0, 0.2);
+  }
+  tr.tasks_row:hover{
+    cursor:pointer;
+  }
+  .line_over_text > div >a{
+    text-decoration: line-through !important;
+  }
+  .line_over_text > div > a >p{
+    text-decoration: line-through !important;
+  }
+  .line_over_text > a > div > span{
+    text-decoration: line-through !important;
+  }
+</style>
+  </div>
+</div><!-- #rightcontent -->
+
+<script>
+  $(document).on('change', '.create_new_tag', function(e){
+    e.preventDefault();
+    if ($(this).val() == "new_tag"){
+      $('.create_milestone').trigger('click');
+    }
+  })
+  
+  $(document).on('change', '.filter_tasks', function(e){
+    e.preventDefault();
+    $.ajax({
+      url: $(this).data('url'),
+      type: 'get',
+      data: {"milestone_id": $(this).val()},
+      success: function(data){
+        $('.tasks_div').html(data);
+        $('#show_milestone_div').hide();
+      },
+      error: function(){
+      }
+    })
+  })
+  
+  $(document).on('change', '.filter_tasks_by_date', function(e){
+    e.preventDefault();
+    $.ajax({
+      url: $(this).data('url'),
+      type: 'get',
+      data: {"filter_period": $(this).val()},
+      success: function(data){
+        $('.tasks_div').html(data);
+      },
+      error: function(){
+      }
+    })
+  })
+
+  $(document).on('change', '.filter_in_order', function(e){
+    e.preventDefault();
+    $.ajax({
+      url: $(this).data('url'),
+      type: 'get',
+      data: {filter_order: $(this).val()},
+      success: function(data){
+        $('.tasks_div').html(data);
+        $('#show_milestone_div').hide();
+      },
+      error: function(){
+      }
+    })
+  })
+  
+  $(document).on('click', '.open_milestone', function(e){
+    e.preventDefault();
+    $.ajax({
+      url: $(this).data('url'),
+      type: 'get',
+      success: function(data){
+        $('#show_milestone_div').show();
+        $('#show_milestone_div').html(data);
+        new nicEditor().panelInstance('community_feed_content');
+        window.scrollTo(0,document.body.scrollHeight);
+      },
+      error: function(){
+      }
+  })
+  })
+
+  $('body').on("ajax:success", ".likeFeed", function(evt, data, status, response){
+    if(data.success == "OK")
+    {
+      $(this).removeClass('likeFeed').addClass('unlikeFeed');
+      var href_val = $(this).attr('href').replace(/like/g, 'unlike');
+      $(this).attr('href',href_val);
+      $(this).html("<span class='hearthbox'></span> UnLike");
+      var likes = jQuery(this).parent().find('.showLikes>.anzahl');
+      $(likes).html(data.likes_count);
+    }
+  });
+
+  $('body').on("ajax:success", ".unlikeFeed", function(evt, data, status, response){
+    if(data.success == "OK")
+    {
+      $(this).removeClass('unlikeFeed').addClass('likeFeed');
+      var href_val = $(this).attr('href').replace(/unlike/g, 'like');
+      $(this).attr('href',href_val);
+      $(this).html("<span class='hearthbox'></span> Like");
+      var likes = jQuery(this).parent().find('.showLikes>.anzahl');
+      $(likes).html(data.likes_count);
+    }
+  });
+  
+  $('body').on('click', '.open_div', function(e){
+    var cont = $(this).attr("name");
+    var has = $(this).hasClass("link_opened_div");
+    $(".link_opened_div").removeClass("link_opened_div");
+    $(".closable_div").hide();
+    if(has != true){
+      $(this).addClass("link_opened_div");
+      $("."+cont).show();
+      $("#"+cont).show();
+    }
+    $("#community_feed_content").parent().parent().find(".nicEdit-panelContain").parent().width('100%');
+    $("#community_feed_content").parent().parent().find(".nicEdit-panelContain").parent().next().width('98%');
+    $("#community_feed_content").parent().parent().find(".nicEdit-main").width('99%');
+    e.preventDefault();
+  });
+</script>

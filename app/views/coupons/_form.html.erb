@@ -1,0 +1,33 @@
+      <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :Products %></p></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.select :subscription, options_from_collection_for_select(Subscription.all, :id, :name), class: "form-control"%>
+	      </div>
+	    </div>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :total_coupons %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :total_coupons, class: "form-control"%>
+	      </div>
+	    </div>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :percent_off %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :percent_off, class: "form-control" %>
+	      </div>
+	    </div>
+	    
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= button_tag "submit", class: "btn btn-default"  %>
+	      </div>
+	    </div>

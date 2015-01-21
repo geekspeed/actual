@@ -1,0 +1,64 @@
+<% organisation = current_organisation || context_program.try(:organisation) %>
+
+<% background_color = organisation.try(:background_color) || "#333" %>
+<% menubar_color = organisation.try(:manubar_color) || "#07b291" %>
+<style>
+.faq_title{
+background:<%= menubar_color %>;
+color:#fff;
+}
+.question_no{
+background:<%= menubar_color %>;
+color:#fff;
+}
+</style>
+<% if context_program %>
+  <div id="faq_content" style="display: none;">
+    <div class="faq_title">
+        <h2>FAQ</h2>
+        <p>Frequently asked questions</p>
+        <% visited_page = ""%>
+    </div>
+    <div class="panel-group" id="accordion">
+        <% current_faqs.each_with_index do |faq, i| %>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title" style="height:43px;width:901px;">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse<%= i+1 %>" style="width:887px;">
+                  <span class="question_no"><%= i+1 %></span>
+                                <span class="question_text">
+                    <%= faq.question %>
+                    <% visited_page = faq.relevant_page%>
+                    </span>
+                            <div class="clear"></div>
+                </a>
+              </h4>
+            </div>
+            <div id="collapse<%= i+1 %>" class="panel-collapse collapse">
+              <div class="panel-body">
+                        <%= faq.answer.html_safe %>
+                        <div>
+              <%= image_tag faq.attachment, :style => "width: 400px;" unless faq.attachment.url.nil? %>
+              <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+              <% if faq.link.present? %>
+                <% if !faq.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                                    <% emb_obj = emb_api.extract(:url => faq.link, :maxwidth => 525)%>
+                  <%= show_attachment(emb_obj)%>
+                <% end  %>
+              <% elsif faq.attachment.present? %>
+                                <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + faq.attachment_url, :maxwidth => 525)%>
+                                <%= raw(emb_obj[0].media.html)%>
+              <% end %>
+            </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <%= tag 'br', nil, nil%>
+      <div class="checkbox_div panel panel-default">
+        <%= check_box_tag "visited_page", "", false, {:"data-page" => visited_page, :class => "check_visited_page"}%> Don't show this message again
+        <%= link_to "Ok", "#", :onclick => "$.fancybox.close()", :id => "submit"%>
+      </div>
+    </div>
+  </div>
+<% end %>

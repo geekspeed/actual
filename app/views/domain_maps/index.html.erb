@@ -1,0 +1,75 @@
+<%= render "devise/shared/navbar" %>
+<%#= render "devise/shared/sidebar", page: "domain_map" %>
+<div id="rightcontent"  class="two_sided_right_content">
+<%= render "shared/flash" %>
+  <div class="block">  
+    <% if !@domain_maps.blank? %>
+      <h2 class="titleLine">Listing Domain Maps</h2>
+
+      <table class="metric_table table table-striped table-bordered domain-table">
+        <tr>
+          <th>Domain</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Analytics Id</th>
+          <th colspan="3" style="text-align:center;">Options</th>
+        </tr>
+
+      <% @domain_maps.each do |domain_map| %>
+        <tr>
+          <td><%= domain_map.domain %></td>
+          <td><%= domain_map.map_type %></td>
+          <td><%= Program.find(domain_map.program_id).title if !domain_map.program_id.nil? %><%= Organisation.find(domain_map.organisation_id).company_name if !domain_map.organisation_id.nil? %></td>
+          <td><%= domain_map.analytics_id %></td>
+          <!-- <td><%#= link_to 'Show', domain_map %></td> -->
+          <td><%= link_to '', edit_domain_map_path(domain_map), :class=>"gn-icon gn-auto gn-icon-pencil", :title=>"Edit" %></td>
+          <td><%= link_to '', domain_map, method: :delete, data: { confirm: 'Are you sure?' }, :class=>"gn-icon gn-auto gn-red gn-icon-destroy", :title=>"Destroy" %></td>
+          <td><%= link_to (domain_map.verified == true ? '<div class="domain-validate-done"><span class="gn-icon gn-auto gn-green gn-icon-verified"></span> Verified</div>' : '<div class="domain-validate gn-icon gn-auto gn-yellow gn-icon-unverified" style="font-size:12px;color:#8A6D3B;width: 90px;"> Unverified</div>').html_safe, validate_domain_map_path(domain_map) %></td>
+        </tr>
+      <% end %>
+      </table>
+    <% else %>
+      <div class="alert alert-warning"><strong>You have not mapped any domain.</strong></div>
+    <% end %>
+    
+		<div>
+    	<%= link_to '+ New Domain map', new_domain_map_path, :class=>"pull-right", :style=>"font-weight:bold;" %>
+			<div class="clear"></div>
+		</div>
+		<br />
+    <div class="alert alert-info">
+      <strong>INSTRUCTIONS</strong>
+			<br /><br />
+      - Please add a domain as www.domain.com / www.subdomain.domain.com or domain.com / subdomain.domain.com.<br/><br/>
+      - To complete this process you need to create A record on your domain hosting provider e.g. GoDaddy which points to the following IP address ( <%= @server_ip %> ) . 
+      <br/><br/>
+      - Once this done, it may up to 48 hours for the domain to propagate and point Apptual, so please give it some time.
+    </div>
+  </div>
+</div>
+
+<style>
+.domain-validate{color:#E80000;width:62px;}
+.domain-validate-done, .domain-validate-done span{color:#33CC00;width:70px;}
+.domain-instructions {border:2px solid; padding:10px;margin-top:30px;border-radius:5px;}
+</style>
+<script>
+$(document).ready(function(){
+  $(".domain-validate").hover(function(){
+    $(this).html(" Verify it");
+		$(this).removeClass("gn-yellow");
+		$(this).removeClass("gn-icon-unverified");
+		$(this).addClass("gn-green");
+		$(this).addClass("gn-icon-verified");
+		$(this).css("color","#3a5f00");
+  },
+  function(){
+    $(this).html(" Unverified");
+		$(this).removeClass("gn-green");
+		$(this).removeClass("gn-icon-verified");
+		$(this).addClass("gn-yellow");
+		$(this).addClass("gn-icon-unverified");
+		$(this).css("color","#8A6D3B");
+  });
+});
+</script>

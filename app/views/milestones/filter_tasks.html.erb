@@ -1,0 +1,77 @@
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-default panel-shadow ui-widget collapses" style="margin-bottom:2px;">
+      <div class="panel-heading">
+        <div class="panel-title title_option">
+          <a href="#" class="gn-icon gn-icon-stack pull-left icon-panel"></a>
+          <p class="pull-left"><%= t("pitch:task", "p")%> </p> 
+          <span class="pull-left user_rol"> (<%= @tasks.count%>)</span>
+        </div>
+        <div class="pull-right panel-links">
+          <ul>
+            <li>
+              <%= link_to "<i class='glyphicon glyphicon-save'></i> Download as pdf".html_safe,  "#{polymorphic_path([:download_action_plan, @program, @pitch, Milestone ])}.pdf",:class=>"" %>
+            </li>
+            <li>
+              <%= link_to "<i class='glyphicon glyphicon-floppy-disk'></i> Save in Document".html_safe,  save_to_document_program_pitch_milestones_url(@program, @pitch), :method => :post, :class=>"" %>
+            </li>
+            <li>
+              <form class="form-inline" role="form">
+                <div class="form-group pull-right">
+                  <label class="sr-only" for="filter2">Filter 2</label>
+                  <%= select_tag :filter, content_tag(:option, 'All', :value=>"all")+options_from_collection_for_select(@milestones, :id, :description), class: "form-style-1 filter_tasks task_panel_filter", prompt: "Filter by Tag", :"data-url" => polymorphic_path([:filter_tasks, @program, @pitch, Milestone ])%>
+                </div>
+              </form>
+            </li>
+            <li>
+              <form class="form-inline" role="form">
+                <div class="form-group pull-right">
+                  <label class="sr-only" for="filter2">Filter 2</label>
+                  <%= select_tag :filter2, options_for_select([["Chronological", "chronological"], ["By Objective", "by_objective"]]), class: "form-style-1 filter_in_order task_panel_filter", prompt: "Sort By", :"data-url" => polymorphic_path([:filter_by_order, @program, @pitch, Milestone ])%>
+                </div>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+          
+      <div class="panel-body">
+        
+        <div class="task_master">
+            <%@tasks.each_with_index do |task, i|%>
+              <% btn_background  = color_scheme(task)%>
+              <% color  = color_type(task)%>
+              <% task_complete = task_completed?(task)%>
+              <%task_completed = task_complete ? "line_over_text" : ""%>
+              <div class="row tasks_row task-row-main <%= color %> <%= task_completed%>" style=<%= task.milestone_flag ? "background-color:#d3edf5;box-shadow: 0 1px 2px #bbb;" : "" %>>
+                <div class="col-md-5 clearfix">
+                  <div class="checkbox checkbox-replace neon-cb-replacement pull-left">
+                    <label class="cb-wrapper"><%= check_box_tag "mark_task_completed", "", task_complete, :"data-url" => complete_program_pitch_task_path(@program, @pitch, task), class: "mark_task_completed", !(!need?(["company_admin", "program_admin"], current_organisation) and (task.event_record_id.present? or task.task_type == "system_task" or task.session)) ? "" : "disabled" => "true" %><div class="checked"></div></label>
+                  </div>
+                  <%= link_to task.description, "#", :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "pull-left open_milestone task-title" %>
+                </div>
+                <div class="col-md-7">
+                  <div class="task_actions pull-right">
+                  <%= link_to "", program_pitch_task_url(@program, @pitch, task.id), method: :delete, class: "gn-icon icon-remove2  icon-panel date_tag"%>
+                  </div>
+                  <%= link_to "#",  :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "open_milestone" do %>
+                    <div class="date-tag pull-right">
+                      <span><%= task.deadline.strftime("%d-%m-%y") if task.deadline%></span> 
+                    </div>
+                  <%end%>
+                  <%= link_to "#",  :"data-url" => polymorphic_path([@program, @pitch, task.milestone]), class: "open_milestone pull-right" do %>
+                    <p class="task_user_name">By <%= task.try(:user).try(:full_name)%> <span><%= time_ago_in_words(task.created_at)%></span></p>
+                  <%end%>
+                  <div class="task_tag_container pull-right">
+                    <span class="tag tag-task label label-danger"><%= task.milestone.description%></span>
+                    <%= "<span class='tag tag-task label label-danger'>Objective</span>".html_safe if task.milestone_flag %>
+                  </div>
+                </div>
+              </div>
+            <%end%>
+            <!-- email list -->
+          <a href="#new_milestone_div" class="gn-icon fancybox_small create_milestone" style=""></a>
+        </div><!-- task-master -->
+        
+      </div>
+    </div>
+  </div>

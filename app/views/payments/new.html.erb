@@ -1,0 +1,170 @@
+<% content_for :title do %>
+  <%= "Make a Payment" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "payments" %>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="block">
+    <%= form_tag payments_path, class: "payment-form" do %>
+      <span class="payment-errors"></span>
+
+      <%= hidden_field_tag :currency_code, @subscription.currency_code %>
+      <%= hidden_field_tag :eligible_for_vat, @payment.eligible_for_vat? %>
+      <%= hidden_field_tag :currency_symbol, ISO4217::Currency.from_code(@subscription.currency_code).try(:symbol) %>
+      <%= hidden_field_tag :"payment[interval]", @subscription.interval %>
+      <%= hidden_field_tag :amount, @subscription.amount %>
+      <%= hidden_field_tag :"payment[entity_id]", current_organisation.id %>
+      <%= hidden_field_tag :"payment[entity_type]", current_organisation.class %>
+      <%= hidden_field_tag :"payment[subscription_id]", @subscription.id %>
+      <p class="form-group">
+        <%= label_tag :"payment[subscription_name]", "Subscription" %>
+        <%= text_field_tag :"payment[subscription_name]", @subscription.name, disabled: "disabled" %>
+      </p>
+
+      <p class="form-group">
+        <%= label_tag :card_number, "Card Number" %>
+        <%= text_field_tag :card_number, nil, :"data-stripe" => "number", name: nil %>
+      </p>
+
+      <p class="form-group">
+        <%= label_tag :cvc, "CVC" %>
+        <%= text_field_tag :cvc, nil, :"data-stripe" => "cvc", name: nil, size: "4" %>
+      </p>
+
+      <p class="form-group">
+        <%= label_tag :expiration, "Expiration (MM/YYYY)" %>
+        <%= select_tag :expiration, options_for_select((1..12)), include_blank: true, :"data-stripe" => "exp-month", name: nil, style: "width: 70px" %>
+        <span> / </span>
+        <%= select_tag :expiration, options_for_select((Date.today.year..(Date.today.year + 15))), include_blank: true, :"data-stripe" => "exp-year", name: nil, style: "width: 100px" %>
+      </p>
+
+      <p class="form-group">
+        <%= label_tag :"payment[amount]", "Amount" %>
+        <%= text_field_tag :"payment[amount]", @subscription.amount_formatted, name: nil, disabled: "disabled" %>
+      </p>
+      <%if !(@subscription.interval == "one_off") %>
+        <p class="form-group">
+          <%= label_tag :"payment[amount]", "Coupon" %>
+          <%= text_field_tag :"payment[coupon]" %>
+        </p>
+      <%end%>
+
+      <p class="form-group">
+        <%= label_tag :"payment[vat]", "VAT (20%)" %>
+        <%= text_field_tag :"payment[vat]", currency_format(@payment, @payment.calculate_vat/100), name: nil, disabled: "disabled"  %> * VAT is not applicable only for non EU resident or with valid VAT Number
+      </p>
+      
+      <p class="form-group">
+        <%= label_tag :"payment[vat_number]", "VAT Number" %>
+        <%= text_field_tag :"payment[vat_number]", "" %>
+      </p>
+      
+
+      <div class="clr"></div>
+      <button type="submit">Submit Payment</button>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+  // This identifies your website in the createToken call below
+  Stripe.setPublishableKey('<%= @subscription.stripe_public %>');
+
+  var stripeResponseHandler = function(status, response) {
+    var $form = $('.payment-form');
+
+    if (response.error) {
+      // Show the errors on the form
+      $form.find('.payment-errors').text(response.error.message);
+      $form.find('button').prop('disabled', false);
+    } else {
+      // token contains id, last4, and card type
+      var token = response.id;
+      // Insert the token into the form so it gets submitted to the server
+      $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+      // and submit
+      $form.get(0).submit();
+    }
+  };
+
+  jQuery(function($) {
+    $('.payment-form').submit(function(event) {
+      var $form = $(this);
+
+      // Disable the submit button to prevent repeated clicks
+      $form.find('button').prop('disabled', true);
+
+      Stripe.card.createToken($form, stripeResponseHandler);
+
+      // Prevent the form from submitting with the default action
+      return false;
+    });
+    $("input[name='payment[vat_number]']").on("focusout", function(e){
+      $.ajax({
+        url: "/payments/check_vat?vat_number=" + $(this).val()//,
+      }).done(function(data) {
+        console.log(data);
+        var currency_code = $("input[name='currency_symbol']").val()
+        var amount = $("input[name='amount']").val()
+        if(data.valid_vat){
+          if(!$("input[name='eligible_for_vat']").val() == "true"){
+            $("#payment_vat").val(currency_code + "" + (amount * 0.20))
+          }
+        }else{
+          $("#payment_vat").val(currency_code + "" + 0)
+        }
+      });
+      e.preventDefault();
+    })
+    $("#payment_subscription_id").on("change", function(e){
+      var new_url = updateURLParameter(window.location.href, "sub", $(this).val());
+      window.location = new_url;
+      e.preventDefault();
+    })
+
+  });
+
+  function updateURLParameter(url, param, paramVal)
+  {
+      var TheAnchor = null;
+      var newAdditionalURL = "";
+      var tempArray = url.split("?");
+      var baseURL = tempArray[0];
+      var additionalURL = tempArray[1];
+      var temp = "";
+
+      if (additionalURL) 
+      {
+          var tmpAnchor = additionalURL.split("#");
+          var TheParams = tmpAnchor[0];
+              TheAnchor = tmpAnchor[1];
+          if(TheAnchor)
+              additionalURL = TheParams;
+
+          tempArray = additionalURL.split("&");
+
+          for (i=0; i<tempArray.length; i++)
+          {
+              if(tempArray[i].split('=')[0] != param)
+              {
+                  newAdditionalURL += temp + tempArray[i];
+                  temp = "&";
+              }
+          }        
+      }
+      else
+      {
+          var tmpAnchor = baseURL.split("#");
+          var TheParams = tmpAnchor[0];
+              TheAnchor  = tmpAnchor[1];
+
+          if(TheParams)
+              baseURL = TheParams;
+      }
+
+      if(TheAnchor)
+          paramVal += "#" + TheAnchor;
+
+      var rows_txt = temp + "" + param + "=" + paramVal;
+      return baseURL + "?" + newAdditionalURL + rows_txt;
+  }
+</script>

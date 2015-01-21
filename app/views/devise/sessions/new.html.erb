@@ -1,0 +1,56 @@
+<% prg_id = session[:user_return_to].present? ? (session[:user_return_to].split('prg_id=')[1] ? 
+            session[:user_return_to].split('prg_id=')[1].split('&')[0] : session[:user_return_to].split('/programs')[1] ? (
+            session[:user_return_to].split('/programs')[1].include?("pitches") ? session[:user_return_to].split('/programs/')[1].split('/pitches')[0] :
+            session[:user_return_to].split('/programs/')[1].split('/community_feeds')[0]) : nil) : nil %>
+
+<% prg_id = request.referrer ? (request.referrer.split('programs/')[1] ? request.referrer.split('programs/')[1].split('/program_login')[0] : nil) : nil if prg_id.nil?%>
+<%prog_ram = Program.where(id: current_subdomain).first%>
+<% @program = prog_ram ? prog_ram : Program.where(id: prg_id).first %>
+<% @program = get_domain_branding(request.host) if @program.nil? %>
+<% content_for :title do %>
+  <%= "Log In" %>
+<% end %>
+<% content_for :navigation do %>
+  <div id="mainnavi">
+		<div class="clr"></div>
+  </div>
+<% end %>
+<div id="rightcontent" style="float: none !important;">
+  <div id="primary" class="site-content">
+		<div id="content" role="main">
+      <div class="entry-content">
+				<%= render "layouts/shared/flash_message" %>
+			  <div class="login block" id="theme-my-login">
+	        <h2 class="titleLine">Log In</h1>
+          <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :id => "loginform") do |f| %>
+          <div>
+            <%= f.label :email, "E-Mail" %>
+            <%= f.email_field :email, :autofocus => true, :class => "input form-control pull-left" %>
+      	    <div class="clear"></div>
+					</div>
+          <div>
+            <%= f.label :password %>
+            <%= f.password_field :password, :class => "input  form-control pull-left" %>
+          	<div class="clear"></div>
+			    </div>
+          <% if devise_mapping.rememberable? -%>
+            <div class="forgetmenot">
+              <%= f.check_box :remember_me, :id=>"rememberme", :class=>"pull-left", :style=>"margin-left:150px;" %>
+              <%= f.label :remember_me, :id=>"", :style=>"font-weight:normal;" %>
+              <div class="clear"></div>
+      		  </div>
+          <% end -%>
+          <p class="submit">
+            <%= f.submit "Log in", :id=>"submit", :style=>"margin-left:150px;float:none;" %>
+	        </p>
+        <% end %>
+          <ul class="tml-action-links">
+            <li class="social_logins">
+              <%= render "devise/shared/links" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

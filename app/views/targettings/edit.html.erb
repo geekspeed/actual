@@ -1,0 +1,97 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "targetting"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<%roles = []%>
+<% roles_allowed =  context_program.roles_allowed.map(&:code)%>
+<% roles_allowed.each do |role|%>
+  <%if role== "participant"%>
+    <% roles << ["#{t("role_type:participant", "p")}", "participant"]%>
+  <% elsif role == "mentor"%>
+    <% roles << ["#{t("role_type:mentor", "p")}", "mentor"]%>
+  <% elsif role == "panellist"%>
+    <% roles << ["#{t("role_type:panellist", "p")}", "panellist"]%>
+  <% elsif role == "selector"%>
+    <% roles << ["#{t("role_type:selector", "p")}", "selector"]%>
+  <%end%>
+<% end %>
+<% roles << ["#{t("pitch","p")}", "pitch"]%>
+<%= render "shared/flash" %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-dashboard gn-icon-large"></i>
+      Targeting
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customizable dashboard to visualize key facts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Targeting</a>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+    <%= form_for(@targetting, :url => targettings_path, :method=> "put", :html => {:class => "registerForm reqForm", :id => "edit_target" })  do |f| %>
+      <%= hidden_field_tag "target_id", @targetting.id%>
+      <%= render "form", :f => f, :roles => roles, :type => "Edit" %>
+    <% end %>
+    <div style="display: none">
+      <div id="targetting_preview">
+      </div>
+    </div>
+  </div>
+    <div class="col-md-2 stick_me">
+      <ul class="navigator-menu">
+        <li id="nav_sec1" class="active-navigator-title">
+          <p>Main Section</p>
+          <ul>
+            <li><a href="#sec1">Edit Target</a></li>
+          </ul>
+        </li>
+      </ul>
+   </div>
+</div>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+ 
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+
+   $(document).on("click", "#target_preview", function(e){
+    e.preventDefault();
+    form = $("#edit_target");
+    values = form.serialize();
+    $.ajax({
+      url: "/targettings/preview",
+      type: 'get',
+      data: values,
+      success: function(data){
+        $("#targetting_preview").html(data);
+      },
+      error: function(){
+        alert('Request failed. Sorry, we are analyzing the cause of this problem');
+      }
+    });
+  });
+</script>

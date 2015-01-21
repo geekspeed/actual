@@ -1,0 +1,141 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - User Adoption Mail Setting" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "user_adoption"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail-settings gn-icon-large"></i>
+      Edit Custom Reminder
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title=""></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Edit Custom Reminder</a>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+
+<%= form_for(@custom_reminder, :url => program_custom_reminder_path(@program), :method=> "put", :html => {:class => "registerForm reqForm" })  do |f|%> 
+      <div class="custom_reminder">
+        <div class="row">
+          <div class="col-md-12">
+            <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading">
+                <div class="panel-title title_option">
+                  <h4>Edit custom reminder</h4>
+                </div>
+              </div>
+        
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Subject</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.text_field :subject, {:class => "form-controls form-style-1"}%>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Message</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.text_area :message, {:class => "form-controls form-style-1 summernote"}%>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>To</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.select :to_target, options_for_select(@program.targettings.map{|t| [t.name,t.id]}), :class => "form-controls form-style-1"%>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Frequency</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.collection_select :frequency, CustomReminder::FREQUENCY, :last, :first, {}, {class: "selectmenu ddl_width iterations custom form-controls form-style-1"} %>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Project Phase Not Achived</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.collection_select :reminder_day, CustomReminder::EVERYDAY, :to_s, :humanize, {}, {class: "selectmenu ddl_width digest_value form-controls form-style-1"}  %>
+                  </div>
+                </div>
+                <br />
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <%= f.submit "Update", :id => "submit" %>
+      </div>
+    <%end%>
+</div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var refreshOptions = function(elem, refreshElem){
+      var new_options = eval(elem.val());
+
+      refreshElem.empty(); // remove old options
+      $.each(new_options, function(key, value) {
+        refreshElem.append($("<option></option>")
+           .attr("value", value).text(key));
+      });
+      refreshElem.selectmenu("destroy").selectmenu({ style: "dropdown" });
+    }
+    var day = {"Everyday": "everyday", "Weekdays Only": "weekdays_only"}
+    var week = {"Monday": "monday", "Tuesday": "tuesday", "Wednesday": "wednesday", "Thursday": "thursday", "Friday": "friday", "Saturday": "saturday", "Sunday": "sunday"}
+    var month = {}, key, never = {"Never": ""};
+    for(i=0; i < 31; i++){
+      if(i==0){
+        key = "1st";
+      }else if(i==1){
+        key = "2nd";
+      }else if(i==2){
+        key = "3rd";
+      }else{
+        key = (i + 1) + "th" 
+      }
+      month[key] = i+1;
+    }
+    $("form select.digest").each(function(index, elem){
+      console.log(elem);
+      var elem = $(this);
+      var change_elem = elem.parents("tr").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+    $("form").on("change", "select.digest", function(e){
+      var elem = $(this);
+      var change_elem = elem.parents("tr").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+
+    $("form").on("change", "select.custom", function(e){
+      var elem = $(this);
+      var change_elem = $(".custom_reminder").find("select.digest_value");
+      refreshOptions(elem, change_elem);
+    });
+
+  });
+  $('.summernote').summernote();
+</script>

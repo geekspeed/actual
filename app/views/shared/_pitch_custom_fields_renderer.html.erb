@@ -1,0 +1,49 @@
+<% klass = "Pitch".constantize;
+    ankor = "pitch";
+    outer_wrap = {tag: :tr, klass: "value_line custom_tr"};
+    label_wrap = {tag: :td, klass: "label_row"};
+    field_wrap = {tag: :td, klass: ""}; 
+    field_class = "form-control"%>
+<% branch_select_fields = @custom_branch_field ? "branch_select_fields" : "" %>
+<% @custom_fields.each do |custom_field| %>
+  <% required = (custom_field.present? && custom_field.required) ? "required" : "" %>
+  <% label_mand_class = required == "required" ? "mend_field_label" : ""%>
+  <% if custom_field.element_type == "text_area" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <%= text_area_tag "pitch[custom_fields][#{custom_field.code}]", "", :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}" %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "date" %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "#pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <%= text_field_tag "pitch[custom_fields][#{custom_field.code}]", "", :placeholder => custom_field.placeholder, :class => "datepicker_std #{required} #{field_class}", :size => 30 %>
+      <% end %>
+    <% end %>
+  <% elsif custom_field.element_type == "dropdown" || custom_field.element_type == "dropdown_with_other" || custom_field.element_type == "dropdown_with_multiple_select" %>
+    <% multiple = custom_field.element_type == "dropdown_with_multiple_select"  %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <%= select_tag "pitch[custom_fields][#{custom_field.code}]", options_for_select(custom_field.options), :placeholder => custom_field.placeholder, :multiple => multiple, :class => "#{required} #{field_class}", :style => "width:277px;" %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= content_tag( outer_wrap[:tag], :class => "#{outer_wrap[:klass]} #{branch_select_fields}") do %>
+      <%= content_tag( label_wrap[:tag], :class => label_wrap[:klass]) do %>
+        <%= label_tag "pitch[custom_fields][#{custom_field.code}]", custom_field.label, :class => label_mand_class %>
+      <% end %>
+      <%= content_tag( field_wrap[:tag], :class => field_wrap[:klass]) do %>
+        <%= text_field_tag "pitch[custom_fields][#{custom_field.code}]", "", :placeholder => custom_field.placeholder, :class => "#{required} #{field_class}", :size => 30 %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

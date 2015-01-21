@@ -1,0 +1,87 @@
+<% content_for :navigation do %>
+  <div class="main-navbar" id="mainnavi">
+    <div  style="width: 60px;" class="pull-left">
+    <ul id="gn-menu" class="gn-menu-main">
+      <li class="gn-trigger">
+        <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+        <nav class="gn-menu-wrapper gn-open-part" id="left_stick">
+          <%= render "pitches/shared/bs_sidebar", :page => ppage %>
+        </nav>
+      </li>
+    </ul>
+  </div>
+    <nav class="navbar navbar-default main-navbar-inner" role="navigation">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-collapse collapse" style="border: none;">
+      <ul class="nav navbar-nav main-navi-bar">
+        <% if need?(["company_admin", "program_admin"], current_organisation) %>
+          <li class="mainnav_link">
+            <%= link_to current_organisation.company_name, organisation_path(current_organisation) %>
+          </li>
+        <% end %>
+        <li class="<%= 'active' if page == "program_community" %> mainnav_link">
+          <%= link_to("Community", dashboard_path) %>
+        </li>
+        <% if context_program %>
+          <li class="<%= 'active' if controller_name == 'community_feeds' %> mainnav_link">
+            <%= link_to("Buzz", program_community_feeds_path(context_program), :class=>"admin_dropdown") %>
+          </li>
+        <% end %>
+        <% if need?(["participant"], context_program)%>
+          <div class="dropdown pull-left nav-dropdown">
+            <li class="<%= 'active' if controller_name == "dashboards" and action_name == "my_work"%> mainnav_link">
+              <%= link_to("My Work", my_work_dashboard_path, :class=>"admin_dropdown") %>
+            </li>
+            <ul class="dropdown-menu right_admin_menu" role="menu" aria-labelledby="dropdownMenu3">
+              <%= navbar_pitch_link %>
+            </ul>
+          </div>
+        <% end %>
+        <% if @pitch.present? && @pitch.user_id != current_user.id %>
+          <li class="<%= 'active' if page == "pitch_show" %> mainnav_link">
+            <%= link_to "#{t("pitch")}: #{@pitch.title}", edit_program_pitch_path(context_program, @pitch) %>
+          </li>
+        <% end %>
+      </ul> 
+    </div>      
+  </nav>
+    <% if need?(["company_admin", "program_admin"], current_organisation) %>
+      <div class="dropdown pull-right nav-dropdown">
+        <button class="btn dropdown-toggle admin_toggle" type="button" id="dropdownMenu3" data-toggle="dropdown">
+          <%= link_to("Admin", context_program ? program_phases_path(context_program) : "#", :class=>"admin_dropdown") %>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu right_admin_menu" role="menu" aria-labelledby="dropdownMenu3">
+          <li class="<%= 'active' if page == "setup_program" %>">
+            <%= link_to "Setup", context_program.try(:persisted?) ? edit_program_path(context_program) : new_program_path %>
+          </li>
+          <li class="<%= 'active' if page == "manage_program" %>">
+            <%= link_to("Manage Program", context_program ? program_phases_path(context_program) : "#") %>
+          </li>
+          <li class="<%= 'active' if page == "report_program" %>">
+            <%= link_to("Report", context_program ? program_reportings_path(context_program) : "#") %>
+          </li>
+        </ul>
+      </div>
+    <% end %>
+    <div class="<%= 'active' if page == "program_summary" %> mainnav_link pull-right">
+      <%= link_to("Summary", context_program ? polymorphic_path(context_program) : "#", :class=>"right_nav_link") %>
+    </div>  
+    <div class="clr"></div>
+    
+  </div>
+<% end %>
+
+
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    </script>
+    
+<% end %>

@@ -1,0 +1,11 @@
+<%= render "devise/shared/navbar" %>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="block">  
+    <p id="notice"><%= notice %></p>
+	<p>
+	  <b>Domain:</b>
+	  <%= @domain_map.domain %>
+	</p>
+	<%= link_to 'Back', domain_maps_path %>
+  </div>
+</div>

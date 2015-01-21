@@ -1,0 +1,20 @@
+<table class="table table-bordered table-striped datatable dataTable" id="table-2">
+  <thead>
+    <tr role="row">
+      <th style="width: 50px;" colspan="1" rowspan="1" >Index</th>
+      <th style="width: 400px;" colspan="1" rowspan="1" >Task</th>
+      <th style="width: 400px;" colspan="1" rowspan="1">created By</th>
+      <th style="width: 400px;" colspan="1" rowspan="1">Due Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%@tasks.each_with_index do |task, index|%>
+    <tr>
+      <td><%= index+1 %></td>
+      <td><%= task.description %></td>
+      <td><%= task.user ? task.user.full_name : "-" %></td>
+      <td><%= task.deadline ? task.deadline : "-"%></td>
+    </tr>
+    <%end%>
+  </tbody>
+</table>

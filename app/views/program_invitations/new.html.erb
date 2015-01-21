@@ -1,0 +1,127 @@
+<% page = "setup_program"%>
+<% ppage = "invitation"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<%= render "shared/flash" %>
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "invitation" %>
+<script type="text/javascript" src="public/javascripts/nicEdit.js"></script>
+
+<script>
+  jQuery(function($) {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      // minDate: 0
+    });
+  });
+</script>
+<script type="text/javascript"> 
+  jQuery(document).ready(function() {
+    jQuery("#add_communty_tag").click(function(){
+      var new_sub_com = jQuery("#new_sub_com").val();
+      var new_sub_id = parseInt(jQuery("#new_sub_id").val());
+      var new_sub_id = new_sub_id + 1;
+      var html = ' | <a href="#" class="switch_community" id="community_'+new_sub_id+'">'+new_sub_com+'</a>';
+      jQuery("#new_sub_id").val(new_sub_id);
+      jQuery(".community_"+new_sub_id+"_text").html("("+new_sub_com+")");
+      jQuery(".community_tag_links").append(html);
+      
+      var label = '<input type="hidden" value="'+new_sub_com+'" id="community_'+new_sub_id+'_label" name="com_labels[community_'+new_sub_id+']" />';
+      jQuery(".community_tags").append(label);
+      if(new_sub_id >= 6){
+        jQuery("#new_sub_com").remove();
+        jQuery("#add_communty_tag").remove();
+      }
+      return false;
+    });
+  });
+</script>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail gn-icon-large"></i>
+      Roles and Invitations
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Roles and invitations lets you customize the invitation, welcome and rejection emails sent to participants"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Roles and Invitations</a>
+  </div>
+</div>
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <%= form_for(@invitation, :url => program_invitation_path(@program), :html => {:class => "invitees closable_h2" }) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>
+
+<div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1">Invite People to your Program</a></li>
+          <li class="lhs_hint"><a href="#" title="#URL#" data-placement="left" data-toggle="tooltip"><i class="glyphicon glyphicon-hand-right"></i>Hint</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+
+
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 305
+    });
+    
+    $('.help-sign').tooltip();
+    $('.lhs_hint a').tooltip();
+  });
+  
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('applicant_invitee');
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('applicant_welcome');
+  });
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('applicant_rejection');
+  });
+
+  $('#program-invitation-hint').on('click', function(e){
+    $("#program-invitation-hintbox").toggle();
+  });
+  
+  $(".hint-title[rel=tooltip]").tooltip();
+</script>
+
+<style>
+  .hint-title{
+    padding:5px;
+    font-weight:bold;
+  }
+  #program-invitation-hintbox{
+    border:2px solid;
+    border-radius:25px;
+  }
+</style>

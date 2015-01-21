@@ -1,0 +1,27 @@
+<table id="" class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @events.each do |event| %>
+      <% event_attributes = event["event"]%>
+      <tr>
+        <td><%= event_attributes["id"]%></td>
+        <td><%= event_attributes["title"]%></td>
+        <td><%= event_attributes["description"].html_safe%></td>
+        <td><%= check_box_tag "select_event", "", false, {:"data-event-id" => "#{event_attributes["id"]}", :class => "check_evenbrite_event"}%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="pull-right" style="margin-left: 10px;">
+   <%= link_to "Save", "#", :class => "btn btn-info create_events_btn", :id => "submit", :"data-url" => create_eventbrite_events_program_summary_path(@program, :user_token => @user_token)%>
+</div>
+<div class="pull-right">
+  <a href="#eventbrite_event" class="fancybox slink btn btn-info" id="submit">Back to Accounts</a>
+</div>

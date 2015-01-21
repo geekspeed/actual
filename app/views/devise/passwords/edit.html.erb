@@ -1,0 +1,42 @@
+<% content_for :title do %>
+  <%= "Lost Password" %>
+<% end %>
+<% content_for :navigation do %>
+  <div id="mainnavi">
+		<div class="clr"></div>
+  </div>
+<% end %>
+<% content_for :sidebar do %>
+  <div id="sidebar"></div>
+<% end %>
+<div id="rightcontent" class="two_sided_right_content" style="float: none;">
+		<div id="content" role="main" class="block">
+      <h1 class="entry-title">Lost Password</h1>
+      <div class="entry-content">
+
+  			<div class="login" id="theme-my-login">
+	        <p class="message">Enter your new password below.</p>
+          <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+            <%= devise_error_messages! %>
+            <%= f.hidden_field :reset_password_token %>
+		        <p>
+		          <%= f.label :password, "New password" %>
+              <%= f.password_field :password, :autofocus => true, :class=>"input", :size => "20" %>
+		        </p>
+		        <p>
+		          <%= f.label :password_confirmation, "Confirm new password" %>
+              <%= f.password_field :password_confirmation %>
+		        </p>
+		        <p class="submit">
+		          <%= f.submit "Reset password" %>
+		        </p>
+		      <% end %>
+		      <ul class="tml-action-links">
+            <li>
+              <%= render "devise/shared/links" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</div>

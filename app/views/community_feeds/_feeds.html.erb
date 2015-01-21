@@ -1,0 +1,96 @@
+<div id="community_stream">
+  <div style="position: relative;">
+    <div class="row timeline no-transition vline isotope" id="timeline" >    
+      <% design_align = 0%>
+      <% cache @feeds do %>
+        <% @feeds.each do |feed| %>
+          <div class="item col-sm-6 isotope-item <%= design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                <%= link_to image_tag(feed.created_by.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(feed.created_by) %>
+                <% if need?(["company_admin", "program_admin"], current_organisation) or feed.created_by_id == current_user.id%>
+                  <%= link_to "<i class='glyphicon glyphicon-trash user_defined_color' style='color:#fff !important;'></i>".html_safe, polymorphic_path([@program, feed]), :method => :delete, :class => "delFeed pull-right" %>
+                <% end %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to feed.created_by.full_name, polymorphic_path(feed.created_by), :style=>"color:#fff;"%></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>              
+              <div class="post-body">
+                <div class="post-excerpt">
+                  <% if !feed.subject.blank? %>
+                    <div style="margin-bottom:10px;">
+                      <b>Subject: </b>
+                      <%= feed.subject %>
+                    </div>
+                  <% end %>
+                  <%= feed.content.html_safe %>
+                  <% if feed.tags.present? %>
+                  <div class="feed_tags">
+                    Tagged: <%= feed.tags.join(", ") %>
+                  </div>
+                <% end %>
+                </div>
+              </div>            
+              <div class="post-media">
+                <div class="thumbnail no-border do-hover">
+                  <% if feed.link.present? %>
+                    <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                        <%#= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+                        <% if is_image?(feed.link) %>
+                          <%= link_to image_tag(feed.link, :height => "500", :width => "525"), feed.link, :target => "_blank" %>
+                        <% else %>
+                           <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                          <% emb_obj = emb_api.extract(:url => feed.link, :maxwidth => 525)%>
+                          <%= show_attachment(emb_obj)%>
+                        <% end %>
+                    <% end  %>
+                  <% elsif feed.attachment.present?%>
+                    <% if is_image?(feed.attachment.url) %>
+                      <%= link_to image_tag(root_url.chomp('/') + feed.attachment_url, :height => "500", :width => "525"), (root_url.chomp('/') + feed.attachment_url), :target => "_blank"%>
+                    <% else %>
+                      <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                      <% emb_obj = emb_api.extract(:url => root_url.chomp('/') + feed.attachment_url, :maxwidth => 525)%>
+                      <%= show_attachment(emb_obj)%>                       
+                    <% end %>
+                  <% end %>
+                </div>
+                <div class="post-meta clearfix feed-events">
+                   <span class="pull-left"><span class="post-date"><i class="glyphicon glyphicon-heart user_defined_color"></i> <span class="anzahl"><%= feed.likes_count %></span> people like this</span> </span>
+                   <span class="pull-right"><%= feed_like_link(feed) %></span>
+                </div>
+              </div>
+              <div class="post-main-comments">
+                <div class="post-main-commment-title">
+                  <span class="post-comment-description-box" id="comments_box_<%= feed.id%>">
+                    <%= feed.comments.count==0 ? "No Comments" : "#{feed.comments.count==1 ? "View #{feed.comments.count} comment" : "View all #{feed.comments.count} comments"}".html_safe %>
+                  </span>
+                </div>
+                <div id="comments_box_<%= feed.id%>_show">
+                  <%= render "comments/inline_comments", :commentable => feed %>
+                </div>
+                <div class="comment-input-container">
+                  <%= render "shared/comment_form", :comment => Comment.new, :commentable_type => feed.class.to_s, :commentable_id => feed.id %>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% design_align = design_align +1 %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .post-comment-description-box{ cursor:pointer;}
+</style>
+
+<script>
+  $(".post-comment-description-box").click(function(){
+    $("#"+this.id+"_show").slideToggle("slow") 
+  });
+</script>

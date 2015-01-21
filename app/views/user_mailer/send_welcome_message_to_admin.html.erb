@@ -1,0 +1,386 @@
+<% background_color =  @organisation.try(:background_color)  || "#17a3bf" %>
+<% menubar_color =  @organisation.try(:manubar_color) || "#17a3bf" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="initial-scale=1.0"> 
+<meta name="format-detection" content="telephone=no">
+<title>Apptual</title>
+<style type="text/css">
+
+.ReadMsgBody { width: 100%; background-color: menubar_color;}
+.ExternalClass {width: 100%; background-color: menubar_color;}
+.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height:100%;}
+body {-webkit-text-size-adjust:none; -ms-text-size-adjust:none;}
+body {margin:0; padding:0;}
+table {border-spacing:0;}
+img{display:block !important;}
+
+table td {border-collapse:collapse;}
+.yshortcuts a {border-bottom: none !important;}
+
+*[class="header-color"]{
+  background-color:<%= menubar_color %>;
+}
+*[class="color-tab"]{
+  background-color:<%= menubar_color %> !important; 
+}
+
+
+*[class="button"] {
+  height: 40px !important;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px; 
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box; 
+  background-color: <%=menubar_color%>; 
+  padding-left: 25px !important;
+  padding-right:25px !important;
+
+}
+
+*[class="ios-main-link"]{
+  color:#aaaaaa !important;
+  font-weight:normal !important;
+}
+span[class="ios-main-link"] a{
+  color:<%= menubar_color %> !important;
+  text-decoration: none;
+  font-weight:normal !important;
+}
+
+span[class="ios-white-link"] a {
+  color:<%= menubar_color %>;
+  text-decoration: none;
+}
+
+span[class="ios-gray-link"] a{
+  color: <%= menubar_color %>;
+  text-decoration: none;
+}
+
+*[class="border-desks"] {
+  background-color: #c7c5c5;
+  -moz-box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+  -webkit-box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+  box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+}
+
+
+@media screen and (max-width: 479px) {
+  
+  table[class="container"] {
+    width: 100%!important;
+  }
+  td[class="container-padding"] {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  table[class="col-2"]{
+    width: 100% !important;
+    float: none !important;
+   
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    padding-left:20px;
+    padding-right:20px;
+    border-bottom: 1px solid #eee;
+
+  }
+
+ td[class="force-col"] {
+    display: block;
+    padding-right: 0 !important;
+  }
+ 
+  *[class="force-remove"]{
+    display:none;
+  }
+   *[class="force-center"]{
+    float:none !important;
+    width:100% !important;
+    text-align: center !important;
+  }
+    *[id="bottom-line"]{
+      border-top: 0px !important;
+      border-left:0px !important;
+      border-right:0px !important;
+      border-bottom: 1px solid #eee;
+  }
+
+}
+
+@media only screen and (max-width : 600px) {
+
+  table[class="container"] {
+    width: 100% !important;
+  }
+  *[id="pad-left-right"]{
+    padding-left: 20px !important;
+    padding-right:20px !important;
+  }
+  *[id="pad-top"]{
+    padding-top: 12px !important;
+  }
+
+  *[class="force-resize"]{
+    width:80% !important;
+    height:80% !important;
+  }
+
+  td[class="force-col"] {
+    display: block;
+    padding-right: 0 !important;
+  }
+   *[class="reset-align"]{ 
+    float: none !important;
+  }
+
+  *[class="force-remove"]{
+    display:none;
+  }
+  *[class="force-reduce-height"]{
+    height:20px !important;
+  }
+  *[class="force-center"]{
+    float:none !important;
+    width:100% !important;
+    text-align: center ;
+  }
+
+  *[class="increase-padding-top"] {
+    padding-top:20px !important;
+  }
+   *[class="increase-padding-bottom"] {
+    padding-bottom:20px !important;
+  }
+  *[class="reduce-padding-top"] {
+    padding-top:12px !important;
+  }
+   *[class="reduce-padding-bottom"] {
+    padding-bottom:12px !important;
+  }
+  *[id="reduce-padding-bottom"] {
+    padding-bottom:12px !important;
+  }
+
+  *[id="bottom-line"]{
+    border:none !important;
+    border-bottom: 1px solid #eee !important;
+
+  }
+
+  
+   table[class="col-2"]{
+    float: none !important;
+    width: 100% !important;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    padding-left:20px;
+    padding-right:20px;
+    border-bottom: 1px solid #eee;
+
+  }
+  table[id="last-col-2"] {
+    padding-left:20px ;
+    padding-right:20px ;
+    border-bottom: none !important;
+    margin-bottom: 0;
+  }
+
+
+
+
+  table[class="col-3"] {
+    float: none !important;
+    width: 100% !important;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  table[id="last-col-3"] {
+    border-bottom: none !important;
+    margin-bottom: 0;
+  }
+  img[class="col-3-img"] {
+    float: left;
+    margin-left: 6px;
+    max-width: 130px;
+  }
+}
+</style>
+</head>
+
+<body>
+<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0" >
+
+  <tr>
+    <td align="center" valign="top" style="background-color:<%= background_color %>;height:91px;">
+        <table width="580" border="0" cellspacing="0" cellpadding="0" class="container" style="padding-top:20px; padding-bottom:20px;">
+          <tr>
+            <td valign="top">
+
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                <tr>
+                  <td valign="top">
+                          <!--start logo navigation -->
+                      <table border="0" align="left" cellpadding="0" cellspacing="0"  class="container">
+                        <tr>
+                          <td align="center" valign="top" >
+                             <% if @organisation.present? %>
+                              <%= image_tag(root_url+@organisation.avatar.url, :height=>"51", :border=>"0", :alt=>"", :style=>"margin-bottom:5px;") %>
+                            <% else %>
+                              <%= link_to(image_tag(root_url+"images/logo-apptual.png"), root_url, :class => "companyLogo", :height=>"51", :border=>"0", :alt=>"", :style=>"margin-bottom:5px;") %>
+                            <% end %>
+                          <% if @organisation.present? %>
+                          <span style="font-family: Helvetica, sans-serif,Arial,Tahoma;color:white;font-size: 12px;"><%= @organisation.company_name %></span>
+                          <% end %>
+                        </td>
+                        </tr>
+                      </table>
+
+                  </td>
+                </tr>
+              </table>
+                
+             </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" bgcolor="#f2f2f2" style="background-color: #f2f2f2;" >
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:40px;" class="reduce-padding-bottom">
+        <tr>
+          <td>
+            <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="2" valign="top" style="background-color: #f2f2f2;"></td>
+              </tr>
+            </table>
+          </td>
+          <td width="53" height="4" class="color-tab" style="color:#eb5055;"></td>
+          <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+             
+              <tr>
+                <td height="2" valign="top" style="background-color: #f2f2f2;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+        <table width="580"  border="0" cellspacing="0" cellpadding="0" class="container">
+          <tr>
+          <td valign="top" >
+            
+            <table border="0" cellspacing="0" cellpadding="0" id="pad-left-right">
+              
+               <tr>
+                <td align="left" colspan="2" width="580" style="font-size: 14px;line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#333333; font-weight:normal; text-align:left; ">
+                <div style="font-size: 18px;font-weight:bold;padding-bottom:10px;">
+                  </div>
+                <div style="font-size: 15px;padding-bottom:10px;">
+                    <span class="ios-white-link"><font color="#333333"><%= "Hello #{@user.try(:first_name)}," %></font></span>
+                    <%= tag 'br'%>
+                    <%= tag 'br'%>
+                    <span class="ios-white-link"><font color="#333333">Thanks a lot for your interest in Apptual!</font></span>
+                    <%= tag 'br'%>
+                    <%= tag 'br'%>
+                    <span class="ios-white-link"><font color="#333333">We are reviewing your application, we will be in touch soon!</font></span>
+                    <%= tag 'br'%>
+                    <%= tag 'br'%>
+                    <span class="ios-white-link"><font color="#333333">Cheers</font></span>
+                    <%= tag 'br'%>
+                    <%= tag 'br'%>
+                    <span class="ios-white-link"><font color="#333333">The Apptual Team</font></span>
+                  </div>
+                </td>
+                </tr>
+            </table>
+            
+            <table height="10" border="0" cellspacing="0" cellpadding="0" align="center" >
+             <tr>
+               <td>&nbsp;</td>
+             </tr>
+            </table>
+          </td>
+         </tr>
+       </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="padding-top:40px;" class="reduce-padding-top">
+        <tr>
+          <td valign="top">
+            <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="3" valign="top"></td>
+              </tr>
+              <tr>
+                <td height="1"  valign="top" style="border-bottom: 1px solid #c8c6c6;"></td>
+              </tr>
+            </table>
+          </td>
+
+          <td width="53" height="5" class="color-tab" style="color:#eb5055;"></td>
+
+          <td valign="top">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="3" valign="top"></td>
+              </tr>
+              <tr>
+                <td height="1"  valign="top" style="border-bottom: 1px solid #c8c6c6;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" bgcolor="#333333" style="background-color:<%= menubar_color %>;">
+      
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:40px;" class="reduce-padding-bottom">
+        <tr>
+          <td>
+            <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+             
+              <tr>
+                <td height="2" valign="top" style="background-color: <%= menubar_color %>;"></td>
+              </tr>
+            </table>
+          </td>
+          <td width="53" height="4" class="color-tab" style="color:#eb5055;"></td>
+          <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+             
+              <tr>
+                <td height="2" valign="top" style="background-color: <%= menubar_color %>;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center" valign="top" bgcolor="#212121" style="background-color:<%= background_color%>; ">
+      <table width="580" border="0" cellspacing="0" cellpadding="0" class="container" style="padding-top:10px; padding-bottom:10px; ">
+        <tr>
+           <td valign="top" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:center; " ><singleline><%= @organisation.company_name %> , all rights reserved 2014 &copy; </singleline>
+           </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

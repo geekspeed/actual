@@ -1,0 +1,26 @@
+<h2 class="titleLine title-normal"><span>Session List (<%= program_event.event_sessions.count %>)</span></h2>
+<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+	<thead>
+		<tr role="row">
+			<th style="width: 100px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Session</th>
+			<th style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Location</th>
+			<th style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Seat no</th>
+			<th style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Date</th>
+			<th style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Timings</th>
+			<th style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+		</tr>
+	</thead>
+	<tbody aria-relevant="all" aria-live="polite" role="alert">
+		<% count = 1; program_event.event_sessions.each do |event| %>
+		<tr class="odd">
+			<td><%= count %></td>
+			<td><%= event.location %></td>
+			<td><%= event.seat_no %></td>
+			<td><%= event.date_to ? "#{event.date} / #{event.date_to}" : event.date %></td>
+			<td><%= event.time_from %> - <%= event.time_to %></td>
+			<td><%= event.description %></td>
+		</tr>
+		<% count+=1 %>
+		<% end %>
+	</tbody>
+</table>

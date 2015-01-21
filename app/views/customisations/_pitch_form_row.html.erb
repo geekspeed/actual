@@ -1,0 +1,57 @@
+<% field ||= nil %>
+<% branch ||= nil%>
+<tr>
+  <td colspan="2" class="field_name">
+	  Field Name
+	</td>
+</tr>
+<tr class="value_line">
+  <td >
+		<div class="form-group">
+			<label>Name</label>
+    	<%= (hidden_field_tag "custom_fields[][id]", field.present? ? field.id : "") %>
+    	<%= text_field_tag "custom_fields[][label]", field.present? ? field.label : nil, :placeholder => "Field name", :class =>"form-control", :style => "width:80px;"  %>
+		</div>
+    <div class="form-group">
+			<label>Type</label>
+			<%= select_tag  "custom_fields[][element_type]", options_from_collection_for_select(App::CustomFields::Models::CustomField::TYPE, :to_s, :humanize, field.present? ? field.element_type : nil), :class =>"form-control", :style => "width:80px;" %>		</div>
+    </div>
+		<div class="form-group options" style="display:none;" id="options">
+			<label><%= field.try(:element_type) == "file_upload" ? "File Type" : "Dropdown options" %></label>
+    	<%= text_area_tag "custom_fields[][options]", field.present? ? field.formatted_options : nil, :style => "width: 120px; height: 50px;", :placeholder => "Comma separated options", :class => "form-control" %>
+  	</div>
+  		<%unless field.try(:element_type) == "file_upload"%>
+			<div class="form-group options" style="display:none;" id="options">
+				<label>Dropdown type</label>
+				<div style="float: left;margin-top: 5px;">	
+					<%= check_box_tag "custom_fields[][use_as_filter]", true, field.present? ? field.use_as_filter : false, :style => "width: auto; margin-right: 2px;"%> Filter
+				</div>
+				<div class="clear"></div>		
+			</div>
+		<% end %>
+		<div class="form-group place_holder">
+			<label>Placeholder</label>
+    	<%= text_field_tag "custom_fields[][placeholder]", field.present? ? field.placeholder : nil, :placeholder => "Place holder text", :class =>"form-control", :style => "width:80px;height:100px;" %>
+		</div>
+		<div class="form-group">
+			<label>Form control</label>
+			<div style="float: left;margin-top: 5px;">
+				<%= check_box_tag "custom_fields[][required]", true, field.present? ? field.required : false, :style => "width: auto; margin-right: 2px;" %> Required
+			</div> 
+			<div class="clear"></div>  
+			<%= hidden_field_tag "custom_fields[][disabled]", field.present? ? field.disabled : false %>
+		</div>
+    <% if @klass == "Pitch" %>
+      <div class="form-group">
+        <label>Link to Phase</label>
+        <%= select_tag  "custom_fields[][phases]", options_from_collection_for_select(active_phase(@program), "code", "phase_name", (field.present? and field.attributes.has_key?("phases")) ? (field.phases.count > 1 ? ["all"] : field.phases) : ["all"]),:class => "form-control", :style => "width: 80px" %>
+        <%= hidden_field_tag "custom_fields[][branch_id]", branch.id if branch.present? %>
+      </div>
+    <% end %>
+  </td>
+	<td valign="middle" style="border-left:1px solid #ddd;width: 10%;" align="center">
+    <%#= link_to image_tag("ico-delete.png"), "#", :class => "deleteTableRow" %>
+    <% field_disabled = field.present? && field.disabled? %>
+    <%= link_to( field_disabled ? "Enable" : "Disable", "#", :class => "deleteTableRow", :style => "float: left;" ) %>
+  </td>
+</tr>

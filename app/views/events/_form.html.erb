@@ -1,0 +1,71 @@
+<!-- <div class="outline-action-links pull-right col-md-12">
+  <%= f.link_to_add "+ Add new event", :program_events , :class=>" clr pull-right", :id => "add_new_event"%>
+</div> -->
+
+<%= f.fields_for :program_events , @program.program_events.build do |program_event | %>
+<a href="sec1" name="sec1" class="section_nav"></a>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Add a new Event</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div style="line-height: 28px;">Title</div>
+					</div>
+					<div class="col-sm-8">
+						<%= program_event.text_field :title, :class => "autogrow form-control form-style-1", :placeholder => "Type title here" %>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div style="line-height: 28px;">Attachment</div>
+					</div>
+					<div class="col-sm-8">
+						<div class="browse-wrapper">
+							<%= program_event.file_field :attachment, :class => "file_field_width", :placeholder => "Type description here" %>
+						</div>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4 setting-font">
+						<div style="line-height: 28px;">Is this a private event?</div>
+					</div>
+					<div class="radioset">
+						<%= program_event.radio_button :is_private, "true", :class => "option_mentoring ui-helper-hidden-accessible" %>
+						<%= program_event.label :is_private, "Yes", :for => "#{program_event.object_name.gsub("][", "_").gsub("[","_").gsub("]","_")}is_private_true", :class => "ui-button ui-widget ui-state-default ui-button-text-only ui-corner-left", "role" => "button", "aria-disabled" => "false", "aria-pressed" => "false" %>
+						<%= program_event.radio_button :is_private, "false", :class => "option_mentoring ui-helper-hidden-accessible", :checked => "checked" %>
+						<%= program_event.label :is_private, "No", :for => "#{program_event.object_name.gsub("][", "_").gsub("[","_").gsub("]","_")}is_private_false" ,:class => "ui-button ui-widget ui-state-default ui-button-text-only ui-state-active ui-corner-right", "role" => "button", "aria-disabled" => "false", "aria-pressed" => "true" %>
+						<div class="clr"></div>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-12  setting-font">
+						<div style="line-height: 28px;">Description</div>
+					</div>
+					<div class="col-sm-12">
+						<%= program_event.text_area :description, :class => "autogrow form-control summernote", :placeholder => "Type description here" %>
+					</div>
+				</div>
+				<hr class="mod_sep">
+				<%= render "event_session", :program_event => program_event %>
+			</div>
+		</div>
+	</div>
+</div>
+<% end %>
+<br />
+<div>
+  <div class="pull-right"><%= f.submit "Save", :id => "submit" %></div>
+</div>

@@ -1,0 +1,453 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "dashboard"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<% roles_allowed =  context_program.roles_allowed.map(&:code)%>
+<%= hidden_field_tag "program_id", @program.id%>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-dashboard gn-icon-large"></i>
+      Dashboard
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customizable dashboard to visualize key facts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Dashboard</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		<div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<a href="sec1" name="sec1" class="section_nav"></a>
+							<h3>People</h3>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body" style="display: none;">
+						<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+							<thead>
+								<tr role="row">
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Role</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Registered</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Invited</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Rejected</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Waiting</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+								</tr>
+							</thead>
+							<tbody aria-relevant="all" aria-live="polite" role="alert">
+								<tr role="row">
+									<td><%= t("role_type:participant", "s")%></td>
+									<td><%= count_users("applicant", context_program.id)%></td>
+									<td><%= link_to count_invites("applicant", context_program.id), invites_program_invitation_path%></td>
+									<td><% if @program.try(:program_scope).try(:manual_approval_for_participant)  %>
+												<% count = count_rejected("applicant", context_program.id)%>
+												<% if count > 0 %>
+													<%= link_to count, awaiting_users_program_url(@program)%>
+												<% else %>
+													<%= count%>
+												<% end %>
+										<%else%>
+											N/A
+										<%end%>
+									</td>
+									<td><% if @program.try(:program_scope).try(:manual_approval_for_participant) %>
+											<%if @awating_participants > 0 %>
+												<%= link_to @awating_participants, awaiting_users_program_url(@program)%>
+											<%else%>
+												<%= @awating_participants %>
+											<%end%>
+										<%else%>
+											N/A
+										<%end%>
+									</td>
+									<td>
+										<%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, program_export_users_detail_path(@program, :role => "participant"), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+									</td>
+								</tr>
+								<% if roles_allowed.include? "mentor" %>
+								<tr role="row">
+									<td><%= t("role_type:mentor", "s") %></td>
+									<td><%= count_users("mentor", context_program.id)%></td>
+									<td><%= link_to count_invites("mentor", context_program.id), invites_program_invitation_path%></td>
+									<td><% if @program.try(:program_scope).try(:manual_approval_for_mentor) %>
+												<% count = count_rejected("mentor", context_program.id)%>
+												<% if count > 0 %>
+													<%= link_to count, awaiting_users_program_url(@program)%>
+												<% else %>
+													<%= count%>
+												<% end %>
+										<%else%>
+											N/A
+										<%end%>
+									</td>
+									<td>
+									  <% if @program.try(:program_scope).try(:manual_approval_for_mentor) %>
+											<%if @awating_mentors > 0 %>
+												<%= link_to @awating_mentors, awaiting_users_program_url(@program)%>
+											<%else%>
+												<%= @awating_mentors %>
+											<%end%>
+										<%else%>
+											N/A
+										<%end%>
+									</td>
+									<td>
+										<%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, program_export_users_detail_path(@program, :role => "mentor"), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+									</td>
+								</tr><%end%>
+								<%if roles_allowed.include? "panellist"%>
+								<tr role="row">
+									<td><%= t("role_type:panellist", "s") %></td>
+									<td><%= count_users("panellist", context_program.id)%></td>
+									<td><%= link_to count_invites("panellist", context_program.id), invites_program_invitation_path%></td>
+									<td>N/A</td>
+									<td>N/A</td>
+									<td>
+										<%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, program_export_users_detail_path(@program, :role => "panellist"), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+									</td>
+								</tr><%end%>
+								<%if roles_allowed.include? "selector"%>
+								<tr role="row">
+									<td><%= t("role_type:selector", "s") %></td>
+									<td><%= count_users("selector", context_program.id)%></td>
+									<td><%= link_to count_invites("selector", context_program.id), invites_program_invitation_path%></td>
+									<td>N/A</td>
+									<td>N/A</td>
+									<td>
+										<%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, program_export_users_detail_path(@program, :role => "selector"), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+									</td>
+								</tr><%end%>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec4" name="sec4" class="section_nav"></a>
+              <h3>Phase Overview</h3>
+            </div>
+            <div class="panel-options">
+            </div>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-horizontal form-wizard visible-lg phases_wizard" id="rootwizard">
+                  <div style="margin-right: 7.14286%; margin-left: 7.14286%;" class="steps-progress">
+                    <div class="progress-indicator"></div>
+                  </div>
+                  <ul>
+                    <% @phases = @program.workflows.on.map(&:phase_name)%>
+                    <% @phases.each_with_index do |phase, index|%>
+                      <% @workflow=@program.workflows.where(phase_name: phase).first%>
+                      <%= @workflow.active ? raw("<li class='pahse-in completed'>") : raw("<li class='pahse-in danger'>")%>
+                      <a class="action-click dropdown-link pull-left" id="<%=phase%>" href="#tab1" data-toggle="tab" ><span><%= workflow_pitch_count(@program, phase)%></span><div style="min-height: 48px;"><%= phase%></div></a>
+                      <div class="dropdown-container phase_dropdown" style="display: none;">
+                        <p class="phase_arrrow"><i class="glyphicon glyphicon-eject"></i></p>
+                        <div class="row col-sm-9">
+                          <% if @workflow.active %>
+                            <%= link_to "Close Phase", polymorphic_path([:toggle_status, @program, @workflow]), class: "button_small_red deactivatePhase", method: :put %>
+                          <% else %>
+                            <%= link_to "Activate Phase", polymorphic_path([:toggle_status, @program, @workflow]), class: "button_small activatePhase", method: :put %>
+                          <% end %>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <p class="phase-dropdown-title"><%= t("pitch", "p")%> have not achieve this phase</p>
+                            <ul>
+                              <li>
+                                <a  href="#phase_name_out_of_phase_<%=index%>" class="send_reminder fancybox_small ">
+                                  <i class="glyphicon glyphicon-send"></i> Message all
+                                </a>
+                              </li>
+                              <li>
+                                <%= link_to "<i class='glyphicon glyphicon-certificate' style='text-align:right;'></i>Action all".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#action_all_data", "id" =>  @workflow.id, :class => "action_all", :"data-type" => "out_of_phase" %>
+                              </li>
+                              <li>
+                                <%= link_to "<i class='glyphicon glyphicon-save'></i> Download to csv".html_safe, download_phase_in_csv_program_path(@program.id, :phase_name=> phase, :phase_type => "out_of_phase"), :class=>"" %>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="col-sm-6">
+                            <p class="phase-dropdown-title"><%= t("pitch", "p")%> have achieve this phase</p>
+                            <ul>
+                              <li>
+                                <a  href="#phase_name_in_phase_<%=index%>" class="send_reminder fancybox_small ">
+                                  <i class="glyphicon glyphicon-send"></i> Message all
+                                </a>
+                              </li>
+                              <li>
+                                <%= link_to "<i class='glyphicon glyphicon-certificate' style='text-align:right;'></i>Action all".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#action_all_data", "id" =>  @workflow.id, :class => "action_all", :"data-type" => "in_phase"%>
+                              </li>
+                              <li>
+                                <%= link_to "<i class='glyphicon glyphicon-save'></i> Download to csv".html_safe, download_phase_in_csv_program_path(@program.id, :phase_name=> phase, :phase_type => "in_phase"), :class=>"" %>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <%= render "programs/shared/message_all", :code => "phase_messages", :recipients => "#{t("pitch", "p")}  ", :phase_name => phase ,  :anchor_id => "phase_name_in_phase_#{index}", :pitch_id => nil,  :url => polymorphic_path([:phase_messages, @program, :messages]), :phase_type => "in_phase" %>
+                    <%= render "programs/shared/message_all", :code => "phase_messages", :recipients => "#{t("pitch", "p")}  ", :phase_name => phase ,  :anchor_id => "phase_name_out_of_phase_#{index}", :pitch_id => nil,  :url => polymorphic_path([:phase_messages, @program, :messages]), :phase_type => "out_of_phase" %>
+                    <%end%>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec2" name="sec2" class="section_nav"></a>
+              <h3>Phases</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            </div>
+          </div>
+
+          <div class="panel-body" style="display: none;">
+            <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <tr role="row"><td class="col-md-4"><%= t("pitch","p") %></td><td class="col-md-4"><%= @program.pitches.count%></td>
+                <td class="col-md-4">
+                  <%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, program_export_projects_detail_path(@program, :role => "participant"), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+            </table>
+            <br />
+            <br />
+
+            <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <thead>
+                <tr role="row">
+                  <th aria-label="" style="width: 50%;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Phase</th>
+                  <th aria-label="" style="width: 50%;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Count</th>
+                </tr>
+              </thead>
+              <tbody aria-relevant="all" aria-live="polite" role="alert">
+                <% @phases = @program.workflows.on.map(&:phase_name)%>
+                <% @phases.each do |phase|%>
+                  <tr role="row">
+                    <td><%= phase%></td>
+                    <td><%= workflow_pitch_count(@program, phase)%></td>
+                  </tr>
+                <%end%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+		<br />
+		<div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<a href="sec3" name="sec3" class="section_nav"></a>
+							<h3>Profiles</h3>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+						</div>
+					</div>
+							
+					<div class="panel-body" style="display: none;">
+						<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+							<thead>
+								<tr role="row">
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Profile</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Stage</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Team/Mentor</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Number of updates</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Last Update</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Number of iterations</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Last Mentor/Admin Update</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+									<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Generate report</th>
+								</tr>
+							</thead>
+							
+							<tbody aria-relevant="all" aria-live="polite" role="alert">
+								<% @program.pitches.each do |pitch|%>
+								<% feed_count = pitch_feed_count(pitch, roles_string)%>
+								<% last_feedback = last_feed(pitch, roles_string) %>
+								<% last_mentor_feedback = last_mentor_feed(pitch, roles_string) %>
+								<% stage = find_active_phase_of_pitch?(pitch)%>
+								<% number_of_iteration = pitch.try(:summary).try(:history_tracks).try(:count).to_i + pitch.try(:custom_iterations).try(:count).to_i %>
+								<tr role="row">
+									<td><b><%= link_to pitch.title, edit_program_pitch_path(@program, pitch)%></b></td>
+									<td><%= stage.nil? ? "-" : stage%></td>
+									<td class="center"><%= User.count_team(pitch)%></td>
+
+									<td>
+									  <%if feed_count > 0 %>
+									    <%= link_to feed_count, feeds_program_pitch_path(@program, pitch) %></td>
+									  <%else%>
+									    <%= feed_count%>
+									  <%end%>
+									<td><%= last_feedback.nil? ? "-" : time_ago_in_words(last_feedback.updated_at)+' ago' %></td>
+									<td><%=number_of_iteration%></td>
+									<td><%= last_mentor_feedback.nil? ? "-" : time_ago_in_words(last_mentor_feedback.updated_at)%></td>
+									<td >
+										<%#= link_to "<i class='glyphicon glyphicon-send'></i> Message".html_safe, "#pitch_message_#{pitch.id}", :class=>"btn btn-info btn-sm btn-icon icon-left send_reminder fancybox_small"%>
+										<%= link_to "<i class='glyphicon glyphicon-send'></i> Message".html_safe, "#", :class=>"btn btn-info btn-sm btn-icon icon-left send_reminder", "data-toggle"=>"modal","data-target"=>"#pitch_message_#{pitch.id}"%>
+										<%= render "phases/shared/message_all", :code => "pitch_members", :recipients => "#{t("pitch", "p")}  have not completed this phase", :anchor_id => "pitch_message_#{pitch.id}", :pitch_id => pitch.id, :url => polymorphic_path([:msg_pitch_team, @program, :messages]) %>
+								  </td>
+								  <td>
+									  <%= form_tag report_pdf_program_custom_reports_url(@program) do %>
+									    <%= hidden_field_tag "pitch_id", pitch.id%>
+									    <%= select_tag "report_id", options_from_collection_for_select(report_dropdown(@program), "id", "name"), prompt: "-Select Report-", style: "width:90%", class: "pull-right pdf_report"%>
+								      <br>
+								      <br>
+								      <%= submit_tag "report", :class=>"btn btn-info btn-sm btn-icon pull-right download_pdf", style: "width:40%"%>
+								    <% end%>
+								  </td>
+								</tr>
+								<%end%>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<br>
+		<div class="eventInsForm modal fade" id="action_all_data" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><b>Action List</b></h4>
+          </div>
+          <div class="modal-body" id = "action_data">
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">People</a></li>
+					<li><a href="#sec4">Phase Overview</a></li>
+					<li><a href="#sec2">Phases</a></li>
+					<li><a href="#sec3"><%= t("pitch","p") %></a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+		$(".download_pdf").hide();
+	});
+	
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  
+  $(document).ready(function(){
+
+  $('li.pahse-in').each(function() {
+    var $dropdown = $(this);
+
+    $("a.dropdown-link", $dropdown).click(function(e) {
+      e.preventDefault();
+      $div = $("div.dropdown-container", $dropdown);
+      var pos = $(this).position();
+    	var width = $(this).outerWidth();
+			var width2 = $div.outerWidth();
+			var left = (width-width2)/2;
+			$div.css({
+					top:"40px",
+        	left: (pos.left + left) + "px"
+				});
+      $div.fadeToggle('slow');
+      $(this).toggleClass('active_phase');
+      $("div.dropdown-container").not($div).hide(500);
+      return false;
+    });
+
+});
+
+  $(document).on("click", ".action_all", function(e){
+    e.preventDefault();
+    data_type = $(this).attr("data-type");
+    workflow_id = $(this).attr("id");
+    $.ajax({
+      url: "/programs/" + $("#program_id").val() + "/get_action_list",
+      type: 'get',
+      data:{workflow_id: workflow_id, data_type: data_type},
+      success: function(data){
+        $("#action_data").html(data);
+      },
+      error: function(){
+        alert('Request failed. Sorry, we are analyzing the cause of this problem');
+      }
+    });
+  });
+    
+  $('html').click(function(){
+    $("div.dropdown-container").hide(500);
+    $('.dropdown-link').removeClass('active_phase');
+  });
+  
+  $(document).on("change", ".pdf_report", function(){
+    if($(this).val() == ""){
+      $(this).closest('td').find(".download_pdf").hide();
+    }
+    else{
+      $(this).closest('td').find(".download_pdf").show();
+    }
+    
+  });
+});
+
+	
+</script>

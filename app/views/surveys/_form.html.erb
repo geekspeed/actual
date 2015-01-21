@@ -1,0 +1,111 @@
+<%= form_for survey do |f| %>
+  <%- if survey.errors.any? %>
+    <ul>
+      <%- survey.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <%= content_tag :div, class: "block" do%>
+    <a href="sec1" name="sec1" class="section_nav"></a>
+    <h1>My Surveys</h1>
+    <%= content_tag :table, class: "settings full_width_table" do%>
+      <%= content_tag :tbody do%>
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label "Survey Title" %>
+          <% end %>
+     
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label "Type" %>
+          <% end %>
+        
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label "Options" %>
+          <% end %>
+        <% end %>
+        <% @surveys.each do |survey|%>
+          <%= content_tag :tr do%>
+            <%= content_tag :td, class: "lbl" do%>
+              <%= survey.name%>
+            <% end %>
+            <%= content_tag :td, class: "lbl" do%>
+              <%= survey.category%>
+            <% end %>
+            <%= content_tag :td, class: "lbl" do%>
+              <%= link_to "Edit",edit_program_survey_path(context_program,survey)%>
+              <%= "/"%>
+              <%= link_to "Delete",program_survey_path(context_program,survey), method: :delete, action: :destroy, data: { confirm: 'This will Delete all the data associated with this Survey.' }%>
+
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+  <%= content_tag :div, class: "block" do%>
+    <a href="sec2" name="sec2" class="section_nav"></a>
+    <h1><%= survey.new_record? ? "New Survey" : "Edit Survey" %></h1>
+    <%= content_tag :table, class: "settings full_width_table" do%>
+      <%= content_tag :tbody do%>
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label :name , "Survey Title",class: "mend_field_label" %>
+          <% end %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= f.text_field :name, :required => true, :placeholder => "Title", class: "form-control" %>
+          <% end %>
+        <% end %>
+
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label :avatar, "Survey Graphic",class: "mend_field_label"%>
+          <% end %>
+          <%= content_tag :td, class: "col_setting" do %>
+          	<div class="browse-wrapper">
+            <%= f.file_field :avatar,:required => true, :class => "form-control"%>
+            </div>
+          <% end %>
+        <% end %>
+        
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label :category, "Survey Type" %>
+          <% end %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= f.select :category, Survey::CATEGORIES,{}, class: "form-control", :required => true %>
+          <% end %>
+        <% end %>
+        
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label :target_audience, "Target",class: "mend_field_label"%>
+          <% end %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= f.select :target_audience,Survey::TARGET_AUDIENCE,{:prompt => "--Choose Target--"},:required => true,:class => "form-control"%>
+         <% end %>
+
+          <%#= content_tag :td, class: "lbl" do%>
+            <%#= f.label :end_date%>
+          <%# end %>
+          <%#= content_tag :td, class: "col_setting" do %>
+            <%#= f.text_field :end_date, :class => "datepicker_std program_plan_td1 form-control" %>
+          <%# end %>
+        <% end%>
+        
+        <%= content_tag :tr do%>
+          <%= content_tag :td, class: "lbl" do%>
+            <%= f.label :description%>
+          <% end %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= f.text_area :description, :class => "form-control" %>
+          <% end %>
+        <% end %>
+    <% end %>
+  <%end%>
+    <%= f.submit "Save", id: "submit"%>
+    <%= f.submit "Cancel", :type => "reset",id: "submit", :style => "background:#07b291;" %>
+    <%= tag 'br'%>
+  <% end %>
+<% end %>

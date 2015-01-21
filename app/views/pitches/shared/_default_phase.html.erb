@@ -1,0 +1,20 @@
+<% if phase.complete?(@pitch, current_user)  %>
+  <p class="pull-right phase-link"><%= link_to phase.try(:target_url), add_url_protocol(phase.try(:target_url)), :target=>"_blank" %></p>
+	<% if phase.undoable? %>
+     <br/>
+      <ul class="tasks_list">
+        <li class="deliver">
+        	<%= link_to("Undo<i class='gn-icon gn-icon-undo gn-icon-glyphicon-todo' style='text-align:right;'></i>".html_safe, polymorphic_path([:undo, @program, phase], pitch_id: @pitch.id), method: :put) %>
+        </li>
+    </ul>
+    <% else %>
+   	  <span class='label label-success pull-right'>Achieved</span>
+    <% end %>
+<% else %>    
+	<br/>
+      <ul class="tasks_list">
+        <li class="done">
+  			<%= link_to "#{phase.phase_name}<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, polymorphic_path([:achieved, @program, phase], pitch_id: @pitch.id), method: :put %>
+        </li>
+    </ul>
+<% end %>

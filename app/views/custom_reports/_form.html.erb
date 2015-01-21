@@ -1,0 +1,126 @@
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading">
+        <div class="panel-title title_option">
+          <h3>New Report</h3>
+        </div>
+        <div class="panel-options">
+          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+          
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Report Name</div>
+          </div>
+          <div class="col-sm-8">
+            <%= f.text_field :name, :class => "autogrow form-control form-style-1", :placeholder => "Type title here" %>
+          </div>
+        </div>
+        
+        <br />
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Report Type</div>
+          </div>
+          <div class="col-sm-8">
+            <%= f.select :type, CustomReport::TYPE, {}, :class => "form-control form-style-1 new_report", :placeholder => "Type title here" %>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+</div>
+<br />
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading">
+        <div class="panel-title title_option">
+          <h3>Element</h3>
+        </div>
+        <div class="panel-options">
+          <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class= "panel-body column">
+      <% i = 1%>
+      <%= f.fields_for :custom_report_elements, @report_elements do |field|%>
+      <div class="portlet" id="element_<%=i%>-<%=i%>">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option" style="padding:10px 25px;">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              Element 1
+          </div>
+        </div>
+        <div class="panel-body">
+            <%= link_to "Delete", "#", :"data-url" => (field.object.new_record? ? "" : delete_custom_element_program_custom_report_path(@custom_report.program_id, field.object.id)), id: "submit", class: "delete_report_element"%>
+          
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div style="line-height: 28px;">Type</div>
+            </div>
+            <div class="col-sm-8">
+              <%= field.select :type, CustomReportElement::TYPE, {:prompt => "Select----"}, :class => "form-control form-style-1 element_option new_element", :placeholder => "Type title here" %>
+            </div>
+          </div>
+          
+          <br />
+          <% if action_name == "edit" %>
+          <div class="row" style="<%= field.object.type ? '' : 'display:none;'%>">
+              <div class="col-sm-4 setting-font">
+                <div class="label_field" style="line-height: 28px;">Option</div>
+              </div>
+              <div class="col-sm-8 input_text">
+                <%case field.object.type%>
+                <% when "Text"%>
+                  <%= field.text_area :option, :class => "form-control form-style-1 summernote"%>
+                <% when "Graph"%>
+                  <%=field.select :option, options_for_select(context_program.reportings.map{|m| [m.graph_name, m.id]}, field.object.option), {}, :class => "form-control form-style-1"%>
+                <% when "Table" %>
+                  <%= field.select :option, options_for_select(["All fields", "Team", "Events attended", "Action list"], field.object.option), {}, :class => "form-control form-style-1 table_element"%>
+                <% when "Field" %>
+                  <%= field.select :option, options_for_select(entity_fields(@custom_report.type), field.object.option), {}, :class => "form-control form-style-1 field_element"%>
+                <%else%>
+                  <%= field.text_field :option, :class => "form-control form-style-1", :placeholder => "Type title here" %>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <div class="row" style="display:none;">
+              <div class="col-sm-4 setting-font">
+                <div class="label_field" style="line-height: 28px;">Option</div>
+              </div>
+              <div class="col-sm-8 input_text">
+                <%= field.text_field :option, :class => "form-control form-style-1", :placeholder => "Type title here" %>
+              </div>
+            </div>
+          <% end %>
+          
+        </div>
+        </div>
+        </div>
+        <%i+=1%>
+      <% end %>
+      <%= f.link_to_add "+ Add new element", :custom_report_elements , :class=>" clr pull-right", :id => "add_new_element"%>
+      </div>
+      <br />
+      <br />
+    </div>
+  </div>
+</div>
+
+<br />
+  <%= f.fields_for :custom_report_order, @custom_report.build_custom_report_order do |custom_report_order| %>
+    <%= custom_report_order.hidden_field :order %>
+  <% end -%>
+  
+<%= f.submit "Save", id: "submit"%>

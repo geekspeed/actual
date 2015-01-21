@@ -1,0 +1,23 @@
+<% content_for :title do %>
+  <%= "Payments Detail" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "payments" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="block">
+    <p>
+      Product Purchased: <%= @subscription.subscription %>
+    </p>
+    <p>
+      Date Purchased: <%= @subscription.start_date %>
+    </p>
+    <p>
+      Expiry Date: <%= @subscription.end_date %>
+    </p>
+    <% if @subscription.due? %>
+      <p>
+        <%= link_to "Renew Subscription", new_payment_path(sub: @subscription.subscription), class: "btn btn-primary" %>
+      </p>
+    <% end %>
+  </div>
+</div>

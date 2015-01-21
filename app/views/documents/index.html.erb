@@ -1,0 +1,130 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Documents" %>
+<% end %>
+
+<%#= render "shared/navbar", :page => "pitch" %>
+<%#= render "pitches/shared/bs_sidebar", :page => "documents" %>
+<div id="rightcontent">
+  <%= hidden_field_tag :page_name, "documents_page"%>
+  <% if @pitch.owner?(current_user) || @pitch.member?(current_user) || @pitch.mentor?(current_user) || need?(["company_admin"], current_organisation)%>
+    <div class="add_doc"><%= link_to "+ Upload new document", "#", :class => "showDiv", :name => "newDocument" %></div>
+    <div id="newDocument" style="display: none">
+      <%= form_for @document, :url => program_pitch_documents_path(@program, @pitch), :html => {:class => "block"} do |f| %>
+        <h2>New Document</h2>
+        File<br/>
+        <%= f.file_field :attachment, :class => "file_field_width" %><br/>
+        Description<br/>
+        <%= f.text_area :description %>
+        <%= f.submit "Save", :id => "submit" %>
+        <div class="clr"></div>
+      <% end %>
+    </div>
+    <br />
+  <% end %>
+  <br />
+  <% @documents.each do |document| %>
+<%
+=begin
+%>
+<div role="alert" class="alert alert-info">
+      <strong>Empty library!</strong> there are no documents in the ibrary.start adding document below.
+    </div>
+    <br />
+<div class="row">
+	<div class="col-md-12">
+		<a class="add_event_pan" href="#"><i class="glyphicon glyphicon-plus-sign"></i> Add new Document</a>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3><label>library</label></h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-bordered table-striped datatable dataTable">
+					<thead>
+						<tr role="row">
+							<th style="width: 50px;">Type</th>
+							<th style="width: 290px;">Title</th>
+							<th style="width: 290px;">Added by</th>
+							<th style="width: 290px;">Date</th>
+							<th style="width: 404px;">Actions</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<td><i class="glyphicon glyphicon-picture table_ico"></i></td>
+							<td>Image title</td>
+							<td>Admin name</td>
+							<td>2014-08-13</td>
+							<td>
+								<a class="btn btn-success btn-sm btn-icon icon-left" href="#"><i class="glyphicon glyphicon-eye-open"></i> view</a>
+				      	<a class="btn btn-danger btn-sm btn-icon icon-left" href="#"><i class="glyphicon glyphicon-remove"></i> Delete</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+<%
+=end
+%>
+
+<div class="newsentry ">
+        <div class="user-avatar-row">
+		  <%= image_tag document.user.try(:avatar).try(:logo).try(:url), :width=>"60", :class=>"img-circle img-responsive img-circle-border" %>
+        </div>
+        <div class="box-content">
+          <div class="box-user-info">
+            <span class="box-user-name">
+              <%= document.user.try(:full_name) %>
+            </span>
+            <span class="box-post-date pull-right">
+              <%= time_in_words(document.created_at) %>  
+            </span>
+          </div>
+          <div class="box-feeds">
+            <div class="textbox ">
+			  <%= link_to image_tag("file_ico.jpg", :width => "60"), document.attachment.url, :target => "_blank" %>
+              <%= document.description %>
+            </div>
+          </div>
+          <div class="actions feed-actions">
+			<div class="approvedBox checkbox_buttons pull-left">
+	          <h2>Approved by:</h2>
+	          <% document.approved_by_mentors.each do |mentor| %>
+	            <div class="approvedRow">
+	              <input disabled="disabled"  type="checkbox" class="checkbox" id="ment0" name="panajMMentor" checked="checked" />
+	              <label for="ment0"><%= mentor.full_name %></label>
+	            </div>
+	          <% end %>
+	          <% if @pitch.mentor?(current_user) && !document.approved_by_mentors.include?(current_user) %>
+	            <%= link_to("Approve this document", approve_program_pitch_document_path(@program, @pitch, document), :id => "submit", :method => :put)  %>
+	          <% end %>
+	          <div class="clr"></div>
+	        </div>
+	        <% if @pitch.owner?(current_user) || @pitch.member?(current_user) || @pitch.mentor?(current_user)%>
+            <%= link_to image_tag("ico_trash.png"), program_pitch_document_path(@program, @pitch, document), :method => :delete, :style => "float:right; display:block;" %>
+          <% end %>
+          	<div class="clr"></div>
+		  </div>
+          <div class="feedLikes"></div>
+        </div>
+        <div class="clr"></div>
+      </div>
+
+    <div class="clr"></div>
+  <% end %>
+</div>

@@ -1,0 +1,31 @@
+<div id="session_<%=session.id%>" style="display:none;">
+	<div class="panel panel-default">
+		<h4 class="panel-title" style="text-align: center;">
+			<b><%= session.try(:program_event).try(:title) %></b>
+		</h4>
+		
+		<div class="panel-body">
+			
+			<b>Location: </b><%=session.try(:location) %><br />
+			
+			<b>Date: </b><%= session.date_to ? "#{session.date.try(:event_format)} (#{session.time_from}) / #{session.date_to.try(:event_format)} (#{session.time_to})" : "#{session.date.try(:event_format)} (#{session.time_from} - #{session.time_to})"%> <br /> 
+			
+			<b>No of seats: </b><%=session.try(:seat_no) %><br />
+			
+			<b>Description: </b><%=session.try(:program_event).try(:description).try(:html_safe) %>
+			<%=session.try(:description).try(:html_safe) %><br />
+			
+			<% unless session.try(:program_event).try(:attachment).blank? %>
+				<% file = session.try(:program_event).try(:attachment_url).split(".")[-1] %>
+				
+				<% if ["jpeg","jpg","png","gif"].include?(file.downcase) %>
+					<%= image_tag session.try(:program_event).attachment, :style => "width: 100%;" %>
+				<% else %>
+					<b>Link URl: </b><%= link_to("#{root_url}#{session.try(:program_event).attachment}", "#{root_url}#{session.try(:program_event).attachment_url}", :target =>"_blank", :class => 'text_underline') %>
+	 			<% end %>
+	 			
+			<% end %>
+		</div>
+		
+	</div>
+</div>

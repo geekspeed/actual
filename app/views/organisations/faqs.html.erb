@@ -1,0 +1,17 @@
+<%= render "devise/shared/navbar", page: "faq"  %>
+
+<div id="rightcontent" class="two_sided_right_content">
+	<%= nested_form_for(@organisation, url: faq_save_organisation_path, :html => {:class => "reqForm no_float", :style => "margin-left: 20px" }) do |f| %>
+    <%= render "faqs/ecosystem_form", :f => f %>
+	<% end %>
+</div>
+<%= render "faqs/ecosystem_faqs", :faqs => @faqs %>
+
+<script type="text/javascript">
+$(document).on('click', ".edit_faq", function(e){
+      id = $(this).attr("id");
+      $(".faq_"+id).hide();
+      $(".edit_"+id).show();
+      new nicEditor().panelInstance('eco_faq_'+id);
+    });
+</script>

@@ -1,0 +1,66 @@
+<% program ||= context_program  %>
+<!-- lightbox -->
+<div style="display: none">
+  <div id="<%= anchor_id %>">
+    <%= form_tag remind_program_phases_path(program) do %>
+    	<div class="row">
+			  <div class="col-md-12">
+			    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			      <div class="panel-heading relative_panel_head">
+			        <div class="panel-title title_option">
+			          <h3>Recipient: <%= user.email %></h3>
+			          <%= hidden_field_tag :user_id, user.id %>
+					      <%= hidden_field_tag :program_id, program.id %>
+					      <%= hidden_field_tag :code, code %>
+			        </div>
+			      </div>
+			      <div class="panel-body">
+							<div class="row">
+								<div class="col-sm-4 setting-font">
+									Subject
+								</div>
+								<div class="col-sm-8">
+									<%= text_field_tag "subject", nil, class: "form-control form-style-1" %>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-sm-12 setting-font">
+									Message
+									<%= text_area_tag "message", nil, class: "form-control form-style-1"%>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-sm-12 setting-font">
+									<%= submit_tag "Send", :class => "button submitMessage", :id => "submit" %>
+								</div>
+							</div>
+			      </div><!-- panel-body -->
+			    </div>
+			  </div>
+			</div>
+    
+    <%
+=begin
+%>
+
+
+      <h2 class="recipient">Recipient: <%= user.email %></h2>
+      <%= hidden_field_tag :user_id, user.id %>
+      <%= hidden_field_tag :program_id, program.id %>
+      <%= hidden_field_tag :code, code %>
+      Subject:<br />
+
+      <%= text_field_tag "subject" %><br/>
+      Message:<br />
+      
+      <%= text_area_tag "message" %>
+      <br />
+      <%= submit_tag "Send", :class => "button submitMessage", :id => "submit" %>
+      <%
+=end
+%>
+    <% end %>
+  </div>
+</div>

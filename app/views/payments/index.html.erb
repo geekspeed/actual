@@ -1,0 +1,39 @@
+<% content_for :title do %>
+  <%= "Payments History" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "payments" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="block">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Error</th>
+          <% if current_user.super_admin? %>
+            <th>By</th>
+          <% end %>
+          <th>For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @payments.each_with_index do |payment, index| %>
+          <tr>
+            <td><%= index.next %></td>
+            <td><%= payment.created_at.day_date_month %></td>
+            <td><%= payment.amount_formatted %></td>
+            <td><%= payment_status(payment) %></td>
+            <td><%= truncate(payment.error) %></td>
+            <% if current_user.super_admin? %>
+              <td><%= payment.customer.try(:full_name) %></td>
+            <% end %>
+            <td><%= payment.entity %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

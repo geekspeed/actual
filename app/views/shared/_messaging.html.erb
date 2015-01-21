@@ -1,0 +1,107 @@
+<%= javascript_include_tag 'nicEdit' -%>
+<% post_to ||= false %>
+<% milestone ||= nil %>
+<% css_class ||= "" %>
+<% targetting= context_program.targettings.map{|t| [t.name,t.id]}%>
+<% css_inline_style = "display:none" if css_class.present? %>
+
+<%= form_for community_feed, :url => program_community_feeds_path(@program), :html => {:id => "updateStatusForm", :class => css_class, :style => css_inline_style} do |f| %>
+  <% klass = "new-status-box";
+     margin_top = "margin-top: 0px;";
+     text_area_margin = "margin-top: 0px;";
+  %>
+  <% if post_to %>
+    <% klass = "box-programUpdate"; 
+       margin_top = "margin-top: 5px;"
+       text_area_margin = "margin-top: 0px;";
+    %>
+  <% end  %>  
+  <div class="<%= klass %>" style="<%= text_area_margin %>">
+    <div>
+    <% if !post_to  %>
+      <div class="user-avatar-row">
+        <%= image_tag(current_user.avatar.logo.url, :width => 80, :height => 80, :class => "img-circle img-responsive img-circle-border") %>
+      </div>
+    <% end %>
+    <div class="box-content">
+      <div class="form-group">
+        <label class="progress_subject_label pull-left" for="community_feed_subject" style="font-weight:normal;">Subject</label>
+        <%= f.text_field :subject, :class=>"progress_subject pull-left form-control  form-style-1", :placeholder => "Enter subject name", :size=>"0" %>
+        <div class="clear"></div>
+      </div>
+      <div class="kk">
+        <%= f.text_area :content, :class => "autogrow box-content-textarea summernote", :placeholder => "Share recent progress, ask a question, request help or share a learning …don’t forget to tag it!" %>
+      </div>
+      <div class="box-content-bottom">
+        <div class="link_box">
+          <span class="img_link_lbl">Image Link:</span>
+          <span class="vid_link_lbl">Youtube / Vimeo Link:</span>
+          <span class="l_link_lbl">Link or File:</span>
+          <span class="gallery_link_lbl">Pictures:</span>
+          <span class="l_link_lbl vid_link_lbl img_link_lbl gallery_link_lbl">
+            <%= f.text_field :link, :class => "file_url file-url-field form-control" %>
+          </span>
+          <span class="l_link_lbl img_link_lbl gallery_link_lbl">
+            OR <div class="browse-wrapper"><%= f.file_field :attachment, :class => "file-link-field" %></div>
+          </span>
+        </div>
+        <%= link_to "<i class='fa fa-camera icon-camera'></i>".html_safe, "#", :class => "addImage feed_ico", :name => "img_link_lbl", :title => "Add Image" %>
+        <%= link_to "<i class='fa fa-video-camera icon-video-camera'></i>".html_safe, "#", :class => "addImage feed_ico", :name => "vid_link_lbl", :title => "Add Video" %>
+        <%= link_to "<i class='fa fa-link icon-link'></i>".html_safe, "#", :class => "addImage feed_ico", :name => "l_link_lbl", :title => "Add Link" %>
+        <%= link_to "<i class='fa fa-picture-o icon-picture-o'></i>".html_safe, "#", :class => "addImage feed_ico", :name => "gallery_link_lbl", :title => "Add Gallery" %>
+        <% if @pitch.present? && milestone.blank? %>
+          <%= f.hidden_field :pitch_id, :value => @pitch.id, :class => "form-control" %>
+        <% end %>
+        <% if milestone.present? %>
+          <%= f.hidden_field :milestone_id, :value => milestone.id, :class => "form-control" %>
+        <% end %>
+        
+
+        <script type="text/javascript">
+          jQuery('#main').on('change', '.tag_applicant', function(){
+            var tag_applicant = $('.tag_applicant').val();
+            if(tag_applicant != '')
+              $('.newtag').val(tag_applicant);
+          });
+          $(".summernote").summernote();
+        </script>
+        <% if need?(["company_admin", "program_admin"], current_organisation) %>
+          <a href="#" class="showNewTagCont feed_ico" style="float:left;"><i class='fa fa-tag icon-tag'></i></a>
+            
+          <div style="margin-left: 10px; display:inline;">
+            <% tags = CommunityFeed.for_program(context_program).pluck(:tags).flatten.uniq %>
+            <span class="newTag" style="display:none">
+              <%= f.text_field :tags, class: "newtag newTagVal", placeholder: "+ add tag", style: "margin-left: 10px; width: 100px; #{margin_top}", value: "", :"data-auto-options" => tags.to_json %>
+            </span>
+            <%#= check_box_tag :post_milestone, "true", false, style:"width:auto" %> <!-- Post to milestone -->
+          </div>
+        <% else %>
+          <div id="showToBox" class="inline_select pull-left">
+            <%= f.collection_select :tags, tags_for_filter, :to_s, :to_s, {prompt: "Select"}, class: "selectmenu tag_applicant form-control", style: "width: 110px;"  %>
+          </div>
+        <% end %>
+
+        <%= f.submit "Post", :id => "submit", :class => "btn btn-default post-feed", :style => "" %>
+
+        <div id="showToBox" class="inline_select pull-right">
+          <%= f.select :target_type, options_for_select([['Buzz Feed All', 'bfa'], ["Buzz Feed + Email - All", "bfea"], ["Email Selected Recpients", "es"]]), {},{:class => "selectmenu", :style => 'width: 150px;'} %>
+        </div>
+      </div>
+      </br>             
+        Recipient:  <%= f.select :target, options_for_select(context_program.targettings.map{|t| [t.name,t.id]})%>
+    </div>
+  </div>
+    <div class="clr"></div>
+  </div>
+<% end %>
+<style type="text/css">
+#community_feed_target_type-button{
+	margin-right: 10px;
+	margin-top: 10px;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function($){
+	$('.summernote').summernote();
+});
+</script>

@@ -1,0 +1,10 @@
+<% if phase.complete?(@pitch, current_user) && @pitch.closed? %>
+    <span class="label label-danger"><%= "Closed" -%></span>
+<% else %>
+    <br/>
+     <ul class="tasks_list">
+        <li class="deliver">
+ 			<%= link_to phase.phase_name, polymorphic_path([@program, @pitch], closed: true), method: :put %>
+        </li>
+    </ul>
+<% end %>

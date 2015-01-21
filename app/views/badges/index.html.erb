@@ -1,0 +1,126 @@
+<%= render "shared/bs_navbar", :ppage => "badge" %>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="row">
+    <div class="col-md-12">
+      <%= render "shared/flash"%>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title" style= "margin-left: 40%">
+            <h3>
+            <%= link_to "Create New Badge".html_safe, new_program_badge_path, :remote=>true, :class=>"new-badge center" %>
+            </h3>                       
+          </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div style="height: 40px">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>All Badges</h3>
+            <span></span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <thead>
+                <tr role="row">
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Type</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                </tr>
+              </thead>
+              
+              <tbody aria-relevant="all" aria-live="polite" role="alert">
+                <% @badges.each do |badge|%>
+                  <tr>
+                    <td><%= badge.name%></td>
+                    <td><%= badge.description%></td>
+                    <td><%= badge.badge_type%></td>
+                    <td>                      
+                      <%= link_to "<i class='glyphicon glyphicon-edit'></i> Edit".html_safe, edit_program_badge_path(id: badge.id), :remote=>true, :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left edit-badge" %>
+                      <%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe, show_badge_program_badge_path(context_program, id: badge.id), :remote=>true, :class=>"new_activity_box btn btn btn-success btn-sm btn-icon icon-left view-badge" %>
+                      <%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe, program_badge_path(id: badge.id), :method=>"delete", :class=>"btn btn-danger btn-sm btn-icon icon-left" %>
+                    </td>
+                  </tr>
+                <%end%>
+              </tbody>
+            </table>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  $(document).ready(function(){
+    var value = $("#app_badge_badge_rule_attributes_expiry").val();
+    show_options(value);
+  });
+
+  $(document).on("change", "#app_badge_badge_rule_attributes_expiry", function(){
+    var value = $(this).val();
+    show_options(value);
+  });
+  
+  function show_options(value){
+    if(value == "fixed_date"){
+      $(".expiry_date").show();
+      $(".expiry_day").hide();
+      $("#app_badge_badge_rule_attributes_expiry_day").prop("disabled", true);
+      $("#app_badge_badge_rule_attributes_expiry_date").prop("disabled", false);
+    }
+    else{
+      if(value == "relative_date"){
+        $(".expiry_date").hide();
+        $(".expiry_day").show();
+        $("#app_badge_badge_rule_attributes_expiry_day").prop("disabled", false);
+        $("#app_badge_badge_rule_attributes_expiry_date").prop("disabled", true);
+      }
+      else{
+        $(".expiry_date").hide();
+        $(".expiry_day").hide();
+        $("#app_badge_badge_rule_attributes_expiry_day").prop("disabled", true);
+        $("#app_badge_badge_rule_attributes_expiry_date").prop("disabled", true);
+      }
+    }
+  }
+ $(function() {
+   $(".view-badge").bind("ajax:beforeSend", function(){
+      $.fancybox({ content:"Loading badge...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".view-badge").bind("ajax:complete", function(){
+    })
+
+  $(".edit-badge").bind("ajax:beforeSend", function(){
+    $.fancybox({ content:"Loading badge...   <img src='/images/bx_loader.gif' width='25'>" });
+   })
+   $(".edit-badge").bind("ajax:complete", function(){
+  })
+  $(".new-badge").bind("ajax:beforeSend", function(){
+    $.fancybox({ content:"Loading badge...   <img src='/images/bx_loader.gif' width='25'>" });
+   })
+   $(".new-badge").bind("ajax:complete", function(){
+  })
+});
+</script>

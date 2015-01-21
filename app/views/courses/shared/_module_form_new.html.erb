@@ -1,0 +1,14 @@
+<% if !@course.blank? %>
+  <%= form_tag polymorphic_path([@program, @course, :new_module]), remote: true, method: "get", class: "registerForm reqForm" do %>
+    <div class="col-sm-4 setting-font">
+      <div style="line-height: 28px;">Add a new module</div>
+    </div>
+    <div class="col-sm-8">
+      <div class="quote_col_row">
+		    <%= text_field_tag "course[module][title]", "", :placeholder=>"Enter new module title here", :class=>"form-control pull-left form-style-1", :style=>"width:60%" %>
+		    <%= submit_tag "Add", id: "submit", :style=>"float:left;padding:8px 20px;border-radius:0;",:class=>"module_box_submit" %>
+		  </div>
+			<div class="clr"></div>
+    </div>
+  <% end %>
+<% end %>

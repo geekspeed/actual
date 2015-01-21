@@ -1,0 +1,85 @@
+<div class="eventInsForm modal" id="manage_participant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h2>
+          <span><%=@program_event.title%></span>
+          <div class="outline-action-links pull-right">
+            <%= link_to "Print", print_event_session_program_event_event_session_path(@program, @program_event, @event_session), id: "submit", class: "btn_padding" %>
+            <%= link_to("Message All", "#", :"data-toggle"=>"modal", :"data-target"=>"#message_#{@event_session.id}", "id" => "submit", "class" => "btn_padding") %>
+            <br />
+          </div>
+        </h2>
+      </div>
+      
+      <div class="modal-body">
+        <div class="bs-example bs-example-tabs">
+          <ul class="nav nav-tabs" id="myTab">
+            <li class="active"><a data-toggle="tab" href="#selected">Selected (<%= @event_session.event_records.selected.count%>) </a></li>
+            <li class=""><a data-toggle="tab" href="#rejected">Rejected (<%= @event_session.event_records.rejected.count %>) </a></li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <%= content_tag :div, :id =>"selected", :class=> "tab-pane fade active in" do %>
+              <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+                <thead>
+                  <tr role="row">
+                    <th aria-label="Student Name: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">First name</th>
+                    <th aria-label="Average Grade: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Last name</th>
+                    <th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                    <th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Mark As Present</th>
+                  </tr>
+                </thead>
+                <tbody aria-relevant="all" aria-live="polite" role="alert">
+                  <% @event_session.event_records.selected.each do |record|%>
+                    <%=content_tag :tr do %>
+                      <td><%=record.user.first_name%></td>
+                      <td><%=record.user.last_name%></td>
+                      <td>
+                        <%= content_tag :div, class: "col-md-7" do%>
+                          <%= link_to("<i class='glyphicon glyphicon-ban-circle'></i> Reject".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"#reject_#{record.id}", :class => "btn btn-danger btn-sm btn-icon icon-left") %>
+                        <%end%>
+                      </td>
+                      <td>
+                        <%= content_tag :div, class: "col-md-4" do%>
+                          <%= check_box_tag "confirmed_at", "", record.try(:confirmed_at), :"data-record-id" => record.id, :"data-url" =>  confirm_participant_program_events_path(@program), class: "confirmed_at", style: "width:10px;"%>
+                        <% end %>
+                      </td>
+                    <% end if record.try(:user)%>
+                  <% end %>
+                </tbody>
+              </table>
+            <% end %>
+            
+            <%= content_tag :div, :id=>"rejected", :class=>"tab-pane fade" do %>
+              <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+                <thead>
+                  <tr role="row">
+                    <th aria-label="Student Name: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">First name</th>
+                    <th aria-label="Average Grade: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Last name</th>
+                    <th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                  </tr>
+                </thead>
+                <tbody aria-relevant="all" aria-live="polite" role="alert">
+                
+                  <% @event_session.event_records.rejected.each do |record|%>
+                    <%=content_tag :tr do %>
+                        <td><%=record.user.first_name%></td>
+                        <td><%=record.user.last_name%></td>
+                        <td>Rejected</td>
+                    <% end if record.try(:user)%>
+                  <% end %>
+                </tbody>
+              </table>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<% @event_session.event_records.selected.each do |record|%>
+  <%=render "reject_participant", :event_record => record if record.try(:user) %>
+<% end %>
+<%=render "message_all", :session_obj => @event_session %>

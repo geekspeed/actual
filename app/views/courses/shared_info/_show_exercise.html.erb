@@ -1,0 +1,355 @@
+<%= hidden_field_tag :program_id, @program.id%>
+<%= hidden_field_tag :course_id, @course.id%>
+
+<div id="course-exercise" class="course-box-div-main">
+	<div class="row">
+    <div class="col-sm-12 vid_desc_container">
+      <p class="vid_desc_title"><%= link_to "<i class='icon-angle-left'></i> Back".html_safe, "#{polymorphic_path([@program, @course, @module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}", :class=>"back-course-link"%> <span style="margin-left: 15px;">Task</span></p> 
+      <div class="alert alert-info alert_top_spacing no-spacing-alert exercise-submission" style="display:none;margin-bottom: 15px;">
+        <button class="close" data-dismiss="alert" type="button">
+        ×
+        </button>
+        Thanks for your submission
+      </div>
+      <p class="vid_desc">    
+        <div class="panel-body exercise-area">
+            <div class="row" style="padding-bottom:0px;">
+              <%#if !@activity.activity_performances.where(:status => true, :user_id => current_user.id, :pitch_id=>params[:pitch_id]).blank? %>
+              <!--  <div class="col-xs-9">
+                  <h2 style="font-weight:normal;color:#3d3d3d;font-size: 15px;text-transform: uppercase;">You have completed your learning action for this activity</h2>
+                </div>
+                <div class="col-xs-3">
+                  <a href="#" class="btn btn-success pull-right" style="border-radius:0;font-weight:normal;">Completed !</a> -->
+<!--                 </div> -->
+              <%# end %>
+            </div>  
+            <%# if @activity.activity_performances.where(:status => true, :user_id => current_user.id, :pitch_id=>params[:pitch_id]).blank? %>
+
+              <div id="start-action">
+                <% if !@activity.activity_project_fields.blank? || !@activity.try(:action).blank?%>   
+                  <%= form_tag polymorphic_path([@program, @course, @activity, :activity_perform]), :multipart=>true,:class => "reqForm no_float" do %>
+                    <h2 style="font-weight:normal;color:#3d3d3d;font-size: 15px;text-transform: uppercase;">Tasks that needs to be completed</h2>
+
+                    <% if !@activity.try(:action).blank? %>
+                      <div class="customAreaText" style="">
+                        <div class="" style="width:100%;border-radius:0px;margin-bottom:0px;">
+                          <div style="margin-bottom:15px;">  
+                              <div class="action-text">
+                                <%= @activity.try(:action).try(:html_safe) %>
+                              </div>
+                          </div>
+                        </div>
+                      </div> 
+                    <% end %>
+                    <% if !@activity.activity_project_fields.blank? %>
+                      <div class="" style="">
+                        <div class="" style="">
+                          <div style="">  
+                            <div class="exercise-text-areas" style="width:100%;">
+                              <% project_fields = @project_fields.where(:id.in => @activity.activity_project_fields.map(&:custom_field_id)) %>
+                              <%= render 'courses/shared_info/pitch_custom_fields_renderer_for_exercise', :@custom_fields => project_fields %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>  
+                    <% else %>
+                      <i>Activity doesn't contains any tasks.</i>
+                    <% end %>
+                    <%= hidden_field_tag :pitch_id, params[:pitch_id]%>
+                    <br/>
+                    <% if !@activity.activity_performances.where(:status => true, :user_id => current_user.id, :pitch_id=>params[:pitch_id]).blank? %>      
+                      <%= submit_tag "Re-submit task", :class=>"btn btn-success pull-right", :style=>"border-radius:0;" %>                      
+                      <p class="pull-right completed-note"><i class="glyphicon glyphicon-check"></i>  Completed</p>    
+                    <% else %>
+                      <%= submit_tag "Submit task", :class=>"btn btn-success pull-right", :style=>"border-radius:0;" %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>             
+            <%#end%>
+        </div>
+      </p>
+    </div>
+	</div>
+  
+</div>
+
+<div id="gallery-extra" style="display:none;">
+  <div class="clr"></div>
+  <br/>
+  <div id="pitch_custom_fields_-1-_error_-2-"></div>  
+  <br/>
+  <input class="file_field_width pull-left check-no-of-file -1-_galleries" id="pitch_custom_fields_-1-_-2-" multiple="multiple" name="pitch[custom_fields][-1-][]" onchange="checkNoOfFiles(this,&quot;pitch_custom_fields_-1-_&quot;,&quot;_-2-&quot;)" type="file">
+  <label class="accepted_value_label pull-left" for="accepted_value" style="margin-top: -32px;margin-left: 231px;">Upload multiple photos, Accepted File types: [ png, jpg, jpeg ]</label>
+</div>
+
+
+<style>
+  .course-box-div-main .col-md-12{
+    padding:0px;
+    border-radius:0px;
+  }
+  .course-box-div{background:#ffffff;padding: 20px;border:1px rgb(236, 236, 236) solid;"
+  }
+  .course-box-div-inner{
+    background:#ffffff;padding: 20px;border:1px rgb(197, 196, 196) solid
+  }
+  .course-page-action{
+    margin-top:40px;
+    overflow: auto;
+  }
+  .course-tag-container{
+    background: #ebebeb no-repeat right center;
+    padding: 6px 10px 6px 10px;
+    display: block;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #333;
+    margin:5px;
+  }
+  .numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    width: 18px;
+    height: 18px;
+    padding: 3px;
+    background: #fff;
+    color: #111;
+    text-align: center;
+    font-weight: bold;
+    float:right;
+    margin-left:5px;
+    font: 10px Arial, sans-serif;
+  }
+  .table-striped .content_flash td{ background: #c1e4f7 !important;}
+  .content_flash{ background: #c1e4f7 !important;}
+</style>
+
+<script>
+  $(function() {
+   $("a.study-material-loader").bind("ajax:beforeSend", function(){
+      $.fancybox({  
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },content:"Loading Study Material...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $("a.study-material-loader").bind("ajax:complete", function(){
+    })
+  });
+
+  $(function() {
+   $("a.activity-back").bind("ajax:beforeSend", function(){
+      $.fancybox({  
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },content:"Going Back to Activity...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $("a.activity-back").bind("ajax:complete", function(){
+    })
+  });
+  $("#<%=params[:custom_field_id]%>").focus()
+  // $(".exercise-area textarea").summernote()
+  $("[data-toggle='popover']").popover({html:true});
+  $(".pitch_feedback_text").autosize()
+ 
+  // Creating link from shortcode @ for description 
+  activity_ids = []
+  $(".action-text a").each(function(e) { 
+      that = this; 
+      activity_ids[e]=$(that).data("activity-id") 
+  });
+  pitch_id = $("#pitch_id").val()
+  program_id = $("#program_id").val()
+  course_id = $("#course_id").val()
+  $.ajax({
+        url: "/programs/"+program_id+"/courses/"+course_id+"/task_reference_links",
+        data: {pitch_id: pitch_id,activity_ids: activity_ids},
+        method: "put",
+        success: function(data) {
+          $.each(data["activity_refer"],function(key,value){
+            $("[data-activity-id="+key+"]").attr("href",value)
+          })
+        }
+     })            
+</script>
+
+
+<style>
+.met_row .comment_row {
+position: relative;
+}
+textarea.pitch_feedback_text {
+border: 1px dashed #ccc;   
+resize: none;
+}
+.back-course-link{
+width: 50px;
+display: inline;
+background: #eee;
+outline: none;
+color: #777;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-family: helvetica;
+font-size: 11px;
+padding: 1em;
+-moz-transition: background 0.3s;
+}
+.exercise-area {
+  background: #eee;
+}
+.exercise-area label {
+  color: #3d3d3d;
+  font-size: 16px !important;
+  padding-right: 0;
+  padding-top: 30px;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+.exercise-area .action-text {
+  color: #3d3d3d;
+  font-size: 16px !important;
+  padding-right: 0;
+  padding-top: 25px;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+.exercise-area textarea, .exercise-area input {
+  border-radius:0;
+}
+
+.panel-body div.last-iter-box {
+font-size: 14px;
+line-height: 20px;
+border-radius: 5px;
+}
+.editcustomfieldvalue input[type=file] {
+padding: 0px !important;
+padding-top: 31px !important;
+overflow-y: hidden;
+overflow-x: hidden;
+}
+.glyphicon:empty {
+width: auto;
+}
+.gallery-remove-pic {
+position: absolute;
+padding: 3px 10px;
+right: 0px;
+font-weight: normal;
+font-size: 15px;
+cursor: pointer;
+}
+.thumb-gallery{width: 200px;}
+</style>
+
+<script>
+  $("[data-toggle=tooltip]").tooltip()
+  $(".gallery-remove-pic").click(function(e){
+    data_custom_field_code = $(this).attr("data_custom_field_code")
+    data_custom_field_value = $(this).attr("data_custom_field_value")
+    data_delete = $(this).attr("data_delete")
+    data_url = $(this).attr("data_url")
+    $("#"+data_delete).remove();
+    $.ajax({
+      url: data_url,
+      method: "delete",
+      data: {data_custom_field_code: data_custom_field_code, data_custom_field_value: data_custom_field_value},
+       success: function(data){
+      }
+    })
+    e.preventDefault()
+  });
+
+  $(function() { $('.mosaicflow').mosaicflow(); });
+  $("#start-action form").submit(function(){
+    $(".exercise-submission").show()
+  });
+   $("body").on("click",".editCustomField",function(){
+      custom_field_id = $(this).attr("data_custom_field_id")
+      $(".customArea"+custom_field_id).hide()
+      $(".editable_custom_field_div"+custom_field_id).show()
+      $('.pitch_feedback_text').autosize();
+    });
+
+    $(".other_select").on("change", function(e){
+      e.preventDefault();
+      if($(this).val()=="other" || $(this).val()=="Other"){
+        $(this).next().removeClass("hide");
+        $(this).next().attr("disabled", false);
+        if ($(this).hasClass('required')){ $(this).next().addClass('required'); }
+      }
+      else{
+        $(this).next().addClass("hide");
+        $(this).next().attr("disabled", true);
+        if ($(this).next().hasClass('required')){ $(this).next().removeClass('required'); }
+      }
+    });
+     $("body").on("keyup",".new_other_val",function(){
+      $(".editable_custom_field_div"+$(this).data("id")+" select option[selected]").val($(this).val())
+    });
+
+    $("body").on('click','.addGalleryExtra', function(e){
+      $("#pitch_custom_fields_"+($(this).data("custom-field-id"))+"_browse_button").val(parseInt($("#pitch_custom_fields_"+($(this).data("custom-field-id"))+"_browse_button").val())+1)
+      $("#pitch_custom_fields_"+($(this).data("custom-field-id"))+"_section").append($("#gallery-extra").html().replace(/-1-/g,$(this).data("custom-field-id")).replace(/-2-/g,$("#pitch_custom_fields_"+($(this).data("custom-field-id"))+"_browse_button").val()))
+      e.preventDefault()
+    });  
+
+    function checkValidityOffile(file, types, field_id){
+      $("#" +field_id +"_error").html('');
+      if(file.value.split(".") && types != "All"){
+        if(file.value.split(".").length >= 1){
+          upload_type = file.value.split(".")[file.value.split(".").length-1]
+          if (types.indexOf(upload_type) == -1){
+             text = "You tried to upload a " +upload_type + " file, only " + types + " files are accepted.";
+            $("#" +field_id +"").val("");
+            $("#" +field_id +"_error").html('<span style="color:red">'+ text +'</span>');
+          }
+        }
+      }
+    }
+
+  function checkNoOfFiles(file, field_id, count){
+      $("#" +field_id +"error"+count).html('');
+        $(".thumb-"+field_id+""+count).remove()
+        var files = file.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+          // Only process image files.
+          if (!f.type.match('image.*')) {
+            continue;
+          }
+
+          var reader = new FileReader();
+
+          // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+              // Render thumbnail.
+              var span = document.createElement('span');
+              span.innerHTML = ['<img class="thumb-gallery thumb-'+field_id+''+count+'" src="', e.target.result,
+                                '" title="', escape(theFile.name), '"/>'].join('');
+              $("#" +field_id +""+count.replace("_","")).next().after(span)        
+          };
+          })(f);
+          // Read in the image file as a data URL.
+          reader.readAsDataURL(f);
+        }
+      if (file.files["length"] > 10){
+        $(".thumb-"+field_id+""+count).remove()
+        $("#" +field_id +"error"+count).html('');
+        $("#" +field_id +""+count.replace("_","")).val("");
+        $("#" +field_id +"error"+count).html('<span style="color:red">Limit excceed, Please upload 10 files.</span>');
+      }
+    }
+
+</script>
+

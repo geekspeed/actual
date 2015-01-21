@@ -1,0 +1,13 @@
+<%ankor = get_custom_field_anchor%>
+<%# custom_field_content = @pitch.send(custom_field.code.to_sym)%>
+<div style="" class="panel-body" id="collapse-additional-info<%=custom_field.id%>">
+  <a class="scroll-link" name="<%= custom_field.label %>">&nbsp;</a>
+  <div class="row">
+    <div class="">
+      <div class="customArea<%=custom_field.id%>">
+        <%= custom_field.try(:text_section_content).try(:html_safe) %>
+      </div>
+    </div>
+  </div>
+</div>
+

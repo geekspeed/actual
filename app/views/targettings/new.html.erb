@@ -1,0 +1,152 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "targetting"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<%roles = []%>
+<% roles_allowed =  context_program.roles_allowed.map(&:code)%>
+<% roles_allowed.each do |role|%>
+  <%if role== "participant"%>
+    <% roles << ["#{t("role_type:participant", "p")}", "participant"]%>
+  <% elsif role == "mentor"%>
+    <% roles << ["#{t("role_type:mentor", "p")}", "mentor"]%>
+  <% elsif role == "panellist"%>
+    <% roles << ["#{t("role_type:panellist", "p")}", "panellist"]%>
+  <% elsif role == "selector"%>
+    <% roles << ["#{t("role_type:selector", "p")}", "selector"]%>
+  <%end%>
+<% end %>
+<% roles << ["#{t("pitch","p")}", "pitch"]%>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-new gn-icon-targetting-new gn-icon-large"></i>
+      Targetting
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customizable dashboard to visualize key facts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Targeting</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		<%= render "shared/flash" %>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+					<a href="sec1" name="sec1" class="section_nav">
+						<h3>Target Groups</h3>
+					</div>
+					<div class="panel-options">
+						<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+						
+				<div class="panel-body">
+					<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+						<thead>
+							<tr role="row">
+								<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>
+								<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Explaination</th>
+								<th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+							</tr>
+						</thead>
+						
+						<tbody aria-relevant="all" aria-live="polite" role="alert">
+							<%@targettings.each do |target|%>
+								<tr role="row">
+									<td><%= target.name %></td>
+									<td><%= target.explaination%></td>
+									<td>
+										<% if target.is_default%>
+											Default / <%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, export_target_targettings_path(:target_id => target.id), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+										<%else%>
+										  <%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe, edit_targettings_url(id: target.id), :class=>"btn btn btn-success btn-sm btn-icon icon-left" %>
+                      <%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe, targettings_path(id: target.id), :method=>:delete, :class=>"btn btn-danger btn-sm btn-icon icon-left", :confirm => "Are you sure" %>
+											<%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download csv".html_safe, export_target_targettings_path(:target_id => target.id), :class=>"btn btn-info btn-sm btn-icon icon-left"%>
+										<%end%>
+									</td>
+								</tr>
+							<%end%>
+						</tbody>
+					</table>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+			<a href="sec2" name="sec2" class="section_nav"></a>
+			<%= form_for(@targetting, :html => {:class => "registerForm reqForm" }) do |f| %>
+				<%= render "form", :f => f, :roles => roles, :type => "Add New"%>
+			<% end %>
+			<div style="display: none">
+				<div id="targetting_preview">
+				</div>
+			</div>
+	</div>
+		<div class="col-md-2 stick_me">
+			<ul class="navigator-menu">
+				<li id="nav_sec1" class="active-navigator-title">
+					<p>Main Section</p>
+					<ul>
+						<li><a href="#sec1">Targets</a></li>
+						<li><a href="#sec2">Add New</a></li>
+					</ul>
+				</li>
+			</ul>
+	 </div>
+	
+	</div>
+		
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  	$(document).on("click", "#target_preview", function(e){
+		e.preventDefault();
+		form = $("#new_targetting");
+		values = form.serialize();
+		$.ajax({
+			url: "/targettings/preview",
+			type: 'post',
+			data: values,
+			success: function(data){
+				$("#targetting_preview").html(data);
+			},
+			error: function(){
+				alert('Request failed. Sorry, we are analyzing the cause of this problem');
+			}
+		});
+	});
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+</script>

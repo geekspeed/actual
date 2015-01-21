@@ -1,0 +1,92 @@
+<div class="course-box-div-main">
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Study Materials</h3>
+          </div>
+          <div style="margin-top:10px;">
+            <%= link_to "<span class='glyphicon glyphicon-chevron-left' style='margin-right: 10px;'></span>Back".html_safe, "#", :class=>"btn btn-success activity-back", :style=>"font-weight:normal;border-radius: 3px;" %>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <div style="font-size:14px;"><%= @study_material.try(:resource_description) %>
+            <div style="margin-top:15px;">
+              <% if @study_material.resource_format == "Video" || @study_material.resource_format == "External URL" %>   
+              <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+              <% if @study_material.link.present? %>
+                  <% if !@study_material.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                      <% emb_obj = emb_api.extract(:url => @study_material.link, :width=>"885px")%>
+                      <%= course_attachment(emb_obj)%>
+                  <% end  %>
+              <% end %>   
+            <% else %> 
+              <% if @study_material.resource_format == "Image" %>
+                <%= image_tag @study_material.attachment, :width=>"100%" %>
+              <% else %>
+                <%= link_to "View Attachment", @study_material.attachment.url %>      
+              <% end %>
+            <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+<style>
+  .course-box-div-main{
+    padding: 72px 24px 24px 24px;background:rgb(243, 243, 243);border-radius:0px;
+  }
+  .course-box-div{background:#ffffff;padding: 20px;border:1px rgb(236, 236, 236) solid;"
+  }
+  .course-box-div-inner{
+    background:#ffffff;padding: 20px;border:1px rgb(197, 196, 196) solid
+  }
+  .course-page-action{
+    margin-top:40px;
+    overflow: auto;
+  }
+  .course-tag-container{
+    background: #ebebeb no-repeat right center;
+    padding: 6px 10px 6px 10px;
+    display: block;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #333;
+    margin:5px;
+  }
+  .numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    width: 18px;
+    height: 18px;
+    padding: 3px;
+    background: #fff;
+    color: #111;
+    text-align: center;
+    font-weight: bold;
+    float:right;
+    margin-left:5px;
+    font: 10px Arial, sans-serif;
+  }
+  .table-striped .content_flash td{ background: #c1e4f7 !important;}
+  .content_flash{ background: #c1e4f7 !important;}ndex: 8040;
+}
+</style>
+
+<script>
+ $(function() {
+   $("a.activity-back").click( function(e){
+    $.fancybox.close();
+    e.preventDefault
+   });
+ });
+</script>

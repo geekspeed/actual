@@ -1,0 +1,6 @@
+<!-- report header -->
+<div id="report-header">
+	<% if !program.try(:program_report_branding).blank? %>
+		<%= program.program_report_branding.try(:header).gsub("#date",Time.now.app_format).try(:html_safe) %>
+	<% end %>
+</div>

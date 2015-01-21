@@ -1,0 +1,27 @@
+<% pitches = find_pitches_not_mentored(user)%>
+<div class="eventInsForm modal fade" id=<%= "assign_pitch_to_#{user.id}" %> tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><b>Select the <%= t("pitch", "p") %>  you want to assign to this <%= t("role_type:mentor", "s")%></b></h4>
+      </div>
+      <%= form_tag assign_pitch_mentor_dashboard_url(user), :method => :get, :class => "registerForm reqForm" do |f| %>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-4 setting-font">
+              <div><%= t("pitch", "p") %></div>
+            </div>
+            <div class="col-sm-8">
+              <%= select_tag :pitches, options_for_select(pitches), multiple: true, size: 5, :class => "form-controls form-style-1", :id => "pitch_for_#{user.id}"%>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= submit_tag "Assign", :id => "submit" %>
+          <%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal"%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

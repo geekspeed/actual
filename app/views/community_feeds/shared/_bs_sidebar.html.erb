@@ -1,0 +1,25 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<% page ||= "pitch" %>
+
+<% unless tags_for_filter.empty?%>
+  <div class="gn-scroller">
+    <ul class="gn-menu">
+      <% if need?(["company_admin", "program_admin"], current_organisation) || need?(["selector", "panellist", "participant", "mentor"], context_program) || @pitch.try(:team_and_mentor?, current_user) %>
+        <% tags_for_filter.each do |tag| %>
+          <li class="text_under">
+            <%= link_to tag, polymorphic_path([context_program, CommunityFeed], tag: tag), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params[:tag] == tag ? 'active' : ''} gn-icon gn-icon-item" %>
+          </li>
+        <% end %> 
+      <% end %>
+    </ul>
+  </div>
+  <% content_for :sidebar do %>
+      <%= javascript_include_tag "classie" %>
+      <%= javascript_include_tag "gnmenu" %>
+      <script>
+        new gnMenu( document.getElementById( 'gn-menu' ) );
+      </script>
+      
+  <% end %>
+<% end %>

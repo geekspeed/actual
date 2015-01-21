@@ -1,0 +1,15 @@
+<% page = page || "list_prgrams"; ppage = ppage || "programs" %>
+<% if user_signed_in? %>
+  <%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<% else %>
+  <%= render "shared/eco_summary_navbar", :page => "eco_summary" %>
+<% end%>
+
+<% content_for :title do %>
+  <%= "#{@organisation.try(:company_name)} - Summary" %>
+<% end %>
+
+<%= render "organisations/shared/welcome_message" if (current_user and current_user.sign_in_count < 2) && params[:welcome]=="true" && current_user.role?("ecosystem_member", @organisation.id) && @organisation.try(:eco_summary).present? %> 
+
+<%= render "organisations/shared/organisation_summary" %>
+

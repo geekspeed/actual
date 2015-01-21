@@ -1,0 +1,56 @@
+<% pitch_team = User.in(id: (@pitch.team)).map{|user| [user.full_name, user.id] unless user == current_user}.compact%>
+
+<div class="eventInsForm modal fade" id="log_mentor_session" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"><b>Log <%= t("role_type:mentor", "s") %> Session</b></h4>
+			</div>
+			<%= form_for(@program.custom_events.new, :url => program_custom_events_url(@program), :html => {:class => "registerForm reqForm" }) do |f| %>
+				<div class="modal-body">
+					<div class="row">
+				<div class="col-sm-4 setting-font">
+					<div>Date Of Session</div>
+				</div>
+				<div class="col-sm-8">
+					<%= f.text_field :session_date, {:class => "datepicker_std program_plan_td1 form-control form-style-1", :id => 'mentor_datepicker'}%>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-sm-4 setting-font">
+					<div>Duration</div>
+				</div>
+				<div class="col-sm-8">
+					<div class="col-sm-4">
+						<span>Hours</span> 
+						<%= f.number_field :duration_hours, {:min => 0, :class => "input-small", :placeholder => "hours", :style => "width:100%;"}%>
+					</div>
+					<div class="col-sm-4">
+						<span>Minutes</span> 
+						<%= f.number_field :duration_mins, {:in => 0..59, :class => "input-small", :placeholder => "minutes", :style => "width:100%;"}%>
+					</div>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-sm-4 setting-font">
+					<div>Attendee</div>
+				</div>
+				<div class="col-sm-8">
+					<%= f.select(:attendee, options_for_select(pitch_team), {}, {multiple: true, size: 5, :class => "form-controls form-style-1"})%>
+				</div>
+			</div>
+			<%= f.hidden_field :pitch_id, value: @pitch.id%>
+			<%= f.hidden_field :created_by_id, value: current_user.id%>
+			<br />
+				</div>
+				<div class="modal-footer">
+					<%= submit_tag "Add", :id => "submit" %>
+					<%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-top:5px; margin-right:10px;" %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

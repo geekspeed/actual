@@ -1,0 +1,163 @@
+<style type="text/css">
+label{
+width:160px;
+}
+</style>
+
+
+<div>
+  <%= f.label :salutation %>
+  <%= f.collection_select :salutation, User::SALUTATION, :to_s, :to_s,{}, {:class=>"form-control pull-left select-size-1"} %>
+	<div class="clr"></div>
+</div>
+<% if @program.try(:program_scope).try(:offer_anonymous_login) %>
+  <br>
+  <div>
+    <label for="anonymous" style="width:100%;">Click here if you want to remain anonymous?
+    <%= f.check_box :anonymous, :class => "form-control pull-left", :style=>"height: 13px;"%></label>
+  <div class="clr"></div>
+  </div>
+  <div id="username_fields" style="display:none;">
+    <br>
+    <div>
+      <%= f.label :first_name,"Username", class:"mend_field_label" %>
+      <%= f.text_field :first_name, :class => "form-control pull-left", :id=>"username"%>
+    <div class="clr"></div>
+    </div>
+  </div>
+<%  end %>
+<br>
+<div>
+  <%= f.label :first_name, class:"mend_field_label" %>
+  <%= f.text_field :first_name, :class => "required form-control pull-left"%>
+  <%= f.text_field :first_name_hidden, :class => "form-control pull-left", :style=>"display:none;" if @program.try(:program_scope).try(:offer_anonymous_login) %>
+<div class="clr"></div>
+</div>
+<br>
+<div>
+  <%= f.label :last_name, class:"mend_field_label" %>
+  <%= f.text_field :last_name,:class => "required form-control pull-left" %>
+  <%= f.text_field :last_name_hidden,:class => "form-control pull-left", :style=>"display:none;" if @program.try(:program_scope).try(:offer_anonymous_login)%>
+<div class="clr"></div>
+</div>
+<br>
+<div>
+  <%= f.label :email, "Email Address", class:"mend_field_label" %>
+  <% if session[:user_details]%>
+    <%= f.email_field :email, :autofocus => true, :class => "required form-control pull-left", placeholder:  @domain_name? ("Ex: somebody@#{@domain_name}") : "" %>
+  <% elsif f.object.email.blank?%>
+    <%= f.email_field :email, :autofocus => true, :class => "required form-control pull-left",placeholder:  @domain_name? ("Ex: somebody@#{@domain_name}") : ""  %>    
+  <% else %>
+    <%= f.email_field :email, :autofocus => true, :class => "required form-control pull-left", disabled: "disabled" %>
+  <% end %>
+<div class="clr"></div>
+</div>
+<input type="hidden" name="domain" id="domain_validate" value="<%=@domain_name%>" />
+
+<% if ProgramScope.where(:program_id => params[:for]).try(:first).try(:associated_organisation) %>
+  <%= render "shared/add_organisation", :f=>f, :organisation_id_name=>"user_organisation", :main_tag=>"div", :in_tag=>"div", :in_field_tag=>"div", :label_tag=>"label for=user_organisation",:add_new_width=>"312px", :add_new_margin_left=>"185px" %>
+<% end %>
+
+<br/>
+
+<div>
+  <%= f.label :password, class:"mend_field_label" %>
+  <%= f.password_field :password, :class => "required form-control pull-left" %>
+<div class="clr"></div>
+</div>
+<br>
+<div>
+  <%= f.label :password_confirmation, "Confirm Password", class:"mend_field_label", placeholder: context_program %>
+  <%= f.password_field :password_confirmation, :class => "required form-control pull-left" %>
+<div class="clr"></div>
+</div>
+<br>
+<% if false%>
+<div>
+  <%= f.label :company_name %>
+  <%= f.text_field :company_name, :class => "form-control pull-left" %>
+<div class="clr"></div>
+</div>
+<br>
+<div>
+  <%= f.label :job_title %>
+  <%= f.text_field :job_title, :class => "form-control pull-left" %>
+<div class="clr"></div>
+</div>
+<br>
+<div>
+  <%= f.label :industry %>
+  <%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, {},:class => "form-control pull-left select-size-1", :include_blank => "Select Indstry" %>
+<div class="clr"></div>
+</div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    // $("#existing_user").fancybox();
+    $(".registerForm input[name='user[email]']").on("focusout", function(e){
+      if(!$(this).prop("disabled") && $(this).val() != ""){
+        $.get("/users/invitation/check_email?email=" + $(this).val()+ "&domain_name=" + $("#domain_validate").val(), function( data ){
+          console.log(data);
+          console.log(data.exist);
+          if(data.exist){
+            console.log(data.exist);
+            $.fancybox({
+              href: '#existing_user', 
+              modal: true
+            });
+            $("#existing_user").find("input[name='email']").val(data.email)
+            // $("#existing_user").trigger("click");
+            // $("#existing_user").unbind("click");
+          }
+          if(data.domain_check){
+            $.fancybox({
+              href: '#invalid_domain', 
+              modal: true
+            });
+          }
+        });
+      }
+    });
+  });
+  $(document).on('click', ".previous_user", function(e){
+	    e.preventDefault();
+	    email = $("#existing_user").find("input[name='email']").val();
+	    $.ajax({
+	      url: "/users/invitation/find_user?email=" + email,
+	      type: 'get',
+	      dataType: 'json',
+	      contentType: 'application/json; charser=utf-8',
+	      success: function(data){
+	      	if(data.user){
+		       $("#user_salutation").val(data.salutation);
+            if (data.anonymous){  
+             $("#user_anonymous").attr('checked', true);
+             $("#user_anonymous").change()      
+             $("#user_first_name_hidden").val(data.first_name_hidden);
+             $("#user_last_name_hidden").val(data.last_name_hidden);    
+             $("#username").val(data.first_name);
+            }
+            else{      
+             $("#user_first_name").val(data.first_name);
+             $("#user_last_name").val(data.last_name); 
+             if ($("#user_anonymous:checked").length ==  "1"){  
+              $("#user_first_name_hidden").val(data.first_name);
+              $("#user_last_name_hidden").val(data.last_name);       
+              $("#user_last_name").val("")
+             }    
+            }
+		       $("#user_email").val(data.email);
+		       $("#user_organisation").val(data.company);
+		       $.fancybox.close();
+		     }
+	      },
+	      error: function(){
+	       alert('Request failed. Sorry, we are analyzing the cause of this problem');
+	      }
+	    })
+	  });
+	  function empty_email(){
+	    $("#user_email").val("");
+	    $.fancybox.close();
+	  }
+</script>

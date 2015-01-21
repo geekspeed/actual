@@ -1,0 +1,106 @@
+<% page = "report_program"; ppage = "reports"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-dashboard gn-icon-large"></i>
+      Dashboard
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customisable dashboard on which you can add key graphs to visualize people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_reportings_path(context_program) %>>Report</a> / <a href="#" class="active_bread">Dashboard</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<a href="sec1" name="sec1" class="section_nav"></a>
+		<h2 class="titleLine title-normal"><span style="font-weight:bold;">Dashboard</span></h2>
+		<div class="row">
+		<% count = 0%>
+		<% @reportings.each do |report| %>
+			<% if report.dashboard %>
+				<% graph_data = chart_data(report.reporting,report.graph_type) %>
+				<% if !graph_data.blank? %>
+					<% if count%2 == 0 %>
+			</div>
+			<div class="row">
+				<% end %>
+			    <div class="col-md-6">
+			    	<div class="panel panel-white panel-shadow ui-widget collapses panel-table panel-with-bottom-padding" data-collapsed="0">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3><%= report.graph_name %></h3>
+							</div>
+							<div class="panel-options">
+								<%= link_to "".html_safe,export_csv_program_reportings_path(context_program,:report_id=>report.id,format: "csv"), :class=>"glyphicon glyphicon-export", :"data-toggle"=>"tooltip", :title=>"Export to csv" %>
+								<%= link_to "".html_safe,show_chart_program_reportings_path(context_program,:report_id=>report.id), :remote=>true, :class=>"glyphicon glyphicon-eye-open view-graph", :"data-toggle"=>"tooltip", :title=>"View chart"%>
+								<%= link_to "".html_safe,remove_report_program_reportings_path(context_program,:report_id=>report.id), :method=>"delete", :class=>"glyphicon glyphicon-trash", :"data-toggle"=>"tooltip", :title=>"Delete chart" %>
+								<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+							</div>
+						</div>
+						<div class="panel-body">
+							<div id="chart<%= report.id %>"></div>
+							<script type="text/javascript">
+					        $(document).ready(function(){
+					        	<% if report.graph_type=="Line Chart" %>
+					            	line_chart('#chart<%= report.id %>',400,420,'<%= raw graph_data[1] %>', '<%= raw graph_data[2] %>', <%=  raw graph_data[0] %>, 75, 130, 8)
+					            <% elsif report.graph_type=="Pie Chart"  %>
+					            	pie_chart('#chart<%= report.id %>',400,420,<%= raw graph_data[0] %>)
+					            <% end %>
+					        });
+						   </script>
+						</div>
+					</div>
+				</div>
+				<% count = count+1%>
+				<% end%>
+				<% end%>
+				<% end %>
+			</div>
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Reporting</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+ $(function() {
+   $('a[data-toggle=tooltip]').tooltip()
+   $(".view-graph").bind("ajax:beforeSend", function(){
+      $.fancybox({ content:"Loading Graph...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".view-graph").bind("ajax:complete", function(){
+    })
+   });
+ $(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+ </script>

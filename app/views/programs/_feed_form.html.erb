@@ -1,0 +1,128 @@
+<%= content_tag :div, class: "block" do%>
+  <%= javascript_include_tag 'nicEdit' -%>
+  <% post_to ||= false %>
+  <% milestone ||= nil %>
+  <% css_class ||= "" %>
+  <% css_inline_style = "display:none" if css_class.present? %>
+  <%= form_for :survey, :url => program_feed_form_path(@program), :method => "put", :html => {:id => "updateStatusForm", :class => css_class, :style => css_inline_style} do |f| %>
+    <% klass = "new-status-box";
+       margin_top = "margin-top: 0px;";
+       text_area_margin = "margin-top: 0px;";
+    %>
+    <% if post_to %>
+      <% klass = "box-programUpdate"; 
+         margin_top = "margin-top: 5px;"
+         text_area_margin = "margin-top: 0px;";
+      %>
+    <% end  %>  
+    <div class="<%= klass %>" style="<%= text_area_margin %>">
+      <div>
+      <div class="box-content">
+        <div class="form-group">
+          <a href="sec2" name="sec2" class="section_nav"></a>
+          <label class="progress_subject_label pull-left" for="community_feed_subject" style="font-weight:normal;">Subject</label>
+          <%= f.text_field :subject, :value => survey.subject, :class=>"progress_subject pull-left form-control  form-style-1", :placeholder => "Enter subject name", :size=>"0" %>
+          <div class="clear"></div>
+        </div>
+        <div class="kk">
+          <%= f.text_area :content, :value => survey.content, :class => "autogrow box-content-textarea", :placeholder => "Share recent progress, ask a question, request help or share a learning …don’t forget to tag it!" %>
+        </div>
+        <div class="box-content-bottom">
+          <%= hidden_field_tag "survey_id", survey.id, :class => "form-control" %>
+          
+  
+          <script type="text/javascript">
+            jQuery('#main').on('change', '.tag_applicant', function(){
+              var tag_applicant = $('.tag_applicant').val();
+              if(tag_applicant != '')
+                $('.newtag').val(tag_applicant);
+            });
+            bkLib.onDomLoaded(function() {
+              new nicEditor().panelInstance('survey_content');
+            }); 
+          </script>
+            
+          <div style="margin-left: 10px; display:inline;">
+            <%= check_box_tag "survey[visibility][]", "buzz_feed", survey.visibility.include?("buzz_feed"), style:"width:auto; margin: 0;" %> Post to buzz feed
+            <%= check_box_tag "survey[visibility][]", "email", survey.visibility.include?("email"), style:"width:auto; margin: 0 0 0 8px;" %> Post to email
+            <%= check_box_tag "survey[visibility][]", "todo", survey.visibility.include?("todo"), style:"width:auto; margin: 0 0 0 8px;" %> Post to To Do List
+          </div>
+  
+          <%= f.submit "Post", :id => "submit", :class => "btn btn-default post-feed", :style => "" %>
+          <div class="clear"></div>
+        </div>             
+      </div>
+    </div>
+      <div class="clr"></div>
+    </div>
+  <% end %>
+  <script type="text/javascript">
+  $(document).ready(function($){
+    $('.summernote').summernote();
+  });
+  </script>
+<% end %>
+
+<%= content_tag :div, class: "block" do%>
+  <div class="block">
+  	<a href="sec3" name="sec3" class="section_nav"></a>
+    <h2>Responses</h2>
+  </div>
+  <%= content_tag :table, class: "settings full_width_table" do%>
+    <%= content_tag :tbody do%>
+      <%= content_tag :tr do%>
+        <%= content_tag :td, class: "lbl" do%>
+          <h3> Number who have completed the survey</h3>
+        <% end %>
+        <%= content_tag :td, class: "col_setting" do %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= text_field_tag :audience_completed_survey, survey.audience_completed_survey.uniq.count, :disabled => true, :style => "width:40px;float:right" %>
+          <% end %>
+          <%= content_tag :td, class: "col_setting", :style => "vertical-align: middle;"  do %>
+            <% if survey.audience_completed_survey.uniq.count > 0 %>  
+              <%= link_to "Message", "#message_user", class:" btn message_user fancybox_small", "audience_type"=> "completed"%>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      
+      <%= content_tag :tr do%>
+        <%= content_tag :td, class: "lbl" do%>
+          <h3> Number who have started but not completed the survey</h3>
+        <% end %>
+        <%= content_tag :td, class: "col_setting" do %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= text_field_tag :audience_started_survey, survey.audience_started_survey.uniq.count, :disabled => true, :style => "width:40px;float:right" %>
+          <% end %>
+          <% if survey.audience_started_survey.uniq.count > 0%>
+            <%= content_tag :td, class: "col_setting", :style => "vertical-align: middle;"  do %>
+              <%= link_to "Message", "#message_user", class: " btn message_user fancybox_small", "audience_type"=>"started"%>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      
+      <%= content_tag :tr do%>
+        <%= content_tag :td, class: "lbl" do%>
+          <h3> Number of people who were invited but have not completed the survey</h3>
+        <% end %>
+        <%= content_tag :td, class: "col_setting" do %>
+          <%= content_tag :td, class: "col_setting" do %>
+            <%= text_field_tag :audience_not_completed, survey.audience_not_completed.count, :disabled => true, :style => "width:40px;float:right"%>
+          <% end %>
+          <% if survey.audience_not_completed.count > 0%>  
+            <%= content_tag :td, class: "col_setting", :style => "vertical-align: middle;" do %>
+              <%= link_to "Message", "#message_user", class: " btn message_user fancybox_small", "audience_type"=> "not_completed"%>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div style="display: none">
+  <div id="message_user">
+    <%= render 'surveys/message_users', :survey => survey %>
+  </div>
+</div>

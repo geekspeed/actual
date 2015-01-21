@@ -1,0 +1,74 @@
+<%milestone = @milestone%>
+<%= content_tag :div, id: (request.xhr? == 0 ? "" : "rightcontent") do%>
+  <div class="block">
+    <div class="category">
+      <table class="inner" style="margin-top: 0;">
+        <tr class="milestone_title_data">
+          <td class="user">
+            <div class="tablecell">
+              <%= image_tag(current_user.avatar.logo.url, :width => 80, :height => 80, :class => "img-circle img-responsive img-circle-border") %>
+            </div>
+          </td>
+          <td class="title">
+            <span class='for_edit' data-text="General" data-mid="0">
+              <b>Comments for tag:</b>&nbsp; &nbsp;<%= milestone.description %>
+            </span>
+          </td>
+        </tr>
+      </table>
+
+<%
+=begin
+%>
+            <div class="tasks_header">
+              <h2 class="tasks task-title">
+                Tasks
+                <a href="#give_a_task" class="fancybox_small" style="float:right; font-size: 12px; font-weight: normal"><u>+ Add a task</u></a>
+              </h2>           
+            </div>
+            <% if milestone.tasks.present? %>
+              <div class="task_container">  
+                <div id="sub">
+                  <% milestone.tasks.each do |task| %>
+                    <table class="subcategory" width="100%">
+                      <tr class="task_content">
+                        <td class="title">
+                          <%= image_tag task.try(:user).try(:avatar).try(:logo).try(:url), :class => "logo", :width => 60 %>
+                              
+                        </td>
+                        <td class="content">
+                          <p>
+                            <%= task.description %>
+                             <span class='hinweis_red'><%= task.complete? ? "(completed)" : "(not completed)" %></span>
+                           </p>
+                          <span class="task_no">Deadline <%= time_in_words(task.deadline) %></span>
+                          <div class="name_low task_name_time"><b>By: </b><%= task.try(:user).try(:full_name) %><span><%= time_in_words(task.created_at) %></span></div>
+                                           
+                        </td>
+                      </tr>
+                      <tr>
+                        <% if need?(["company_admin", "program_admin"], current_organisation) or @pitch.member?(current_user) or milestone.user_id == current_user.id%>
+                          <td colspan="2" align="right"><%= link_to "Mark as complete", complete_program_pitch_task_path(@program, @pitch, task), :class => "mark_as_complete button" if !task.complete? %></td>
+                        <% end %>
+                      </tr>
+                    </table>
+                    <br />
+                  <% end %>
+                </div>
+              </div>
+            <% else %>
+              <div style="padding:10px;"><i>You have not received any tasks for this milestone by your mentors</i></div>  
+            <% end %>
+<%
+=end%>
+    <div class="milestone_comments">
+          <h2 class="tasks">Comments
+            <a href="#" class="open_div" name="milestone_<%= milestone.id %>_comments" style="float:right; font-size: 12px; font-weight: normal"><u>+ Add a comment</u></a>
+          </h2>
+          <%= render "shared/feed_form", :community_feed => CommunityFeed.new, :milestone => milestone, :css_class => "milestone_#{milestone.id}_comments" %>
+          <% @feeds = CommunityFeed.feed_for_milestone(context_program.id, milestone.id, roles_string) %>
+          <%= render "community_feeds/feeds" %>
+        </div>
+    </div>
+  </div>
+<%end %>

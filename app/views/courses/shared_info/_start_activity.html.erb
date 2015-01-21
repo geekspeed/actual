@@ -1,0 +1,215 @@
+<div class="activity-start">
+  <div class="row main-row">
+    <div class="col-md-10 start_activity_main_col">
+      <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+        <% if !@activity.blank? %>
+          <p class="next_video_title">Next Video: <span class="cource_indicator <%=activity_status_class(@activity)%>"></span><span class="chapter_title"><%=@activity.try(:course_module).try(:title)%>: <%=@activity.try(:title)%></span></p>
+        <% end %>
+        <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" style="position: relative;left: 97%;" href="#"></a>
+        <a href="#" class="video-expand"><span class="glyphicon glyphicon-fullscreen" style="color:#666;position: relative;left: 93%;"></span></a>
+        <div class="course_video_wrapper panel-body">
+          <div class="">
+              <% if (@activity.resource_format == "Video" || @activity.resource_format == "External URL") && @activity.link.present? %>  
+              <% provider = vimeo_protocol_specific_url(@activity.link) %>
+              <% if !provider.blank? && provider[1] == "vimeo" %>
+                <div class="course_video_container">
+                  <div class="video-centered-text">  
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                      <div class="todo_list">               
+                        <%= link_to "View again".html_safe,"#", :class=>"replay-video" %>                    
+                      </div>  
+                    </div>
+                    <div class="col-sm-3">                  
+                      <div class="todo_list">
+                        <a href="<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, :show_exercise])}?pitch_id=#{params[:pitch_id]}"%>" class="course-ajax-load" data-remote="true">Task</a>
+                    
+                      </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                  </div>
+                  <iframe id="player<%=@activity.id%>" src="//player.vimeo.com/video/<%=provider[2]%>?api=1&player_id=player<%=@activity.id%>" class="iframe" width="630" height="354" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                  <%= hidden_field_tag :video_status,nil,:class=>"video_status" %>
+                </div>
+              <% else %>  
+                <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                <% if @activity.link.present? %>
+                  <% if !@activity.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                    <% emb_obj = emb_api.extract(:url => @activity.link, :width=>"885px")%>
+                    <%= course_attachment(emb_obj)%>
+                  <% end  %>
+                <% end %> 
+              <% end %>   
+            <% else %> 
+              <% if @activity.resource_format == "Image" %>
+                <%= image_tag @activity.attachment, :width=>"100%" %>
+              <% else %>
+                <%= link_to "View Attachment", @activity.attachment.url %>      
+              <% end %>
+            <% end %>
+          </div>
+        </div> 
+      </div>    
+      <br />
+    </div>
+    <div class="col-md-2 start_activity_extra_col">
+      <div class="row ">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <p class="todo_title">To Do</p>
+                  <ul class="todo_list">
+                    <li>
+                      <%= link_to "Study materials".html_safe,"#{polymorphic_path([@program, @course, @activity.course_module, @activity, :study_materials])}?pitch_id=#{params[:pitch_id]}", :class=>"course-ajax-load", :remote=>true %>
+                    </li>
+                    <% if !@next_activity.blank? %>
+                      <li>
+                      </li>
+                    <% end %>
+                    <li>
+                      <a href="<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, :show_exercise])}?pitch_id=#{params[:pitch_id]}"%>" class="course-ajax-load" data-remote="true">Task</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div><!-- panel-body -->
+          </div>
+        </div>
+      </div>
+      <br />
+      <% if @activity_performance.video_watch_status%>
+        <div class="row ">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="info_list"><br/><br/>
+                  <p class="watched-video"><a href="#-">Video has been seen already !</a></p>
+                </ul>
+              </div>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      <% end %>
+    </div> 
+
+    <div class="row ">
+      <div class="col-md-10">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="info_list">
+                  <div class="todo_list" style="text-align:center;width:15%;margin:auto;"><%= link_to "More materials".html_safe,"#{polymorphic_path([@program, @course, @activity.course_module, @activity, :study_materials])}?pitch_id=#{params[:pitch_id]}", :class=>"course-ajax-load", :remote=>true %></div>
+                </ul> 
+              </div>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      </div>    
+      <div class="col-md-2">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="info_list">
+                  <% if !@next_activity.blank? %>
+                    <div class="todo_list">
+                      <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @next_activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax" data-remote="true" >Next activity</a>
+                    </div>
+                  <% end %>
+                </ul> 
+              </div>
+            </div>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(function() {
+   $(".start-activity-ajax").bind("ajax:beforeSend", function(){
+      $.fancybox({ 
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },
+        content:"Starting Activity Please Wait...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".start-activity-ajax").bind("ajax:complete", function(){
+    })
+     
+   $(".course-ajax-load").bind("ajax:beforeSend", function(){
+      $.fancybox({ 
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },
+        content:"Please Wait...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".course-ajax-load").bind("ajax:complete", function(){
+    })
+  });
+</script>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander,.video-expand,.replay-video").click(function(e){
+          e.preventDefault(); 
+      });
+    $('.help-sign').tooltip();
+  });
+
+  $(".video-expand").click(function(){
+    video_expand()
+    $(".video-contract").click(function(){
+      video_contract()
+    });
+  }); 
+
+  function video_expand(){
+    $(".activity-start .start_activity_extra_col").removeClass("col-md-2").hide();
+    $(".activity-start .start_activity_main_col").removeClass("col-md-10").addClass("col-md-12");
+    $(".video-expand").addClass("video-contract").removeClass("video-expand")
+    $(".video-contract").click(function(){
+      video_contract()
+    });
+  };
+  function video_contract(){ 
+    $(".activity-start .start_activity_extra_col").addClass("col-md-2").show();
+    $(".activity-start .start_activity_main_col").addClass("col-md-10").removeClass("col-md-12");
+    $(".video-contract").addClass("video-expand").removeClass("video-contract")
+    $(".video-expand").click(function(){
+      video_expand()
+    });
+  };  
+</script>
+
+<style>
+  .video-centered-text {
+      display:none;
+      left: 0;
+      position:absolute;
+      text-align:center;
+      top: 70%;
+      width: 100%;
+      z-index:1000;
+  }
+  .iframe{
+    position:relative;
+  }
+  .watched-video {
+      font-size: 22px !important;
+      text-align: center;
+      line-height: initial;
+  }
+  .watched-video a{
+      color: #8DC442 !important;
+    }
+
+</style>

@@ -1,0 +1,168 @@
+<% @pitch_team = User.in(id: @pitch.team).map{|user| [user.full_name, user.id] unless user == current_user}.compact%>
+<%= hidden_field_tag "program_id", @program.id%>
+<div class="eventInsForm modal fade" id="log_admin_session" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"><b>Log Admin Session</b></h4>
+			</div>
+			<%= form_for(@program.custom_events.new, :url => log_admin_session_program_custom_events_url(@program), :html => {:class => "registerForm reqForm" }) do |f| %>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Title</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.text_field :title, {:class => "form-control form-style-1"}%>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Description</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.text_field :description, {:class => "form-control form-style-1"}%>
+						</div>
+					</div>
+					<br />
+					Or
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Choose from events</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.select(:program_event_id, @program.program_events.flatten.map{|pe| [pe.title, pe.id]}, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+						</div>
+					</div>
+					<br />
+					<div class="row" id="event_session">
+						<div class="col-sm-4 setting-font">
+							<div>Select Session</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.select(:event_session_id, @program.program_events.flatten.map{|pe| [pe.title, pe.id]}, { include_blank: "-select-" }, :class => "form-controls form-style-1")%>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Date Of Session</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.text_field :session_date, {:class => "datepicker_std form-control form-style-1", :id => 'admin_datepicker'}%>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Duration</div>
+						</div>
+						<div class="col-sm-8">
+							<div class="col-sm-4">
+								<span>Hours</span> 
+								<%= f.number_field :duration_hours, {:min => 0, :class => "input-small", :placeholder => "hours", :style => "width:100%;", :id => "admin_session_hours"}%>
+							</div>
+							<div class="col-sm-4">
+								<span>Minutes</span> 
+								<%= f.number_field :duration_mins, {:in => 0..59, :class => "input-small", :placeholder => "minutes", :style => "width:100%;", :id => "admin_session_minutes"}%>
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div>Atendee</div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.select(:attendee, options_for_select(@pitch_team), {}, {multiple: true, size: 5, :class => "form-controls form-style-1", :id => "admin_session_attendee"})%>
+						</div>
+					</div>
+					<%= f.hidden_field :pitch_id, value: @pitch.id%>
+					<%= f.hidden_field :created_by_id, value: current_user.id%>
+				</div>
+				<div class="modal-footer">
+					<%= submit_tag "Add", :id => "submit" %>
+					<%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-top:5px; margin-right:10px;" %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+<script>
+  $(document).ready(function(){
+    $("#event_session").hide();
+    $("#custom_event_event_session_id").attr("disabled", true);
+  });
+  
+  $(document).on('change', "#custom_event_program_event_id", function(){
+    var event = [];
+    <% @pitch_team.each do |k,v|%>
+      event.push(['<%=k%>', '<%=v%>']);
+    <% end %>
+    if($("#custom_event_program_event_id").val() == ""){
+      $("#event_session").hide();
+      $("#custom_event_event_session_id").attr("disabled", true);
+      var $select1 = $('#admin_session_attendee').empty();
+      var j = 0;
+      while(j < event.length){
+         $('#admin_session_attendee').append('<option value="' + event[j][1] + '">' + event[j][0] + '</option>'); 
+        j++;
+      }
+      $('#admin_session_hours').val("");
+      $('#admin_session_minutes').val("");
+      $('#admin_datepicker').val("");
+     }
+    else{
+      $("#event_session").show();
+      $("#custom_event_event_session_id").attr("disabled", false);
+      var event_id = $(this).val();
+      $.ajax({
+          url: "/programs/" + $("#program_id").val() + "/custom_events/get_event_sessions",
+          type: 'get',
+          data: {event_id: event_id},
+          success: function(data){
+            var $select = $('#custom_event_event_session_id').empty();
+            var i = 0;
+            while(i < data.event_sessions.length){
+               $('#custom_event_event_session_id').append('<option value="' + data.event_sessions[i][1] + '">' + data.event_sessions[i][0] + '</option>'); 
+              i++;
+            }
+            event_session_users(data.event_sessions[0][1]);
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+      });
+    }
+  });
+
+  $(document).on('change', "#custom_event_event_session_id", function(){
+    var event_session_id = $(this).val();
+    event_session_users(event_session_id);
+  });
+
+  function event_session_users(event_session_id){
+    $.ajax({
+        url: "/programs/" + $("#program_id").val() + "/custom_events/get_event_record_users",
+        type: 'get',
+        data: {event_session_id: event_session_id},
+        success: function(data){
+          var $select1 = $('#admin_session_attendee').empty();
+          var j = 0;
+          while(j < data.event_records.length){
+             $('#admin_session_attendee').append('<option value="' + data.event_records[j][1] + '">' + data.event_records[j][0] + '</option>'); 
+            j++;
+          }
+          $('#admin_session_hours').val(data.hours);
+          $('#admin_session_minutes').val(data.mins);
+          $('#admin_datepicker').val(data.date);
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+    });
+  }
+</script>

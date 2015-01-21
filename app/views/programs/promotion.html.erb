@@ -1,0 +1,60 @@
+<div id="">
+      <ul class="bxslider">
+  <li><img src="<%= image_path('test1.jpg') %>"></li>
+    <li><img src="<%= image_path('test2.jpg') %>"></li>
+    <li><img src="<%= image_path('test1.jpg') %>"></li>
+    <li><img src="<%= image_path('test2.jpg') %>"></li>
+</ul>
+  <div class="programm_info block">
+
+
+    
+    <h1><%= @program.title %></h1><br /><br />
+    by <%= @program.organisation.try(:company_name) %>
+    <br />
+      
+    <div class="clr"></div>
+  </div>
+
+  <br />
+  <div class="block">
+    <h2 class="titleLine">Overview</h2>
+    <%= @program.program_summary.try(:overview) %>   
+  </div>
+  <div class="block">
+    <h2 class="titleLine">Goal</h2>
+    <%= @program.program_summary.try(:goal) %>
+  </div>
+
+  <div class="block block_scroll">
+    <h2 class="titleLine">Terms</h2>
+    <%= @program.program_summary.terms %>
+  </div>
+
+
+
+<a class="twitter-timeline"  href="https://twitter.com/<%= @program.program_summary.try(:twitter_handle) %>"  data-widget-id="412483040724533248">Tweets by @capital_list</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+
+
+
+</div><!-- #rightcontent -->
+
+   <div id="fb-root"></div>
+<script>
+$(document).ready(function(){
+  $('.bxslider').bxSlider();
+});
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=520245551388031";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+</script>
+<div class="fb-like-box" data-href="http://www.facebook.com/FacebookDevelopers" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
+

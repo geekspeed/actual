@@ -1,0 +1,130 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<% page ||= "pitch" %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+
+<%# content_for :bs_sidebar do %>
+  <!-- <div id="sidebar"> -->
+    
+      <!-- <li class='active'> -->
+        <script>
+          $(document).ready(function(){
+            $('.expand_arrow').click(function(event){
+              event.preventDefault();
+               $('.expand_menu').toggle('slow', function() {
+                // Animation complete.
+               });
+            });
+            
+            $('.view_options').click(function(event){
+              event.preventDefault();
+              $('.view_options').removeClass('active');
+              if($(this).data('view') == 'default'){
+                $('.expand_hidden').hide();
+                $('.expand_hidden :first').fadeIn(300);
+                $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+                $('.expand_hidden :first').prev().find('.expand').addClass('.opened_expand').html('-');
+                
+              }else if($(this).data('view') == 'maximise'){
+                $('.expand_hidden').fadeIn(300);
+                $('.expand_hidden').prev().find('.expand').addClass('.opened_expand').html('-');
+              }else{
+                $('.expand_hidden').fadeOut(300);
+                $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+              }
+              $(this).addClass('active');
+            });
+            
+          });
+        </script>
+        <% if @pitch.try(:persisted?) %>
+          <div class="gn-scroller">
+          <ul class="gn-menu">
+          <!-- <ul class="filtermenu"> -->
+            <% if (!@program.course.blank? && @program.courses_part_of_program) %>
+              <li class="<%= 'active' if page == "course_show" %>">
+                  <%= link_to "Course", (is_subdomain ? polymorphic_url([@program, @pitch, @program.course, :show], subdomain: false) : polymorphic_url([@program, @pitch, @program.course, :show])), :class=>"gn-icon gn-icon-create-course" %>
+              </li>
+            <%end%>
+            <li class="<%= 'active' if page == "pitch" %> menu_with_sub">
+              <%= link_to "Overview", @pitch.persisted? ? (is_subdomain ? edit_program_pitch_url(context_program, @pitch, subdomain: false) : edit_program_pitch_url(context_program, @pitch)) : (is_subdomain ? new_program_pitch_url(context_program, @pitch, subdomain: false) : new_program_pitch_url(context_program, @pitch)), :class=>"gn-icon gn-icon-overview" %>
+              <div class="clear"></div>
+              <span class="glyphicon glyphicon-chevron-right gn-arrow"></span>
+              <ul class="gn-submenu">
+                  <li class="text_under">
+                    <a data-view='default' class='view_options active gn-icon gn-icon-item' href='#'>Default View</a>
+                  </li>
+                  <li class="text_under">
+                    <a data-view='maximise' class='view_options gn-icon gn-icon-item' href='#'>Maximise all</a>
+                  </li>
+                  <li class="text_under">
+                    <a data-view='minimise' class='view_options gn-icon gn-icon-item' href='#'>Minimise all</a>
+                  </li>
+              </ul>
+            </li>
+            <% if need?(["company_admin", "program_admin"], current_organisation) || need?(["selector", "panellist"], context_program) || @pitch.try(:team_and_mentor?, current_user) %>
+              <li class="<%= 'active' if page == "project_feed" %> menu_with_sub">
+                    <%= link_to("#{workspace_sementic("left_buzz","Project Feed")}", (is_subdomain ? polymorphic_url([:feeds, @program, @pitch], subdomain: false) : polymorphic_url([:feeds, @program, @pitch])), :class=>"gn-icon gn-new gn-icon-feed-new") %>
+                    <span class="glyphicon glyphicon-chevron-right gn-arrow"></span>
+                    <ul class="gn-submenu">
+                      <% CommunityFeed::DEFINED_TAG.each do |tag| %>
+                        <li class="text_under">
+                          <%= link_to tag, (is_subdomain ? polymorphic_url([:feeds, context_program, @pitch], tag: tag, subdomain: false) : polymorphic_url([:feeds, context_program, @pitch], tag: tag)), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params[:tag] == tag ? 'active' : ''} gn-icon gn-icon-item" %>
+                        </li>
+                      <% end %> 
+                  </ul>
+              </li>
+              <% if context_program.try(:workspace).try(:left_to_do_list)%>
+                <li class="<%= 'active' if controller_name == "milestones"%>">
+                  <%= link_to("#{workspace_sementic("left_milestone","Milestones")}<span class='amount_inside'> (#{@pitch.milestones.count})</span>".html_safe, (is_subdomain ? polymorphic_url([context_program, @pitch, Milestone], subdomain: false) : polymorphic_url([context_program, @pitch, Milestone])), :class=>"gn-icon gn-new gn-icon-milestone-new") %>
+                </li>
+              <%end%>
+              <% if context_program.try(:workspace).try(:left_feedback) and (!@program.try(:program_scope) or (@program.try(:program_scope).try(:show_judging_score) ? true : (need?(["panellist"], context_program) or need?(["company_admin"], current_organisation))))%>
+                <li class="<%= 'active' if controller_name == "feedbacks" %>">
+                  <%= link_to("Feedback", (is_subdomain ? program_pitch_feedbacks_url(@program, @pitch, subdomain: false) : program_pitch_feedbacks_url(@program, @pitch)), :class=>"gn-icon gn-icon-feedback") %>
+                </li>
+              <% end %>
+              
+              <% if context_program.try(:workspace).try(:left_contacts)%>
+                <% if @pitch.team?(current_user) %>
+                  <li class="<%= 'active' if page == "contact" %>">
+                    <%= link_to("Contacts", (is_subdomain ? contacts_program_pitch_url(context_program, @pitch, subdomain: false) : contacts_program_pitch_url(context_program, @pitch)), :class=>"gn-icon gn-icon-contacts") %>
+                  </li>
+                <% end %>
+              <% end %>
+              <li class="<%= 'active' if controller_name == "documents" %>">
+                <%= link_to "Documents <span class='amount_inside'> (#{@pitch.documents.count})</span>".html_safe, (is_subdomain ? program_pitch_documents_url(@program, @pitch, subdomain: false) : program_pitch_documents_url(@program, @pitch)), :class=>"gn-icon gn-icon-doc" %>
+              </li>
+            <% end %>
+            <% if context_program.try(:workspace).try(:left_team)%>
+              <li class="<%= 'active' if page == "team" %>">
+                <%= link_to "Team", (is_subdomain ? polymorphic_url([:team, @program, @pitch], subdomain: false) : polymorphic_url([:team, @program, @pitch])), :class=>"gn-icon gn-icon-team" %>
+              </li>
+            <% end %>
+            <% if ((@pitch.team_and_mentor? current_user and @program.try(:show_events)) or need?(["company_admin"], current_organisation) and @program.workspace.try(:hide_events_tab))%>
+              <li class="<%= 'active' if page == "recommended_events" %>">
+                <%= link_to("#{workspace_sementic("left_event","Events")}", (is_subdomain ? polymorphic_url([:recommended_events, @program, @pitch], subdomain: false) : polymorphic_url([:recommended_events, @program, @pitch])), :class=>"gn-icon gn-icon-events") %>
+              </li>
+            <%end%>
+            
+          <!-- </ul> -->
+        <% else %>
+          <!-- <ul class="filtermenu"> -->
+            <li class="active">
+              <%#= link_to "Create #{t("pitch")}", "#" %>
+            </li>
+          <!-- </ul> -->
+        <% end %>
+      <!-- </li> -->
+    </ul>
+    </div>
+  <!-- </div> -->
+<%# end %>
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    </script>
+    
+<% end %>

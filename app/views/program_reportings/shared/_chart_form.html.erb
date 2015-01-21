@@ -1,0 +1,70 @@
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Build chart</h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+			<div class="panel-body">
+       	<div class="row">
+					<div class="col-sm-4">
+						<%= label_tag "graph_name" %>
+					</div>
+					<div class="col-sm-8">
+						<%= text_field_tag "graph_attr[graph_name]", selected_value(params[:graph_attr],"graph_name"), :placeholder=>"Graph name", :class=>"form-control form-style-1" %>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-4">
+						<%= label_tag "metric_name" %>
+					</div>
+					<div class="col-sm-8">
+						<%= text_field_tag "graph_attr[metric_name]", selected_value(params[:graph_attr],"metric_name"), :placeholder=>"Metric name", :class=>"form-control form-style-1" %>
+					</div>
+				</div>
+				<hr class="mod_sep" />
+				<div class="row">
+					<div class="col-sm-4">
+						<%= label_tag "who" %>
+					</div>
+					<div class="col-sm-8 option-group">
+						<%= select_tag "reporting[who_field_1]", options_for_select([["Participants", "participants"],["Projects", "projects"],["Organisations","organisations"]], selected_value(params[:reporting],"who_field_1")),:prompt =>"Filter 1", :class=>"form-control form-style-1" %>
+				    <%= select_tag "reporting[who_field_2]", nil, :class=>"form-control form-style-1", :style=>"display:none;" %>
+				    <%= select_tag "reporting[who_field_3]", nil, :class=>"form-control form-style-1", :style=>"display:none;"  %>
+				    <%= select_tag "reporting[who_field_4]", nil, :class=>"form-control form-style-1", :style=>"display:none;"  %>
+					</div>
+				</div>
+				<hr class="mod_sep" />
+				<div class="row">
+					<div class="col-sm-4">
+						<%= label_tag "what" %>
+					</div>
+					<div class="col-sm-8 option-group">
+						<%= select_tag "reporting[what_field_1]", options_for_select(["Participants", "Organisations", "Projects","Engagement","Learning"], selected_value(params[:reporting],"what_field_1")), :prompt =>"Filter 1", :class=>"form-control form-style-1" %>
+				    <%= select_tag "reporting[what_field_2]", nil, :class=>"form-control form-style-1", :style=>"display:none;" %>
+				    <%= select_tag "reporting[what_field_3]", nil, :class=>"form-control form-style-1", :style=>"display:none;"  %>
+					</div>
+				</div>
+				<hr class="mod_sep" />
+				<div class="row">
+					<div class="col-sm-4">
+						<%= label_tag "how" %>
+					</div>
+					<div class="col-sm-8 option-group">
+						<%= select_tag "reporting[how_field_1]", options_for_select([ "Interval",["Filtered by", "FilteredBy"]], selected_value(params[:reporting],"how_field_1")), :prompt =>"Filter 1", :class=>"form-control form-style-1" %>
+				    <%= select_tag "reporting[how_field_2]", nil, :class=>"form-control form-style-1", :style=>"display:none;"  %>
+				    <%= select_tag "reporting[how_field_3]", nil, :class=>"form-control form-style-1", :style=>"display:none;"  %>
+				    <%= text_field_tag "reporting[how_field_4]", nil, :placeholder=>"1,2,3,4,5" ,:style=>"display:none;", :class=>"form-control form-style-1" %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<%= button_tag :submit_preview, :id=>"submit_preview",:class=>"hide" %>
+<%= hidden_field_tag "graph_attr[graph_type]", graph_type %>

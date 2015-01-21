@@ -1,0 +1,21 @@
+<h3 class='popup_heading'><b>Your message to</b></h3>
+<br>
+<%= form_for :survey, :url => message_users_program_survey_path(@program, survey), :method => "PUT" do |f|%>
+    <div>
+    <p>Subject:</p>
+    <%= text_field_tag "subject", "", class: "title form-control"%>
+    <%= hidden_field_tag "audience", "", :id => "audience_type_field"%>
+    </div>
+    <br />
+    <div>
+    <p>Message:</p>
+    <%= text_area_tag "message", "", class: "form-control", cols: "25", rows: "8", style:"height:100px;"%>
+    <br>
+    </div>
+
+    <div>
+    <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+    <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+    <div class="clear"></div>
+    </div>
+<% end %>

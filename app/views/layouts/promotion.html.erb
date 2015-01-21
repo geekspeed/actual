@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-EN">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-EN">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-EN">
+<!--<![endif]-->
+  <head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title><%= [yield(:title)].reject(&:blank?).join(" | ") %></title>
+
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+ 
+    <%= render "layouts/shared/assets" %>
+  </head>
+  <body class="home page page-id-5 page-template full-width custom-background-empty single-author" style="zoom: 1;">
+    <div id="page" class="hfeed site ">
+      <div id="masthead" class="site-header" role="banner">
+        <div id="headinner">
+          <a href="/" style="float:left;"><img src="<%= image_path("logo-apptual.png")%>"></a>
+          <div class="menu-right">
+            <%= render "layouts/shared/login_form" %>
+          </div>
+          <div class="clr"></div>
+        </div>
+      </div>
+
+      <%= yield %>
+<script>
+jQuery(document).ready(function($) {
+    $('#banner-fade').bjqs({
+        'height' : 320,
+        'width' : 620,
+        'responsive' : true
+    });
+});
+
+</script>
+      <div id="footer" role="contentinfo">
+        <div class="inner">
+          <table width="100%" border="0">
+            <tbody><tr>
+              <td width="20%">Our partners</td>
+              <td><img src="<%= image_path("logo_ibehave.png") %>"></td>
+              <td><img src="<%= image_path("logo_droidcon.png") %>"></td>
+              <td><img src="<%= image_path("logo_ucl.jpg") %>"></td>
+              <td><img src="<%= image_path("logo_capital_enterprise.jpg") %>"></td>
+            </tr>
+          </tbody></table>
+        </div>
+      </div>
+
+    </div><!-- #page -->
+    <%= render "layouts/shared/analytics" %>
+  </body>
+</html>

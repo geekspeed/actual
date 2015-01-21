@@ -1,0 +1,36 @@
+<div id="rightcontent">
+  <% cache @feeds do %>
+  
+    <% @faqs.each do |feed| %>
+      <div class="newsentry ">
+ 
+        <div class="box-content">
+          <div class="textbox ">
+            <%= feed.description %>
+            <div class="carouselCont">
+              <%= image_tag feed.attachment, :style => "width: 400px;" %>
+              <% if feed.link.present? %>
+                <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                  <%= link_to("Visit link", "https://".concat(feed.link), target: "_blank", :class => 'text_underline') %>
+                <% end  %>
+              <% end %>
+            </div>
+          </div>
+          <div class="actions ">
+            <%#= feed_like_link(feed) %>
+            <%#= link_to("<span class=\"anzahl\">#{feed.likes_count}</span> Likes".html_safe, "#", :class => "showLikes") %>
+            <%#= link_to("<span class=\"anzahl\">#{feed.comments.count}</span> Comments".html_safe, "#", :class => "commentFeed") %>
+            <%#= feature_link(feed) %>
+            <%#= link_to image_tag("ico_trash.png"), polymorphic_path([@program, feed]), :method => :delete, :class => "delFeed" %>
+          </div>
+          <div class="feedLikes"></div>
+          
+          <%#= render "comments/inline_comments", :commentable => feed %>
+
+          <%#= render "shared/comment_form", :comment => Comment.new, :commentable_type => feed.class.to_s, :commentable_id => feed.id %>
+        </div>
+        <div class="clr"></div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

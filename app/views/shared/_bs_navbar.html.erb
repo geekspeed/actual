@@ -1,0 +1,263 @@
+<% page = page || params[:for] || nil %>
+<% content_for :title do %>
+  <%= "Program Designer" %>
+<% end %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<div style="display: none" id="show_alert_message">
+  <div class="lightbox_box">
+    <%= content_tag :div do%>
+      <%= content_tag :p, "You need to log in to access this page"%>
+    <% end %>
+  </div>
+</div>
+
+<div class="main-navbar" id="mainnavi">
+  <div  style="width: 60px;" class="pull-left">
+    <ul id="gn-menu" class="gn-menu-main">
+      <li class="gn-trigger">
+        <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+        <nav class="gn-menu-wrapper gn-open-part" id="left_stick">
+        <%case controller_name%>
+        <% when "dashboards", "event_lists"%>
+          <%= render "dashboards/shared/new_sidebar", :page => page%>
+        <%when "community_feeds"%>
+          <%= render "community_feeds/shared/bs_sidebar", :page => "project_feed"%>
+        <%when "milestones" %>
+          <%= render "pitches/shared/bs_sidebar", :page => "milestone" %>
+        <%when "feedbacks" %>
+          <%= render "pitches/shared/bs_sidebar", :page => "feedback" %>
+        <%when "documents" %>          
+          <%= render "pitches/shared/bs_sidebar", :page => "documents" %>
+        <%when "organisations" %>
+          <%case action_name%>
+            <%when "edit"%>
+              <%= render "devise/shared/sidebar", :page => "organisation" %>
+            <%when "faqs"%>
+              <%= render "devise/shared/sidebar", :page => "faq" %>
+            <%when "badge_authority_details"%>
+              <%= render "devise/shared/sidebar", :page => "badge_issue_detail" %>
+            <%else%>
+              <%= render "organisations/shared/sidebar", :page => ppage %>
+            <%end%>
+        <%when "phases", "user_adoptions", "dynamic_mail_scheduling", "custom_reminders" %>
+          <%= render "phases/shared/sidebar", :page => ppage %>
+        <%when "due_diligences", "settings", "messages", "surveys", "customisations", "workspace", "workflows", "faqs", "program_summaries", "program_scopes", "program_invitations", "questions", "badges" %>
+          <%case action_name%>
+            <%when "invites", "judging_score"%>
+              <%= render "phases/shared/sidebar", :page => ppage %>
+            <%else%>
+              <%= render "programs/program_edit_sidebar", :page => ppage %>
+          <%end%>
+        <% when "search"%>
+          <%case ppage%>
+            <%when "search"%>
+            <%= render "search/shared/sidebar" %>
+          <%end%>
+        <% when "registrations"%>
+          <%case action_name%>
+            <%when "show"%>
+              <%= render "dashboards/shared/new_sidebar", :page => page%>
+            <%else%>
+              <%= render "devise/shared/sidebar", :page => "basic" %>
+          <%end%>
+        <% when "programs"%>
+          <%case action_name%>
+            <%when "awaiting_users", "manage_form", "dashboard", "manage_badges"%>
+              <%= render "phases/shared/sidebar", :page => ppage %>
+            <%when "edit", "community_tab"%>
+              <%= render "programs/program_edit_sidebar", :page => ppage %>
+            <%when "user_badges"%>
+              <%= render "dashboards/shared/new_sidebar", :page => page%>
+          <%end%>
+        <% when "pitches"%>
+          <%case action_name%>
+            <%when "show"%>
+              <%= render "pitches/shared/bs_sidebar", :page => "pitch", :ppage => "pitch" %>
+            <%when "edit"%>
+              <%= render "pitches/shared/bs_sidebar", :page => "pitch", :ppage => "pitch" %>
+            <%when "feeds"%>
+              <%= render "pitches/shared/bs_sidebar", :page => "project_feed" %>
+            <%when "team"%>
+              <%= render "pitches/shared/bs_sidebar", :page => "team" %>
+            <%when "contacts"%>
+              <%= render "pitches/shared/bs_sidebar", :page => "contact" %>
+            <%when "recommended_events"%>
+                <%= render "pitches/shared/bs_sidebar", :page => "recommended_events" %>
+            <%end%>
+          <% when "courses"%>
+            <%case action_name%>
+              <%when "show"%>
+                <%= render "pitches/shared/bs_sidebar", :page => "course_show" %>
+              <%when "index"%>
+                <%= render "programs/program_edit_sidebar", :page => "course"%>
+            <%end%>
+          <% when "domain_maps"%>
+             <%= render "devise/shared/sidebar", page: "domain_map" %>
+          <% when "ecosystems"%>
+             <%= render "devise/shared/sidebar", page: "ecosystem" %>
+          <% when "eco_summaries"%>
+             <%= render "devise/shared/sidebar", page: "eco_summary" %>
+          <% when "program_reportings"%>
+             <%= render "program_reportings/shared/sidebar", :page => ppage %>
+          <% when "targettings"%>
+             <%= render "phases/shared/sidebar", :page => ppage %>
+          <% when "custom_reports"%>
+             <%= render "program_reportings/shared/sidebar", :page => "custom_report" %>
+          <% when "payments"%>
+            <%= render "devise/shared/sidebar", :page => "payments" %>
+          <% when "subscriptions"%>
+            <%case action_name%>
+              <%when "subscriptions"%>
+              <%= render "devise/shared/sidebar", :page => "subscriptions" %>
+              <%when "soft_deleted_user"%>
+                <%= render "devise/shared/sidebar", :page => "soft_deleted_users" %>
+            <%end%>
+          <% when "coupons"%>
+            <%= render "devise/shared/sidebar", :page => "discount_code" %>
+        <%end%>
+        </nav>
+      </li>
+    </ul>
+  </div><!-- /container -->
+  <%klass = user_signed_in? ? "navbar navbar-default main-navbar-inner" : "width-80 navbar navbar-default main-navbar-inner" %>
+  <nav class= "<%= klass %>" role="navigation">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-collapse collapse" style="border: none;">
+      <ul class="nav navbar-nav main-navi-bar">
+        <% if (current_organisation.try(:eco_summary).try(:visible_to_participants) or need?(["company_admin", "program_admin"], current_organisation)) %>
+          <%if controller_name == "organisations" and page != "user_profile"%>
+            <li class="<%= 'active' if page == "list_prgrams" %> mainnav_link">
+                <%= link_to("#{e('eco_summary:ecosystem_navbar_homepage').present? ? e('eco_summary:ecosystem_navbar_homepage') : 'Programs'}", organisation_path(@organisation)) %>
+              </li>
+            <li class="<%= 'active' if page == "ecosystem" %> mainnav_link">
+                <%= link_to("Ecosystem", members_organisation_path(current_organisation, :role_code => "participant")) %>
+              </li>
+            <%else%>
+	          <li class="<%= 'active' if page == "list_prgrams" %> mainnav_link">
+	            <% company_name_navbar_configurable = e("eco_summary:company_name_navbar_configurable") ? e("eco_summary:company_name_navbar_configurable") : current_organisation.company_name %>
+	            <%= link_to company_name_navbar_configurable, (is_subdomain ? organisation_url(current_organisation, subdomain: false) : organisation_url(current_organisation)) if current_organisation%>
+	          </li>
+	        <%end%>
+	      <% end %>
+	      <% unless controller_name == "organisations" and page != "user_profile"%>
+  	        <% if user_signed_in?%>
+              <%= content_tag :li, :class => ((page == "program_community" or (controller_name == "dashboards" and action_name == "show")) ? "active mainnav_link" : "mainnav_link") do%>
+                <%= link_to("Community", user_signed_in? ? (is_subdomain ? dashboard_url(subdomain: false) : dashboard_url) : (is_subdomain ? root_url(:login => false, :program_id => @program ? @program.id : nil, subdomain: false) : root_url(:login => false, :program_id => @program ? @program.id : nil)),:id=>"community_link") %>
+              <% end %>
+            <% else%>
+              <% unless context_program.try(:program_nav_links).try(:any?) %>
+                <%= content_tag :li, :class => ((page == "program_community") ? "active mainnav_link" : "mainnav_link") do%>
+                  <%= link_to_if((@program and @program.program_scope.try(:participant_scope) == "public"), "Community", (is_subdomain ? root_url(:login => false, :program_id => @program.try(:id), subdomain: false) : root_url(:login => false, :program_id => @program.try(:id)))){(link_to "Community", "#show_alert_message", class: "fancybox" )} %>
+                <% end %>
+              <% end %>
+          <% end %>
+	        <% unless user_signed_in? %>
+            <% if context_program.try(:program_summary).present? %>
+              <% context_program.program_nav_links.order_by(:order => "ASC").each do |nav_link| %>
+                  <% unless nav_link.custom_url %>
+                    <li class="mainnav_link anchors_li" id="<%="anchor_#{nav_link.url}"%>">
+                      <%= link_to nav_link.name, "##{nav_link.url}", class: "anchor_links" %>
+                    </li>
+                  <% else %>
+                    <li class="mainnav_link anchors_li">
+                        <%= link_to nav_link.name, "//#{nav_link.url}"%>
+                    </li>
+                  <% end %>
+              <% end %>
+            <%end%>
+          <%end%>
+        <%end%>
+      
+      <%if controller_name == "organisations" and page != "user_profile"%>
+        <li class="<%= 'active' if page == "buzz" %> mainnav_link">
+          <%= link_to("Buzz", buzz_organisation_path(@organisation)) %>
+        </li>
+      <%else%>
+        <% if context_program and (current_user and !current_user.role?("awaiting_participant", context_program)) and 
+              (current_user and !current_user.role?("awaiting_mentor", context_program))%>
+            <li class="<%= 'active' if controller_name == 'community_feeds' %> mainnav_link">
+              <%= link_to("Buzz", user_signed_in? ? (is_subdomain ? program_community_feeds_url(context_program, subdomain: false) : program_community_feeds_url(context_program)) : (@program ? (is_subdomain ? program_login_program_url(@program, subdomain: false) : program_login_program_url(@program)) : (is_subdomain ? new_user_session_url(subdomain: false) : new_user_session_url)), :class=>"admin_dropdown") %>
+            </li>
+          <% if need?(["participant"], context_program) or  need?(["mentor"], context_program) %>
+            <div class="dropdown pull-left" style="height: 60px;border-left: 1px solid #ddd;">
+              <li class="<%= 'active' if (controller_name == "dashboards" and action_name == "my_work") or (@pitch and (@pitch.owner?(current_user) or @pitch.member?(current_user)) )%> mainnav_link">
+                <%= link_to((t("program:my_work").present? ? "#{t("program:my_work")}" : "My Work"), (is_subdomain ? my_work_dashboard_url(subdomain: false) : my_work_dashboard_url), :class=>"admin_dropdown") %>
+              </li>
+              <ul class="dropdown-menu right_admin_menu" role="menu" aria-labelledby="dropdownMenu3">
+                <%= navbar_pitch_link(@pitch) %>
+              </ul>
+            </div>
+            <% if @pitch.present? && @pitch.user_id != current_user.id %>
+                <li class="<%= 'active' if action_name == "show" %> mainnav_link">
+                  <%= link_to "#{t("pitch")}: #{@pitch.title}", (is_subdomain ? program_pitch_url(context_program, @pitch, subdomain: false) : program_pitch_url(context_program, @pitch)) %>
+                </li>
+              <% end %>
+          <% end %>
+        <% end %>
+      <%end%>
+      </ul>
+    </div>
+  </nav>
+	<% unless controller_name == "organisations" and page != "user_profile"%>
+			<% if need?(["company_admin", "program_admin"], current_organisation) %>
+				<div class="dropdown pull-right" style="height: 60px;border-left: 1px solid #ddd;">
+				  <button class="btn dropdown-toggle admin_toggle <%= 'active' if ["setup_program", "manage_program","report_program","due_diligence"].include?(page) %>" type="button" id="dropdownMenu3" data-toggle="dropdown">
+				    <%= link_to("Admin", context_program ? (is_subdomain ? program_phases_url(context_program, subdomain: false) : program_phases_url(context_program)) : "#", :class=>"admin_dropdown") %>
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu right_admin_menu" role="menu" aria-labelledby="dropdownMenu3">
+						<% if need?(["company_admin", "program_admin"], current_organisation) %>
+		          <li class="<%= 'active' if page == "setup_program" %>">
+		             <%= link_to "<i class='glyphicon glyphicon-cog'></i> Setup".html_safe, context_program.try(:persisted?) ? (is_subdomain ? edit_program_url(context_program, subdomain: false) : edit_program_url(context_program)) : (is_subdomain ? new_program_url(subdomain: false) : new_program_url) %>
+		          </li>
+		          <li class="<%= 'active' if page == "manage_program" %>">
+		            <%= link_to("<i class='glyphicon glyphicon-briefcase'></i> Manage Program".html_safe, context_program ? (is_subdomain ? program_dashboard_url(context_program, subdomain: false) : program_dashboard_url(context_program)) : "#") %>
+		          </li>
+		          <li class="<%= 'active' if page == "report_program" %>">
+                <%= link_to("<i class='glyphicon glyphicon-list-alt'></i> Report".html_safe, context_program ? program_reportings_path(context_program) : "#") %>
+              </li>
+		        <% end %>
+				  </ul>
+				</div>
+		  <% end %>
+			<% if (!context_program.try(:program_nav_links).try(:any?) or user_signed_in?)%>
+        <div class="<%= 'active' if page == 'program_summary' %> mainnav_link pull-right summary_link hidden-xs">
+          <ul class="nav navbar-nav">
+            <li class="<%= 'active' if page == 'program_summary' %> mainnav_link" style="height: 60px;border-left: 1px solid #ddd;">
+              <div>
+                <%= link_to("Summary", context_program ? (is_subdomain ? polymorphic_url(context_program, subdomain: false) : polymorphic_url(context_program)) : "#", :class=>"admin_dropdown") %>
+              </div>
+            </li>
+          </ul>
+        </div>
+      <% end %>
+		  
+		  <% if user_signed_in? and context_program %>
+		    <% current_faqs = faqs %>
+		    <% if current_faqs.any? %>
+		      <div class="mainnav_link pull-right">
+		        <%= link_to("FAQ", "#faq_content", :class=>"right_nav_link faq_pop fancybox_large toggle_div") %>
+		      </div>
+		    <% end %>
+		    <%= render "shared/faq_content", current_faqs: current_faqs %>
+		    <%= render "search/shared/search_box" %>
+		  <% end %>
+	<%end%>
+	<div class="clear"></div>
+</div>
+<% if page == "ecosystem" or page == "buzz" %>
+  <% content_for :sidebar do %>
+      <%= javascript_include_tag "classie" %>
+      <%= javascript_include_tag "gnmenu" %>
+      <script>
+      $(document).ready(function(){
+        new gnMenu( document.getElementById( 'gn-menu' ) );
+      });
+      </script>
+      
+  <% end %>
+<% end%>

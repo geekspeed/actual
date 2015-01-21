@@ -1,0 +1,63 @@
+<% page = page || locals[:page]%>
+  <div class="gn-scroller">
+    <% if user_signed_in? %>
+      <ul class="gn-menu">
+        <li class="<%= 'active' if page == "basic" %>">
+          <%= link_to("#{t('program:basic').present? ? t('program:basic') : 'Basics'}", edit_user_registration_path, :class=>"gn-icon gn-icon-file") %>
+        </li>
+        <li class="<%= 'active' if page == "about_me" %>">
+          <%= link_to("#{t('program:about_me').present? ? t('program:about_me') : 'About Me'}", about_me_registration_path, :class=>"gn-icon icon-profile") %>
+        </li>
+        <% if current_user.company_admin?(current_organisation) %>
+          <li class="<%= 'active' if page == "organisation" %>">
+            <%= link_to("Company Account", edit_organisation_path(current_organisation), :class=>"gn-icon gn-icon-company") %>
+          </li>
+          <li class="<%= 'active' if page == "domain_map" %>">
+            <%= link_to("Map Your Domain", domain_maps_path(), :class=>"gn-icon gn-icon-map-domain") %>
+          </li>
+          <li class="<%= 'active' if page == "ecosystem" %>">
+            <%= link_to("Ecosystem", polymorphic_path([:ecosystems]), :class=>"gn-icon gn-icon-ecosys") %>
+          </li>
+          <li class="<%= 'active' if page == "eco_summary" %>">
+            <%= link_to("Eco Summary", polymorphic_path([:edit,current_organisation, :summary]), :class=>"gn-icon gn-icon-ecosys-sum") %>
+          </li>
+          <li class="<%= 'active' if page == "faq" %>">
+            <%= link_to("Faq", polymorphic_path([:faqs, current_organisation]), :class=>"gn-icon gn-icon-question") %>
+          </li>
+          <li class="<%= 'active' if page == "discount_code" %>">
+          <%= link_to("Discount Coupon", polymorphic_path([current_organisation, :coupons]), :class=>"gn-icon gn-icon-file") %>
+          </li>
+          <li class="<%= 'active' if controller_name == "subscriptions" and action_name == "new" %>">
+          <%= link_to("Create Product", polymorphic_path([:new, current_organisation, :subscription]), :class=>"gn-icon gn-icon-file") %>
+          </li>
+
+          <li class="<%= 'active' if action_name == "soft_deleted_user" %>">
+          <%= link_to("Reactivate User", polymorphic_path([:soft_deleted_user, current_organisation, :subscriptions]), :class=>"gn-icon gn-icon-file") %>
+
+          <li class="<%= 'active' if page == "badge_issue_detail" %>">
+          <%= link_to("Badge Issue Organisation Detail", polymorphic_path([current_organisation, :badge_authority_details]), :class=>"gn-icon gn-icon-file") %>
+          </li>
+        <% end %>
+        <li class="<%= 'active' if page == "payments" %>">
+          <%= link_to("Payment History", polymorphic_path([:payments]), :class=>"gn-icon gn-icon-file") %>
+        </li>
+        
+        <li class="<%= 'active' if action_name == "subscriptions" %>">
+          <%= link_to("Subscriptions", polymorphic_path([:subscriptions, :payments]), :class=>"gn-icon gn-icon-file") %>
+        </li>
+        
+        
+      </ul>
+    <% end %>
+  </div>
+<% content_for :sidebar do %>
+  
+  <%= javascript_include_tag "classie" %>
+  <%= javascript_include_tag "gnmenu" %>
+  <script>
+  $(document).ready(function(){
+    new gnMenu( document.getElementById( 'gn-menu' ) );
+  });
+  </script>
+  
+<% end %>

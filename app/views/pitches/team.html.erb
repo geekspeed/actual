@@ -1,0 +1,69 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Team" %>
+<% end %>
+
+<%#= render "shared/navbar", :page => "pitch_show" %>
+<%#= render "pitches/shared/bs_sidebar", :page => "team" %>
+<div id="rightcontent" class="full_content">
+  <%= hidden_field_tag :page_name, "team_page"%>
+  <div class="innercontent people-row">
+    <% cache @users do %>
+      <% @users.each do |user| %>
+        <div class="row people-row-inner">
+          <div class="col-md-3 col-user-img" style="text-align: center;">
+            <%= link_to(image_tag(user.avatar.logo.url, :class => "img-responsive user-img"), user_path(user)) %>
+          </div>
+          <div class="col-md-8">
+            <h2 class="user-head">
+              <span class="user-name">
+                <%= link_to(user.full_name, user_path(user)) %>
+              </span>
+              <span class="user_roles">
+                (<%= user.roles_string_for(context_program).collect{|code| t("role_type:#{code}")}.join(", ") %>)
+              </span>
+            </h2>
+            <div class="user-content">
+              <p>
+                <span class="span-bio">Email : </span>
+                <span class="span-bio-content"><%= user.email %></span>
+              </p>
+              <p>
+                <span class="span-bio">Bio : </span>
+                <span class="span-bio-content"><%= user.bio %></span>
+              </p>
+              <!--<p class="user-admin-section"><b>Admin section</b></p>-->
+            </div>
+          </div>
+        </div>
+        <div class="clr"></div>
+      <% end %>
+    <% end %>
+  </div>
+  <% ankor = get_custom_field_anchor %>
+    <% if can_create_pitch(ankor) %>
+      <div class="col-sm-4 pitch-col add_new_pitch">
+        <a href="#">
+          <%= link_to image_tag("../images/add_new_pitch.png"), new_program_pitch_path(context_program), :class=>"img img-responsive" %>
+          <p><strong>Add a new <%= t("pitch", "s") %></strong></p>
+        </a>
+    </div>
+  <%end%>
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    </script>
+    
+<% end %>
+   <script type="text/javascript">
+    $(document).ready(function() {
+      var $container = $('.innercontent');
+      $container.imagesLoaded(function(){
+        $container.masonry({
+        itemSelector : '.box_310'
+        });
+      });
+    });
+  </script>
+</div><!-- #rightcontent -->

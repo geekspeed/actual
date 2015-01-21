@@ -1,0 +1,88 @@
+<% content_for :title do %>
+  <%= "Discounts" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "discount_code" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Discount</h3>
+            <span>Create New Discount Coupon</span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <%=form_for :coupon, url: organisation_coupons_path do |f|%>
+            <%render "form", f: f%>
+          <%end%>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>All Coupons</h3>
+            <span></span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+      </div>
+            
+      <div class="panel-body">
+        <table class="table table-bordered table-striped" style="margin-top: 20px;">
+          <tr>
+            <th>
+              Product Name
+            </th>             
+             <th>
+              Discount %
+            </th>
+
+            <th>
+              Coupon Code
+            </th>
+             <th>
+              Number Issued
+            </th>
+            <th>
+              Number Used
+            </th>
+          </tr>
+          <%if @all_coupons %>
+            <% @all_coupons.each do |coupon| %>
+              <tr>
+                <td>
+                  <%= coupon.subscription %>
+                </td>                
+                <td>
+                 <%= coupon.percent_off %>
+                </td>
+                
+                <td>
+                 <%= coupon.id %>
+                </td>
+                <td>
+                 <%= coupon.total_coupons %>
+                </td>
+                <td>
+                 <%= coupon.used_coupons %>
+                </td>
+              </tr>
+            <%end%>
+          <%end%>
+       </table>
+      </div> 
+    </div>
+</div>

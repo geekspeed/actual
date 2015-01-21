@@ -1,0 +1,78 @@
+<% page = "ecosystem"; ppage = "ecosystem" %>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<%#= render "organisations/shared/navbar", :page => "ecosystem" %>
+<%#= render "organisations/shared/sidebar", :page => "ecosystem" %>
+
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Ecosystem" %>
+<% end %>
+
+<div id="rightcontent" class="two_sided_right_content">
+	<div class="innercontent masonry">
+	  <% @users.each do |user| %>
+      <div class="innercontent people-row" style="width:94%">
+        <%= render "dashboards/person_tile", user: user %>
+      </div>
+	  <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function($){
+$('.collapses').collapsiblePanel();
+});
+</script>
+
+
+<div style="display: none">
+  <div id="contact_user">
+    <h3 class='popup_heading'><b>Your message to</b></h3>
+    <br>
+    <%= form_for current_user.contact_requests.new, :url => user_contact_requests_path do |f|%>
+        <div>
+        <p>Subject:</p>
+        <%= f.text_field :subject, class: "title form-control"%>
+        <%= f.hidden_field :receiver_id%>
+        <%= f.hidden_field :program_id, value: context_program.try(:id)%>
+        </div>
+        <br />
+        <div>
+        <p>Message:</p>
+        <%=f.text_area :message, class: "form-control", cols: "25", rows: "8", style:"height:100px;"%>
+        <br>
+        </div>
+
+        <div>
+        <input type="submit" style="width:100px" class="contact_send pull-left" id="submit" value="Send">
+        <input type="reset" style="width:100px" class="contact_cancel pull-left" id="cancel_btn" value="Cancel">
+        <div class="clear"></div>
+        </div>
+    <% end %>
+    </div>
+  </div>
+  
+<script>
+  $(".contact_cancel").on("click", function(e){
+    $.fancybox.close();
+    e.preventDefault();
+  })
+  
+   $(document).on('click', '.request_popup', function(e){
+     e.preventDefault();
+     $('.popup_heading').html("Your message to "+ $(this).data('user-name'));
+     $('#user_contact_request_receiver_id').attr('value', $(this).data('user-id'));
+   });
+
+</script>
+<style type="text/css">
+	input[type="checkbox"]{
+		width: 15px !important;
+	}
+	.ui-corner-all{
+		width: 165px !important;
+		font-weight: normal;
+	}
+	.ui-multiselect-menu{
+		width: 192px !important;
+	}
+</style>

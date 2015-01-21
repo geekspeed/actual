@@ -1,0 +1,61 @@
+<br>
+<div class="row ">
+  <div class="col-md-12">
+    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3>
+          <label>Reviews</label>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display:none;">
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class="tasks_list">
+              <li class="later">
+                <%= link_to "Reviews<i class='glyphicon glyphicon-eye-open' style='text-align:right;'></i>".html_safe, "#diligence_preview", :class => "fancybox" %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>       
+
+<div style="display: none" id="diligence_preview">
+  <div class="lightbox_box">
+    <h2>All Feedback</h2>
+    <div id="diligencepitch">
+      <% @pitch.pitch_due_diligence_matrices.each do |matrix| %>
+        <div class="met_row">
+          <table>
+            <tbody>
+              <tr>
+                <td class="rating_low_lbl"><%= matrix.matrix.try(:one_star)%></td>
+                <td class="rating_middle_lbl"></td>
+                <td class="rating_high_lbl"><%= matrix.matrix.try(:five_star) %></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="rating_row">
+            <div class="star_cont">
+              <% value = matrix.points || 0 %>
+              <div class="already_rated" data-id="<%= matrix.id %>" data-average="<%= value %>"></div>
+            </div>
+            <div class="rating_lbl"><%= matrix.matrix.try(:description) %></div>
+            <div class="clr"></div>
+          </div>
+          <%=content_tag :h4, "On #{matrix.created_at}, #{matrix.panellist.first_name} #{matrix.panellist.last_name} wrote"%>
+          <div class="clr"></div>
+          <div class="clr"></div>
+          <div class="rating_lbl"><%= matrix.feedback ? matrix.feedback : nil %></div>
+        </div>
+      <% end if @program.due_diligence_matrix.present? %>
+    </div>
+  </div>
+</div>

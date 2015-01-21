@@ -1,0 +1,203 @@
+<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+<!--   <div class="panel panel-default">
+ -->         
+ <a class="scroll-link" name="<%= t("pitch:summary") %>">&nbsp;</a>
+    <%= f.fields_for :summary, @pitch.summary do |summary| %>
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3><label><%= t("pitch:summary") %> <%= link_to("<i class='glyphicon glyphicon-question-sign help-sign'></i>".html_safe, "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => "summary", :"data-custom-field-id" => "", :class => "show_help_text_pitch no_background_color", :style =>"height:22px;width:22px;float:right;") if show_help_icon(@program, "pitch", "summary")%></label></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#iterations" class="panel-options-link open-first-level-control">
+            <i class="glyphicon glyphicon-repeat"></i> Last iteration on             
+            <% if @pitch.summary.history_tracks.desc(:version).try(:first).blank? %>
+              <%= @pitch.updated_at.app_format %> 
+            <% else %>
+              <%= @pitch.summary.history_tracks.desc(:version).try(:first).updated_at.app_format %>
+            <% end %>  
+          </a>
+          <a href="#all_feedbacks" class="panel-options-link open-all-control">
+          	<i class="glyphicon glyphicon-comment"></i> <%= feedback_view(feedback_count(@pitch)) %>
+          </a>
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+<!--       <div class="panel-heading panel-pitch-detail">
+        <h4 class="panel-title">
+          <%#= t("pitch:summary") %>
+          <%#= link_to "", "#collapse-summary", :"data-toggle" => "collapse", :"data-field-id" => "#{@pitch.summary.id}", :"data-parent" => "accordion", :class => "glyphicon-arrow-#{@pitch.summary.id} glyphicon glyphicon-chevron-up pull-right glyphicon-color act_arrow"  %>
+        </h4>
+      </div> -->
+      <div style="display: none;" class="panel-body">
+        <div class="row">
+        	<div class="col-sm-12 last-iter-links">
+        		<!--<span class="my-iteration">Last iteration on <%=@pitch.created_at.app_format%></span>-->
+        		<a href="#all_iterations" class="fancybox all-iterations pull-right">
+        			<i class="glyphicon glyphicon-repeat"></i> <%= iteration_view(@pitch.summary.history_tracks.count) %>
+        		</a>
+        	</div>
+          <div class="col-sm-12">
+            <div class="summaryArea">
+             <p class="last-iter-box">
+             		<i class="fa icon-quote-left"></i>
+                <%= @pitch.try(:summary).try(:content).present? ? @pitch.try(:summary).try(:content).gsub(/\r\n/, "<br>").html_safe : ""%>
+                 <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) and !@program.program_scope.try(:stop_editing_fields) or need?(["company_admin", "program_admin"], current_organisation) %>
+                  <a href="#" class="editSummaryFormLink triangle-edit"><i class="icon icon-edit"></i></a>
+                 <% end %>
+                 <i class="fa icon-quote-right"></i>
+              </p>
+            </div>
+            <div class="editable_summary_div col-sm-12" style='display:none'>
+              <div class="">  
+                <div class="editsummaryvalue" style="">
+                  <div class="met_row">
+                    <div class="comment_row">
+                    	<%= summary.text_area :content, :class => "pitch_feedback_text"%>
+                    	<div class="editsummaryvalue save-summary">
+                  			<%= summary.submit "Save", :id => "submit", :style=>"", :class=>"btn button sub-btn textarea_submit_btn" %>
+                			</div>
+                    </div>
+                  </div>
+                </div>
+                <br/>
+              </div>              
+            </div>
+            <br>
+            <div class="row">
+<!--               <%# if (@pitch.user == current_user and !submit_deadline?(@pitch)) %>
+                <div class="met_row">
+                  <div class="comment_row">
+                    <%#= text_area_tag :content, nil, :class => "pitch_feedback_text autogrow iter-text-area", :placeholder => "Make an improvement to this section based on your recent learnings. (This text will replace your current summary.)" %>
+                  </div>              
+                  <br/>
+                  <%#= link_to "Send", "#", :id => "iteration_remote", :class=>"btn button reload-page sub-btn pull-right", :"data-href" => polymorphic_path([:iteration, @program, @pitch]), :"data-name" => "PitchSummary", :style=>"margin:15px 15px 15px 0;border-radius:0px;" %>
+                  <div class="loader" style="float:right;"></div>
+                  <div class="ok_ico" style="float:right;"></div>
+                </div>
+              <%# end %> -->
+                  <%= content_tag :div, :class => "col-md-12" do%>
+                  
+                  		<div class="panel panel-none ui-widget collapses" data-collapsed="0">
+                  			<div class="panel-heading relative_panel_head">
+									        <div class="panel-title title_option">
+									          <h3><i class="glyphicon glyphicon-comment"></i></h3>
+									          <i class="icon icon-angle-up angle"></i>
+									        </div>
+									        <div class="panel-options">
+                            <% if !@pitch.feedbacks.where(:user_id.ne => nil).try(:last).blank?%> 
+                              <a href="#all_feedbacks" class="panel-options-link open-first-level-control">
+                                <i class="glyphicon glyphicon-comment"></i> Last feedback on <%= @pitch.feedbacks.where(:user_id.ne => nil).try(:last).created_at.app_format %>
+                              </a>
+                            <% end %>
+									          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+									        </div>
+									      </div>
+									      <div class="panel-body no-padding feedback-panel" style="display: none;">
+									      	<div class="row">
+									      		<div class="col-sm-12">
+									      			<%= content_tag :div, :id => "collapse-summary", :class => "panel-collapse collapse in feedback_group", :style=>"" do%>
+							                    <% if !@pitch.feedbacks.blank? %>
+                                    <% @pitch.feedbacks.where(:user_id.ne => nil).reverse.each.each_with_index do |feedback, i| %>
+  							                      <% if feedback.private and @pitch.team_and_mentor?(current_user)%>
+  							                        <p class="triangle-right">
+  												                <%= feedback.content %> 
+                                          <%= link_to '', program_pitch_feedback_path(@program,@pitch,feedback), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2 pull-right" if need?(["company_admin"], current_organisation) %>
+  												                <span class="triangle-post"><%= "By #{feedback.user.first_name} #{feedback.user.last_name} on #{feedback.created_at.date_month_year}"%></span>
+  												              </p>
+  												              <br /><br /><br />
+  							                      <%elsif !feedback.private %>
+  							                        <p class="triangle-right">
+  												                <%= feedback.content %>
+                                          <%= link_to '', program_pitch_feedback_path(@program,@pitch,feedback), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2 pull-right" if need?(["company_admin"], current_organisation) %>
+  												                <span class="triangle-post"><%= "By #{feedback.user.first_name} #{feedback.user.last_name} on #{feedback.created_at.date_month_year}"%></span>
+  												              </p>
+  												              <br /><br /><br />
+  							                      <% end %>
+  							                    <% end %> 
+                                  <% else %>
+                                    <span class="my-iteration"><i>No Feedback</i></span>
+                                    <br><br>
+                                  <% end %>
+							                <% end %>
+									      		</div>
+									      	</div>
+												</div>
+											</div>
+                      <% if @pitch.user_id != current_user.id %>
+                    		<div class="row">
+  												<div class="col-sm-12">
+  													<%= text_area_tag :content, "",:placeholder => "Share your feedback to help the team sharpen their big idea", :class=>"pitch_feedback_text feedback_textarea",:id => "fd_b" %>
+  													<%= link_to "Post", "#", :class=>"btn button reload-page sub-btn pull-right textarea_submit_btn", :id => "post_fdb", :style=>""%>
+  												</div>
+  											</div>
+                      <% end %>
+
+                  
+                  <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+          <div class="iteration_counter">
+            <div style="display: none" id="all_iterations">
+              <div class="lightbox_box">
+                <h2>Previous iterations and their learnings</h2>
+                <% @pitch.summary.history_tracks.desc(:version).each_with_index do |history, i| %>
+                  <h3 class="iter_heading <%= 'first-child' if i==0 %>"><%= "Iteration #{history.version} on #{history.created_at.date_month_year}" %></h3>
+                  <div class="previous_iterations">
+                    <%= history.original["content"] %>
+                  </div> 
+                <% end %>
+              </div>
+            </div>
+          </div>
+          
+          <div class="feedback_counter">
+            <div style="display: none" id="all_feedbacks">
+              <div class="lightbox_box">
+                <h2>All Feedbacks</h2>
+                <% @pitch.feedbacks.where(:user_id.ne => nil).reverse.each_with_index do |feed, i| %>
+                  <% if feed.private and @pitch.team_and_mentor?(current_user)%>
+                    <h3 class="iter_heading"><%= "By #{feed.user.first_name} #{feed.user.last_name} on #{feed.created_at.date_month_year}"%></h3>
+                    <div class="previous_iterations">
+                      <%= feed.content %>
+                      <p class= "pull-right"><%= link_to '', program_pitch_feedback_path(@program,@pitch,feed), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2" if need?(["company_admin"], current_organisation) %><p>
+                    </div>
+                  <%elsif !feed.private %>
+                    <h3 class="iter_heading"><%= "By #{feed.user.first_name} #{feed.user.last_name} on #{feed.created_at.date_month_year}"%></h3>
+                    <div class="previous_iterations">
+                      <%= feed.content %>
+                      <p class= "pull-right"><%= link_to '', program_pitch_feedback_path(@program,@pitch,feed), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2" if need?(["company_admin"], current_organisation) %><p>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+    <% end %>
+  <!-- /div> -->
+</div>
+
+<script type="text/javascript">
+	 $(document).ready(function($){
+	 	$('.open-all-control').click(function(){
+	 		
+	 		var panelBody = $(this).parent().parent().parent().children('.panel-body');
+	 		if(panelBody.css('display') == 'none'){
+	 			panelBody.slideToggle(500);
+	 		}
+	 		var feedbackPanel = panelBody.find('.feedback-panel').first();
+	 		feedbackPanel.slideToggle(500);
+	 	});
+	 	
+	 	$('.open-first-level-control').click(function(){
+	 		
+	 		var panelBody = $(this).parent().parent().parent().children('.panel-body');
+	 		if(panelBody.css('display') == 'none'){
+	 			panelBody.slideToggle(500);
+	 		}
+	 		});
+	 		
+	 		$('.pitch_feedback_text').autosize();
+	 });
+</script>

@@ -1,0 +1,31 @@
+<tr>
+  <td class="label_row"><%= custom_field.label %></td>
+  <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+  <% custom_field_content = @user.send(custom_field.code.to_sym)%>
+  <% if custom_field_content.present? and (custom_field.element_type == "video_url" or custom_field.element_type == "sound_url" or custom_field.element_type == "image_url") and !custom_field_content.scan(/~^(?:f|ht)tps?:/i).present? %>
+    <% emb_obj = emb_api.extract(:url => custom_field_content, :maxwidth => 525)%>
+    <td><p class="lighter_color_table"><%= show_attachment(emb_obj)%></p></td>
+  <% elsif custom_field.element_type == "gallery"%>
+    <td style="width:300px !important;"><p class="lighter_color_table"><div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+      
+      <!-- Slider Content (Wrapper for slides )-->
+      <div class="carousel-inner">
+        <%custom_field_content.reject(&:blank?).each_with_index do |val, index|%>
+          <%= content_tag :div, class: index == 0 ? 'active item' : 'item', style: "height:300px;" do %>
+              <%= image_tag val%>
+          <% end %>
+        <% end %>
+      </div>
+     
+      <!-- Controls -->
+      <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div></p></td>
+  <% else %>
+    <td><p class="lighter_color_table"><%= custom_field_content %></p></td>
+  <% end  %>
+</tr>

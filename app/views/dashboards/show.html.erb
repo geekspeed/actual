@@ -1,0 +1,311 @@
+<%#= render "shared/navbar", :page => "program_community" %>
+<%#= render "dashboards/shared/sidebar", :page => "community" %>
+<%= sidebar("dashboards/shared/sidebar") if user_signed_in?%>
+<%# content_for :bs_sidebar do %>
+  <%#= render "dashboards/shared/bs_sidebar" %>
+<%# end %>
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<style type="text/css">
+.pitch-by:hover, .pitch-title a{
+color:<%= menubar_color %>;
+}
+.s_details p {
+
+}
+.admin_section_feature{
+color: <%= menubar_color %> !important;
+}
+.admin_section_feature_container .glyphicon{
+color: <%= menubar_color %> !important;
+}
+.col-md-4 {
+    width: 32%;
+}
+</style>
+<script type="text/javascript">
+
+  function pitch_changes(){
+    var limit = 140;
+    $( ".pitch_summary_limit" ).each(function() {
+      var chars = $(this).html();
+    if (chars.length > limit) {
+        var visiblePart = $("<span> "+ chars.substr(0, limit-1) +"</span>");
+        var dots = $("<span class='dots'>... </span>");
+        var hiddenPart = $("<span class='pitch_more'>"+ chars.substr(limit-1) +"</span>");
+        var readMore = $("<span class='read-more scx'>More <span class='glyphicon glyphicon-forward'></span></span>");
+        var readLess = $("<span class='read-more scx'>Less <span class='glyphicon glyphicon-backward'></span>");
+        var $container = $('#masonry_container');
+        readLess.hide();
+        readMore.click(function() {
+            $(this).prev().hide(); // remove dots
+            $(this).next().show();
+            $(this).hide(); // remove 'read more'
+            $(this).next().next().show();
+            setTimeout(function(){ $container.masonry() }, 100);
+        });
+        readLess.click(function() {
+            $(this).prev().hide(); // remove extra
+            $(this).prev().prev().show(); //show more
+            $(this).prev().prev().prev().show(); //show dots
+            $(this).hide(); // remove 'less'
+            setTimeout(function(){ $container.masonry() }, 100);
+        });
+        $(this).empty()
+            .append(visiblePart)
+            .append(dots)
+            .append(readMore)
+            .append(hiddenPart)
+            .append(readLess);
+            setTimeout(function(){ $container.masonry() }, 100);
+          }
+    });
+  }
+
+$(document).ready(function($) {
+  $('#survey_reminder_lightbox').trigger('click');
+     pitch_changes();
+    // var $container = $('#masonry_container');
+    // $(".read-more").click(function(){
+				// alert("ddd");
+        // $container.masonry('reload');
+        // setTimeout(function(){ $container.masonry() }, 100);
+    // });
+    $('#recomendation').multiselect({
+      //hide: ["explode", 1000],
+      header: false,
+      selectedList: 4
+    });
+    
+    <% if @js_match.blank? %>
+	    $("select").multiselect("widget").find(":checkbox[value='all']").each(function() {
+	      this.click();
+	    });
+    <%else%>
+		<% @js_match.each do |match| %>
+	  	    $("select").multiselect("widget").find(":checkbox[value='<%=match%>']").each(function() {
+	  	      this.click();
+	  	    });
+	      <% end %>
+	      $("select").multiselect("widget").find(":checkbox[value='recommended']").click();
+    <% end %>
+    
+    $("select").on("multiselectclick", function(event, ui) {
+      var val = $(this).val();
+      checked = $("select").multiselect("widget").find("input:checked");
+      data = new Array();
+      for(i = 0; i < checked.length; i++){
+        data.push(checked[i].value);
+      }
+      if(ui.value == "recommended" && ui.checked){
+        rec_data = new Array();
+        <% @js_match.each do |match| %>
+          rec_data.push('<%=match%>');
+        <% end if !@js_match.blank?%>
+        $.ajax({
+          url: $(this).data("url"),
+          type: 'get',
+          data: {options: rec_data},
+          success: function(data){
+            if(data["status"] != "no"){
+               $("select").multiselect("widget").find("input:checked").prop('checked', false);
+               $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', true);
+               <% @js_match.each do |match| %>
+                $("select").multiselect("widget").find(":checkbox[value='<%=match%>']").prop('checked', true);
+               <% end if !@js_match.blank?%>
+               $("select").multiselect({selectedText: ""});
+              $('.masonry').html(data);
+              $('.masonry').masonry().masonry( 'reloadItems' );
+              $('.masonry').masonry().masonry( 'layout' );
+              $('.rating-kv').rating('refresh', {'showCaption': false});
+              pitch_changes();
+            }
+            else{
+              $("select").multiselect("widget").find("input:checked").prop('checked', false);
+              $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', true);
+              $('.masonry').html('');
+              //window.location.reload();
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        })
+      }
+      else{
+        
+        if(ui.value == "custom_filter" && ui.checked){
+        $.ajax({
+          url: $(this).data("url"),
+          type: 'get',
+          data: {options: ["custom_filter", $(this).data("ankor")]},
+          success: function(data){
+            if(data["status"] != "no"){
+               $("select").multiselect("widget").find("input:checked").prop('checked', false);
+               $("select").multiselect("widget").find(":checkbox[value='custom_filter']").prop('checked', true);
+               $("select").multiselect({selectedText: ""});
+              $('.masonry').html(data);
+              $('.masonry').masonry().masonry( 'reloadItems' );
+              $('.masonry').masonry().masonry( 'layout' );
+              $('.rating-kv').rating('refresh', {'showCaption': false});
+              pitch_changes();
+            }
+            else{
+              $("select").multiselect("widget").find("input:checked").prop('checked', false);
+              $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', true);
+              $('.masonry').html('');
+              //window.location.reload();
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        })
+      }
+      
+      else{
+        $("select").multiselect("widget").find(":checkbox[value='recommended']").prop('checked', false);
+        if(ui.value == "all" && ui.checked){
+          $("select").multiselect("widget").find('input:checked').prop('checked', false);
+          $("select").multiselect("widget").find(":checkbox[value='all']").prop('checked', true);
+        }
+        $.ajax({
+          url: $(this).data("url"),
+          type: 'get',
+          data: {options: data},
+          success: function(data){
+            if(data["status"] != "no"){
+              $('.masonry').html(data);
+              $('.masonry').masonry().masonry( 'reloadItems' );
+              $('.masonry').masonry().masonry( 'layout' );
+              $('.rating-kv').rating('refresh', {'showCaption': false});
+              pitch_changes();
+            }
+            else{
+              $('.masonry').html('');
+              //window.location.reload();
+            }
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        })
+      }
+      }
+    });
+    
+    // // Instance the tour
+		// var tour = new Tour({
+		  // steps: [
+		  // {
+		    // element: "#community_link",
+		    // title: "Community",
+		    // content: "This is the comunity link and .....",
+		    // placement: "bottom"
+		  // },
+		  // {
+		    // element: "#add_new_idea_link",
+		    // title: "Add new idea",
+		    // content: "This is where you can add a new pitch"
+		  // },
+		  // {
+		    // element: "#idea_link",
+		    // title: "Ideas link",
+		    // content: "This is where you can see all pitchs"
+		  // },
+		  // {
+		    // element: "#people_link",
+		    // title: "People link",
+		    // content: "This is where you can see people on the community"
+		  // }
+		// ]});
+// 		
+		// // Initialize the tour
+		// tour.init();
+// 		
+		// // Start the tour
+		// tour.start();
+		
+});
+</script>
+
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Community" %>
+<% end %>
+
+<div id="rightcontent">
+  <%= render "shared/welcome_message" if ((current_user and current_user.sign_in_count < 2) or (@count == 0 and params[:action] == "show" and need?(["participant"], context_program)) or (need?(["ecosystem_member"], current_organisation) and (!need?(["mentor", "selector", "panellist", "participant"], context_program))) and !(need?(["participant"], context_program) and context_program.try(:program_scope).try(:stop_adding_project_participants))) %>
+
+  <%= render "pitches/filter_form" if !@pitches.blank? and params[:action] != "my_work"%>
+  <%= hidden_field_tag :page_name, "community_page"%>
+  <!--
+  <div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white panel-shadow ui-widget collapses" data-collapsed="0"><!-- to apply shadow add class "panel-shadow" -->
+				<!-- panel head -->
+				<!--<div class="panel-heading">
+					<div class="panel-title title_option">
+						<a class="user_name_panel pull-left pitch_title_panel" href="#">Pitch title</a> 
+							<div class=" pull-left">
+					      <div class="pitch-user-img pitch-user-img-panel pull-left">
+					        <a href="#"><img height="40" src="/uploads/user/avatar/52d7cd5128d8b86e6e000004/thumb_download__5_.jpg?1391165868" class="img-circle img-responsive img-circle-border" alt="Thumb_download__5_"></a>
+					      </div>
+					      <div class="pitch-user-detail pitch-user-detail-panel pull-left">
+					        <a class="pitch-by" href="#">by Applicant1 R <span>(5 months ago)</span></a>     	
+					    	</div>
+					    	<div class="clr"></div>
+					    </div>
+					</div>
+					<div class="panel-options">
+						<a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				
+				<!-- panel body -->
+				<!--<div class="panel-body">
+					<div class="row user_data">
+						<div class="pull-left user_data_img_cotainer"><a href="/profile/52d7cd5128d8b86e6e000005"><img src="/uploads/pitch/avatar/52d7cdc428d8b86e6e000008/logo_images__22_.jpg?1391165918" class="img-circle img-responsive img-circle-border" alt="Logo_images"></a></div>
+						<b>Details:</b> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus vitae risus vitae lorem iaculis placerat. Aliquam sit amet felis. Etiam congue. Donec risus risus, pretium ac, tincidunt eu, tempor eu, quam. Morbi blandit mollis magna. Suspendisse eu tortor. Donec vitae felis nec ligula blandit rhoncus. Ut a pede ac neque mattis facilisis. Nulla nunc ipsum, sodales vitae, hendrerit non, imperdiet ac, ante. Morbi sit amet mi. Ut magna. Curabitur id est. Nulla velit. Sed consectetuer sodales justo. Aliquam dictum gravida libero. Sed eu turpis. Nunc id lorem. Aenean consequat tempor mi. Phasellus in neque. Nunc fermentum convallis ligula.
+					</div>
+					<a href="#" class="btn btn-default pull-right">View</a>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	
+  <div class="masonry js-masonry row" id="masonry_container" data-masonry-options='{ "columnWidth":".pitch-col", "itemSelector": ".pitch-col", "gutter": 20 }'>
+    <% ankor = get_custom_field_anchor %>
+    <% if can_create_pitch(ankor) %>
+	    <div class="col-sm-4 pitch-col add_new_pitch" id="add_new_idea_link">
+				<a href="#">
+					<%= link_to image_tag("../images/add_new_pitch.png",:class=>"img img-responsive"), new_program_pitch_path(context_program), :class=>"img img-responsive" %>
+					<p><strong>Add a new <%= t("pitch", "s") %></strong></p>
+				</a>
+		</div>
+	<%end%>
+    <%# cache @pitches do %>
+      <% @pitches.each do |pitch| %>
+        <%= render "pitch_tile", pitch: pitch %>
+      <% end %>
+    <%# end %>
+  </div>
+<% if session[:first_time_in] and show_reminder_lightbox?%>
+  <%= link_to "remind", "#remind_survey", class: "faq_pop fancybox_large", :id => "survey_reminder_lightbox", :style => "display:none;"%>
+  <div id="remind_survey" style="display: none;">
+    <%= render 'surveys/reminder_survey' %>
+  </div>
+  <%session.delete(:first_time_in)%>
+<%end%>
+</div><!-- #rightcontent -->
+<style type="text/css">
+	input[type="checkbox"]{
+		width: 15px !important;
+	}
+	.ui-corner-all{
+		width: 165px !important;
+		font-weight: normal;
+	}
+	.ui-multiselect-menu{
+		width: 192px !important;
+	}
+</style>

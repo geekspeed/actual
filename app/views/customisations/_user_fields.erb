@@ -1,0 +1,450 @@
+<% if ["mentor", "participant"].include?(ankor) %>
+<%
+=begin
+%>
+	<h2 class="titleLine title-normal"><span style="font-weight:bold;">Form builder</span>
+    <div class="outline-action-links pull-right">
+      <a data-remote="true" class="fancybox_large course_preview" href="#"><span class="gn-icon gn-icon-overview" style="margin-right: -16px;"></span> Preview</a>
+    </div>
+  </h2>
+	<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+		<div class="panel-heading relative_panel_head">
+			<div class="panel-title title_option">
+				<h3>Applicant form builder</h3>
+				<span>Customize applicant form</span>
+			</div>
+			<div class="panel-options">
+				<a data-rel="collapse" id="toggle-setting-box" class="gn-icon gn-icon-chevron-down ui-expander" href="#-"></a>
+				<div class="add_activity_link">
+	        <a data-remote="true" class="new_activity_box" href="#"><span><b style="font-size:18px;"> + </b> Insert a new field</span></a>
+	      </div>
+			</div>
+		</div>
+				
+		<div class="panel-body" style="padding-top: 10px;">
+      <div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Upload my Profile picture</label>
+				<div class="col-sm-5 upload">
+					<input type="file" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Bio</label>
+				<div class="col-sm-5">
+					<textarea class="form-control form-style-1"></textarea>
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Speciality</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Skills</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+					<a href="#"><strong>+ Add a skill</strong></a>
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Interests</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+					<a href="#"><strong>+ Add an interest</strong></a>
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Education / Qualification</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Education / Qualification</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="field-1">Linkedin profile</label>
+				<div class="col-sm-5">
+					<input type="text" placeholder="Placeholder" id="field-1" class="form-control form-style-1">
+				</div>
+				<div class="col-sm-4 panel-butns">
+					<a href="#" class="new_activity_box btn btn-help btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-question-sign'></i> Add help</a>
+					<a href="#" class="new_activity_box btn btn-danger btn-sm btn-icon icon-left"><i class='glyphicon glyphicon-remove-circle'></i> Remove</a>
+				</div>
+			</div>
+		</div>
+	</div>
+<%
+=end
+%>
+
+  <%= link_to "Form Preview", "#user_form_preview", :class => "fancybox", :id => "submit"%>
+  <%= tag 'br'%>
+  <%= tag 'br'%>
+  <%= tag 'br'%>
+  
+  <%= content_tag :div, :class => "hide_basic_field" do%>
+
+  <%= hidden_field_tag :ankor, @anchor %>
+  <%= hidden_field_tag :referee, @klass %>
+  
+   
+   <div class="row">
+      <div class="col-sm-12 setting-font">
+        <div style="line-height: 28px;"><%= label_tag :welcome_section %></div>
+				<%= text_area_tag :context_message, @program.context_messages.where(anchor: @anchor).first.try(:context_message), :class=> "form-control summernote" %>
+      </div>
+    </div>
+   
+   <!-- <%= content_tag :div, class: "col-md-3" do%>
+   	  <span><%= label_tag :welcome_section %></span>
+  	<% end %>
+  
+  <div class="form-group">
+    
+    <div class="clr"></div>
+  </div> -->
+  	<hr class="mod_sep" />
+  	<div class="row">
+      <div class="col-sm-4 setting-font">
+        <div>
+        	<%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+		      <% upload_picture = t("user:upload_picture") ? t("user:upload_picture").html_safe : "Upload my Profile Picture".html_safe%>
+		      <span><%= content_tag :b, upload_picture %></span>
+		      <%= text_field_tag "semantics[user:upload_picture][singular]", upload_picture , style: "display:none", class: "form-control input-size1" %>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="browse-wrapper">
+              <%= file_field_tag :avatar, :class => "file_field_width", :style=>"display:inline" %>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <img src="" class="img img-responsive">
+          </div>
+        </div>
+        <div class="clr"></div>
+      </div>
+      <div class="col-sm-3" style="text-align: right;">
+      	<%= link_to "+ Add Help", "#help_content_avatar", :class => "fancybox", :style=>"padding-right:10px;"%>
+      	<%= link_to_if(show_basic_field(@program, "upload", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "upload", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "upload", :"data-type" => ankor)}%>
+      </div>
+    </div>
+  	<br />
+    <!-- <%= content_tag :div, class: "col-md-3" do%>
+    	<%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+      <% upload_picture = t("user:upload_picture") ? t("user:upload_picture").html_safe : "Upload my <br>Profile Picture".html_safe%>
+      <span><%= content_tag :b, upload_picture %></span>
+      <%= text_field_tag "semantics[user:upload_picture][singular]", upload_picture , style: "display:none", class: "form-control input-size1" %>
+    <%end%>
+    <div class="form-group">
+    	<div class="browse-wrapper">
+      	<%= file_field_tag :avatar, :class => "file_field_width", :style=>"display:inline" %>
+      </div>
+      <%= link_to "Add Help", "#help_content_avatar", :class => "fancybox pull-right" , style: "margin: -22px 40px 0px 0px;"%>
+      <%= link_to_if(show_basic_field(@program, "upload", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: 0px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "upload", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "upload", :"data-type" => ankor)}%>
+    </div> -->
+  
+    <div class = "field_id">
+    <table class="pitchcontent  table table-striped" id="nrm_tbl">
+      <tbody>
+        <% @custom_fields.where(position: "avatar").each do |field| %>
+          <%= render "form_row", field: field %>
+        <% end %>
+      </tbody>
+    </table>
+    <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+    </div>
+  <% end %>
+
+  <br />
+  <div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+	      <% bio_field = t("user:bio") ? t("user:bio") : "Bio"%>
+	      <span class="mend_field_label"><%= content_tag :b, bio_field%></span>
+	      <%= text_field_tag "semantics[user:bio][singular]", bio_field , style: "display:none", class: "form-control input-size1" %>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <div class="quote_col_row">
+      	<%= text_area_tag :bio, "", :class=>"form-control form-style-1" %>
+      </div>
+    </div>
+    <div class="col-sm-3" style="text-align: right;">
+      <%= link_to "+ Add Help", "#help_content_bio", :class => "fancybox", :style=>"padding-right:10px;"%>
+    	<%= link_to_if(show_basic_field(@program, "bio", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "bio", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: 35px -55px 0px 0px;", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "bio", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+    <!-- <%= content_tag :div, class: "col-md-3" do%>
+      <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+      <% bio_field = t("user:bio") ? t("user:bio") : "Bio"%>
+      <span class="mend_field_label"><%= content_tag :b, bio_field%></span>
+      <%= text_field_tag "semantics[user:bio][singular]", bio_field , style: "display:none", class: "form-control input-size1" %>
+    <%end%>
+  <div class="form-group">
+    <%= text_area_tag :bio, "", :class=>"form-control" %>
+    <%= link_to "Add Help", "#help_content_bio", :class => "fancybox pull-right", style: "margin: 11px 23px 0px 0px;"%>
+    <%= link_to_if(show_basic_field(@program, "bio", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: 35px -55px 0px 0px;", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "bio", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: 35px -55px 0px 0px;", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "bio", :"data-type" => ankor)}%>
+    <div class="clear"></div>
+  </div> -->
+	<br />
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "bio").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+	<div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= label_tag :speciality %>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <div class="quote_col_row">
+      	<%= text_field_tag :speciality, "", :class=>"form-control form-style-1" %>
+      </div>
+    </div>
+    <div class="col-sm-3" style="text-align: right;">
+    	<%= link_to "+ Add Help", "#help_content_speciality", :class => "fancybox", style: "padding-right:10px;"%>
+    	<%= link_to_if(show_basic_field(@program, "speciality", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "speciality", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "speciality", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+ 	
+  <!-- <p class="form-group">
+    <%= label_tag :speciality %>
+    <%= text_field_tag :speciality, "", :class=>"form-control" %>
+    <%= link_to "Add Help", "#help_content_speciality", :class => "fancybox pull-right", style: "margin: -52px 40px 0px 0px;"%>
+    <%= link_to_if(show_basic_field(@program, "speciality", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "speciality", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "speciality", :"data-type" => ankor)}%>
+  </p> -->
+	<br />
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "speciality").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+
+	<div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= label_tag :skills %>
+      </div>
+    </div>
+    <div class="col-sm-5 tag_functionality">
+      <div class="container_tags">
+        <div class="tagList" id="skillList">
+        </div>
+        <div class="clr"></div>
+      </div>
+      <div class="quote_col_row container_add_tag">
+      	<%= text_field_tag :skills, "", :class => "autoSkills form-control pull-left form-style-1", :placeholder => "One item at a time", :id => "skills", :name => "skills[]", :value => "", :"data-field-name" => "skills[]" %>
+        <%= link_to "+ Add a Skill", "#", :class => "addSkill pull-left module_box_submit", :id=>"submit" %>
+		  </div>
+    </div>
+    
+    <div class="col-sm-3" style="text-align: right;">
+    	<%= link_to "+ Add Help", "#help_content_skill", :class => "fancybox", style: "padding-right:10px;"%>
+    	<%= link_to_if(show_basic_field(@program, "skills", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "skills", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "skills", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+
+  <!-- <div class="tag_functionality">
+    <%= label_tag :skills %>
+    <div class="tags_container">
+      <div class="container_tags">
+        <div class="tagList" id="skillList">
+        </div>
+        <div class="clr"></div>
+      </div>
+      <div class="container_add_tag">
+        <%= text_field_tag :skills, "", :class => "autoSkills form-control pull-left", :placeholder => "One item at a time", :id => "skills", :name => "skills[]", :value => "", :"data-field-name" => "skills[]" %>
+        <%= link_to "+ Add a Skill", "#", :class => "addSkill text_underline" %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </div>
+<div class="clr"></div>
+      <%= link_to "Add Help", "#help_content_skill", :class => "fancybox pull-right", style: "margin: -52px 40px 0px 0px;"%>
+      <%= link_to_if(show_basic_field(@program, "skills", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "skills", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "skills", :"data-type" => ankor)}%>
+  </div> -->
+	<br />
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "skills").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+	<div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= label_tag :interests %>
+      </div>
+    </div>
+    <div class="col-sm-5 tag_functionality">
+      <div class="container_tags">
+        <div class="tagList" id="interestsList">
+        </div>
+        <div class="clr"></div>
+      </div>
+      <div class="quote_col_row container_add_tag">
+		  	<%= text_field_tag :interests, "",:class => "autoInterests form-control pull-left form-style-1", :placeholder => "One item at a time", :id => "interests", :name => "interests[]", :value => "", :"data-field-name" => "interests[]" %>
+        <%= link_to "+ Add an Interest", "#", :class => "addInterest pull-left module_box_submit", :id=>"submit" %>
+		  </div>
+    </div>
+    
+    <div class="col-sm-3" style="text-align: right;">
+    	<%= link_to "+ Add Help", "#help_content_interest", :class => "fancybox", style: "padding-right:10px;"%>
+    	<%= link_to_if(show_basic_field(@program, "interests", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "interests", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "interests", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+
+  <!-- <div class="tag_functionality">
+    <%= label_tag :interests %>
+    <div class="tags_container">
+      <div class="container_tags">
+        <div class="tagList" id="interestsList">
+        </div>
+        <div class="clr"></div>
+      </div>
+      <div class="container_add_tag">
+        <%= text_field_tag :interests, "",:class => "autoInterests form-control pull-left", :placeholder => "One item at a time", :id => "interests", :name => "interests[]", :value => "", :"data-field-name" => "interests[]" %>
+        <%= link_to "+ Add an Interest", "#", :class => "addInterest text_underline" %>
+        <div class="clr"></div>
+      </div>
+    </div>
+    <div class="clr"></div>
+        <%= link_to "Add Help", "#help_content_interest", :class => "fancybox pull-right", style: "margin: -52px 40px 0px 0px;"%>
+        <%= link_to_if(show_basic_field(@program, "interests", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "interests", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "interests", :"data-type" => ankor)}%>
+  </div> -->
+	<br>
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "interests").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+
+	<div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= label_tag :education_qualification %>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <div class="quote_col_row">
+      	<%= text_field_tag :education_qualification, "", :class=>"form-control form-style-1" %>
+      </div>
+    </div>
+    <div class="col-sm-3" style="text-align: right;">
+    	<%= link_to "+ Add Help", "#help_content_qualification", :class => "fancybox", style: "padding-right:10px;"%>
+    <%= link_to_if(show_basic_field(@program, "qualifications", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "qualifications", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "qualifications", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+
+  <!-- <p class="form-group">
+    <%= label_tag :education_qualification %>
+    <%= text_field_tag :education_qualification, "", :class=>"form-control" %>
+    <%= link_to "Add Help", "#help_content_qualification", :class => "fancybox pull-right", style: "margin: -52px 40px 0px 0px;"%>
+    <%= link_to_if(show_basic_field(@program, "qualifications", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "qualifications", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "qualifications", :"data-type" => ankor)}%>
+  </p> -->
+	<br />
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "education_qualification").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+	<div class="row">
+    <div class="col-sm-4 setting-font">
+      <div>
+      	<%= label_tag :linkedin_profile %>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <div class="quote_col_row">
+      	<%= text_field_tag :linkedin_profile, "", :class=>"form-control form-style-1" %>
+      </div>
+    </div>
+    <div class="col-sm-3" style="text-align: right;">
+    	<%= link_to "+ Add Help", "#help_content_profile", :class => "fancybox", style: "padding-right:10px;"%>
+    	<%= link_to_if(show_basic_field(@program, "profile", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "profile", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "profile", :"data-type" => ankor)}%>
+    </div>
+ 	</div>
+	<br />
+  <!-- <p class="form-group">
+    <%= label_tag :linkedin_profile %>
+    <%= text_field_tag :linkedin_profile, "", :class=>"form-control" %>
+    <%= link_to "Add Help", "#help_content_profile", :class => "fancybox pull-right", style: "margin: -52px 40px 0px 0px;"%>
+    <%= link_to_if(show_basic_field(@program, "profile", ankor), "Remove", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "profile", :"data-type" => ankor){(link_to "Add", "#", :class => "remove_basic_fields", :id => "submit", :style => "margin: -22px 23px 0 0", :"data-url" => remove_basic_fields_program_customisations_path(@program), :"data-target" => "profile", :"data-type" => ankor)}%>
+  </p>
+  <p></p> -->
+<% end %>

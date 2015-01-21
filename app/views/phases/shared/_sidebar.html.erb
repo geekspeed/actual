@@ -1,0 +1,55 @@
+<% page ||= "pre_application" %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+  <div class="gn-scroller">
+    <ul class="gn-menu">
+      <li class="<%= 'active' if page == "dashboard" %>">
+        <%= link_to "Dashboard", (is_subdomain ? program_dashboard_url(context_program, subdomain: false) : program_dashboard_url(context_program)), :class=>"gn-icon gn-icon-dashboard" %>
+      </li>
+      <li class="<%= 'active' if page == "invites" %>">
+        <%= link_to "Invites", (is_subdomain ? invites_program_invitation_url(context_program, subdomain: false) : invites_program_invitation_url(context_program)), :class=>"gn-icon gn-icon-mail" %>
+      <li class="<%= 'active' if page == "targetting" %>">
+        <%= link_to "Targeting", (is_subdomain ? new_targettings_url(subdomain: false) : new_targettings_url), :class=>"gn-icon gn-new gn-icon-targetting-new" %>
+      </li>
+      <li class="<%= 'active' if page == "messaging" %>">
+        <%= link_to "Messaging", (is_subdomain ? messaging_targettings_url(subdomain: false) : messaging_targettings_url), :class=>"gn-icon gn-icon-envelope" %>
+      </li>
+      <li class="<%= 'active' if action_name == "awaiting_users" %>">
+        <%= link_to "Pending Approvals", (is_subdomain ? awaiting_users_program_url(context_program, subdomain: false) : awaiting_users_program_url(context_program)), :class=>"gn-icon gn-icon-busy"%>
+      </li>
+      <li class="<%= 'active' if action_name == "manage_badges" %>">
+        <%= link_to "Badges", (is_subdomain ? manage_badges_program_url(context_program, subdomain: false) : manage_badges_program_url(context_program)), :class=>"gn-icon gn-icon-busy"%>
+      </li>
+      <% (@workflows || context_program.workflows.on).each do |workflow| %>
+        <li class="<%= 'active' if @current_phase == workflow %>">
+          <%= link_to("#{workflow.phase_name} Phase", (is_subdomain ? program_phases_url(context_program, :phase => workflow.id, subdomain: false) : program_phases_url(context_program, :phase => workflow.id)), :class=>"gn-icon gn-icon-custom-phase") %>
+        </li>
+      <% end %>
+      <li class="<%= 'active' if page == "manage_phases" %>">
+        <%= link_to "Manage Phases", (is_subdomain ? manage_program_phases_url(context_program, subdomain: false) : manage_program_phases_url(context_program)), :class=>"gn-icon gn-icon-manage" %>
+      </li>
+      <li class="<%= 'active' if page == "surveys" %>">
+        <%= link_to "Surveys", (is_subdomain ? program_manage_form_path(context_program, subdomain: false) : program_manage_form_path(context_program)), :class=>"gn-icon gn-icon-survey" %>
+      </li>
+      <li class="<%= 'active' if page == "user_adoption" %>">
+        <%= link_to "User Adoption Mail Setting", (is_subdomain ? edit_program_user_adoption_url(context_program, subdomain: false) : edit_program_user_adoption_url(context_program)), :class=>"gn-icon gn-icon-mail-settings" %>
+      </li>      
+      <li class="<%= 'active' if page == "mail_scheduling" %>">
+        <%= link_to "Mail Scheduling", polymorphic_path([context_program, :dynamic_mail_scheduling, :index]), :class=>"gn-icon gn-icon-mail-settings" %>
+      </li>
+      <li class="<%= 'active' if page == "judging_score" %>">
+        <%= link_to "Judging Score", (is_subdomain ? judging_score_program_due_diligence_url(context_program, subdomain: false) : judging_score_program_due_diligence_url(context_program)), :class=>"gn-icon gn-icon-mail-settings" %>
+      </li>
+    </ul>
+  </div>
+<%# end %>
+
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+    $(document).ready(function(){
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    });
+    </script>
+    
+<% end %>

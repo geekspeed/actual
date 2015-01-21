@@ -1,0 +1,45 @@
+<div class="pitch-col">
+    <div class="p_img" style="position: relative; left: 0; top: 0;">
+      <%= image_tag(organisation.avatar.logo.url, :class => "img-responsive img-pitch-logo", :style=>"position: relative; top: 0; left: 0;") %>
+    </div>
+	<div class="pitch-data">
+	    <h2 class="pitch-title">
+	      <%= organisation.try(:company_name) %>
+	    </h2>
+	    <div class="pitch-content">
+	      <p class="pitch_summary_limit">
+	        <%= organisation.try(:description) %>
+	      </p>
+	
+	    </div>
+	</div>
+  <% if !organisation.try(:size).blank? || !organisation.try(:type).blank? %>
+  	<div class="pitch-data">
+      <div class="row">
+        <% if !organisation.try(:size).blank? %>
+          <div class="col-md-6">
+          	<b>Type : </b><%= organisation.try(:type)%>
+        	</div>
+        <% end %>
+      	<% if !organisation.try(:size).blank? %>
+          <div class="col-md-6">
+          	<b>Size : </b><%= organisation.try(:size)%>
+       	  </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <% if !organisation.try(:industry).blank? %>
+    <div class="pitch-content pitch-content-noborder">
+      <div class="s_details">
+        <div class="row">
+          <div class="col-md-12">
+            <b>Industry : </b><%= organisation.try(:industry) %>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="clr"></div>
+  <% end %>
+</div>

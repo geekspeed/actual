@@ -1,0 +1,64 @@
+<ul class="post-main-comment-list">
+  <% commentable.comments.desc(:created_at).each do |comment| %>
+    <li>
+      <div class="comment-top">
+        <%= link_to image_tag(comment.commented_by.avatar.logo.url, :width => "40", :class=> "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(comment.commented_by) %>
+        <%= link_to "<i class='glyphicon glyphicon-trash user_defined_color'></i>".html_safe, polymorphic_path([comment]), :method => :delete, :class => "delComment pull-right" %>
+        <div class="comment-author-data">
+          <p class="comment-author-name"><%= comment.commented_by.full_name %></p>
+          <p class="comment-author-date"><%= time_in_words(comment.created_at) %></p>
+          <p class="comment-data">
+            <%= comment.try(:content).try(:html_safe) %>
+          </p>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="comment-social">
+        <span class="pull-left"><a href="#" class="user_defined_color <%= "new_comment_#{comment.id}" %>"><i class="glyphicon glyphicon-comment user_defined_color"></i> Comment</a> </span>
+        <span class="pull-right" style="margin-left: 10px;"><%= comment_like_link(comment) %></span>
+        <span class="pull-right"><span class="post-date"><i class="glyphicon glyphicon-heart user_defined_color"></i> <span class="anzahl"><%= comment.likes_count %></span> people like this</span> </span>
+        <div class="clear"></div>
+      </div>
+      <ul class="sub-comment-container">
+        <% comment.children.each do |child| %>
+          <li>
+            <div class="comment-top">
+              <%= link_to image_tag(child.commented_by.avatar.thumb.url, :width => "30", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(child.commented_by) %>
+              <div class="comment-author-data sub-comment-data">
+                <p class="comment-author-name"><%= child.commented_by.try(:full_name) %></p>
+                <p class="comment-author-date"> <%= time_ago_in_words(child.created_at) %></p>
+                <p class="comment-data">
+                  <%= child.try(:content).try(:html_safe) %>
+                </p>
+              </div>
+              <div class="clear"></div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <script type="text/javascript">
+        $(document).ready(function(){
+          $('.<%= "new_comment_#{comment.id}" %>').click(function(evt) {
+            $('.<%= "span_comment_#{comment.id}" %>').show();
+            $(this).hide();
+            evt.preventDefault();
+          });
+        });
+      </script>    
+       <div class="comment-input-container">
+         <div style="display:none;margin-top: 10px;margin-left:30px;" class="span_comment_<%= comment.id %>">
+          <%= form_for Comment.new do |f| %>
+            <%= f.text_area :content, :class => "comment_#{comment.id} child-comment-textarea", :placeholder => "Enter comment here" %>
+            <%= f.hidden_field :commentable_type, :value => comment.class.to_s %>
+            <%= f.hidden_field :commentable_id, :value => comment.id.to_s %>
+            <%= f.hidden_field :commented_by_id, :value => current_user.id %>
+            <%= f.hidden_field :parent_id, :value => comment.id %>
+            <br/>
+            <%= f.submit "Save", :class => "button", :id => "submit" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="clr"></div>
+    </li>
+    <% end %>
+</ul>

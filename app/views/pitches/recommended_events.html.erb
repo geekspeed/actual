@@ -1,0 +1,119 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Project Feed" %>
+<% end %>
+
+<div id="rightcontent">
+  <div class="table-responsive">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading relative_panel_head">
+            <div class="panel-title title_option">
+              <h3>Recommended Events</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body" style="padding-top:15px;">
+            <table class="table table-striped program_table table-bordered">
+              <tr>
+                <th width="20%">Date &amp; Time</th>
+                <th width="40%">Event</th>
+                <th width="20%">Event Description</th>
+                <th width="20%">Sign up</th>
+              </tr>
+              
+              <% i = @event_sessions.count %>
+          
+              <% @event_sessions.each do |session| %>
+                <tr id="session_<%=i%>">
+                  <td><%= session.date.try(:event_format) %><br><%= "#{session.time_from} - #{session.time_to}" %></td>
+                  <td style="text-align: left"><%= "#{session.try(:program_event).try(:title)} at #{session.try(:location)}" %></td>
+                  <td><a href="#session_<%=session.id%>" class="fancybox">More Detail</a></td>
+                  <td>
+                    <% if current_user and EventRecord.for_program(@program.id).where(event_session_id: session.id, user_id: current_user.id ).first%>
+                      <% er = EventRecord.for_program(@program.id).where(event_session_id: session.id, user_id: current_user.id ).first%>
+                      <% if er %>
+                        <%= er.rejected_at ? "Rejected" : "Registered" %>
+                      <%end%>
+                    <% else %>
+                      <button type="button" class="btn btn-default" style="margin-right:1%;min-width: 65%;" onclick="window.location='<%=accept_program_event_path(@program, session.try(:program_event), :for => session )%>'"><span class="glyphicon glyphicon-plus-sign"> </span> Click to Attend Event</button>
+                    <% end %>
+                  </td>
+                  <%= render "programs/show/program_event_detail", :session => session %>
+                </tr>
+                
+                <%i-=1%>
+                
+              <% end %>
+            </table>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading relative_panel_head">
+            <div class="panel-title title_option">
+              <h3>Events Attended</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body" style="padding-top:15px;display: none;">
+            <table class="table table-striped program_table table-bordered">
+              <tr>
+                <th width="20%">Date &amp; Time</th>
+                <th width="30%"> Event </th>
+                <th>Session Description</th>
+                <th width="10%">Remarks</th>
+              </tr>
+              
+              <% i = @custom_events.count %>
+              
+              <% @custom_events.each do |ce| %>
+                <tr id="custom_event__<%=i%>">
+                  <% user = User.where(id: ce.created_by_id).first %>
+                  <td><%= ce.try(:session_date) %><br><%= "#{ce.try(:duration_hours)} Hours #{ce.try(:duration_mins)} Minutes" %></td>
+                  <td style="text-align: left"><%= ce.try(:title) %></td>
+                  <td><%= ce.try(:description).present? ? ce.try(:description) : "With #{user.full_name} #{}"%></td>
+                  <td>Attended</td>
+                </tr>
+                <%i-=1%>
+              <% end %>
+
+              <% custom_events_ids = @custom_events.pluck(:event_session_id).map(&:to_s)%>
+              <% @mark_as_present_events.each do |event| %>
+                <% session = event.event_session %>
+                <%if !custom_events_ids.include?(session.id.to_s)%>
+                  <tr>
+                    <td><%= session.try(:date) %><br>
+                      <%= time_duration_of_event_session(session)%>
+                    </td>
+                    <td style="text-align: left"><%= session.program_event.try(:title) %></td>
+                    <td><%= session.try(:description) %></td>
+                    <td>Attended</td>
+                  </tr>
+                <%end%>
+              <% end %>
+            </table>
+          </div><!-- panel-body -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    </script>
+<% end %>

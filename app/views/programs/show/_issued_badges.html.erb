@@ -1,0 +1,72 @@
+<div id="rightcontent"  class="two_sided_right_content">
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div style="height: 20px">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Badge <%= @app_badge.name %> Earner </h3>
+            <span></span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <thead>
+                <tr role="row">
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Issue fname</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Issue lname</th> 
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Date Issued</th>   
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Manage</th>
+                </tr>
+              </thead>
+              
+              <tbody aria-relevant="all" aria-live="polite" role="alert">
+                <% @user_badges.each do |user_badge|%>                
+                  <% if user_badge.present?%>
+                    <% earner = user_badge.user %>
+                    <tr>
+                      <td><%= earner.first_name %></td>
+                      <td><%= earner.last_name %></td>
+                      <td><%= user_badge.created_at %></td>                    
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-edit'></i> #{user_badge.revoked ? "Revoked" : "Revoke"}".html_safe, '#', :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left revoke-badge", :"data-url" => (revoke_user_badge_program_path(user_badge: user_badge.id)) , :"data-id" => user_badge.id, id: user_badge.id, confirm: "Are you sure?" %> 
+                         <%= link_to "Detail<i class='glyphicon glyphicon-edit' </i>".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"##{user_badge.id}", "id" => "badge_assertion",  :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left" %>                       
+                      </td>
+                     <%= render "programs/show/badge_assertion", user_badge: user_badge %>
+                    </tr>
+                    
+                  <% end %>
+                <%end%>
+              </tbody>
+            </table>
+        </div> 
+      </div>
+    </div>
+  </div>
+ 
+</div>
+<script>
+ $(document).on('click', '.revoke-badge', function(){
+  var url = $(this).data("url");
+  var id = $(this).data("id");
+   $.ajax({
+      url: url,
+      data: {},
+      method: "get",
+      success: function(data) {
+          $("#"+ id).html("<i class='glyphicon glyphicon-edit'></i>"+data.revoked);
+          }
+    });          
+  });
+</script>

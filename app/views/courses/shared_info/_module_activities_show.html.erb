@@ -1,0 +1,40 @@
+<% @modules.each_with_index do |course_module,index| %>
+  <% if !course_module.module_activities.blank? %>
+    <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-bordered table-striped datatable dataTable course_lessons_table" >
+            <thead>
+              <tr class="hide" data-tagging="<%=course_module.keywords.collect{|p| p.gsub(" ","-")}.join(" ") %> All" role="row">
+                <th>
+                  <span class="cource_indicator <%=module_status_class(course_module)%>"></span>Module <%=index+1%>: <%=course_module.title %>
+                 <div class="lesson_data">
+                    <a href="#"><i class="glyphicon glyphicon-time"></i><%= module_duration(course_module)%></a>
+                    <a href="#"><i class="glyphicon glyphicon-file"></i> <%= course_module.try(:description) %></a>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if !course_module.module_activities.blank? %>
+                <% course_module.module_activities.each_with_index do |activity,count| %>
+                <tr class="hide" data-tagging="<%=course_module.keywords.collect{|p| p.gsub(" ","-")}.join(" ")+" "+activity.keywords.collect{|p| p.gsub(" ","-")}.join(" ") %> All">
+                  <td>
+                    <a href="<%= "#{polymorphic_path([@program, @course, course_module, activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="lesson_title">
+                      <span class="cource_indicator <%=activity_status_class(activity)%>"></span>Activity <%=count+1%>:  <%= activity.try(:title) %>
+                    </a>
+                    <div class="lesson_data">
+                      <a href="<%= "#{polymorphic_path([@program, @course, course_module, activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>"><i class="glyphicon glyphicon-time"></i><%= activity_duration(activity)%></a>
+                      <a href="<%= "#{polymorphic_path([@program, @course, course_module, activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>"><i class="glyphicon glyphicon-file"></i> <%= activity.try(:description) %></a>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>  
+            </tbody>
+          </table>
+        </div>
+      </div>        
+    <% else %>
+      <p class="no_activity">You have not added any activities yet</p> 
+    <% end %>
+  <% end %>
+<% end %> 

@@ -1,0 +1,76 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<style type="text/css" media="screen">
+  a{
+color:  <%= menubar_color %>;
+}
+</style>
+
+ <% if @pitch.owner?(current_user) || @pitch.member?(current_user) or need?(["company_admin", "program_admin"], current_organisation)%>
+        <div style="display: none">
+          <div id="inviteMember">
+            <div class="member_row_copy" style="display: none">
+              <div class="member_row form-inline">
+                <div class="form-group"><%= text_field_tag "members[][first_name]", nil, placeholder: "First Name", style: "width: 130px", :class=>"form-control" %></div> 
+                <div class="form-group"><%= text_field_tag "members[][last_name]", nil, placeholder: "Last Name", style: "width: 130px", :class=>"form-control" %></div> 
+                <div class="form-group"><%= text_field_tag "members[][email]", nil, placeholder: "Email", style: "width: 305px; margin-right: 0px", class: "required form-control required_email" %></div> 
+              </div>
+            </div>
+            <%= form_tag (is_subdomain ? polymorphic_url([:be_member, @program, @pitch], subdomain: false) : polymorphic_url([:be_member, @program, @pitch])), method: :put do %>
+              <p>Hi <%= current_user.full_name %>! Please specify the team members you would like to invite.</p>
+              <br />
+              <div class="member_container">
+                <div class="member_row form-inline">
+          
+                  <div class="form-group"><%= text_field_tag "members[][first_name]", nil, placeholder: "First Name", style: "width: 130px", :class=>"form-control" %></div> 
+                  <div class="form-group"><%= text_field_tag "members[][last_name]", nil, placeholder: "Last Name", style: "width: 130px", :class=>"form-control" %></div>
+                  <div class="form-group"><%= text_field_tag "members[][email]", nil, placeholder: "Email", style: "width: 305px; margin-right: 0px", class: "required form-control required_email" %></div>
+                     
+                  </div>
+              </div>
+              <a href="#" class="add-member pull-right">+ Add another team member</a>
+<div class="clear"></div>
+<br />
+              <%= submit_tag "Send Invitation", class: "lightbox_sn_close pull-right submit_inv", id: "submit" %>
+<% end %>
+          </div>
+          <script type="text/javascript" charset="utf-8">
+            jQuery(document).ready(function() {
+              $("#inviteMember form").on("click", ".add-member", function(e){
+                var cont = $(this).parents("#inviteMember").find(".member_row_copy").html();
+                console.log(cont);
+                $(this).siblings('.member_container').append(cont);
+                e.preventDefault();
+              });
+              
+              $(".submit_inv").click(function(e){
+                count = 0
+                $(".member_container .required_email").each(function(){
+                  email_format = validEmail($(this).val());
+                  if($(this).val() == "" || !email_format){
+                    count=count+1;
+                 }
+                });
+                if(count > 0)
+                {
+                  e.preventDefault();
+                  alert("Email field is required and format should be correct");
+                }
+              });
+            });
+            
+            function validEmail(v) {
+              var r = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+              return (r.test(v))
+            }
+          </script>
+        </div>
+      <% end %>
+
+      <style>
+      .team-members{float: right;
+        margin-top: -32px;
+        font-size: 13px;
+        }
+      </style>

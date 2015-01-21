@@ -1,0 +1,78 @@
+<% page = "report_program"; ppage = "saved_graphs"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-saved gn-icon-large"></i>
+      Saved Graphs
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Saved Graphs lets you save all the various graphs you have created and decide to display them on the dashboard"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_reportings_path(context_program) %>>Report</a> / <a href="#" class="active_bread">Saved Graphs</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+	<h2 class="titleLine title-normal"><span style="font-weight:bold;">Saved Graphs</span></h2>
+    <% if !@reportings.blank? %>
+	    <div class="row">
+			<div class="col-md-12">
+				<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title title_option">
+							<h3>Saved graphs list</h3>
+						</div>
+						<div class="panel-options">
+							<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+						</div>
+					</div>
+					<div class="panel-body">
+						<table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+							<thead>
+								<tr role="row">
+									<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 330px;" aria-label="Student Name: activate to sort column ascending">Graph name</th>
+									<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 190px;" aria-label="Average Grade: activate to sort column ascending">Graph type</th>
+									<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 400px;" aria-label="Curriculum / Occupation: activate to sort column ascending">Date created</th>
+									<th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 604px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+								</tr>
+							</thead>
+							
+							
+							<tbody role="alert" aria-live="polite" aria-relevant="all">
+								<% @reportings.each_with_index do |report| %>
+								<tr class="odd">
+									<td class=" "><%= report.graph_name %></td>
+									<td class=" "><%= report.graph_type %></td>
+									<td class=" "><%= report.created_at.app_format %></td>
+									<td class=" ">	
+										<% if !report.dashboard %>
+											<%= link_to "<i class='glyphicon glyphicon-plus'></i> Add to dashboard".html_safe,added_to_dashboard_program_reportings_path(context_program,:report_id=>report.id), :method=>"put", :class=>"new_activity_box btn btn btn-info btn-sm btn-icon icon-left" %>	
+										<% else %>
+											<%= link_to "<i class='glyphicon glyphicon-remove'></i> Remove from dashboard".html_safe,remove_from_dashboard_program_reportings_path(context_program,:report_id=>report.id), :method=>"put", :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left" %>
+										<% end %>
+					              		<%= link_to "<i class='glyphicon glyphicon-eye-open'></i> View".html_safe,show_chart_program_reportings_path(context_program,:report_id=>report.id), :remote=>true, :class=>"new_activity_box btn btn btn-success btn-sm btn-icon icon-left view-graph" %>
+					              		<%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe,remove_report_program_reportings_path(context_program,:report_id=>report.id), :method=>"delete", :class=>"btn btn-danger btn-sm btn-icon icon-left" %>
+									</td>
+								</tr>
+								<% end %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% else %>
+		<p class="no_activity">You have not added any graphs yet</p> 
+	<% end %>
+</div>
+</div>
+<script>
+ $(function() {
+   $(".view-graph").bind("ajax:beforeSend", function(){
+      $.fancybox({ content:"Loading Graph...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".view-graph").bind("ajax:complete", function(){
+    })
+   });
+ </script>

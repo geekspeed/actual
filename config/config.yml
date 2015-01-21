@@ -1,0 +1,40 @@
+common: &common
+  linked_in:
+    AppId: "y04eyhv8dzyv"
+    AppSecret: "MBOkmbty9Vg6tL1R"
+
+development:
+  <<: *common
+  embedly:
+    key: "0d06d8c5a155488998b48a75b2684b06"
+  facebook:
+    AppId: "585311481543324"
+    AppSecret: "b5d2726bcee454a13ebcac25517a2b4b"
+  twitter:
+    AppId: "exNKCpJNwvX5wcqseOlHg"
+    AppSecret: "sFzwpSOoa1ctasOoC7tiAavXyrbIdLQ5XVe9irW85c"
+
+test:
+  <<: *common
+
+staging:
+  <<: *common
+  embedly:
+    key: "0d06d8c5a155488998b48a75b2684b06"
+  facebook:
+    AppId: "585311481543324"
+    AppSecret: "b5d2726bcee454a13ebcac25517a2b4b"
+  twitter:
+    AppId: "exNKCpJNwvX5wcqseOlHg"
+    AppSecret: "sFzwpSOoa1ctasOoC7tiAavXyrbIdLQ5XVe9irW85c"
+
+production:
+  <<: *common
+  embedly:
+    key: "9a543e57842e443283940e63e0538945"
+  facebook:
+    AppId: "374058769372699"
+    AppSecret: "7824c5f173dcbb15007a75cffe996d8d"
+  twitter:
+    AppId: "CfT9pUioqEsqmRpBXlahw"
+    AppSecret: "e8bGabadA52XOa5trE5yrM2WnSc9zLKxzaUQ7BtqU"

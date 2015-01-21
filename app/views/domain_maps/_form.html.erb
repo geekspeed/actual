@@ -1,0 +1,81 @@
+<%= form_for(@domain_map) do |f| %>
+  <% if @domain_map.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@domain_map.errors.count, "error") %> prohibited this domain_map from being saved:</h2>
+
+      <ul>
+      <% @domain_map.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="domain-map">
+    <div class="form-group">
+      <%= f.label :domain,"Enter the url you wants to map to Apptual" %>
+      <label class="domain-field">http://</label>
+      <%= f.text_field :domain, :placeholder => "yourwebsite.com", :class=>"required form-control #{@req_error}" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :analytics_id,"Enter your google analytics id" %>
+      <%= f.text_field :analytics_id, :placeholder => "Google analytics id", :class=>"form-control #{@req_error}" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :eventbrite_app_key,"Enter your EventBrite application key" %>
+      <%= f.text_field :eventbrite_app_key, :placeholder => "EventBrite Application key", :class=>"form-control #{@req_error}" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :eventbrite_oauth_client_secret,"Enter your OAuth Client Secret key" %>
+      <%= f.text_field :eventbrite_oauth_client_secret, :placeholder => "OAuth Client Secret key", :class=>"form-control #{@req_error}" %>
+    </div>
+    <div class="form-group overflow-radio">
+      <%= f.label "Specify how you want this domain to be linked" %>
+      <label class="radio-inline">
+        <%= f.radio_button :map_type, "organisation", :checked=>"checked" %>To my company Page 
+      </label>
+      <label class="radio-inline">
+        <%= f.radio_button :map_type, "program" %>To a specific program
+      </label>
+    </div>
+    <div class="form-group">
+      <div id="program_list" style="display:none;">
+        <%= f.label :program_id,"Select the program you want to link the domain to" %>
+        <%= f.select :program_id, current_organisation.programs.collect {|p| [ p.title, p.id ] }, {}, :class=>"form-control s" %>
+      </div>
+    </div>
+    <div class="domain-instructions">
+      <h3>INSTRUCTIONS</h3>
+      Please add a domain as www.domain.com / www.subdomain.domain.com or domain.com / subdomain.domain.com.<br/><br/>
+      To complete this process you need to create A record on your domain hosting provider e.g. GoDaddy which points to the following IP address ( <%= @server_ip %> ) . 
+      <br/><br/>
+      Once this done, it may up to 48 hours for the domain to propagate and point Apptual, so please give it some time.
+    </div>
+  </div>
+  <div class="actions">
+    <%= f.submit :id=>"submit" %>
+  </div>
+<% end %>
+<style>
+.domain-instructions {border:2px solid; padding:10px;margin-top:30px;border-radius:5px;}
+.domain-map label{width:35%;}
+.domain-map .radio-inline input[type=radio]{width:14px;}
+.domain-map .overflow-radio{overflow: hidden;}
+.domain-map .radio-inline{ font-size: 11px;width: 165px;}
+label.domain-field{
+width: 47px;
+font-size: 14px;
+margin-top: 4px;
+font-weight: normal !important;
+}
+</style>
+<script>
+$(document).ready(function(){
+  $("#domain_map_map_type_program").click(function(){
+    $("#program_list").show();
+  });
+  $("#domain_map_map_type_organisation").click(function(){
+    $("#program_list").hide();
+  });
+  if($('#domain_map_map_type_program').is(':checked')) { $("#program_list").show();}
+});
+</script>

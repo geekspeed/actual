@@ -1,0 +1,50 @@
+<%= content_tag :tbody do%>
+  
+  <%= content_tag :tr, class: "option_row row col-md-12" do%>
+    <div class="row">
+      <%=content_tag :div, class: "col-md-2" do%>
+        <%= content_tag :td, class: "lbl col-md-2" do%>
+          <%= label_tag "Question Text" %>
+        <% end %>
+      <% end %>
+      <%=content_tag :div, class: "col-md-8" do%>
+        <%= content_tag :td, class: "col_setting col-md-8" do %>
+          <%= text_field_tag "question[][option_fields][][question_text]", field.try(:question_text), class: "form-control" %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  <% options = ques_type - ["branch_field"]%>
+  <div class="clr"></div>
+  <%= content_tag :tr, class: "option_row row col-md-12" do%>
+    <div class="row">
+      <%=content_tag :div, class: "col-md-2" do%>
+        <%= content_tag :td, class: "lbl col-md-2" do%>
+          <%= label_tag "Question Type" %>
+        <% end %>
+      <% end %>
+      <%=content_tag :div, class: "col-md-8" do%>
+        <%= content_tag :td, class: "col_setting col-md-8" do %>
+          <%= select_tag "question[][option_fields][][question_type]",content_tag(:option,'Choose Question Type',:value=>"")+options_from_collection_for_select(options, :to_s, :humanize, field.try(:question_type)), class: "form-control",:required => true%>
+          <%= hidden_field_tag "question[][option_fields][][parent_option]", field.try(:parent_option), class: "option_name_field"%>
+        <% end %>
+      <% end %>
+    </div>
+    <br>
+  <% end %>
+  <%= content_tag :tr, class: "option_row row options col-md-12" ,:style =>  (field and display_options(field)) ? "" : "display:none;" do%>
+    <div class="row">
+      <%=content_tag :div, class: "col-md-2" do%>
+        <%= content_tag :td, class: "lbl col-md-2" do%>
+          <%= label_tag "Answer Options" %> 
+        <% end %>
+      <% end %>
+      <%=content_tag :div, class: "col-md-8" do%>
+        <%= content_tag :td, class: "col_setting col-md-8" do %>
+          <%= text_area_tag "question[][option_fields][][answer_options]", answer_options(field), rows: 5, class: "options_field_area form-control",:placeholder => "Comma seperated options" %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  
+<% end %>

@@ -1,0 +1,12 @@
+APP_NAME = "Apptual"
+VERSION = "0.1"
+if Rails.env == "development"
+  EventBrite_KEY = "LNLQ5IW2OJDNEH2ELW"
+  EvenBrite_secret = "LTJEGCLFDW4PHFN2TZDYH2JTNMT7QDM6ZWIULN2BNHOK3MY46L"
+elsif Rails.env == "staging"
+  EventBrite_KEY = "HMUTIEURYAMAUQCKHD"
+  EvenBrite_secret = "NZBUHWWKZCHAADWFLVGLXPSMSWRCVOODPGEDLKWBP4JQW4LTIF"
+elsif Rails.env == "production"
+  EventBrite_KEY = "S66L53IP2AAGPSXMH6"
+  EvenBrite_secret = "EFN3WV2P4R5JPMA4NSXTR2XVUC5T2ZZFIRUM5KJIGSVK454B43"
+end

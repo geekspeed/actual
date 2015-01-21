@@ -1,0 +1,23 @@
+<div class="remind_survey_title">
+  <h1>Reminder</h1>
+  <p>Please complete your following pending surveys</p>
+</div>
+<div class="panel-group">
+  <% a= 1 %>
+  <% Survey.all.each_with_index do |survey, i| %>
+    <% if survey_incomplete?(survey) and remind_survey?(survey)%>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <span class="question_no"><%= a %></span>
+              <span class="question_text">
+              <%= link_to survey.name, answers_program_survey_path(survey.program, survey) %>
+              </span>
+            <div class="clear"></div>
+          </h4>
+        </div>
+      </div>
+      <% a= a+1 %>
+    <% end %>
+  <% end %>
+</div>

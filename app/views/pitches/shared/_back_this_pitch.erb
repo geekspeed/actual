@@ -1,0 +1,36 @@
+<% if context_program.virtual_currency? %>
+<li class="branded">
+  <%= link_to "Back this #{t("pitch")}<i class='glyphicon glyphicon-thumbs-up' style='text-align:right;'></i>".html_safe, "#backthispitch", :class => "fancybox_small" %>
+    <div class="back-pitch-text">You can back 5 more <%= t("pitch", "p") %> and have $10 Virtual Dollars to spend on <%= t("pitch", "p") %> you back.</div><br>
+    <a href="#backthispitch" class="fancybox_small back-pitch-link">Click here to manage your list</a>
+</li> 
+
+  <!-- lightboxes -->
+  <div style="display: none">
+    <div id="backthispitch">
+      At the start of a program you are given 10 Virtual Dollars - the symbol on Apptual is V$. You get to spend your prescious V$ on up to 5 <%= t("pitch", "p") %>.<br>
+      Backing <%= t("pitch", "p") %> both helps you develop a nose for great ideas as well as it helps the community identigy the best ideas.
+      <br><br>
+      <div class="inner_box">
+        <div style="margin-bottom: 10px;">Back this <%= t("pitch") %> with:</div>
+        <div id="back-pitch-slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
+          <div class="ui-slider-range ui-widget-header ui-slider-range-max" style="width: 100%;"></div>
+          <a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a>
+        </div> 
+        <div class="amount_box_cont">V$ <input type="text" id="amount_box" name="amount_box" value="0" readonly="readonly">
+        </div>
+        <div class="clr" style="height: 10px"></div>
+        Your Virtual Dollar bank balance = $10<br>
+        So far you have backed 0 out of 5 <%= t("pitch", "p") %>                                                 
+      </div>
+      <br>
+      <a href="#" class="button btn sub-btn" id="send_back">Back this <%= t("pitch") %></a>
+      <div class="clr"></div>
+      <br>
+      <div class="inner_box">
+        <h2><%= t("pitch", "p") %> I back:</h2>
+        <div id="mybacks"></div>
+      </div>
+    </div>
+  </div>
+<% end %>

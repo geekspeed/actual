@@ -1,0 +1,37 @@
+<% @program ||= context_program %>
+<% users = app_badge.user_badges.where(active: false).map(&:user).sort! { |a,b| a.first_name.try(:downcase) <=> b.first_name.try(:downcase) }
+%>
+<div class="eventInsForm modal fade" id=<%= "#{app_badge.id}" %> tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><b>Manual Issue Badge</b></h4>
+      </div>
+        <div class="modal-body">
+          <%= form_tag issue_manual_badge_program_badge_url(@program, app_badge) do%>
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div>Issuing Badge </div>
+              </div>
+              <div class="col-sm-8">
+                <%= app_badge.name %>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-sm-4 setting-font">
+                <div>Recipient</div>
+              </div>
+              <div class="col-sm-8">
+                <%= select_tag "badges_for", options_from_collection_for_select(users, :id, :first_name), multiple: true, id: "from"%>
+              </div>
+            </div>
+            <br />
+            <%= submit_tag "Issue", class: "btn btn-primary btn-small"%>
+            </div>
+          <%end%>
+       
+    </div>
+  </div>
+</div>

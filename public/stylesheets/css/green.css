@@ -1,0 +1,100 @@
+a, .text-primary, .btn-primary .badge, .btn-link,a.list-group-item.active > .badge,.nav-pills > .active > a > .badge, p.drop-caps:first-child:first-letter, .accent-color-text,  .header-style5 .main-menu > ul > li:hover > a, .header-style5 .main-menu > ul > li > a:hover, .header-style6 .main-menu > ul > li.active > a, .header-style6 .main-menu > ul > li:hover > a, .footer-style2 .site-footer-top a, .footer-style3 .social-icons-bar a, .header-style6 .site-header a:hover, .header-style6 .site-header li.active a, .portfolio-item:hover .action-icons a, .search-icon a:hover, ul.inline li i.fa, .services-list li i.fa, .dnav1 .prev:hover, .dnav1 .next:hover, .products-list li .product-price, .products-list li .product-details h3 a:hover, .team-position, .pricing-column h3, .cart-button .cart-items li a, .blog-posts .post .comments-likes a:hover, .widget.sidebar-widget h4, ul.checks > li > i, ul.hearts > li > i, ul.carets > li > i, ul.chevrons > li > i, .features:hover a{
+	color:#39c1a7;
+}
+.main-menu > ul > li > a{
+	color: #383838;
+}
+.main-menu > ul > li > a:hover{
+	color: #39c1a7;
+}
+a:hover{
+	color:#2889ca;
+}
+p.drop-caps.secondary:first-child:first-letter, .accent-color, .fa.accent-color, .btn-primary,
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active,
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus,
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus,
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus,
+.label-primary,
+.progress-bar,
+a.list-group-item.active,
+a.list-group-item.active:hover,
+a.list-group-item.active:focus,
+.panel-primary > .panel-heading,
+.header-left-bg, .header-style3 .main-menu > ul > li:hover > a, .header-style3 .main-menu > ul > li > a:hover, .ic-lg:hover, .features:hover .ic-lg, .accordion-heading .accordion-toggle.active, .carousel-indicators .active, .sequence-pagination li.current a, .sequence-next:hover,
+.sequence-prev:hover, .pricing-column.highlight h3, .products-list .product-image .add-to-cart, .owl-theme .owl-controls .owl-page.active span,
+.owl-theme .owl-controls.clickable .owl-page:hover span, .main-menu > ul > li > ul > li > a:hover, .main-menu .megamenu-container ul li a:hover, .tp-caption.with_colored_background, .features .features-icon, .header-style6 .main-menu > ul > li:hover > a, .header-style3 .main-menu > ul > li > ul {
+  background-color: #39c1a7;
+}
+.main-menu > ul > li > ul > li > a:hover{
+	color:#fff !important;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary, .footer-style3 .social-icons-bar a:hover, .nav-tabs li a:active, .nav-tabs li.active a {
+  color: #fff;
+}
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus,
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus,
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active,
+a.list-group-item.active,
+a.list-group-item.active:hover,
+a.list-group-item.active:focus,
+.panel-primary,
+.panel-primary > .panel-heading{
+	border-color:#39c1a7;
+}
+.panel-primary > .panel-heading + .panel-collapse .panel-body, .header-style5 .main-menu > ul > li:hover > a, .header-style5 .main-menu > ul > li > a:hover, .header-style5 .main-menu > ul > li.active > a{
+	border-top-color:#39c1a7;
+}
+.panel-primary > .panel-footer + .panel-collapse .panel-body{
+	border-bottom-color:#39c1a7;
+}
+.ic-lg{
+	border-color:#39c1a7;
+	color:#39c1a7;
+}
+.nav-tabs li a:hover, .nav-tabs li a:active, .nav-tabs li.active a{
+	border-top-color:#39c1a7;
+	color:#39c1a7;
+}
+.portfolio-item:hover .project-overlay, .blog-image:hover .blog-overlay, .team-item:hover .team-overlay, .parallax-overlay, .services-overlay{
+	background-color:rgba(97,216,193,.7)
+}
+.reading-block, blockquote{
+	border-left-color:#39c1a7;
+}

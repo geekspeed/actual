@@ -1,0 +1,85 @@
+<div class="block">
+  <h2 class="titleLine">Progress Task Manager</h2>
+  <%= form_for @task_manager, :url => task_manager_program_phases_path(context_program), :html => {:id => "progress_manager"} do |f| %>
+    <table class="progress_manager table table-striped">
+      <tr>
+        <td>Metric</td>
+        <td>Number<br />required</td>
+        <td>Deadline</td>
+        <td>Average<br />number<br />fulfilled</td>
+        <td>% of teams not<br />achieved target</td>
+        <td>% of teams<br />achieved target</td>
+      </tr>
+      <tr>
+        <td>Hustles required</td>
+        <td>
+          <%= f.text_field :hustle_required, :class=>"form-control" %>
+        </td>
+        <td>
+          <%= f.text_field :hustle_required_deadline, :class => "datepicker_std form-control" %>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Iterations required</td>
+        <td>
+          <%= f.text_field :iteration_required, :class=>"form-control" %>
+        </td>
+        <td>
+          <%= f.text_field :iteration_required_deadline, :class => "datepicker_std form-control" %>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Items of feedback required</td>
+        <td>
+          <%= f.text_field :feedback_required, :class=>"form-control" %>
+        </td>
+        <td>
+          <%= f.text_field :feedback_required_deadline, :class => "datepicker_std form-control" %>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Grace period permitted for<br />efficiency qualification</td>
+        <td>
+          <%= f.text_field :grace_period_required, :class=>"form-control" %>
+        </td>
+        <td>
+          <%= f.text_field :grace_period_required_deadline, :class => "datepicker_std form-control" %>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Progress updates required</td>
+        <td>
+          <%= f.text_field :progress_update_required, :class=>"form-control" %>
+        </td>
+        <td>
+          <%= f.text_field :progress_update_required_deadline, :class => "datepicker_std form-control" %>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+	<div>
+	<i class="pull-left">(If you save new targets, the previous data is reset)</i>
+	<%= f.submit "Save new targets", :id => "submit", :class => "pull-right" %>
+<div class="clear"></div>
+	</div>
+    
+
+        
+      
+  <% end %>
+</div>

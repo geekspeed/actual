@@ -1,0 +1,42 @@
+<h2 class="titleLine title-normal"><span>Event sessions</span>
+  <div class="outline-action-links pull-right">
+    <%= program_event.link_to_add "+ Add new session", :event_sessions , :class=>" clr"%>
+  </div>
+</h2>
+<%= program_event.fields_for :event_sessions , program_event.object.event_sessions.build do |event_session | %>
+	<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+		<thead>
+			<tr role="row">
+				<th aria-label="Student Name: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Location</th>
+				<th aria-label="Average Grade: activate to sort column ascending" style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Seat no</th>
+				<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Date</th>
+				<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Timings</th>
+				<th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Description</th>
+			</tr>
+		</thead>
+		<tbody aria-relevant="all" aria-live="polite" role="alert">
+			<tr class="odd">
+				<td><%= event_session.text_field :location, :class => "autogrow form-control form-style-1", :placeholder => "Type title here" %></td>
+				<td><%= event_session.text_field :seat_no, :class => "autogrow form-control form-style-1", :placeholder => "Type seats no here" %></td>
+				<td>
+				  <%= event_session.text_field :date, :class => "datepicker_std form-control form-style-1", :placeholder => "Date from" %>
+				  <br>
+				  <%= event_session.text_field :date_to, :class => "datepicker_std form-control form-style-1", :placeholder => "Date to" %>
+				</td>
+				<td>
+				  <div class='input-append bootstrap-timepicker' style='display: inline;'>
+				    <%= event_session.text_field :time_from, :class => "timepicker input-small", :placeholder => "Type Time From here" %>
+				    <span class='add-on'><i class='icon-time'></i></span>
+				  </div>
+				  <div class='input-append bootstrap-timepicker' style='display: inline;'>
+				    <%= event_session.text_field :time_to, :class => "timepicker input-small", :placeholder => "Type Time To here", style: "margin-top:5px;" %>
+				    <span class='add-on'><i class='icon-time'></i></span>
+          </div>
+				</td>
+				<td>
+				  <%= event_session.text_area :description, :class => "autogrow form-control form-style-1"%>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+<% end %>

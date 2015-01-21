@@ -1,0 +1,284 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<% page ||= "community" %>
+
+<!-- <div id="sidebar" class="navbar"> -->
+  <ul id='leftmenu-drop-acc' class="dropdown-menu nav">
+    <li class="<%= 'active' if page == "community" %> left_menu_pitches">
+      <%= link_to t("pitch", "p"), root_path %>
+    </li>
+    <% if context_program %>
+      <li class="<%= 'active' if page == "community_feed" %> no-padding">
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default panel-dropdown-menu">
+            <div class="panel-heading panel-pitch-detail panel-dropdown-menu-head">
+              <h4 class="panel-title left_menu_community_feed">
+                <%= link_to "Community Feed", program_community_feeds_path(context_program) %>
+                <%= link_to "", "#collapse-feeds", :"data-toggle" => "collapse", :"data-field-id" => "feed", :"data-parent" => "accordion", :class => "glyphicon-arrow-overview glyphicon glyphicon-chevron-down glyphicon-color pull-right"  %>
+                <div class="clear"></div>
+              </h4>
+            </div>
+            <div id="collapse-feeds" class="panel-collapse collapse">
+              <div class="panel-body expand_menu panel-dropdown-menu-body">
+                <% tags_for_filter.each do |tag| %>
+                  <%= link_to "#{tag}", program_community_feeds_path(context_program, tag: tag), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params['#{filter.code}'] == '#{option}' ? 'active' : ''}" %></br>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    <% end %>
+    <li class="<%= 'active' if page == "mentor" %> no-padding">
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-dropdown-menu">
+          <div class="panel-heading panel-pitch-detail panel-dropdown-menu-head">
+            <h4 class="panel-title left_menu_mentor">
+              <%= link_to t("role_type:mentor", "p"), people_dashboard_path(:code => "mentor") %>
+              <%= link_to "", "#collapse-mentor", :"data-toggle" => "collapse", :"data-field-id" => "mentor", :"data-parent" => "accordion", :class => "glyphicon-arrow-overview glyphicon glyphicon-chevron-down glyphicon-color pull-right"  %>
+            	<div class="clear"></div>
+            </h4>
+          </div>
+          <div id="collapse-mentor" class="panel-collapse collapse">
+            <div class="panel-body expand_menu panel-dropdown-menu-body">
+              <% custom_fields = User.custom_fields.enabled.for_program(get_program).filters %>
+              <% custom_fields.for_anchor("mentor").each do |filter| %>
+                <% filter.options.each do |option| %>
+                  <%= link_to "#{filter.label}:#{option}", people_dashboard_path(:code => "mentor", "custom_fields.#{filter.code}" => option), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params['#{filter.code}'] == '#{option}' ? 'active' : ''}" %></br>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="<%= 'active' if page == "people" %> no-padding">
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-dropdown-menu">
+          <div class="panel-heading panel-pitch-detail panel-dropdown-menu-head">
+            <h4 class="panel-title left_menu_ppl">
+              <%= link_to "Entire Community", people_dashboard_path %>
+              <%= link_to "", "#collapse-people", :"data-toggle" => "collapse", :"data-field-id" => "people", :"data-parent" => "accordion", :class => "glyphicon-arrow-overview glyphicon glyphicon-chevron-down glyphicon-color pull-right"  %>
+            	<div class="clear"></div>
+            </h4>
+          </div>
+          <div id="collapse-people" class="panel-collapse collapse">
+            <div class="panel-body expand_menu panel-dropdown-menu-body">
+              <% custom_fields = User.custom_fields.enabled.for_program(get_program).filters %>
+              <% custom_fields.each do |filter| %>
+                <% filter.options.each do |option| %>
+                  <%= link_to "#{filter.label}:#{option}", people_dashboard_path("custom_fields.#{filter.code}" => option), :style => "text-transform: none; font-weight: normal;font-size:12px;", class: "submenu #{params['#{filter.code}'] == '#{option}' ? 'active' : ''}" %></br>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+<script>
+          $(document).ready(function(){
+            $('.expand_arrow').click(function(event){
+              event.preventDefault();
+               $('.expand_menu').toggle('slow', function() {
+                // Animation complete.
+               });
+            });
+            
+            $('.view_options').click(function(event){
+              event.preventDefault();
+              $('.view_options').removeClass('active');
+              if($(this).data('view') == 'default'){
+                $('.expand_hidden').hide();
+                $('.expand_hidden :first').fadeIn(300);
+                $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+                $('.expand_hidden :first').prev().find('.expand').addClass('.opened_expand').html('-');
+                
+              }else if($(this).data('view') == 'maximise'){
+                $('.expand_hidden').fadeIn(300);
+                $('.expand_hidden').prev().find('.expand').addClass('.opened_expand').html('-');
+              }else{
+                $('.expand_hidden').fadeOut(300);
+                $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+              }
+              $(this).addClass('active');
+            });
+            
+          });
+        </script>
+<style>
+          ul#leftmenu li ul.filtermenu{
+            margin-left:0;
+          }
+          
+          ul#leftmenu li.active ul.filtermenu li, ul#leftmenu li ul.filtermenu li, ul#leftmenu li.active ul.filtermenu li, ul#leftmenu li ul.filtermenu li{
+            margin-bottom: 17px;
+          }
+          
+          ul#leftmenu li ul.filtermenu li a{
+            text-transform:uppercase;
+            color: #434343;
+            font-weight:bold;
+            font-size:15px;
+          }
+          
+          ul#leftmenu li ul.filtermenu li ul.filtermenu li a {
+            text-transform: none;
+            color: #434343;
+            font-weight:normal;
+            font-size:13px;
+          }
+          ul#leftmenu li ul.filtermenu li ul.filtermenu li .subfilter {
+            margin-left: 15px;
+          }
+          ul#leftmenu li ul.filtermenu li ul.filtermenu li .subfilter a {
+            text-transform: none;
+            font-size:11px;
+          }
+          
+          ul#leftmenu li ul.filtermenu a:hover{
+            color: #17a3bf; 
+          }
+          
+          body ul#leftmenu li ul.filtermenu li.active a, .amount_inside {
+            color: #17a3bf;
+            text-decoration:none !important;
+            font-size:15px;
+            font-weight:bold;
+          }
+          
+          .expand_menu a.view_options, a.submenu{
+            font-size:13px !important;
+            display:block;  
+            color: #a4a4a4 !important;
+            text-transform:none !important;
+            margin: 0 0 8px 20px;
+            font-weight:normal !important;
+            text-align: left !important;
+            border-top: none;
+          }
+          .expand_menu a.active{
+            color: #434343 !important;
+          }
+          
+          .expand_menu{
+            margin-top:10px;  
+          }
+          .expand_arrow{
+            margin-left:14px; 
+            margin-top:-4px;  
+          }
+		body ul#leftmenu li a{
+			
+}
+h4.panel-title a:first-child{
+
+}
+.glyphicon {
+padding-left: 0 !important;
+}
+#leftmenu .panel:hover{
+background-color: <%= menubar_color %> !important;
+}
+.body ul#leftmenu li.active .panel{
+background-color: <%= menubar_color %> !important;
+}
+.body ul#leftmenu li.active a{
+color: #fff;
+}
+#leftmenu-drop-acc li{
+padding-left: 30px;
+float: none !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+padding-top: 0 !important;
+}
+#leftmenu-drop-acc li a{
+color: <%= menubar_color %>;
+padding-top: 10px;
+font-size: 12px;
+padding: 8px 15px 10px !important;
+font-weight: normal !important;
+position: relative;
+top:4px;
+}
+#leftmenu-drop-acc li a:hover{
+background:none !important;
+}
+#leftmenu-drop-acc li.active{
+background-color: <%= menubar_color %>;
+}
+#leftmenu-drop-acc li.active a{
+background: none !important;
+color:#fff;
+}
+#leftmenu-drop-acc li:hover {
+background-color: <%= menubar_color %>;
+}
+#leftmenu-drop-acc li:hover a{
+
+}
+#leftmenu-drop-acc li .panel-heading {
+padding: 5px 0;
+}
+#leftmenu-drop-acc li.active .panel-heading {
+background-color: <%= menubar_color %>;
+}
+#leftmenu-drop-acc li .panel-heading:hover {
+background-color: <%= menubar_color %>;
+}
+#leftmenu-drop-acc li .panel-heading:hover a {
+color: #fff;
+}
+#leftmenu-drop-acc li .panel-body {
+padding: 0 0 !important;
+}
+#leftmenu-drop-acc h4.panel-title{
+padding: 0 0;
+}
+#leftmenu-drop-acc  .panel{
+border-bottom: none !important;
+}
+#leftmenu-drop-acc h4 a:first-child{
+float:left;
+}
+.expand_menu a.view_options, a.submenu{
+ border-bottom: 1px solid #EEEEEE;
+    border-top: medium none;
+    color: #444 !important;
+    display: block;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    margin: 0 0 !important;
+    padding:10px 10px 10px 15px !important;
+    text-align: left !important;
+    text-transform: none !important;
+}
+a.view_options:hover, a.submenu:hover{
+color: <%= menubar_color %> !important;
+}
+a.view_options.active, a.submenu.active{
+color: <%= menubar_color %> !important;
+}
+.expand_menu{
+margin-top: 0 !important;
+}
+#leftmenu-drop-acc li a{
+
+}
+#leftmenu-drop-acc li:hover{
+background-color:<%= menubar_color %> !important;
+}
+#leftmenu-drop-acc li span.amount_inside{
+font-size: 12px;
+font-weight: normal;
+color: <%= menubar_color %> !important;
+}
+#leftmenu-drop-acc li:hover span.amount_inside{
+color:#fff !important;
+}
+.no-padding{
+padding: 0 !important;
+}
+        </style>
+<!-- </div> -->

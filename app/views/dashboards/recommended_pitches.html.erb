@@ -1,0 +1,5 @@
+<div class="masonry js-masonry" id="masonry_container" data-masonry-options='{ "columnWidth":".pitch-col", "itemSelector": ".pitch-col", "gutter": 10 }'>
+  <% @pitches.each do |pitch| %>
+    <%= render "pitch_tile", pitch: pitch %>
+  <% end %>
+</div>

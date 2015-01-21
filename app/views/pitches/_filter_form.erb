@@ -1,0 +1,63 @@
+<% if need?(["company_admin", "program_admin"], current_organisation) && !!context_program %>
+  <div class="block filter_block">
+    <%= form_for dashboard_path, method: :get do %>
+      <% options = context_program.pitches.pluck(:tags).flatten
+        options = options.group_by{|x| x}.sort_by{|k, v|  -v.size}.map(&:first)
+       %>
+  		<h2 class="filter_title pull-left">Filters</h2>
+  		<%= submit_tag "Filter", id: "submit", :class=>"pull-right"%>
+      <div class="filter_pack pull-right">
+  			<%= select_tag :tags, options_from_collection_for_select(options, "to_s", "to_s", params[:tags]), :class=>"pull-right form-control filter_select" %>
+  			<%= label_tag :tags, "Having tagged", :class=>"pull-left" %>
+  			<div class="clear"></div>
+  		</div>
+  		<div class="clear"></div>
+    <% end %>
+  </div>
+<%elsif need?(["participant"], context_program) %>
+  <%custom_filter = context_program.custom_filters.where(:ankor => "participant").first%>
+  <%unless custom_filter.try(:rule_type) == "none" %>
+    <% if custom_filter.try(:rule_type) == "project_recomendation" %>
+      <div class="block filter_block">
+        <h2 class="filter_title pull-left">Recommendations</h2>
+        <div class="recomendation_pack pull-right">
+            <%= select_tag :recomendation, content_tag(:option,'All',:value=>"all") + content_tag( :option,'Recommended for you',:value=>"recommended") + options_for_select(@match ? @match : []), {multiple: true, :"data-url"=> recommended_pitches_dashboard_path} %>
+          <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    <%elsif custom_filter.try(:rule_type) == "custom_filter" and !custom_filter.is_private%>
+      <div class="block filter_block">
+        <h2 class="filter_title pull-left">Recommendations</h2>
+        <div class="recomendation_pack pull-right">
+          <%= select_tag :recomendation, content_tag(:option,'All',:value=>"all") + content_tag( :option,'Custom Filtered',:value=>"custom_filter"), {multiple: true, :"data-url"=> recommended_pitches_dashboard_path, :"data-ankor" => "participant"} %>
+          <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    <%end%>
+  <%end%>
+<%elsif need?(["mentor"], context_program)%>
+  <%custom_filter = context_program.custom_filters.where(:ankor => "mentor").first%>
+  <%unless custom_filter.try(:rule_type) == "none"%>
+    <div class="block filter_block">
+      <h2 class="filter_title pull-left">Recommendations</h2>
+      <div class="recomendation_pack pull-right">
+        <%= select_tag :recomendation, content_tag(:option,'All',:value=>"all") + content_tag( :option,'Recommended for you',:value=>"recommended") + options_for_select(@match ? @match : []), {multiple: true, :"data-url"=> recommended_pitches_dashboard_path, :"data-ankor" => "mentor"} %>
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  <%end%>
+<%elsif need?(['selector'], context_program)%>
+
+  <div class="block filter_block">
+    <h2 class="filter_title pull-left">Score Filter</h2>
+    <div class="recomendation_pack pull-right">
+      <%= select_tag :filter_option, content_tag(:option, 'Overall', :value => "overall") + (options_for_select(context_program.try(:due_diligence_matrix).try(:matrices).try(:collect){|d| [d.description, d.id]}) if !context_program.try(:due_diligence_matrix).blank?), {:class=>"pittch_score_filter gn-icon gn-icon-idea", :"data-url" => pitch_score_filter_dashboard_path} %>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+<% end %>

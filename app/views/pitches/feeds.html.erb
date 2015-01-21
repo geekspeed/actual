@@ -1,0 +1,27 @@
+<%#= render "shared/navbar", :page => "pitch" %>
+<%#= sidebar("dashboards/shared/sidebar") %>
+<%#= render "pitches/shared/sidebar", :page => "project_feed" %>
+<%# content_for :bs_sidebar do %>
+  <%#= render "pitches/shared/bs_sidebar", :page => "project_feed" %>
+<%# end %>
+
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Project Feed" %>
+<% end %>
+
+<div id="rightcontent">
+  <%= hidden_field_tag :page_name, "project_feed_page"%>
+	<div style="margin: auto;">
+  	<%= render "shared/feed_form", :community_feed => CommunityFeed.new, post_to: true %>
+    <div class="clear"></div>
+  	<%= render "community_feeds/bs_feeds" %>
+	</div>
+</div><!-- #rightcontent -->
+<% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    </script>
+    
+<% end %>

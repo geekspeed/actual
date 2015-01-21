@@ -1,0 +1,231 @@
+<% background_color = current_organisation.try(:background_color) || "#333" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#07b291" %>
+<% page = page || (locals ? locals[:page] : nil) || nil%>
+
+<% if @program.persisted? %>
+  <%- 
+    summary_path = @program.program_summary.try(:persisted?) ? edit_program_summary_path(@program) : new_program_summary_path(@program)
+    scope_path = @program.program_scope.try(:persisted?) ? edit_program_scope_path(@program) : new_program_scope_path(@program)
+    diligence_path = @program.due_diligence_matrix.try(:persisted?) ? edit_program_due_diligence_path(@program) : new_program_due_diligence_path(@program)
+  -%>
+  <%# content_for :sidebar do %>
+    <div class="gn-scroller">
+      <ul class="gn-menu">
+        <li class="<%= 'active' if page == "program" %>">
+          <%= link_to("Program Designer", edit_program_path(@program), :class=>"gn-icon gn-icon-quill") %>
+        </li>
+        <li class="<%= 'active' if page == "summary" %>">
+          <%= link_to("Program Summary", summary_path, :class=>"gn-icon gn-icon-file") %>
+        </li>
+        <li class="<%= 'active' if page == "scope" %>">
+          <%= link_to("Scope & Settings", scope_path, :class=>"gn-icon gn-icon-cogs") %>
+        </li>
+        <%# if !context_program.master_program? %>
+          <li class="<%= 'active' if page == "invitation" %>">
+            <%= link_to("Roles & Invitations", new_program_invitation_path(@program), :class=>"gn-icon gn-icon-mail") %>
+          </li>
+        <%# end %>
+        <li class="<%= 'active' if page == "due_diligence" %>">
+          <%= link_to("Due Diligence Phase", diligence_path, :class=>"gn-icon gn-icon-star") %>
+        </li>
+        <li class="<%= 'active' if page == "settings" && params[:controller] != "messages" %>">
+          <%= link_to("Semantic", new_polymorphic_path([@program,:setting]), :class=>"gn-icon gn-icon-spinner") %>
+        </li>
+        <li class="<%= 'active' if page == "messages" || params[:controller] == "messages" %>">
+          <%= link_to("System Email Customizer",customize_email_messages_program_messages_path(@program) , :class=>"gn-icon gn-icon-envelope") %>
+        </li>
+        <li class="<%= 'active' if params[:ankor] == "participant" %>">
+          <%= link_to("#{t("role_type:participant")} Registration Form Builder", new_polymorphic_path([context_program, :customisation], :ankor => :participant), :class=>"gn-icon gn-icon-stack_applicant") %>
+        </li>
+        <li class="<%= 'active' if params[:ankor] == "mentor" %>">
+          <%= link_to("#{t("role_type:mentor")} Registration Form Builder", new_polymorphic_path([context_program, :customisation], :ankor => :mentor), :class=>"gn-icon gn-icon-stack-mentor") %>
+        </li>
+      
+        <li class="<%= 'active' if params[:ankor] == "pitch" %>">
+          <%= link_to("#{t("pitch")} Form Builder", new_polymorphic_path([context_program, :customisation], :ankor => :pitch, referee: "Pitch"), :class=>"gn-icon gn-icon-stack-idea") %>
+        </li>
+
+        <li class="<%= 'active' if page == "workspace" %>">
+          <%= link_to("Workspace", polymorphic_path([context_program, :workspace, :index]), :class=>"gn-icon  gn-icon-doc") %>
+        </li>
+
+        <li class="<%= 'active' if page == "community_tab" %>">
+          <%= link_to("Community Page", polymorphic_path([context_program, :community_tab]), :class=>"gn-icon  gn-icon-doc") %>
+        </li>
+
+        <li class="<%= 'active' if page == "course" %>">
+          <%= link_to("Create Course", polymorphic_path([context_program, :courses]), :class=>"gn-icon gn-icon-create-course") %>
+        </li>
+
+        <li class="<%= 'active' if page == "workflows" %>">
+          <%= link_to("Program Workflow", polymorphic_path([context_program, :workflows]), :class=>"gn-icon gn-icon-flip")  %>
+        </li>
+
+         <li class="<%= 'active' if page == "surveys" %>">
+          <%= link_to("Create Survey", new_program_survey_path(context_program), :class=>"gn-icon gn-icon-stack-idea")  %>
+        </li>
+
+        <li class="<%= 'active' if page == "events" %>">
+          <%= link_to("Program Events", polymorphic_path([context_program, :events]), :class=>"gn-icon gn-icon-events")  %>
+        </li>
+
+        <li class="<%= 'active' if controller.controller_name == 'faqs' %>  menu_with_sub">
+          <%= link_to("FAQ", new_program_faq_path(context_program), :class=>"gn-icon gn-icon-question") %>
+					<span class="glyphicon gn-arrow glyphicon-chevron-right"></span>
+					<ul class="gn-submenu" style="display: none;">
+						<% RoleType.on_programs.each do |role| 
+                role_count = Faq.where(role_code: role.code )
+                role_count = role_count.present? ? role_count.count : "0"
+              %>
+						<li class="text_under">
+							<a data-view='default' class='view_options active gn-icon gn-icon-item' href="/programs/<%= @program.id %>/faqs/new" > <%= role.name %> (<%= role_count %>)</a>
+						</li>
+						<% end %>
+					</ul>   
+        </li> 
+
+
+        <li class="<%= 'active' if page == "badge" %>">
+          <%= link_to("Badge", polymorphic_path([context_program, :badges]), :class=>"gn-icon gn-icon-events")  %>
+        </li>
+        
+      </ul>
+    </div>
+  <%# end %>
+<% else %>
+  <%# content_for :sidebar do %>
+    <div class="gn-scroller">
+      <ul class="gn-menu">
+        <li class="active"><a href="#" class="gn-icon gn-icon-quill">Program Designer</a></li>
+        <li><a href="#" class="gn-icon gn-icon-file">Program Summary</a></li>
+        <li><a href="#" class="gn-icon gn-icon-cogs">Scope &amp; Settings</a></li>
+        <li><a href="#" class="gn-icon gn-icon-mail">Phases &amp; Deadlines</a></li>
+        <li><a href="#" class="gn-icon gn-icon-mail">Roles &amp; Invitations</a></li>
+        <li><a href="#" class="gn-icon gn-icon-star">Due Diligence Phase</a></li>
+        <li><a href="#" class="gn-icon gn-icon-stack"><%= "#{t("role_type:participant")} Registration Form Builder" %></a></li>
+        <li><a href="#" class="gn-icon gn-icon-stack"><%= "#{t("role_type:mentor")} Registration Form Builder" %></a></li>
+        <li><a href="#" class="gn-icon gn-icon-stack"><%= "#{t("pitch")} Form Builder" %></a></li>
+      </ul>
+    </div>
+  <%# end %>
+<% end %>
+
+
+<script>
+  $(document).ready(function(){
+    $('.expand_arrow').click(function(event){
+      event.preventDefault();
+       $('.expand_menu').toggle('slow', function() {
+        // Animation complete.
+       });
+    });
+    
+    $('.view_options').click(function(event){
+      event.preventDefault();
+      $('.view_options').removeClass('active');
+      if($(this).data('view') == 'default'){
+        $('.expand_hidden').hide();
+        $('.expand_hidden :first').fadeIn(300);
+        $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+        $('.expand_hidden :first').prev().find('.expand').addClass('.opened_expand').html('-');
+        
+      }else if($(this).data('view') == 'maximise'){
+        $('.expand_hidden').fadeIn(300);
+        $('.expand_hidden').prev().find('.expand').addClass('.opened_expand').html('-');
+      }else{
+        $('.expand_hidden').fadeOut(300);
+        $('.expand_hidden').prev().find('.expand').removeClass('.opened_expand').html('+');
+      }
+      $(this).addClass('active');
+    });
+    
+  });
+  
+  <% content_for :sidebar do %>
+    <%= javascript_include_tag "classie" %>
+    <%= javascript_include_tag "gnmenu" %>
+    <script>
+    $(document).ready(function(){
+      new gnMenu( document.getElementById( 'gn-menu' ) );
+    });
+    </script>
+    
+<% end %>
+</script>
+
+<style>
+  ul#leftmenu li ul.filtermenu{
+    margin-left:0;
+  }
+  
+  ul#leftmenu li.active ul.filtermenu li, ul#leftmenu li ul.filtermenu li, ul#leftmenu li.active ul.filtermenu li, ul#leftmenu li ul.filtermenu li{
+    margin-bottom: 17px;
+  }
+  
+  ul#leftmenu li ul.filtermenu li a{
+    text-transform:uppercase;
+    color: #434343;
+    font-weight:bold;
+    font-size:15px;
+  }
+  
+  ul#leftmenu li ul.filtermenu li ul.filtermenu li a {
+    text-transform: none;
+    color: #434343;
+    font-weight:normal;
+    font-size:13px;
+  }
+  ul#leftmenu li ul.filtermenu li ul.filtermenu li .subfilter {
+    margin-left: 15px;
+  }
+  ul#leftmenu li ul.filtermenu li ul.filtermenu li .subfilter a {
+    text-transform: none;
+    font-size:11px;
+  }
+  
+  ul#leftmenu li ul.filtermenu a:hover{
+    color: #17a3bf; 
+  }
+  
+  body ul#leftmenu li ul.filtermenu li.active a, .amount_inside {
+    color: #17a3bf;
+    text-decoration:none !important;
+    font-size:15px;
+    font-weight:bold;
+  }
+
+  .expand_menu a.view_options{
+    border-top: 1px solid #DDDDDD;
+    color: #A4A4A4 !important;
+    display: block;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    padding: 10px !important;
+    text-align: left;
+    text-transform: none !important;
+  }
+  .expand_menu a.view_options:first-child{
+    border-top: 0;
+  }
+  .expand_menu a.view_options:hover{
+    color: 
+  }
+    .expand_menu a.active{
+      color: #434343 !important;
+    }
+    
+    .expand_menu a.view_options:hover{
+       color:<%= menubar_color %> !important;
+    }
+    
+    .expand_arrow{
+      margin-left:14px; 
+      margin-top:-4px;  
+    }
+  .panel-title a:first-child{
+  float: left;
+  }
+  #collapse-feed{
+  background:#fff;
+  }
+</style>

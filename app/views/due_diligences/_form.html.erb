@@ -1,0 +1,317 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Due Diligence Phase" %>
+<% end %>
+
+<% if context_program.master_program? %>
+<% setting = MasterSetting.for(context_program).first %>
+	<a href="#sec1" name="sec1" class="section_nav"></a>
+  <div class="block">
+    <h2 class="titleLine">Set standard project evaluation metrics across all programs</h2>
+    <table class="settings full_width table">
+      <tbody>
+        <tr class="show_option_mentoring">
+          <td class="lbl">Would you like to set standard project evaluation metrics across all Programs?
+            <br>
+            YES - means that all programs will use these metrics.
+            <br>
+            No - means that administrators for each program will be able to set their own evaluation metrics
+          </td>
+          <td class="col_setting">
+            <div class="radioset pull_left cloneble_setting" data-url="<%= cloneable_program_settings_path(context_program) %>">
+              <%= radio_button_tag :"settings[matrix_cloneable]", "true", setting.matrix_cloneable, :class => "option_cloneable" %>
+              <%= label_tag :"settings[matrix_cloneable]", "Yes", :for => "settings_matrix_cloneable_true" %>
+
+              <%= radio_button_tag :"settings[matrix_cloneable]", "false", !setting.matrix_cloneable, :class => "option_cloneable" %>
+              <%= label_tag :"settings[matrix_cloneable]", "No", :for => "settings_matrix_cloneable_false" %>
+              <div class="clr"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+<!--
+	<div class="row">
+		<div class="col-md-12">
+			<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+						<h3>Due diligence</h3>
+						<span>What due diligence system would you like to use</span>
+						<br /><br />
+						
+				    <div class="radioset">
+				      <%#= f.radio_button :matrix_enable, true %>
+				      <%#= f.label :matrix_enable_true, "Enable" %>
+				      <%#= f.radio_button :matrix_enable, false %>
+				      <%#= f.label :matrix_enable_false, "Disable" %>
+				    </div>
+					</div>
+					<div class="panel-options">
+						<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+					</div>
+				</div>
+				<div class="panel-body" style="padding-top: 15px;">
+					<div class="row">
+						<div class="col-sm-4">System type</div>
+						<div class="col-sm-8">
+							<span class="radioset dd_radio_margin">
+						    <%#= f.radio_button :star_system, "true", :checked => "checked", :class => "dd_system_stars" %>
+						    <%#= f.label :star_system, "Star System" ,:for => "#{f.object_name}_star_system_true" %>
+						
+						    <%#= f.radio_button :star_system, "false", :class => "dd_system_points" %>
+						    <%#= f.label :star_system, "Point System", :for => "#{f.object_name}_star_system_false" %>
+					  	</span>
+						</div>
+					</div>
+					<hr class="mod_sep">
+					<div class="row">
+          	<div class="col-sm-12">
+          		Choose a set of up to 5 metrics that will form the evaluation criteria to help you select which <%= t("pitch", "p") %> should advance further. For each metric, specify the description of the metric. <span class="system_stars">For Star System specify what a 1 Star and 5 Star score means.</span>
+						</div>
+						<div class="system_points no_display">
+						  <br />
+						  <%#= f.label :term_for_points, "What is your term for points", :class => "dd_label" %>
+						  <%#= f.text_field :term_for_points %>
+						</div>
+					</div>
+					<br />
+          <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+						<thead>
+							<tr role="row">
+					      <th>&nbsp;</th>
+								<th style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting ">Description</th>
+								<th style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting system_stars">1 Star</th>
+								<th style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting system_stars">5 Star</th>
+								<th style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting system_stars">system_points</th>
+							</tr>
+						</thead>
+						<tbody aria-relevant="all" aria-live="polite" role="alert">
+							<tr class="example odd" style="height: auto;">
+					      <td>E.G.</td>
+					      <td>Differentiation</td>
+					      <td class="system_stars">Me Too Product</td>
+					      <td class="system_stars">Differentiated</td>
+					      <td class="system_points">&nbsp;</td>
+					    </tr>
+					    <%# index = 0 %>
+					    <%#= f.fields_for :matrices, @due_diligence_matrix.matrices do |matrix| %>
+					      <%# index += 1 %>
+					      <tr>
+					        <td><%#= "Metric #{index}" %></td>
+					        <%#= matrix.hidden_field :order_no, :value => index%>
+					        <td>
+					          <%#= matrix.text_field :description, :class=>"form-control matrix-fix" %>
+					        </td>
+					        <td class="system_stars">
+					          <%#= matrix.text_field :one_star, :class=>"form-control matrix-fix" %>
+					        </td>
+					        <td class="system_stars">
+					          <%#= matrix.text_field :five_star, :class=>"form-control matrix-fix" %>
+					        </td>
+					        <td class="system_points">
+					          <%#= matrix.text_field :max_points, :class=>"form-control matrix-fix" %>
+					        </td>
+					      </tr>
+					    <%# end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	
+<a href="#sec2" name="sec2" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Due diligence Metrics</label></h3>
+					<span>
+						<div class="radioset radio-container">
+				      <%= f.radio_button :matrix_enable, true %>
+				      <%= f.label :matrix_enable_true, "Enable" %>
+				      <%= f.radio_button :matrix_enable, false %>
+				      <%= f.label :matrix_enable_false, "Disable" %>
+				    </div>
+					</span>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+					<tbody>
+						<tr class="odd">
+							<td>What due diligence system would you like to use</td>
+							<td>
+								<div class="radioset">
+							    <%= f.radio_button :star_system, "true", :checked => "checked", :class => "dd_system_stars" %>
+							    <%= f.label :star_system, "Star System" ,:for => "#{f.object_name}_star_system_true" %>
+							
+							    <%= f.radio_button :star_system, "false", :class => "dd_system_points" %>
+							    <%= f.label :star_system, "Point System", :for => "#{f.object_name}_star_system_false" %>
+							  </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class="mod_sep">
+				<div class="row">
+					<div class="col-sm-12">
+						Choose a set of up to 5 metrics that will form the evaluation criteria to help you select which <%= t("pitch", "p") %> should advance further. For each metric, specify the description of the metric. <span class="system_stars">For Star System specify what a 1 Star and 5 Star score means.
+					</div>
+				</div>
+				<br />
+				<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+					<thead>
+						<tr role="row">
+							<th style="width: 50px;" colspan="1" rowspan="1">Metric</th>
+							<th style="width: 300px;" colspan="1" rowspan="1">Description</th>
+							<th style="width: 250px;" colspan="1" rowspan="1" class="system_stars">1 Star</th>
+							<th style="width: 250px;" colspan="1" rowspan="1" class="system_stars">5 Stars</th>
+							<th style="width: 250px;" colspan="1" rowspan="1" class="system_points">Max Points Possible</th>
+						</tr>
+					</thead>
+					
+					<tbody aria-relevant="all" aria-live="polite" role="alert">
+						<tr class="odd">
+							<td class=" ">E.G.</td>
+							<td class=" ">Differentiation</td>
+							<td class="system_stars">Me Too Product</td>
+							<td class="system_stars">Differentiated</td>
+							<td class="system_points">&nbsp;</td>
+						</tr>
+						<% index = 0 %>
+				    <%= f.fields_for :matrices, @due_diligence_matrix.matrices do |matrix| %>
+				      <% index += 1 %>
+				      <tr>
+				        <td><%= "#{index}" %></td>
+				        <%= matrix.hidden_field :order_no, :value => index%>
+				        <td>
+				          <%= matrix.text_field :description, :class=>"form-control matrix-fix form-style-1" %>
+				        </td>
+				        <td class="system_stars">
+				          <%= matrix.text_field :one_star, :class=>"form-control matrix-fix form-style-1" %>
+				        </td>
+				        <td class="system_stars">
+				          <%= matrix.text_field :five_star, :class=>"form-control matrix-fix form-style-1" %>
+				        </td>
+				        <td class="system_points">
+				          <%= matrix.text_field :max_points, :class=>"form-control matrix-fix form-style-1" %>
+				        </td>
+				      </tr>
+				    <% end %>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<%
+=begin
+%>
+
+<div class="block">
+<p>  
+  What due diligence system would you like to use
+  <br/><br />
+  <span class="radioset dd_radio_margin">
+    <%= f.radio_button :star_system, "true", :checked => "checked", :class => "dd_system_stars" %>
+    <%= f.label :star_system, "Star System" ,:for => "#{f.object_name}_star_system_true" %>
+
+    <%= f.radio_button :star_system, "false", :class => "dd_system_points" %>
+    <%= f.label :star_system, "Point System", :for => "#{f.object_name}_star_system_false" %>
+  </span>
+    <div class="radioset pull_right">
+      <%= f.radio_button :matrix_enable, true %>
+      <%= f.label :matrix_enable_true, "Enable" %>
+      <%= f.radio_button :matrix_enable, false %>
+      <%= f.label :matrix_enable_false, "Disable" %>
+    </div>
+</p>
+<br /><br />
+Choose a set of up to 5 metrics that will form the evaluation criteria to help you select which <%= t("pitch", "p") %> should advance further. For each metric, specify the description of the metric. <span class="system_stars">For Star System specify what a 1 Star and 5 Star score means.</span>
+<div class="system_points no_display">
+  <br />
+  <%= f.label :term_for_points, "What is your term for points", :class => "dd_label" %>
+  <%= f.text_field :term_for_points %>
+</div>
+<br/>
+<table class="metric_table table">
+  <thead>
+    <tr>
+      <td></td>
+      <td style="width: 170px;">Description</td>
+      <td class="system_stars">1 Star</td>
+      <td class="system_stars">5 Star</td>
+      <td class="system_points">Max Points Possible</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="example1">
+      <td>E.G.</td>
+      <td>Differentiation</td>
+      <td class="system_stars">Me Too Product</td>
+      <td class="system_stars">Differentiated</td>
+      <td class="system_points"></td>
+    </tr>
+    <% index = 0 %>
+    <%= f.fields_for :matrices, @due_diligence_matrix.matrices do |matrix| %>
+      <% index += 1 %>
+      <tr>
+        <td><%= "Metric #{index}" %></td>
+        <%= matrix.hidden_field :order_no, :value => index%>
+        <td>
+          <%= matrix.text_field :description, :class=>"form-control matrix-fix" %>
+        </td>
+        <td class="system_stars">
+          <%= matrix.text_field :one_star, :class=>"form-control matrix-fix" %>
+        </td>
+        <td class="system_stars">
+          <%= matrix.text_field :five_star, :class=>"form-control matrix-fix" %>
+        </td>
+        <td class="system_points">
+          <%= matrix.text_field :max_points, :class=>"form-control matrix-fix" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<%
+=end
+%>
+<br />
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>
+<script>
+  $(".cloneble_setting").on("click", function(){
+    var elem = $(this)
+    $.post( 
+      elem.data("url"), 
+      $(".cloneble_setting :checked").serialize(),
+      function( data ) {
+        console.log(data)
+      }
+    );
+  });
+  
+  $(document).ready(function(){
+    var v = $('.dd_system_stars').attr("checked");
+    var v1 = $('.dd_system_points').attr("checked");
+    if(v1 == "checked"){
+      $('.system_stars').hide();
+      $('.system_points').show();
+    }
+    else{
+      $('.system_points').hide();
+      $('.system_stars').show();
+    }
+  });
+</script>

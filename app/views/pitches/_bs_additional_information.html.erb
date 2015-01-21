@@ -1,0 +1,55 @@
+<div class="row pitch_phases">
+  <div class="col-sm-12" style="">
+    <div class="">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+        <div class="panel-heading relative_panel_head">
+          <div class="panel-title title_option">
+            <h3><%= f.label :tags, t("pitch:tag") ? t("pitch:tag") : "Tags" %></h3>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a> 
+          </div>
+        </div>
+
+        <div style="" class="panel-body">
+          <div class="value">
+            <ul class="pitch-tags">
+              <% f.object.tags.each do |tags| %>
+                <li><a href="#"><%= tags %></a></li>
+              <% end %>
+            </ul>
+            <div class="clr"></div>
+          </div>
+          <div class="tag-area-of-pitch" style="display:none;">
+            <br/>
+            <div class="tag_functionality">
+              <div class="container_tags">
+                <div class="tagList" id="tagList">
+                  <% f.object.tags.each do |tags| %>
+                  <div class="tagContainer">
+                    <%= link_to tags, "#", :class => "delTag" %>
+                    <%= hidden_field_tag :"pitch[tags][]", tags %>
+                  </div>
+                <% end %>
+                </div>
+                <div class="clr"></div>
+              </div>
+
+              <div class="container_add_tag" style="margin: 0 0 0 0;">
+                <%= f.text_field :"tags", :placeholder => "e.g. Healthcare", :value => '', :name => "tags[]", :class => 'pitchTag', :"data-field-name" => "#{f.object_name}[tags][]", :"data-auto-options" => Pitch.pluck(:tags).flatten.uniq.to_json %>
+                <%= link_to "+ Add a Tag", "#", :class => "addPitchTag text_underline" %>
+                <br/><br/>
+                <%= f.submit "Save", :id => "submit", :class => "saveEditForm submit-button-to-normal", :style=>"border-radius:0px;" %>
+              </div>
+            </div>
+          </div>
+          <div class="pull-right panel-links">
+            <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) or need?(["company_admin", "program_admin"], current_organisation) %>  
+              <%= link_to "<i class=\"icon icon-edit\"></i>".html_safe, "#", class: "editTagList triangle-edit" %>
+            <% end %>
+          </div>
+        </div> 
+      </div>
+    </div>    
+  </div>
+</div>

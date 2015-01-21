@@ -1,0 +1,16 @@
+<%= form_for comment do |f| %>
+  <!-- <div class="new-comment-box"> -->
+    <!-- <div class="commententry"> -->
+<!--       <div class="user-avatar-row">
+        <#%= image_tag(current_user.avatar.logo.url, :width => 40, :class => "img-circle img-responsive img-circle-border") %>
+      </div> -->
+      <%= f.text_field :content, :class => "new-comment box-content-textarea", :placeholder => "Comment here....." %>
+      <%= f.hidden_field :commentable_type, :value => commentable_type %>
+      <%= f.hidden_field :commentable_id, :value => commentable_id %>
+      <%= f.hidden_field :commented_by_id, :value => current_user.id %>
+      <div class="clr"></div>
+<!--     </div> -->
+    <br/>
+    <%= f.submit "Post", :id => "submit", :style => "float:right;" %>
+<!--   </div> -->
+<% end %>

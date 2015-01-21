@@ -1,0 +1,4 @@
+$(".main-frame").html("<%= escape_javascript(render 'courses/shared_info/show_exercise') %>");
+$("#vid_desc_only_video").remove()
+$(".last-iter-box").removeClass("border-custom")
+$(".customArea<%=params[:custom_id]%> .last-iter-box").addClass("border-custom")

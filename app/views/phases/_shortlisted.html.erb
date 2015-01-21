@@ -1,0 +1,8 @@
+<div class="block">
+  <div class="row_div_data">
+    <div class="user_name pull-left"><%= "Have the #{t("role_type:selector", "p")} prepared the shortlist" %></div>
+    <a href="#shortlist_message" class="send_reminder fancybox_small pull-right">Send Thank You</a>
+    <%= render "phases/shared/message_all", :code => "selectors", :recipients => "#{t("role_type:selector", "p")}", :anchor_id => "shortlist_message" %>
+    <div class="clear"></div>
+  </div>
+</div>

@@ -1,0 +1,243 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Roles and Invitations" %>
+<% end %>
+<strong>
+  Get a head start and invite people to participate in your program
+</strong>
+
+<%= link_to "<u>Show invited people</u>".html_safe, invites_program_invitation_url(context_program), :class=>"pull_right", :target => "_blank" %>
+<br /><br />
+
+<style>
+  <!--
+    #prev_mails { display: none; }
+    #new_mails { display: none; }
+  -->
+</style>
+  <div class="community_1_container sub_com" style="">
+    <div>
+      <% if context_program.master_program? %>
+      	<div class="row ">
+					<div class="col-md-12">
+						<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+							<div class="panel-heading relative_panel_head ">
+								<div class="panel-title title_option">
+									<h3><label>Program Admin ( Invite program admin to create new program )</label></h3>
+								</div>
+								<div class="panel-options">
+									<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+								</div>
+							</div>
+							<div class="panel-body">
+				        <div class="row">
+							    <div class="col-sm-12">
+							    	<%= f.text_area :invited_program_admins, :class=>"form-control", :placeholder => "For maximum efficiency, create a dummy email in your email client e.g. Outlook, Mac Mail where you can easily add the emails of those you want to invite from your address book. Then copy and paste all the emails into this section and you are good to go Comma separeted Email List Note: No one will be invited until you complete the creation of your accelerator", value: "" %>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Type your message to your invitees here</div>
+							      <%= text_area_tag "message[program_admin][program_admin_invitee]" ,(@program_invitation_mails.program_admins_message["program_admin_invitee"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:program_admins_message).nil?) , :id=>"program_admin_invitee" ,:cols=>"40" %>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Welcome Message</div>
+							      <%= text_area_tag "message[program_admin][program_admin_welcome]" ,(@program_invitation_mails.program_admins_message["program_admin_welcome"] if !@program_invitation_mails.try(:program_admins_message).blank?), :id=>"program_admin_welcome", :cols=>"40" %>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Rejection Message</div>
+							      <%= text_area_tag "message[program_admin][program_admin_rejection]" ,(@program_invitation_mails.program_admins_message["program_admin_rejection"] if !@program_invitation_mails.try(:program_admins_message).blank?), :id=>"program_admin_rejection" ,:cols=>"40" %>
+							    </div>
+				        </div>
+				        <script>
+			            bkLib.onDomLoaded(function() {
+			              new nicEditor().panelInstance('program_admin_invitee');
+			            });
+			            bkLib.onDomLoaded(function() {
+			              new nicEditor().panelInstance('program_admin_welcome');
+			            });
+			            bkLib.onDomLoaded(function() {
+			              new nicEditor().panelInstance('program_admin_rejection');
+			            });
+			          </script>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+				<br />
+      <% else %>
+      <div class="row ">
+				<div class="col-md-12">
+					<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+						<div class="panel-heading relative_panel_head ">
+							<div class="panel-title title_option">
+								<h3><label><%= t("role_type:participant", "p") %></label></h3>
+							</div>
+							<div class="panel-options">
+								<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+							</div>
+						</div>
+						<div class="panel-body">
+			        <div class="row">
+			        	<div class="col-sm-12 setting-font">
+						      <div>Type your message to your invitees here</div>
+						      <%= text_area_tag "message[applicant][applicant_invitee]" ,(@program_invitation_mails.applicant_message["applicant_invitee"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:applicant_message).nil?) , :id=>"applicant_invitee" ,:cols=>"40" ,:style=>"width:70% !important;" %>
+						    </div>
+			        </div>
+			        <br />
+			        <div class="row">
+			        	<div class="col-sm-12 setting-font">
+						      <div>Welcome Message</div>
+						      <%= text_area_tag "message[applicant][applicant_welcome]" ,(@program_invitation_mails.applicant_message["applicant_welcome"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:applicant_message).nil?), :id=>"applicant_welcome", :cols=>"40" %>
+						    </div>
+			        </div>
+			        <br />
+			        <div class="row">
+			        	<div class="col-sm-12 setting-font">
+						      <div>Rejection Message</div>
+						      <%= text_area_tag "message[applicant][applicant_rejection]" ,(@program_invitation_mails.applicant_message["applicant_rejection"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:applicant_message).nil?), :id=>"applicant_rejection" ,:cols=>"40" %>
+						    </div>
+			        </div>
+						</div><!-- panel-body -->
+					</div>
+				</div>
+			</div>
+			<br />
+      
+      <% if (context_program.try :selectors_allowed?) || (current_user.try :super_admin?)  %>
+      	<div class="row ">
+					<div class="col-md-12">
+						<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+							<div class="panel-heading relative_panel_head ">
+								<div class="panel-title title_option">
+									<h3><label><%= t("role_type:selector", "p") %></label></h3>
+								</div>
+								<div class="panel-options">
+									<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+								</div>
+							</div>
+							<div class="panel-body">
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Type your message to your invitees here</div>
+							      <%= text_area_tag "message[selectors][selectors_invitee]" ,(@program_invitation_mails.selectors_message["selectors_invitee"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:selectors_message).nil?), :id=>"selectors_invitee" ,:cols=>"40"%>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Welcome Message</div>
+							      <%= text_area_tag "message[selectors][selectors_welcome]" ,(@program_invitation_mails.selectors_message["selectors_welcome"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:selectors_message).nil?), :id=>"selectors_welcome" ,:cols=>"40"%>
+							    </div>
+				        </div>
+				        <script>
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('selectors_invitee');
+				          });
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('selectors_welcome');
+				          });
+				        </script>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+				<br />
+      <% end %>
+
+      <% if (context_program.try :penallist_allowed?) || (current_user.try :super_admin?)  %>
+      	<div class="row ">
+					<div class="col-md-12">
+						<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+							<div class="panel-heading relative_panel_head ">
+								<div class="panel-title title_option">
+									<h3><label><%= t("role_type:panellist", "p") %></label></h3>
+								</div>
+								<div class="panel-options">
+									<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+								</div>
+							</div>
+							<div class="panel-body">
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Type your message to your invitees here</div>
+							      <%= text_area_tag "message[panel][panel_invitee]",(@program_invitation_mails.panel_message["panel_invitee"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:panel_message).nil?),:id=>"panel_invitee" ,:cols=>"40" %>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Welcome Message</div>
+							      <%= text_area_tag "message[panel][panel_welcome]" ,(@program_invitation_mails.panel_message["panel_welcome"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:panel_message).nil?), :id=>"panel_welcome" ,:cols=>"40"%>
+							    </div>
+				        </div>
+				        <script>
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('panel_invitee');
+				          });
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('panel_welcome');
+				          });
+				        </script>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+				<br />
+      <% end %>
+
+      <% if (context_program.try :mentor_allowed?) || (current_user.try :super_admin?) %>
+      	<div class="row ">
+					<div class="col-md-12">
+						<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+							<div class="panel-heading relative_panel_head ">
+								<div class="panel-title title_option">
+									<h3><label><%= t("role_type:mentor", "p") %></label></h3>
+								</div>
+								<div class="panel-options">
+									<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+								</div>
+							</div>
+							<div class="panel-body">
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Type your message to your invitees here</div>
+							      <%= text_area_tag "message[mentors][mentors_invitee]" ,(@program_invitation_mails.mentors_message["mentors_invitee"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:mentors_message).nil?), :id=>"mentors_invitee" ,:cols=>"40" %>
+							    </div>
+				        </div>
+				        <br />
+				        <div class="row">
+				        	<div class="col-sm-12 setting-font">
+							      <div>Welcome Message</div>
+							      <%= text_area_tag "message[mentors][mentors_welcome]" ,(@program_invitation_mails.mentors_message["mentors_welcome"] if !@program_invitation_mails.nil? && !@program_invitation_mails.try(:mentors_message).nil?), :id=>"mentors_welcome" ,:cols=>"40" %>
+							    </div>
+				        </div>
+				        <script>
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('mentors_invitee');
+				          });
+				          bkLib.onDomLoaded(function() {
+				            new nicEditor().panelInstance('mentors_welcome');
+				          });
+				        </script>
+							</div><!-- panel-body -->
+						</div>
+					</div>
+				</div>
+      <% end %>
+      <% end %>
+    </div>
+  </div>
+  <% if params[:from_invites]%>
+    <%= hidden_field_tag :from_invites, "true"%>
+  <%end%>
+
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>

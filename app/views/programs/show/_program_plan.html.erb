@@ -1,0 +1,40 @@
+<% if display_program_plan? %>
+	<div id="program_plans" class="jumbotron plan-container">
+			<div class="container content-wrap">
+				
+					<h2 class="company-page-title">
+						<%=t("program_summary:program_plan") ? t("program_summary:program_plan") : "Program plan"%>
+					</h2>
+					
+					<div class="border-bottom-dark"></div>
+					
+					<div class="bs-example bs-example-tabs">
+						
+						<ul class="nav nav-tabs" id="myTab">
+							<% active = false %>
+							<%if @program.program_summary.program_plans.present? %>
+								<li class="active"><a data-toggle="tab" href="#plans">Plan</a></li>
+								<% active = true %>
+							<% end %>
+							<%unless @program.event_sessions.blank? %>
+								<li class="<%=active ? '' : 'active'%>"><a data-toggle="tab" href="#event">Events</a></li>
+							<% end %> 
+						</ul>
+						
+						<div class="tab-content" id="myTabContent">
+							<% active_div = false %>
+							<%= content_tag :div, :id =>"plans", :class=> "tab-pane fade #{active_div ? '' : 'active in'}" do %>
+								<% active_div = true %>
+								<%= render "/programs/show/program_plan_detail" %>
+							<% end if @program.program_summary.program_plans.present? %>
+							<%= content_tag :div, :id=>"event", :class=>"tab-pane fade #{active_div ? '' : 'active in'} " do %>
+								<% active_div = true %>
+								<%= render "/programs/show/program_events" %>
+							<% end if !@program.event_sessions.blank? and @program.try(:show_events) %>
+						</div>
+						
+					</div>
+					
+			</div>
+	</div>
+<% end %>

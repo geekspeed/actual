@@ -1,0 +1,11 @@
+<div id="customize-email-header">
+  <%= link_to "Feedback Emails", polymorphic_path([:feedback_emails, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "Comments Emails", polymorphic_path([:comment_emails, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "Admin Invite", polymorphic_path([:admin_invite, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "Team member Invite", polymorphic_path([:team_member_invite, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "Mentor Invite", polymorphic_path([:team_mentor_invite, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "Mentor Offer To Invite" , polymorphic_path([:mentor_offer_invite, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "I would like to join this team" , polymorphic_path([:join_team, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+  <%= link_to "I would like to submit this #{ t('pitch')}" , polymorphic_path([:submit_pitch, :admin, :organisations, :customize_email, :index]), :class=>"email-tab" %>
+</div>
+	

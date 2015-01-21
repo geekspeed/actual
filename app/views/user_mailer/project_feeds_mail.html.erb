@@ -1,0 +1,1586 @@
+<% background_color =  @program.organisation.try(:background_color)  || "#17a3bf" %>
+<% menubar_color =  @program.organisation.try(:manubar_color) || "#17a3bf" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0"> 
+    <meta name="format-detection" content="telephone=no">
+    <title>Apptual</title>
+ <style type="text/css">
+
+      .ReadMsgBody { width: 100%; background-color: menubar_color;}
+      .ExternalClass {width: 100%; background-color: menubar_color;}
+      .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height:100%;}
+      body {-webkit-text-size-adjust:none; -ms-text-size-adjust:none;}
+      body {margin:0; padding:0;}
+      table {border-spacing:0;}
+      img{display:block !important;}
+
+      table td {border-collapse:collapse;}
+      .yshortcuts a {border-bottom: none !important;}
+
+      *[class="header-color"]{
+        background-color:<%= menubar_color %>;
+      }
+      *[class="color-tab"]{
+        background-color:<%= menubar_color %> !important; 
+      }
+
+
+      *[class="button"] {
+        height: 40px !important;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px; 
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box; 
+        background-color: <%=menubar_color%>; 
+        padding-left: 25px !important;
+        padding-right:25px !important;
+
+      }
+
+      *[class="ios-main-link"]{
+        color:#aaaaaa !important;
+        font-weight:normal !important;
+      }
+      span[class="ios-main-link"] a{
+        color:<%= menubar_color %> !important;
+        text-decoration: none;
+        font-weight:normal !important;
+      }
+
+      span[class="ios-white-link"] a {
+        color:<%= menubar_color %>;
+        text-decoration: none;
+      }
+      span[class="ios-gray-link"] a{
+        color: <%= menubar_color %>;
+        text-decoration: none;
+      }
+
+      *[class="border-desks"] {
+        background-color: #c7c5c5;
+        -moz-box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+        -webkit-box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+        box-shadow: 0 5px 7px rgba(0,0,0,.64); 
+      }
+
+
+      @media screen and (max-width: 479px) {
+        
+        table[class="container"] {
+          width: 100%!important;
+        }
+        td[class="container-padding"] {
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+
+        table[class="col-2"]{
+          width: 100% !important;
+          float: none !important;
+         
+          margin-bottom: 12px;
+          padding-bottom: 12px;
+          padding-left:20px;
+          padding-right:20px;
+          border-bottom: 1px solid #eee;
+
+        }
+
+       td[class="force-col"] {
+          display: block;
+          padding-right: 0 !important;
+        }
+       
+        *[class="force-remove"]{
+          display:none;
+        }
+         *[class="force-center"]{
+          float:none !important;
+          width:100% !important;
+          text-align: center !important;
+        }
+          *[id="bottom-line"]{
+            border-top: 0px !important;
+            border-left:0px !important;
+            border-right:0px !important;
+            border-bottom: 1px solid #eee;
+        }
+
+      }
+
+      @media only screen and (max-width : 600px) {
+
+        table[class="container"] {
+          width: 100% !important;
+        }
+        *[id="pad-left-right"]{
+          padding-left: 20px !important;
+          padding-right:20px !important;
+        }
+        *[id="pad-top"]{
+          padding-top: 12px !important;
+        }
+
+        *[class="force-resize"]{
+          width:80% !important;
+          height:80% !important;
+        }
+
+        td[class="force-col"] {
+          display: block;
+          padding-right: 0 !important;
+        }
+         *[class="reset-align"]{ 
+          float: none !important;
+        }
+
+        *[class="force-remove"]{
+          display:none;
+        }
+        *[class="force-reduce-height"]{
+          height:20px !important;
+        }
+        *[class="force-center"]{
+          float:none !important;
+          width:100% !important;
+          text-align: center ;
+        }
+
+        *[class="increase-padding-top"] {
+          padding-top:20px !important;
+        }
+         *[class="increase-padding-bottom"] {
+          padding-bottom:20px !important;
+        }
+        *[class="reduce-padding-top"] {
+          padding-top:12px !important;
+        }
+         *[class="reduce-padding-bottom"] {
+          padding-bottom:12px !important;
+        }
+        *[id="reduce-padding-bottom"] {
+          padding-bottom:12px !important;
+        }
+
+        *[id="bottom-line"]{
+          border:none !important;
+          border-bottom: 1px solid #eee !important;
+
+        }
+
+        
+         table[class="col-2"]{
+          float: none !important;
+          width: 100% !important;
+          margin-bottom: 12px;
+          padding-bottom: 12px;
+          padding-left:20px;
+          padding-right:20px;
+          border-bottom: 1px solid #eee;
+
+        }
+        table[id="last-col-2"] {
+          padding-left:20px ;
+          padding-right:20px ;
+          border-bottom: none !important;
+          margin-bottom: 0;
+        }
+
+
+
+
+        table[class="col-3"] {
+          float: none !important;
+          width: 100% !important;
+          margin-bottom: 12px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #eee;
+        }
+        table[id="last-col-3"] {
+          border-bottom: none !important;
+          margin-bottom: 0;
+        }
+        img[class="col-3-img"] {
+          float: left;
+          margin-left: 6px;
+          max-width: 130px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0" >
+      <tr>
+        <td align="center" valign="top" style="background-color:<%= background_color %>;height:91px;">
+          <table width="580" border="0" cellspacing="0" cellpadding="0" class="container" style="padding-top:20px; padding-bottom:20px;">
+            <tr>
+              <td valign="top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                  <tr>
+                    <td valign="top">
+                      <!--start logo navigation -->
+                      <table border="0" align="left" cellpadding="0" cellspacing="0"  class="container">
+                        <tr>
+                          <td align="center" valign="top" >
+                             <% if @program.organisation.present? %>
+                              <%= image_tag(root_url+@program.organisation.avatar.url, :height=>"51", :border=>"0", :alt=>"", :style=>"margin-bottom:5px;") %>
+                            <% else %>
+                              <%= link_to(image_tag(root_url+"images/logo-apptual.png"), root_url, :class => "companyLogo", :height=>"51", :border=>"0", :alt=>"", :style=>"margin-bottom:5px;") %>
+                            <% end %>
+                            <% if @program.organisation.present? %>
+                            <span style="font-family: Helvetica, sans-serif,Arial,Tahoma;color:white;font-size: 12px;"><%#= @program.organisation.company_name %></span>
+                            <% end %>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <table border="0"  align="right" cellpadding="0" cellspacing="0"  class="container">
+                        <tr>
+                          <td valign="top" align="center" class="increase-padding-top" >
+                            <table border="0"  align="center" cellpadding="0" cellspacing="0">
+                             <% if @program.program_summary.present? %>
+                                <tr>
+                                  <% if @program.program_summary.facebook_url.present? %>
+                                    <td valign="top"  style="padding-left:20px; padding-top:8px;" id="pad-left-right">
+                                      <%= link_to(image_tag(root_url+"images/mail/icon-facebook.png", :width=>"33", :style=>"max-width:33px;", :border=>"0", :hspace=>"0", :vspace=>"0"), @program.program_summary.facebook_url, target: "_blank") %>
+                                    </td>
+                                  <% end %>
+                                  <% if @program.program_summary.twitter_url.present? %>
+                                    <td valign="top" style="padding-left:20px; padding-top:8px;" id="pad-left-right">
+                                      <%= link_to(image_tag(root_url+"images/mail/icon-twitter.png", :width=>"33", :style=>"max-width:33px", :border=>"0", :hspace=>"0", :vspace=>"0"), @program.program_summary.twitter_url, target: "_blank") %>
+                                    </td>
+                                  <% end %>
+                                  <% if @program.program_summary.linkedin_url.present? %>
+                                    <td valign="top" style="padding-left:20px; padding-top:8px;" id="pad-left-right">
+                                      <%= link_to(image_tag(root_url+"images/mail/icon-linkedin.png", :width=>"33", :style=>"max-width:33px;", :border=>"0", :hspace=>"0", :vspace=>"0"), @program.program_summary.linkedin_url, target: "_blank") %>
+                                    </td>
+                                  <% end %>
+                                </tr>
+                              <% end %>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" bgcolor="#f2f2f2" style="background-color: #f2f2f2;" >
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:40px;" class="reduce-padding-bottom">
+            <tr>
+              <td>
+                <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="2" valign="top" style="background-color: #f2f2f2;"></td>
+                  </tr>
+                </table>
+              </td>
+              <td width="53" height="4" class="color-tab" style="color:#eb5055;"></td>
+              <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                 
+                  <tr>
+                    <td height="2" valign="top" style="background-color: #f2f2f2;"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table width="580"  border="0" cellspacing="0" cellpadding="0" class="container">
+            <tr>
+              <td valign="top" >
+                <table border="0" cellspacing="0" cellpadding="0" id="pad-left-right">
+                  <tr>
+                    <td align="center" colspan="2" width="580" style="font-size: 14px;line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#333333; font-weight:normal; text-align:center; ">
+                    <div style="font-size: 18px;font-weight:bold;padding-bottom:10px;">
+                      <span class="ios-white-link"><font color="#333333">Hi <%= @member.first_name %></font></span>
+                      </div>
+                    <div style="font-size: 15px;padding-bottom:10px;">
+                      <span class="ios-white-link"><font color="#333333">Here’s the round up of project feeds for <%= @pitch.title%> <%= @mail_setting %></font></span>
+                      </div>
+                    </td>
+                    <tr><td valign="top">
+                      <div id="community_stream">
+                        <% @feeds.each do |feed| %>
+                            <% if !feed.blank? && !feed.try(:activity) %>
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+              <tbody><tr>
+                <td valign="top" class="force-col">
+
+                  <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                  <tbody><tr>
+                    <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                      <%= link_to image_tag(root_url+feed.created_by.avatar.logo.url, :hspace=>"0", :width=>"80", :vspace=>"0", :border=>"0", :style=>"max-width:60px;"), polymorphic_url(feed.created_by, host: @domain_host) %>
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+                    <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                      <tbody><tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </tbody></table>
+
+
+                  <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                    <tbody><tr>
+                      <td valign="top">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                          <tbody><tr>
+                            <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to feed.created_by.full_name, polymorphic_url(feed.created_by, host: @domain_host) %></span></td>
+                    <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              </td>
+                          </tr>
+                          <tr>
+                            <td valign="top">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                <tbody><tr>
+                                  <td valign="middle" height="3">
+
+
+                                    <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                    <tbody>
+                                    <tr>
+                                      <td height="3"></td>
+                                    </tr>
+                                  </tbody></table>
+
+                                </td>
+                                </tr>
+                              </tbody></table>
+
+                            </td>
+                          </tr>
+                          <tr>
+                            <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                          <tbody><tr>
+                            <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                             <multiline><div class="box-feeds">
+                              <div class="textbox">
+                                <% if !feed.subject.blank? %>
+                                  <div style="margin-bottom:5px;"><b>Subject: </b><%= feed.subject %></div>
+                                <% end %>
+                                <%= feed.content.html_safe %>
+                                <% if !feed.attachment.blank? %>
+                                <br/><br/>
+                                  <%= image_tag root_url+feed.attachment.url, :style => "width: 100%;" %>
+                                <% end %>
+                                <% if feed.link.present? %>
+                                  <% if !feed.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+                                    <br/>
+                                    <%= link_to("Visit link", feed.link, target: "_blank", :class => 'text_underline') %>
+                                  <% end %>
+                                <% end %>
+                              </div>
+                              <% if feed.tags.present? %>
+                                <div class="feed_tags">
+                                  Tagged: <%= feed.tags.join(", ") %>
+                                </div>
+                              <% end %>
+                            </div></multiline>
+                             <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container" bgcolor="#eeeeee" style="padding:5px;margin-top:5px;">
+                              <tbody><tr>
+                                <td width="80"><a style="font-size: 12px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma;text-decoration:none;color: #444444;" class="showLikes" href="<%=polymorphic_url([:like_from_mail, feed.program, feed], host: @domain_host)%>" target="_blank"><span class="anzahl" style="color:#000000;font-weight:bold;"><%=feed.likes_count%></span> Likes</a></td>
+                                <td><a style="font-size: 12px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma;text-decoration:none;color: #444444;" class="commentFeed" href="<%=polymorphic_url([feed.program,feed.pitch, feed], host: @domain_host, :comment_id => "comment")%>" target="_blank"><span class="anzahl" style="color:#000000;font-weight:bold;"><%=feed.comments.count%></span> <%= feed.comments.count==1 ? "Comment" : "Comments" %></a></td>
+                              </tr>
+                             </tbody></table>
+                              <% feed.comments.desc(:created_at).each do |comment| %>  
+                                <br>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+              <tbody><tr>
+                <td valign="top" class="force-col">
+
+                  <table width="40" cellspacing="0" cellpadding="0" border="0" align="left" class="container" style="">
+                  <tbody><tr>
+                    <td width="40" valign="top" align="left" class="" style="">
+                      <%= link_to image_tag(root_url+comment.commented_by.avatar.logo.url, :hspace=>"0", :width=>"40", :vspace=>"0" ,:border=>"0", :style=>"max-width:60px;"), polymorphic_url(comment.commented_by, host: @domain_host) %>
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+                    <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                      <tbody><tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </tbody></table>
+
+
+                  <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" class="container" id="bottom-line">
+                    <tbody><tr>
+                      <td valign="top">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                          <tbody><tr>
+                            <td style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; " class="force-center">
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span class="ios-main-link" style="padding-top:40px;"><%= link_to comment.commented_by.full_name, polymorphic_url(comment.commented_by, host: @domain_host) %></span></td>
+                    <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span class="ios-main-link" style=""><%= time_ago_in_words(comment.created_at) %> ago</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              </td>
+                          </tr>
+                          <tr>
+                            <td valign="top">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                <tbody><tr>
+                                  <td valign="middle" height="3">
+
+
+                                    <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                    <tbody>
+                                    <tr>
+                                      <td height="3"></td>
+                                    </tr>
+                                  </tbody></table>
+
+                                </td>
+                                </tr>
+                              </tbody></table>
+
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;padding-left:0;padding-right:0;" class="force-center" id="">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;background:#fafafa;">
+                          <tbody><tr>
+                            <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                             <multiline><%= comment.try(:content).try(:html_safe) %></multiline>
+                             <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#eeeeee" style="padding:5px;margin-top:5px;" class="container">
+                              <tbody><tr>
+                                <td width="80"><a target="_blank" href="<%=polymorphic_url([:like_from_mail, comment], host: @domain_host)%>" class="showLikes" style="font-size: 12px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma;text-decoration:none;color: #444444;"><span style="color:#000000;font-weight:bold;" class="anzahl"><%=comment.likes_count%></span> Likes</a></td>
+                  <td><a target="_blank" href="<%=polymorphic_url([feed.program,feed.pitch, feed], host: @domain_host, :comment_id => comment.id)%>" class="commentFeed" style="font-size: 12px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma;text-decoration:none;color: #444444;"><span style="color:#000000;font-weight:bold;" class="anzahl"><%=comment.children.count%></span> <%= comment.children.count==1 ? "Comment" : "Comments" %></a></td>
+                              </tr>
+                             </tbody></table>
+                             <% comment.children.each do |child| %>
+                              <br>
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+              <tbody><tr>
+                <td valign="top" class="force-col">
+
+                  <table width="40" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                  <tbody><tr>
+                    <td width="40" valign="top" align="left" style="" class="">
+                      <%= link_to image_tag(root_url+child.commented_by.avatar.thumb.url, :hspace=>"0", :width=>"40",:vspace=>"0", :border=>"0", :style=>"max-width:60px;"), polymorphic_url(child.commented_by) %>
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+                    <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                      <tbody><tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </tbody></table>
+
+
+                  <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                    <tbody><tr>
+                      <td valign="top">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                          <tbody><tr>
+                            <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to(child.commented_by.try(:full_name), polymorphic_url(child.commented_by, host: @domain_host)) %></span> - mentor</td>
+                    <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(child.created_at) %></span></td>
+                  </tr>
+                </tbody>
+              </table>
+              </td>
+                          </tr>
+                          <tr>
+                            <td valign="top">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                <tbody><tr>
+                                  <td valign="middle" height="3">
+
+
+                                    <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                    <tbody>
+                                    <tr>
+                                      <td height="3"></td>
+                                    </tr>
+                                  </tbody></table>
+
+                                </td>
+                                </tr>
+                              </tbody></table>
+
+                            </td>
+                          </tr>
+                          <tr>
+                            <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-left:0;padding-right:0;">
+                              <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;background:#fcfcfc;">
+                          <tbody><tr>
+                            <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                             <multiline><%= child.try(:content).try(:html_safe) %></multiline>
+                              
+                            </td>
+                          </tr>
+                        </tbody></table>
+                            </td>
+                          </tr>
+                        </tbody></table>
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+                              <% end %>            
+                            </td>
+                          </tr>
+                        </tbody></table>
+                            </td>
+                          </tr>
+                        </tbody></table>
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+                              <% end %>        
+
+                            </td>
+              
+              
+                          </tr>
+                        </tbody></table>
+                            </td>
+                          </tr>
+                        </tbody></table>
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+                          <% else %>
+                            <% feed = ActivityFeed.where(:community_feed_id => feed.id).try(:first) %>
+                          <% if !feed.try(:awaiting) %>  
+                            <% if feed.try(:type) == "join_program" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <%user_role_code = Semantic.t(feed.program, "role_type:#{feed.role_code}")%>
+                              <% @correct_role_code = user_role_code.present? ? user_role_code : feed.role_code%>
+                              <% if !user.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                    <tbody><tr>
+                                      <td valign="top" class="force-col">
+
+                                        <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                        <tbody><tr>
+                                          <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                            <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user) %>
+                                          </td>
+                                        </tr>
+                                        </tbody></table>
+
+                                          <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                            <tbody><tr>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                          </tbody></table>
+
+
+                                        <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                          <tbody><tr>
+                                            <td valign="top">
+                                              <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                                <tbody><tr>
+                                                  <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                    <table width="100%">
+                                      <tbody>
+                                        <tr>
+                                          <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                          <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    </td>
+                                                </tr>
+                                                <tr>
+                                                  <td valign="top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                      <tbody><tr>
+                                                        <td valign="middle" height="3">
+
+
+                                                          <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                          <tbody>
+                                                          <tr>
+                                                            <td height="3"></td>
+                                                          </tr>
+                                                        </tbody></table>
+
+                                                      </td>
+                                                      </tr>
+                                                    </tbody></table>
+
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                                <tbody><tr>
+                                                  <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                   <multiline><b><%= user.full_name %></b> has just joined the program as a <%= @correct_role_code %></multiline>
+                                                    </td>
+                                                  </tr>
+                                              </tbody></table>
+                                                  </td>
+                                                </tr>
+                                              </tbody></table>
+                                            </td>
+                                          </tr>
+                                        </tbody></table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_member" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> has just joined the team of <%= link_to pitch.title, polymorphic_url([@program, pitch],:subdomain => @sub_domain ? pitch.program_id : "", host: @domain_host), :target => "_blank" %></multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_mentor" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> has just joined the team as <%= Semantic.t(@program,"role_type:mentor") %></multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_task" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% task = Task.where(:id => feed.task_id).first %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> has just added new task: <%= link_to task.description, polymorphic_url([pitch.program, pitch, Milestone], host: @domain_host) %></multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_task_completed" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% task = Task.where(:id => feed.task_id).first %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> has just completed task <%= link_to task.description, polymorphic_url([pitch.program, pitch, Milestone], host: @domain_host) %></multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_feedback" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% feedback = PitchFeedback.where(:id => feed.feedback_id).first %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> has just added private feedback:</br></br><%= feedback.content%></multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "be_pitch_mentor" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if pitch.team?(user) %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> would like to be a <%= Semantic.t(@program,"role_type:mentor") %> of your team.</multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                                <%end%>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_collaborator" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if pitch.team?(user) %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> wants to collaborate.</multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                                <%end%>
+                              <% end %>
+                            <% elsif feed.try(:type) == "join_team" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if pitch.team?(user) %>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> wants to join team.</multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                                <%end%>
+                              <% end %>
+                            <% elsif feed.try(:type) == "due_diligence" %>
+                              <% user = User.where(:id => feed.user_id).first %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% due_diligence = pitch.pitch_due_diligence_matrices.where(id: feed.due_diligence_id).first%>
+                              <% if !user.blank? && !pitch.blank? %>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                  <tbody><tr>
+                                    <td valign="top" class="force-col">
+
+                                      <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                      <tbody><tr>
+                                        <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                          <%= link_to image_tag(root_url+user.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(user, host: @domain_host) %>
+                                        </td>
+                                      </tr>
+                                      </tbody></table>
+
+                                        <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                          <tbody><tr>
+                                            <td>&nbsp;</td>
+                                          </tr>
+                                        </tbody></table>
+
+
+                                      <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                        <tbody><tr>
+                                          <td valign="top">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                              <tbody><tr>
+                                                <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                  <table width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to user.full_name, polymorphic_url(user, host: @domain_host) %></span></td>
+                                        <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  </td>
+                                              </tr>
+                                              <tr>
+                                                <td valign="top">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                    <tbody><tr>
+                                                      <td valign="middle" height="3">
+
+
+                                                        <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                        <tbody>
+                                                        <tr>
+                                                          <td height="3"></td>
+                                                        </tr>
+                                                      </tbody></table>
+
+                                                    </td>
+                                                    </tr>
+                                                  </tbody></table>
+
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                              <tbody><tr>
+                                                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                 <multiline><b><%= user.full_name %></b> gives feedback on <%= due_diligence.try(:matrix).try(:description) %> matrix.</multiline>
+                                                  </td>
+                                                </tr>
+                                            </tbody></table>
+                                                </td>
+                                              </tr>
+                                            </tbody></table>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <% end %>
+                            <% elsif feed.try(:type) == "pitch_create" %>
+                              <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                              <% if !pitch.blank? %>
+                                <% pitch_owner = User.where(:id => pitch.user_id).first %>
+                                  <table width="100%" cellspacing="0" cellpadding="0" border="0" class="container">
+                                    <tbody><tr>
+                                      <td valign="top" class="force-col">
+
+                                        <table width="60" cellspacing="0" cellpadding="0" border="0" align="left" style="" class="container">
+                                        <tbody><tr>
+                                          <td width="60" valign="top" align="left" style="" class="increase-padding-top">
+                                            <%= link_to image_tag(root_url+pitch_owner.avatar.logo.url, :border=>"0", :hspace=>"0", :vspace=>"0", :width=>"80", :style=>"max-width:60px;"), polymorphic_url(pitch_owner, host: @domain_host) %>
+                                          </td>
+                                        </tr>
+                                        </tbody></table>
+
+                                          <table width="10" cellspacing="0" cellpadding="0" border="0" align="left" class="force-remove">
+                                            <tbody><tr>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                          </tbody></table>
+
+
+                                        <table width="465" cellspacing="0" cellpadding="0" border="0" align="left" id="bottom-line" class="container">
+                                          <tbody><tr>
+                                            <td valign="top">
+                                              <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                                <tbody><tr>
+                                                  <td class="force-center" style="font-size: 18px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; ">
+                                    <table width="100%">
+                                      <tbody>
+                                        <tr>
+                                          <td style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; "><span style="padding-top:40px;" class="ios-main-link"><%= link_to pitch_owner.full_name, polymorphic_url(pitch_owner, host: @domain_host) %></span></td>
+                                          <td align="right" style="font-size: 13px; line-height: 20px; font-family:Helvetica, sans-serif,Arial,Tahoma; color:#aaaaaa; font-weight:normal; text-align:right; "><span style="" class="ios-main-link"><%= time_ago_in_words(feed.created_at) %> ago</span></td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    </td>
+                                                </tr>
+                                                <tr>
+                                                  <td valign="top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                      <tbody><tr>
+                                                        <td valign="middle" height="3">
+
+
+                                                          <table cellspacing="0" cellpadding="0" border="0" align="left" class="container">
+                                                          <tbody>
+                                                          <tr>
+                                                            <td height="3"></td>
+                                                          </tr>
+                                                        </tbody></table>
+
+                                                      </td>
+                                                      </tr>
+                                                    </tbody></table>
+
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <td id="" class="force-center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left; padding-bottom:15px;padding-left:0;padding-right:0;">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="left" style="padding-top:10px; padding-bottom:10px; padding-left:10px; padding-right:10px;width:100%;border-top:1px solid #c8c6c6; border-bottom:1px solid #c8c6c6; border-left:1px solid #c8c6c6;border-right:1px solid #c8c6c6;">
+                                                <tbody><tr>
+                                                  <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:left;">
+                                                   <multiline><b><%= pitch_owner.full_name %></b> has just created <%= link_to pitch.title, polymorphic_url([@program, pitch],:subdomain => @sub_domain ? pitch.program_id : "", host: @domain_host), :target => "_blank" %></multiline>
+                                                    </td>
+                                                  </tr>
+                                              </tbody></table>
+                                                  </td>
+                                                </tr>
+                                              </tbody></table>
+                                            </td>
+                                          </tr>
+                                        </tbody></table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              <% end %>
+                                                       
+                              <% end %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td valign="top">
+                    </td>
+                  </tr>
+                </table>
+
+                <table height="10" border="0" cellspacing="0" cellpadding="0" align="center" >
+                 <tr>
+                   <td>&nbsp;</td>
+                 </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table border="0" align="center" cellpadding="0" cellspacing="0" style="padding-bottom:20px;">
+            <tr>
+
+            </tr>
+          </table>
+
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="padding-top:40px;" class="reduce-padding-top">
+            <tr>
+              <td valign="top">
+                <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="3" valign="top"></td>
+                  </tr>
+                  <tr>
+                    <td height="1"  valign="top" style="border-bottom: 1px solid #c8c6c6;"></td>
+                  </tr>
+                </table>
+              </td>
+
+              <td width="53" height="5" class="color-tab" style="color:#eb5055;"></td>
+
+              <td valign="top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="3" valign="top"></td>
+                  </tr>
+                  <tr>
+                    <td height="1"  valign="top" style="border-bottom: 1px solid #c8c6c6;"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" bgcolor="#333333" style="background-color:<%= menubar_color %>;"> 
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:40px;" class="reduce-padding-bottom">
+            <tr>
+              <td>
+                <table  width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="2" valign="top" style="background-color: <%= menubar_color %>;"></td>
+                  </tr>
+                </table>
+              </td>
+              <td width="53" height="4" class="color-tab" style="color:#eb5055;"></td>
+              <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                 
+                  <tr>
+                    <td height="2" valign="top" style="background-color: <%= menubar_color %>;"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table width="580" border="0" cellspacing="0" cellpadding="0" class="container" style="padding-bottom:40px;" id="reduce-padding-bottom">
+            <tr>
+              <td valign="top"  class="force-col" >
+                <table widht="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="increase-padding-top">
+                  <tr>
+                    <td valign="top" class="increase-padding-bottom">
+                      <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="container" id="pad-left-right">
+                        <tr>
+                          <td valign="top" >
+                            <table border="0" align="center" cellpadding="0" cellspacing="0" class="increase-padding-top">
+                              <tr>
+                                <td align="center" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#fff; font-weight:normal; text-align:center;" class="force-center">
+                                  <div class="force-center">
+                                    <multiline>You are receiving this message as you are part of the <%=@program.try(:title)%> program run on <a href="<%= root_url%>">Apptual.com</a> to unsubscribe contact the manager of the program or delete your profile.</multiline>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="center" valign="top" bgcolor="#212121" style="background-color:<%= background_color%>; ">
+          <table width="580" border="0" cellspacing="0" cellpadding="0" class="container" style="padding-top:10px; padding-bottom:10px; ">
+            <tr>
+              <td valign="top" style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif,Arial,Tahoma; color:#7f7f7f; font-weight:normal; text-align:center; " ><singleline><%= @program.organisation.company_name %> , all rights reserved 2014 &copy; </singleline>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

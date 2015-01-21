@@ -1,0 +1,97 @@
+<% page = "manage_program"; ppage = "judging_score"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail gn-icon-large"></i>
+      Judging Score
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Judging scores lets you manage  judges participation and the scores / comments they're giving"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Judging Score</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+  <div class="row">
+    <div class="col-md-12">
+      <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+        <div class="panel-heading">
+        <a href="sec1" name="sec1" class="section_nav"></a>
+          <div class="panel-title title_option">
+            <h3>Judging</h3>
+          </div>
+          <div class="panel-options">
+            <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body">
+          <%= link_to "<i class='glyphicon glyphicon-download-alt'></i> Download as CSV".html_safe,  export_judging_details_program_due_diligence_path(@program), :class=>"btn btn-info btn-sm btn-icon icon-left pull-right"%>
+          <% judges = User.in("_panellist" => @program.id.to_s)%>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                  <th>Pitch</th>
+                  <% judges.each do |judge| %>
+                    <th><%= judge.full_name%> </th>
+                  <%end%>
+                  <th>Total Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @program.pitches.each do |pitch|%>
+                <tr>
+                  <td><%= pitch.title%></td>
+                  <%judges.each do |judge|%>
+                    <% val = pitch_rating(pitch, judge)%>
+                    <td><%= val%></td>
+                  <% end %>
+                  <td><%= total_score(pitch) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+</div>
+<div class="col-md-2 stick_me">
+	<ul class="navigator-menu">
+		<li id="nav_sec1" class="active-navigator-title">
+			<p>Main Section</p>
+			<ul>
+				<li><a href="#sec1">Judging</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+	 $("[rel=tooltip]").tooltip();
+</script>

@@ -1,0 +1,4 @@
+<%= form_for(@organisation, url: organisations_update_user_org_path, :html => {:class => "reqForm"}, :remote=>true, :multipart=>true) do |f| %>
+  <%= render "organisations/shared/organisation_entity_form", :f => f%>
+<% end %>
+

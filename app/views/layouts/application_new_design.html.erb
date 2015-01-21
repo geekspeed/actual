@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width" />
+    <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,700">
+	  <title><%= [yield(:title)].reject(&:blank?).join(" | ") %></title>
+	  <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+	  
+   	<!-- CSS files -->
+		<%= stylesheet_link_tag    "jquery-ui-1.10.0.custom.min", :media => "all" %>
+		<%= stylesheet_link_tag    "css/bootstrap", :media => "all" %>
+		<%= stylesheet_link_tag    "css/bootstrap-theme", :media => "all" %>
+		<%= stylesheet_link_tag    "jquery.fancybox", :media => "all" %>
+		<%= stylesheet_link_tag    "jRating.jquery", :media => "all" %>
+		<%= stylesheet_link_tag    "jquery.rollbar", :media => "all" %>
+		<%= stylesheet_link_tag    "star-rating", :media => "all" %>
+		<%= stylesheet_link_tag 'css/summernote'%>
+		<%= stylesheet_link_tag 'css/summernote-bs2', :media => "all"%>
+		<link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<%= stylesheet_link_tag    "css/font-awesome.css", :media => "all" %>
+		<%= stylesheet_link_tag    "css/new_font-awesome.css", :media => "all" %>
+		<%= stylesheet_link_tag    "owl.carousel", :media => "all" %>
+		<%= stylesheet_link_tag    "owl.theme", :media => "all" %>
+		<%= stylesheet_link_tag    "bootstrap-tour-standalone.min", :media => "all" %>
+		<%= stylesheet_link_tag    "dashboard", :media => "all" %>
+		<!-- JS files -->
+		<%= javascript_include_tag "jquery-1.9.0" %>
+		<%= javascript_include_tag "jquery_ujs" %>
+		<%= javascript_include_tag "jquery-ui-1.10.0.custom.min" %>
+		<%= javascript_include_tag "js/bootstrap" %>
+		<%= javascript_include_tag "bootstrap-tour-standalone.min" %>
+    <%= javascript_include_tag 'js/typehead'%>
+		<%= javascript_include_tag "masonry.pkgd.min" %>
+		<%= javascript_include_tag "jquery.fancybox.pack" %>
+		<%= javascript_include_tag "jRating.jquery.stefan.new" %>
+		<%= javascript_include_tag "jquery.sticky-kit.min" %>
+		<%= javascript_include_tag "star-rating.min" %>
+		<%= javascript_include_tag "jquery.autosize" %>
+		<%= javascript_include_tag "jquery.collapsiblepanel" %>
+		<%= javascript_include_tag "js/jquery.mousewheel" %>
+		<%= javascript_include_tag "js/jquery.rollbar.min" %>
+		<%= javascript_include_tag "jquery.ddslick.min" %>
+		<%= javascript_include_tag "js/new_custom" %>
+		<%= javascript_include_tag "jquery.remotipart" %>
+    	<%= javascript_include_tag "jquery.iframe-transport.js" %>
+    	<%= javascript_include_tag 'js/summernote.min'%>
+    	<%= stylesheet_link_tag    "css/slide_component", :media => "all" %>
+    	<%= javascript_include_tag "html5shiv" %>
+    	<%= javascript_include_tag "respond.min" %>
+    	<%= javascript_include_tag "jquery.infinitescroll" %>
+    	<%= javascript_include_tag "bootstrap-progressbar" %>
+    	<%= javascript_include_tag "owl.carousel" %>
+    	<%= javascript_include_tag "jquery.autosize" %>
+    	<%= javascript_include_tag "bootstrap-progressbar" %>
+    <% field = (current_user ? ((current_user.try(:attributes).try(:keys) & ["_awaiting_participant", "_awaiting_mentor"]).first) : nil) %>
+    <% @prog = field.present? ? Program.where(id: current_user.try(field).try(:first)).first : nil%>
+		<% background_color = current_organisation.try(:background_color) || context_program.try(:organisation).try(:background_color) || @prog.try(:organisation).try(:background_color) || "#17a3bf" %>
+		<% menubar_color = current_organisation.try(:manubar_color) || context_program.try(:organisation).try(:manubar_color) || @prog.try(:organisation).try(:manubar_color) || "#17a3bf" %>
+		<style>
+a{
+color: <%= menubar_color %>;
+}
+		  #notifications{
+		    margin-left: 5px;
+		  }
+		  body .select_prog_btn {
+    background: <%= background_color %> url('/images/20_percent.png');
+  }
+  .timeline .item-left .dot, .timeline .item-right .dot{
+  	background: <%= menubar_color %>;
+  }
+  .btn-primary{
+  	background: <%= menubar_color %> !important;
+  }
+.read-more{
+color: <%= menubar_color %>;
+}
+.read-more span{
+color: <%= menubar_color %> !important;
+font-size: 10px;
+}
+.lost_pass_link{
+color: <%= menubar_color %> !important;
+}
+		  body #masthead {
+		  }
+		  
+		  .timeline .item-left .dot, .timeline .item-right .dot{
+		  	background: <%= menubar_color %>;
+		  }
+		  .post-authorx{
+		  	background: <%= menubar_color %>;
+		  }
+		  .user_defined_color{
+		  	color: <%= menubar_color %> !important;
+		  }
+		  #community_stream a{
+		    color: <%= background_color %>;
+		  }
+		  #community_stream a.button {
+    color: #fff !important;
+    font-weight: normal;
+}
+		  
+		  #community_stream a:hover{
+		    text-decoration:underline;
+		  }
+		  
+		  #masthead #headinner .default-slogan{
+		    font-weight:bold; 
+		    text-transform:none;
+		  }
+		  
+		  #mainnavi ul li.mainnav_link a{
+		    padding: 5px 15px 8px;
+		  }
+		  .clear{
+		    clear:both; 
+		  }
+		  
+		  .category .inner .title{
+		    padding: 20px 15px; 
+		  }
+		  
+		  .category .inner td.expandRow a{
+		    font-weight:normal;
+		    font-size:50px;
+		    color: <%= menubar_color %>; 
+		  }
+		  
+		  .progress_bar{
+		    border-radius: 4px 4px 4px 4px;
+		    height: 16px; 
+		    -webkit-box-shadow:inset 0 0 4px #000;
+		    -moz-box-shadow:inset 0 0 4px #000;
+		    box-shadow:inset 0 0 3px #000;
+		    border:none;
+		    background: white;
+		  }
+		  
+		  .grey_bar, .green_bar, .red_bar, .orange_bar{
+		    border-radius: 4px 4px 4px 4px;
+		    height: 16px;
+		  }
+		  
+		  body .category.row_incomplete{
+		    background: none repeat scroll 0 0 <%= menubar_color %>;
+		    border-top: 2px solid <%= menubar_color %>;
+		  }
+		  
+		  body .category.row_incomplete .expandRow a{
+		    color:white;
+		  }
+		  
+		  .category .inner .title{
+		    width: 85%; 
+		  }
+		  
+		  textarea{
+		    resize:none;  
+		  }
+		  
+		  body h2.sidebarTitle{
+		    margin:0 0 15px 0;
+		    text-align:center;
+		    color:#434343 !important;
+		  }
+		  
+		  .main_boxright{
+		    border-color: <%= menubar_color %>;
+		  }
+		  
+		  .watermark{
+		    color: #8f8f8f;
+		  }
+		  
+		  .boxright h2{
+		    color:#434343;  
+		  }
+		  
+		  .fancybox-lock .fancybox-overlay{
+		    overflow: auto;
+		  }
+		  
+		  .popup_header{
+		    color:#434343;
+		    font-size:16px;
+		    font-weight:bold;
+		    margin-top:10px;
+		  }
+		  
+		  .popup_line{
+		    width:80%;  
+		    margin:0 auto;
+		  }
+		  
+		  .popup_line hr{
+		    margin-top: 20px;
+		    margin-bottom:20px;
+		  }
+		  
+		  .fancybox-close{
+		    cursor: pointer;
+		    height: 20px;
+		    position: absolute;
+		    right: 10px;
+		    top: 15px;
+		    width: 36px;
+		    z-index: 8040;  
+		  }
+		  
+		  .popup_button_block{
+		    width:300px;margin:0 auto 25px;
+		  }
+		  
+		  .popup_button_sub_block{
+		    width:130px;float:left;margin-right:10px;
+		  }
+		  
+		  body .popup_button_block a.popup_button{
+		    float:none;font-weight:bold;background:#cacaca; 
+		    box-shadow: 0 2px 2px -2px gray;
+		  }
+		  
+		  body .popup_button_block a.button_active{
+		    background: <%= menubar_color %>; 
+		  }
+		  
+		  .label_left{
+		    font-size:16px;
+		    font-weight:bold;
+		    color:#434343;
+		    width:15%;
+		  }
+		  
+		  .progress_bar_td{
+		    width:15%;
+		  }
+		  
+		  .label_right{
+		    width:50%;  
+		    color:#434343;
+		    font-size:13px;
+		    padding-top:6px;
+		  }
+		  
+		  .detailed_values td{
+		    padding-bottom: 15px; 
+		  }
+		  
+		  .detailed_values{
+		    margin-left:20px;
+		  }
+		  
+		  .progress_bar_td .progress_bar{
+		    margin-top:5px; 
+		  }
+		  
+		  #pitchhead{
+		    width:882px;
+		    margin-bottom:40px;
+		  }
+		  
+		  #mainnavi{
+		    /*width:882px;  */
+		  }
+		  
+		  #pitchhead h1{
+		    color: #434343;
+		  }
+		  
+		  .progress_table_container{
+		    padding: 2px 8px;
+		  }
+		  
+		  .row_incomplete .button{
+		    color: <%= menubar_color %>;
+		    background:white;
+		  }
+		  
+		  .profilebox_section .uppercase {
+		    color: <%= menubar_color %>;
+		    font-weight:bold;
+		  }
+		  
+		  .row_incomplete .uppercase {
+		    color: white;
+		    font-weight:bold;
+		  }
+		  
+		  .profilebox_section .expand_hidden {
+		    margin-top: -15px;
+		  }
+		  
+		  .iteration_counter{
+		    padding:0;
+		    background:none;
+		    font-size:13px; 
+		    color:#A4A4A4;
+		  } 
+		  
+		  .iteration_counter a{
+		    color:#A4A4A4;
+		  }
+		  
+		  .rating_content{
+		    margin: 15px 0; 
+		  }
+		  
+		  .rating_count{
+		    color:#434343;
+		    font-size:14px;
+		    position:relative;
+		    top:2px;  
+		  }
+		  
+		  .update-sign{
+		    float:right;
+		    margin-right:10px;
+		    width:100px;  
+		    position:relative;
+		  }
+		  
+		  .update-sign span{
+		    margin-left:5px;
+		    color:#434343;
+		    text-decoration:underline;
+		    font-size:15px;
+		    font-weight:bold;
+		    float:right;  
+		  }
+		  
+		  .update-sign img{
+		    position:absolute;
+		    top:-6px;
+		    left:13px;  
+		  }
+		  
+		  .update-sign div{
+		    clear:both;
+		    color:#a4a4a4;
+		    font-size:11px;
+		  }
+		  
+		  .rating_content hr{
+		    color:#a4a4a4;
+		    width:70%;  
+		    display:block;
+		    margin:24px auto;
+		  }
+		  
+		  .last_iteration{
+		    color:#696969;
+		    font-weight:bold;
+		      
+		  }
+		  
+		  .links_content{
+		    margin: 12px 0; 
+		  }
+		  
+		  .links_content a{
+		    text-decoration:underline;
+		    margin-right:30px;
+		  }
+		  
+		  .right_status{
+		    font-size:12px;
+		    color:#a4a4a4;  
+		    margin-top:5px;
+		    display:block;
+		  }
+		  
+		  .main_boxright .less-margin{
+		    margin-bottom:0px;  
+		    padding-bottom:0px; 
+		  }
+		  .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+		background-color: <%= menubar_color %>;
+}
+.dropdown.open{
+background-color: <%= menubar_color %>;
+}
+body #mainnavi ul li.dropdown.open {
+		    background: <%= menubar_color %>;
+		  }
+		  #expand_sub_additional td{
+		    border-bottom: 1px solid #a4a4a4;
+		    padding: 10px 30px 10px 0;  
+		  }
+		  body .ui-state-active, body .ui-widget-content .ui-state-active, body .ui-widget-header .ui-state-active {
+		    background: <%= menubar_color %>;
+		    color: white;
+		  }
+		  body #mainnavi ul li.active.mainnav_link {
+		    background: <%= menubar_color %>;
+		  }
+body #mainnavi ul li.active.mainnav_link a {
+		    background: <%= menubar_color %>;
+box-shadow: none;
+-webkit-box-shadow: none;
+		  }
+		  body #mainnavi ul li.mainnav_link:hover {
+		    background: <%= menubar_color %> !important;
+		  }
+		  .active-navigator-title p{
+  	color:<%= menubar_color %>;
+  	border-left: 2px solid <%= menubar_color %>;
+  }
+  .recent-posts .date .day {
+  color:<%= menubar_color %>;
+  }
+  .recent-posts .date .month{
+    background-color: #0088cc;
+   }
+.back-to-top {
+    background-color: <%= menubar_color %> !important;
+}
+.navbar-default .navbar-toggle {
+    border-color: <%= menubar_color %> !important;
+}
+.navbar-toggle{
+background-color: <%= menubar_color %> !important;
+}
+		  body .box_310 h2, body .box_310 h2 a {
+		    color: <%= menubar_color %>;
+		  }
+body ul#leftmenu li a {
+		    color: <%= menubar_color %>;
+padding-left: 50px;
+		  }
+		  
+		  body ul#leftmenu li:hover {
+		    background: <%= menubar_color %>;
+		  }
+#leftmenu-drop li:hover{
+background-color: <%= menubar_color %> !important;
+}
+#leftmenu-drop li:hover a{
+color:#fff;
+}
+.right_admin_menu li a, .right_admin_menu li a i{
+	color:<%= menubar_color %> !important;
+}
+.right_admin_menu li a:hover, .right_admin_menu li a:hover i{
+	background:<%= menubar_color %> !important;
+	color:#fff !important;
+}
+.right_admin_menu li.active a, .right_admin_menu li.active a i{
+background:<%= menubar_color %> !important;
+	color:#fff !important;
+}
+.right_nav_link{
+color: <%= menubar_color %> !important;
+}
+.right_nav_link:hover{
+color:#fff !important;
+background:<%= menubar_color %>;
+}
+.admin_toggle{
+color:<%= menubar_color %> !important;
+}
+.admin_toggle a{
+color:<%= menubar_color %> !important;
+}
+		  body #submit {
+		    background: <%= menubar_color %>;
+		  }
+		  body a.button {
+		    background: <%= menubar_color %>;
+		  }
+		  body a.button_low {
+		    background: <%= menubar_color %>;
+		  }
+		  body a.button_low:hover {
+		    color: #fff;
+		  }
+		  body a.button_small {
+		    background: <%= menubar_color %>;
+		  }
+		  body #main .block .row .user_status_Yes {
+		    background-color: <%= menubar_color %>;
+		  }
+		  body #main .block .row .send_reminder {
+		    background-color: <%= menubar_color %>;
+		  }
+		  body ul#leftmenu li.active {
+		    color: <%= menubar_color %>;
+		  }
+		  body #main .block .send_reminder {
+		    background: <%= menubar_color %>;
+		  }
+		  body .jRatingAverage {
+		    background: <%= menubar_color %>;
+		  }
+		  body .star_button, body .normal_button {
+		    background-color: <%= menubar_color %>;
+		  }
+		  body .custom_color {
+		    color: <%= menubar_color %>;
+		    font-weight: bold;
+		  }
+		  body #inbox.newMail {
+		    background-color: <%= menubar_color %>;
+		  }
+		  a.unlikeFeed, a.unlikeComment {
+		    color: <%= menubar_color %>;
+		  }
+		  .unlikeFeed .hearthbox {
+		    background: url("/images/hearth_unlike.png");
+	width:20px;
+		  }
+		  .unlikeComment .hearthbox {
+		    background-color: <%= menubar_color %>;
+		  }
+		  h2.section_title {
+		    color: <%= menubar_color %>;
+		  }
+		  .featured {
+		    color: <%= menubar_color %>;
+		  }
+		  body #pitchhead {
+		    /*background-color: #17a3bf;*/
+		  }
+		  body .progress_table_container {
+		    /*background-color: #17a3bf;*/
+		  }
+		  body h2.sidebarTitle {
+		    color: <%= menubar_color %>;
+		  }
+		  body .progress_history h2 {
+		    background-color: <%= menubar_color %>;
+		  }
+		  body .progress_history h3 {
+		    color: #17a3bf;
+		  }
+		  body .category {
+		    border-top: <%= menubar_color %> 2px solid;
+		  }
+		  body .colored_border {
+		    border-color: <%= menubar_color %>;
+		  }
+		  body #masthead {
+		    background: <%= background_color %>;
+		  }
+		  body #footer {
+		    background: <%= menubar_color %>;
+		  }
+		  body #select_prog_btn {
+		    background: <%= background_color %> url('/images/20_percent.png');
+		  }
+		  body #select_action_btn {
+		    background: <%= background_color %> url('/images/20_percent.png');
+		  }
+		  body #select_action_list {
+		    border-top: 1px <%= background_color %> solid;
+		  }
+		  body #select_prog_list {
+		    border-top: 1px <%= background_color %> solid;
+		  }
+
+		  #rightcontent {
+		    color: #666666;
+		    float: right;
+		    font-size: 13px;
+		    line-height: 18px;
+		    position: relative;
+		  }
+		  .placeholder { color: #aaa; }
+		  .no_display { display: none; }
+		  .pull_right { float:right; }
+		  .pull_left { float: left; }
+		  .pull_none { float: none; }
+		  .full_width { width: 100% !important; }
+		  .manage_companyBox { 
+		    width:100%; 
+		    margin: 0 0 40px 0; 
+		  }
+		  .box_310 h2 {
+		    border-bottom: none;
+		    color: #C8C8C8;
+		    font-size: 18px;
+		    font-weight: normal;
+		    margin: 0px;
+		    padding: 0px;
+		    text-align: inherit;
+		  }
+		  .company_imageBox{
+		    width: 200px; 
+		    padding-right: 15px; 
+		    text-align: right;
+		  }
+		  .company_view { margin: 0 0 20px 20px; }
+		  .company_details { margin-bottom: -12px; }
+		  .company_registration { 
+		    height: 30px; 
+		    line-height: 30px; 
+		    width: 120px;
+		  }
+		  .short_input { width: 120px !important; }
+		  .fullwidth { width: 430px !important; }
+		  .program_plan_td1 { width: 70px; }
+		  .program_plan_td2 { width: 34px; }
+		  .program_plan_td3 { width: 84px; }
+		  .program_plan_td4 { width: 100px; }
+		  .program_plan_td5 { width: 200px !important; }
+		  .light_metric { width: 100px; }
+		  .auto_width { width: auto; }
+		  .no_margin { margin: 0px; }
+		  .virtual_dollar { width: 250px; }
+		  .text_underline { text-decoration: underline; }
+		  .dd_label { font-weight: normal !important; display: inline !important; }
+		  .dd_radio_margin { margin-left: 20px; }
+		  .h2_underline {
+		    border-bottom: 1px solid #DDDADA !important;
+		    font-weight: normal;
+		    margin: 0 25px 10px !important;
+		    padding: 20px 0 !important;
+		    text-align: center !important;
+		  }
+		  .leftcol label { width: 112px; }
+		  .pitchcontent .label_row label {
+		      font-weight: normal;
+		      font-size: 13px;
+		  }
+		  .tag_label {
+		    font-size: 13px !important;
+		    font-weight: normal !important;
+		  }
+		  .file_field_width {
+		    width: 200px;
+		  }
+		  .tasks_header {
+		    background: none repeat scroll 0 0 #FBFBFB;
+		    border: 0 none;
+		    padding: 0 0 10px;
+		  }
+		  h2.tasks {
+		    border-bottom: 1px solid #E8E8E8;
+		    border-top: 1px solid #E8E8E8;
+		    font-size: 15px;
+		    margin: 0 0 5px;
+		    padding: 10px 0;
+		  }
+		  a.glyphicon-color {
+		    color: <%= menubar_color %>;
+		  }
+body #mainnavi ul li ul#leftmenu li.active a{
+background-color:transparent;
+}
+.dropdown-menu li.active{
+background-color:<%= menubar_color %> !important;
+}
+li.left_menu_pitches{
+background-image: url('/images/lamp.png') !important;
+background-repeat: no-repeat !important;
+background-position: 15px 7px !important;
+}
+li.active.left_menu_pitches, li.left_menu_pitches:hover{
+background-image: url('/images/lamp_w.png') !important;
+background-repeat: no-repeat !important;
+background-position: 15px 7px !important;
+}
+li.left_menu_community_feed{
+background-image: url('/images/rss.png') !important;
+background-repeat: no-repeat !important;
+background-position: 15px 11px !important;
+}
+li.active.left_menu_community_feed, li.left_menu_community_feed:hover{
+background-image: url('/images/rss_w.png') !important;
+background-repeat: no-repeat !important;
+background-position: 15px 11px !important;
+}
+h4.left_menu_mentor{
+background-image: url('/images/colg.png') !important;
+background-repeat: no-repeat !important;
+background-position: 8px 9px !important;
+padding-left: 30px !important;
+}
+li.active h4.left_menu_mentor, li h4.left_menu_mentor:hover{
+background-image: url('/images/colg_w.png') !important;
+background-repeat: no-repeat !important;
+background-position: 8px 9px !important;
+}
+h4.left_menu_ppl{
+background-image: url('/images/ppl.png') !important;
+background-repeat: no-repeat !important;
+background-position: 10px 8px !important;
+padding-left: 30px !important;
+}
+li.active h4.left_menu_ppl, li h4.left_menu_ppl:hover{
+background-image: url('/images/ppl_w.png') !important;
+background-repeat: no-repeat !important;
+background-position: 10px 8px !important;
+}
+.dropdown:hover{
+
+}
+.dropdown-toggle:hover{
+
+}
+.box-post-date{
+color:<%= menubar_color %>;
+font-size: 12px;
+}
+.newsentry .textbox a{
+color:<%= menubar_color %>;
+font-size: 14px !important;
+}
+.feed-actions a{
+color:<%= menubar_color %> !important;
+font-size: 14px !important;
+}
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box;
+}
+*, *:before, *:after {
+    -moz-box-sizing: border-box;
+}
+body ul#leftmenu li.active a {
+    
+}
+.user-name a{
+color: <%= menubar_color %>;
+}
+#mainnavi ul li.mainnav_link a:hover{
+color:#fff;
+}
+.dropdown-menu.top_right_menus{
+background: <%= background_color %> url('/images/20_percent.png') !important;
+}
+.ui-widget-content a{
+
+}
+.add_activity_link a{
+	color: <%= menubar_color %> !important;
+}
+		</style>
+		<%= stylesheet_link_tag    "css/custom", :media => "all" %>
+		<style type="text/css">
+			.main-navbar {
+				background: #fff;
+			}
+			#mainnavi ul li.mainnav_link a{
+				color: <%= menubar_color %>;
+			}
+			.gn-icon-menu:before {
+		    background: none repeat scroll 0 0 <%= menubar_color %> !important;
+		    box-shadow: 0 3px #fff, 0 -6px <%= menubar_color %>, 0 -9px #fff, 0 -12px <%= menubar_color %> !important;
+			}
+			.gn-menu-main a {
+		    
+			}
+	.menu_with_sub{
+color:  <%= menubar_color %> !important;
+}
+			.no-touch .gn-menu-main a:hover,
+			.no-touch .gn-menu li.gn-search-item:hover,
+			.no-touch .gn-menu li.gn-search-item:hover a {
+				background: #444 !important;
+				color:#ddd !important;
+			}
+.gn-arrow{
+color:  <%= menubar_color %> !important;
+}
+.nicEdit-pane input[type="submit"]{
+background:<%= menubar_color %> !important;
+color:#fff !important;
+}
+.quotes-content .testimonialContent{
+
+}
+.gn-menu-wrapper{
+	background:<%= menubar_color %> !important;
+}
+.gn-icon-menu{
+	background: <%= menubar_color %> !important;
+}
+.gn-menu li{
+	background: <%= menubar_color %> !important;
+}
+.no-touch .gn-menu-main a:hover,
+.no-touch .gn-menu li.gn-search-item:hover,
+.no-touch .gn-menu li.gn-search-item:hover a {
+		background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2) !important;
+  color: #eee !important;
+}
+ .gn-menu li.active a{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
+  color: #eee !important;
+}
+.login-sum-btn{
+  	background: <%= background_color %> url('/images/20_percent.png');
+  	font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+  }
+  .page_head{
+  	color:<%= menubar_color %>;
+  }
+  .breadcrumb a.active_bread{
+	color: <%= menubar_color %>;
+}
+
+.right_admin_menu li.active a{
+background:<%= menubar_color %> !important;
+ color:#fff; 
+}
+.admin_toggle.active{
+ background: <%= menubar_color %> !important;
+ color:#fff !important;
+ border-radius: 0;
+ box-shadow: none;
+}
+.timeline .post-excerpt a {
+    color: <%= menubar_color %> !important;
+}
+.panel .panel-links ul li a i{
+	color: <%= menubar_color %> !important;
+}
+.panel_bottom_link{
+	background: <%= menubar_color %> !important;
+}
+.corse_title_links a{
+	color:<%= menubar_color %>;
+}
+.progress-bar-custom{
+	background: <%= menubar_color %>;
+}
+.lesson_title{
+	color:<%= menubar_color %>;
+}
+.todo_list a{
+	background: <%= menubar_color %>;
+}
+.info_list p a{
+	color: <%= menubar_color %>;
+}
+.media-heading a{
+	color: <%= menubar_color %>;
+	font-weight: bold;
+}
+.active.summary_link{
+	background: <%= menubar_color %>;
+	color:#fff;
+}
+.active.summary_link{
+	background: <%= menubar_color %>;
+}
+.active.summary_link a{
+	color:#fff;
+}
+.custom_btn{
+	background: <%= menubar_color %> !important;
+}
+.corse_title_links a{
+    color:<%= menubar_color %>;
+}
+.progress-bar-custom{
+    background: <%= menubar_color %>;
+}
+.lesson_title{
+    color:<%= menubar_color %>;
+}
+.todo_list a{
+    background: <%= menubar_color %>;
+}
+.info_list p a{
+    color: <%= menubar_color %>;
+}
+.media-heading a{
+    color: <%= menubar_color %>;
+    font-weight: bold;
+}
+.active.summary_link{
+	background: <%= menubar_color %>;
+	color:#fff;
+}
+.active.summary_link{
+	background: <%= menubar_color %>;
+}
+.active.summary_link a{
+	color:#fff;
+}
+.next_video_my_title{background:<%= menubar_color %>;opacity:0.7;padding:10px;color:#ffffff;}
+a.main-activity-hover:hover{
+    color:<%= menubar_color %>;
+  }
+.form-wizard #owl-example div.pahse-in.completed a span, .form-wizard #owl-example div.pahse-in.uncompleted a span{
+	background: <%= menubar_color %>;
+}
+.video_nav a{
+	color:<%= menubar_color %>;
+}
+
+.pitch-tags{
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+  .pitch-tags li, .pitch-tags a{
+	float:left;
+	height:24px;
+	line-height:24px;
+	position:relative;
+	font-size:11px;
+	}
+  .pitch-tags a{
+	margin:10px;
+	padding:0 10px 0 12px;
+	background:<%= menubar_color %>;
+	color:#fff;
+	text-decoration:none;
+	-moz-border-radius-bottomright:4px;
+	-webkit-border-bottom-right-radius:4px;	
+	border-bottom-right-radius:4px;
+	-moz-border-radius-topright:4px;
+	-webkit-border-top-right-radius:4px;	
+	border-top-right-radius:4px;	
+	} 
+  .pitch-tags a:before{
+	content:"";
+	float:left;
+	position:absolute;
+	top:0;
+	left:-12px;
+	width:0;
+	height:0;
+	border-color:transparent <%= menubar_color %> transparent transparent;
+	border-style:solid;
+	border-width:12px 12px 12px 0;		
+	}
+  .pitch-tags a:after{
+	content:"";
+	position:absolute;
+	top:10px;
+	left:0;
+	float:left;
+	width:4px;
+	height:4px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	background:#fff;
+	-moz-box-shadow:-1px -1px 2px #004977;
+	-webkit-box-shadow:-1px -1px 2px #004977;
+	box-shadow:-1px -1px 2px #004977;
+	}
+
+  .pitch-tags a:hover{background:#555;}	
+
+  .pitch-tags a:hover:before{border-color:transparent #555 transparent transparent;}
+	
+	.tasks_list li.branded{
+		border-left: 2px solid <%= menubar_color %>;
+	}
+	.tasks_list li.branded a{
+		color:<%= menubar_color %>;
+	}
+	.phase_dropdown{
+		background: <%= menubar_color %>;
+	}
+	.phase_dropdown i{
+		color: <%= menubar_color %>;
+	}
+	.cource_indicator.yellwo_indi{
+		background:<%= menubar_color %>;
+	}
+	.cource_indicator.green_indi{
+		background:<%= menubar_color %>;
+	}
+	.avatar_letter{
+		background:<%= menubar_color %>;
+	}
+	
+   .panel > .panel-heading > .panel-options > a.panel-options-link {
+    color: <%= menubar_color %>;
+}
+.panel > .panel-heading > .panel-options > a.panel-options-link i{
+    color: <%= menubar_color %>;
+}
+.panel-title > h3 > i{
+	color: <%= menubar_color %>;
+}
+.last-iter-box{
+	
+}
+.all-iterations i{
+	color:<%= menubar_color %>;
+}
+.panel-heading .help-sign {
+	color: <%= menubar_color %>;
+}
+.triangle-edit i{
+	color: <%= menubar_color %>;
+}
+.remove-pic{
+	color: <%= menubar_color %>;
+}
+.thumb-gallery{width: 200px;margin-top:10px;float: left;}
+.panel-trans .panel-title h3{
+	font-weight: bold !important;
+	color: <%= menubar_color %>;
+}
+.panel-cus > .panel-heading {
+    background-color: <%= menubar_color %>;
+    border-color: #eee;
+    color:#fff;
+    text-transform: uppercase;
+}
+.panel.panel-cus > .panel-heading > .panel-options > a{
+	color:#fff;
+}
+.bg-primary {
+    background-color: <%= menubar_color %>;
+    color: #ffffff;
+}
+.active_more_link{
+	color: <%= menubar_color %>;
+}
+.tags_switch{
+	color: <%= menubar_color %>;
+}
+.get-in-touch-dropdown button a{
+	color: <%= menubar_color %>;
+}
+.panel-sec-item p{
+color: <%= menubar_color %>;	
+}
+.event-month{
+	background-color: <%= menubar_color %> !important;
+}
+</style>
+		<link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
+    <%= stylesheet_link_tag    "normalize", :media => "all" %>
+    <%= stylesheet_link_tag    "component", :media => "all" %>
+    <%= stylesheet_link_tag    "icomoon", :media => "all" %>
+    <%= stylesheet_link_tag    "css/checklist", :media => "all" %>
+    <%= javascript_include_tag "modernizr.custom" %>
+    <%= javascript_include_tag "jquery.sticky" %>
+    <%= javascript_include_tag "js/checklist.min" %>
+    <%= javascript_include_tag "jquery.autogrow-textarea" %>
+    <%= javascript_include_tag "jquery.mosaicflow" %>
+    <%= yield(:stylesheets) %>
+    <%= yield(:javascript) %>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    "dashboard", :media => "all" %>
+    <%= javascript_include_tag "velocity.min" %>
+    <%= javascript_include_tag "popmain" %>
+    
+    <%= javascript_include_tag "animo" %>
+    <%= stylesheet_link_tag "animate+animo", :media => "all" %>
+    <%= stylesheet_link_tag "badge_tooltip", :media => "all" %>
+    <%= stylesheet_link_tag "tooltip-bloated", :media => "all" %>
+    <style type="text/css">
+    	.win_overlay{
+    		background: url('../images/black_lozenge.png') top left repeat;
+    		opacity: 0.8;
+    		position: absolute;
+    		z-index: 9998;
+    		width: 100%;
+    		height: 100%;
+    	}
+    	.congratulations{
+    		position: absolute;
+    		background: #f7f7f7;
+    		border-radius:10px;
+    		box-shadow: 0 0 25px #333; 
+    		padding: 10px;
+    		text-align: center;
+    		z-index: 9999;
+    	}
+    	.congratulations strong{
+    		font-family: 'Oswald', sans-serif;
+    		font-size: 24px;
+    		font-weight: bold;
+    		text-transform: uppercase;
+    		padding: 10px 0;
+    		color: #f9a41a;
+    		display: block;
+    	}
+    	.badge_won{
+    		position: absolute;
+    		background: #f7f7f7 url('../images/rays.jpg') top center no-repeat;
+    		background-size: cover;
+    		border-radius:10px;
+    		box-shadow: 0 0 25px #333; 
+    		text-align: center;
+    		z-index: 9999;
+    		width: 350px;
+    	}
+    	.badge_won img{
+    		margin-top: 10px;
+    	}
+    	.badge_won strong{
+    		font-family: 'Oswald', sans-serif;
+    		font-size: 24px;
+    		font-weight: bold;
+    		text-transform: uppercase;
+    		padding: 10px 0;
+    		color: #f9a41a;
+    		display: block;
+    	}
+    	.badge_won_desc{
+		    border-top: 1px dashed #fff;
+		    color: #444;
+		    font-family: "Oswald",sans-serif;
+		    font-size: 12px;
+		    line-height: 18px;
+		    margin: 10px 10px 0;
+		    padding: 10px 0;
+    	}
+    	.badge_won_link{
+    		border-radius: 0 0 10px 10px; 
+    		padding: 10px 0;
+    		border: none;
+    		box-shadow: 0 0 0;
+    		width:100%;
+    	}
+    	.badge_won_link i{
+    		color:#fff;
+    	}
+    	#close_trophy{
+    		background: #ccc;
+    		color: #700000;
+    		font-size: 14px;
+    		font-family: "Oswald",sans-serif;
+    		padding: 10px;
+    		border-radius: 0 0 0 10px;
+    		position: absolute;
+    		top: 0;
+    		right: 0;
+    	}
+    </style>
+    <script type="text/javascript">
+    	jQuery.fn.center = function () {
+		    this.css("position","absolute");
+		    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+		    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+		    return this;
+			}
+    	$(document).ready(function() {
+      	$('#win_btn').click(function(){
+      		$('.win_overlay').show();
+      		$('.win_overlay').animo( { animation: 'bounceInUp', duration: 0.5 });
+      		$('.congratulations').center();
+      		$('.congratulations').show();
+      		$('.congratulations').animo({ animation: 'bounceInUp', duration: 1 });
+      		$('.trophy_image').attr("src", "");
+      		$('.trophy_image').attr("src", "../images/trophy3.gif");
+      		function delayed_animation () {
+      			$('.congratulations').animo({ animation: 'bounceOutUp', duration: 0.5, keep: true });
+      			$('.badge_won').center();
+      			$('.badge_won').show();
+      			$('.badge_won').animo({ animation: 'bounceInDown', duration: 1, keep: true });
+					}
+      		setTimeout(delayed_animation, 1800);
+      	});
+      	
+      	$('#close_trophy').click(function(){
+      		$('.badge_won').animo({ animation: 'bounceOutDown', duration: 0.5, keep: true });
+      		$('.win_overlay').animo( { animation: 'bounceOutDown', duration: 1 , keep: true});
+      		function destroy_animation () {
+      			$('.badge_won').hide();
+      			$('.win_overlay').hide();
+      			$('.congratulations').hide();
+      		}
+      		setTimeout(destroy_animation, 1200);
+      	});
+    	});
+    </script>
+  </head>
+  <body style="background: #f4f4f4;">
+	  <div id="fb-root"></div>
+	  <!--<a href="#" id="win_btn">WIN</a>-->
+	  <div class="congratulations" style="display: none;">
+	  	<img src="../images/trophy3.gif" class="trophy_image" />
+	  	<strong>Congratulations</strong>
+	  </div>
+	  <div class="badge_won" style="display: none;">
+	  	<a href="#" id="close_trophy">X</a>
+	  	<img src="../images/test_badge.png" width="60" />
+	  	<strong>You won the vector scouts badge</strong>
+	  	<p class="badge_won_desc">
+	  		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+	  	</p>
+	  	<a href=<%= user_path(current_user)%> class="badge_won_link btn btn-primary"><i class="fa fa-trophy"></i> View on my profile</a>
+	  </div>
+	  <div id="page" class="hfeed site">
+      <div class="main_header_container">
+				<%= render "layouts/shared/bs_header" %>
+				<%= render "shared/bs_navbar"%>
+			</div>
+	    <div id="main" class="wrapper">
+		  <%= render "shared/flash" %>
+	      <%= render "shared/sidebar" %>
+        <%= yield %>
+	    	<div class="clr"></div>
+	    </div><!-- #main .wrapper -->
+	    <!-- <div id="footer" role="contentinfo"> -->
+    </div><!-- #page -->
+    <%= render "layouts/shared/feedback" %>
+    <%= render "layouts/shared/questions" %>
+    <%= render "layouts/shared/analytics" %>
+    <div class="win_overlay" style="display: none;"></div>
+  </body>
+</html>

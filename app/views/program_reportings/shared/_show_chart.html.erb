@@ -1,0 +1,43 @@
+		<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3><%= @report.graph_name %></h3>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div id="show_chart<%= @report.id %>"></div>
+						<% if !@report.blank? %>    
+			         <table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+			            <thead>
+			                <tr role="row">
+			                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 330px;" aria-label="Student Name: activate to sort column ascending"><%= @graph_data[1] %></th>
+			                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 190px;" aria-label="Average Grade: activate to sort column ascending"><%= @graph_data[2] %></th>
+			                </tr>
+			            </thead>                  
+			            <tbody role="alert" aria-live="polite" aria-relevant="all">
+			              <% chart_table(@report.reporting, @report.graph_type).each_with_index do |report| %>
+			                <tr class="odd">
+			                    <td class=" "><%= report[0] %></td>
+			                    <td class=" "><%= report[1] %></td>                        
+			                </tr>
+			              <% end %>
+			            </tbody>
+			        </table> 
+			    <% end %>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="table">
+			<div class="col-md-6">
+				<%= link_to "<i class='glyphicon glyphicon-export'></i> Export to CSV".html_safe, export_csv_program_reportings_path(context_program,:report_id=>@report.id,format: "csv"), :class=>"btn btn-success btn-icon icon-left  btn-sm pull-left" %>
+			</div>
+			<div class="col-md-6">
+				<%= link_to "<i class='glyphicon glyphicon-trash'></i> Delete".html_safe,remove_report_program_reportings_path(context_program,:report_id=>@report.id), :method=>"delete", :class=>"btn btn-danger btn-icon icon-left  btn-sm pull-right" %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<br />

@@ -1,0 +1,78 @@
+      <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :name, "Product Name" %></p></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :name, class: "form-control"%>
+	      </div>
+	    </div>
+	    
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :description %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :description, class: "form-control"%>
+	      </div>
+	    </div>
+<%
+=begin%>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :duration %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :duration, class: "form-control" %>
+	      </div>
+	    </div>
+<%
+=end%>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :interval %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.select :interval, options_for_select([["One Off", "one_off"], ["Monthly", "month"], ["Yearly", "year"]]), class: "form-control" %>
+	      </div>
+	    </div>
+	    
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :amount %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :amount, class: "form-control" %>
+	      </div>
+	    </div>
+	     <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :currency_code %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.select :currency_code, options_for_select([["$", "USD"], ["€", "EUR"], ["£", "GBP"]]), class: "form-control" %>
+	      </div>
+	    </div>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :quantity %></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :quantity, class: "form-control numeric" %>
+	      </div>
+	    </div>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        <div style="line-height: 28px;"><%= f.label :plan_type%></div>
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= f.text_field :plan_type, class: "form-control", value: "organisation", :readonly => true %>
+	      </div>
+	    </div>
+	    <div class="row" style="margin-top: 20px;">
+	      <div class="col-sm-4 setting-font">
+	        
+	      </div>
+	      <div class="col-sm-8">
+	      	<%= button_tag "submit", class: "btn btn-default"  %>
+	      </div>
+	    </div>

@@ -1,0 +1,143 @@
+<% if ankor == "pitch" %>
+  <%= link_to "Form Preview", "#form_preview", :class => "fancybox", :id => "submit"%>
+  <%= tag 'br'%>
+  <%= tag 'br'%>
+  <%= tag 'br'%>
+  <div style="display: none" id="form_preview">
+    <div class="lightbox_box">
+      <h2>Form Preview</h2>
+      <%= render "pitch_form_preview" %>
+    </div>
+  </div>
+  <%= content_tag :div, :class => "" do%>
+  <%= form_tag polymorphic_path([@program, :customisations]) do %>
+  <%= hidden_field_tag :ankor, @anchor %>
+  <%= hidden_field_tag :referee, @klass %>
+  
+    <%= content_tag :div, class: "col-md-3" do%>
+   	  <span><%= label_tag :welcome_section %></span>
+  	<% end %>
+  
+  <div class="form-group">
+    <%= text_area_tag :context_message, @program.context_messages.where(anchor: @anchor).first.try(:context_message), :class=> "form-control summernote", :style=>"width:50%" %>
+    <div class="clr"></div>
+  </div>
+  
+  <%= content_tag :div, class:"col-md-3" do%>
+    <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+    <% title_field = t("pitch:title") ? t("pitch:title") : "Title"%>
+    <span><%= content_tag :b, title_field %></span>
+    <%= text_field_tag "semantics[pitch:title][singular]", title_field , style: "display:none", class: "form-control input-size1" %>
+  <% end %>
+  
+  <p class="form-group">
+    <%= text_field_tag :title, "", :class=> "form-control" %>
+    <%= link_to "Add Help", "#help_content_title", :class => "fancybox pull-right" , :style => "margin: -35px 23px 0 0"%>
+  </p>
+
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "title").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+  <%= content_tag :div, class: "col-md-3" do%>
+    <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+    <% avatar_field = t("pitch:avatar") ? t("pitch:avatar") : "Upload visual for your pitch"%>
+    <span><%= content_tag :b, avatar_field %></span>
+    <%= text_field_tag "semantics[pitch:avatar][singular]", avatar_field , style: "display:none", class: "form-control input-size1" %>
+  <% end %>
+  <div class="form-group">
+  	<div class="browse-wrapper">
+    <%= file_field_tag :avatar, :class => "file_field_width" %>
+    </div>
+    <%= link_to "Add Help", "#help_content_upload", :class => "fancybox pull-right" , :style => "margin: -35px 23px 0 0"%>
+  </div>
+
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "avatar").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+  <%= content_tag :div, class: "col-md-3" do%>
+    <%#= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+    <% summary_field = t("pitch:summary") ? t("pitch:summary") : "Summary"%>
+    <span><%= content_tag :b, summary_field %></span>
+    <%#= text_field_tag "semantics[pitch:summary][singular]", summary_field , style: "display:none", class: "form-control input-size1" %>
+  <% end %>
+  
+  <div class="form-group">
+    <%= text_area_tag :summary, "", :class=> "form-control" %>
+    <%= link_to "Add Help", "#help_content_summary", :class => "fancybox pull-right" , :style => "margin: 0px 23px 0 0"%>
+    <div class="clr"></div>
+  </div>
+
+  <div class = "field_id">
+  <table class="pitchcontent  table table-striped" id="nrm_tbl">
+    <tbody>
+      <% @custom_fields.where(position: "summary").each do |field| %>
+        <%= render "form_row", field: field %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to("+ Insert new field", "#", :class => "insert_between_fields") %>
+  </div>
+
+  <%= content_tag :div, class: "col-md-3" do %>
+    <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+    <% tags_field = t("pitch:tag") ? t("pitch:tag") : "Tags"%>
+    <span><%= content_tag :b, tags_field %></span>
+    <%= text_field_tag "semantics[pitch:tag][singular]", tags_field , style: "display:none", class: "form-control input-size1" %>
+  <% end %>
+  
+  <div class="tag_functionality">
+    <div class="tags_container">
+      <div class="container_tags">
+            <div class="tagList" id="tagList">
+            </div>
+            <div class="clr"></div>
+      </div>
+      <div class="container_add_tag" style="margin: 0 0 0 0;">
+        <%= text_field_tag :"tags", "", :placeholder => "e.g. Healthcare", :name => "tags[]", :class => 'pitchTag form-control pull-left', :"data-field-name" => "tags[]", :value => "" %>
+        <%= link_to "+ Add a Tag", "#", :class => "addPitchTag text_underline" %>
+        <div class="clr"></div>
+      </div>
+      <i>up to 10 Tags that will help people find your pitch</i>
+    </div>
+    <%= link_to "Add Help", "#help_content_tag", :class => "fancybox pull-right" , :style => "margin: 0 23px 0 0"%>
+    <div class="clr"></div>
+      <%#= form_tag polymorphic_path([@program, :customisations]) do %>
+        <%#= hidden_field_tag :ankor, @anchor %>
+        <%#= hidden_field_tag :referee, @klass %>
+        <div class = "field_id">
+          <table class="pitchcontent  table table-striped" id="nrm_tbl">
+            <tbody>
+              <% @custom_fields.where(branch_id: nil, position: "").each do |field| %>
+                <%= render "form_row", field: field %>
+              <% end %>
+              <%#= render "form_row" %>
+            </tbody>
+          </table>
+          <%= link_to("+ Insert new field ", "#", :class => "insert_between_fields") %>
+        </div>
+        <div>
+          <%= submit_tag "Save", :id => "submit" %>
+			    <div class="clear"></div>
+	      </div>
+      <% end %>
+        <%= tag('br', nil, nil)%>
+      <% end %>
+      <div class="clr"></div>
+  </div>
+<% end %>

@@ -1,0 +1,186 @@
+  <div class="row course_head">
+    <div class="col-md-12">
+      <h1>
+        <%= @course.try(:title) %>
+      </h1>
+    </div>
+  </div>
+  <% if !@activity.blank? %>
+    <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax main-activity-hover">
+      <div class="row main-row">
+        <div class="col-md-10 main-right-section">
+          <% if !@activity.blank? %>
+          	<div class="video_title_wrap" style="background: url('<%=video_or_asset_image(@activity)%>') no-repeat;background-size:100%;">
+          		<div class="row video_title_overlay" >
+            		<p class="col-sm-9 next_video_title">
+            			<span class="chapter_title"><%=count_module_number(@course, @activity.try(:course_module))%>: <%=count_activity_number(@activity.try(:course_module), @activity)%></span>
+            			<br>
+            			<%=@activity.try(:title)%>: 
+            			<br />
+            			<span class="time_remaining"><b>Time remaining: </b><%= activity_duration(@activity)%></span>
+            		</p>
+          			<div class="col-sm-3 play_vid clearfix">
+          				<span class="lesson_title pull-left">
+            				<span class="cource_indicator <%=activity_status_class(@activity)%>"></span> Continue with this activity
+            			</span>
+          				<i class="glyphicon glyphicon-play pull-right" style="font-size:1.7em"></i>
+          			</div>
+          		</div>
+          	</div>
+          <% end %>
+        </a>
+        <br />
+        <p class="course_progress_title">You completed <span><b><%=completed_activities.try(:count)%></b></span> out of <span><b><%= @activities.try(:count) %></b></span> activities.</p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-custom six-sec-ease-in-out" role="progressbar" data-transitiongoal="<%=percentage_calculation(completed_activities.try(:count),@activities.try(:count))%>"></div>
+        </div>
+        <br />
+        <div class="row ">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-heading relative_panel_head ">
+                <div class="panel-title title_option">
+                  <h3 style="padding-bottom: 10px;"><label>Browse by topic</label></h3>
+                </div>
+                <div class="panel-options">
+                  <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ul class="tag_list">
+                      <li class="course_tags">
+                        <div id="course-tags-show">  
+                          <%= course_tags(@course) %>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div><!-- panel-body -->
+            </div>
+          </div>
+        </div>
+        <br />
+        <h2 class="titleLine"><a href="<%=polymorphic_path([@program, @course, :course_overview])%>" class="course-ajax-load" data-remote="true"><b>Course overview</b></a></h2>
+	    <div id="module_activities">
+  		  <%= render 'courses/shared_info/module_activities_show' %>
+  		</div>
+      </div>
+      <div class="col-md-2">
+        <div class="row ">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <p class="todo_title">To Do</p>
+                    <ul class="todo_list">
+                      <% if @activity_performance.blank? %>
+                        <li>
+                           <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}"%>" class="start-activity-ajax">View activity</a>
+                        </li>
+                      <% end %>
+                      <% if !@activity.study_materials.blank? %>
+                        <li>
+                          <%= link_to "Study materials".html_safe,"#{polymorphic_path([@program, @course, @activity.course_module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}&action_type=study_materials", :class=>"course-ajax-load" %>
+                        </li>
+                      <% end %>
+                      <% if !@next_activity.blank? %>
+                        <li>
+                          <a href="<%="#{polymorphic_url([@program, @pitch, @program.course, :show])}?activity_id=#{@next_activity.id}"%>">Next activity</a>
+                        </li>
+                      <% end %>
+                      <% if (!@activity.activity_project_fields.blank? || !@activity.try(:action).blank?) && !@activity_performance.try(:status) %>
+                        <li>
+                          <a href="<%= "#{polymorphic_path([@program, @course, @activity.course_module, @activity, :start_activity])}?pitch_id=#{params[:pitch_id]}&action_type=show_exercise"%>" class="course-ajax-load">Task</a>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div><!-- panel-body -->
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row ">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ul class="info_list">
+                      <li>
+                        <p>Activities <span class="pull-right"><%= @activities.try(:count) %></span></p>
+                      </li>
+                      <li>
+                        <p>Hours <span class="pull-right"><%= course_duration(@course) %></span></p>
+                      </li>
+                      <li>                        
+                        <p>Additional materials <span class="pull-right"><%= @activities.map(&:study_materials).try(:flatten).try(:count) %></span></p>
+                      </li>
+                      <li>
+                        <p>Tasks <span class="pull-right"><%= @activities.try(:count) %></span></p>
+                      </li>
+                    </ul>
+                    <br />
+                    <ul class="instructor_list">
+                      <li class="instructpr_title">
+                        <p>Instructors</p>
+                      </li>
+                      <li class="">
+                        <div class="media">
+                          <div class="pull-right">
+                             <img alt="" class="img-circle" src="<%=@course.try(:program).try(:organisation).try(:owner).try(:avatar) %>" width="40">
+                          </div>
+                          <div class="media-body">
+                            <h5 class="media-heading"><a href="#"><%=@course.try(:program).try(:organisation).try(:owner).try(:full_name)%></a></h5>
+                            <p>
+                              <%=@course.intro.html_safe%>
+                            </p>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div><!-- panel-body -->
+            </div>
+          </div>
+        </div>
+        <!-- <br />
+        <div class="row ">
+          <div class="col-md-12">
+            <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <p class="todo_title">Key</p>
+                    <ul class="key_list">
+                      <li class="key_blue">
+                        <p><span class="cource_indicator blue_indi"></span> Still to start</p>
+                      </li>
+                      <li class="key_yellwo">
+                        <p><span class="cource_indicator yellwo_indi"></span> In progress</p>
+                      </li>
+                      <li class="key_green">
+                        <p><span class="cource_indicator green_indi"></span> Completed</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div><!-- panel-body -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="row main-row">
+      <div class="col-md-10 main-right-section">
+          <p class="next_video_title">There is no activities to perform.</p>
+      </div>
+    </div>
+  <% end %>

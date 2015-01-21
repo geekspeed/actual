@@ -1,0 +1,12 @@
+development:
+  secret: sk_test_tvoCzCZuDQf8z5ZS3o2UrJIM
+  publishable: pk_test_07E6l8kiTKRjafMbt6913WXJ
+staging:
+  secret: sk_test_tvoCzCZuDQf8z5ZS3o2UrJIM
+  publishable: pk_test_07E6l8kiTKRjafMbt6913WXJ
+test:
+  secret: sk_test_tvoCzCZuDQf8z5ZS3o2UrJIM
+  publishable: pk_test_07E6l8kiTKRjafMbt6913WXJ
+production:
+  secret: sk_test_tvoCzCZuDQf8z5ZS3o2UrJIM
+  publishable: pk_test_07E6l8kiTKRjafMbt6913WXJ

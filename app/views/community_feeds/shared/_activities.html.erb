@@ -1,0 +1,506 @@
+<% if feed%>
+  <% if !feed.try(:awaiting) %> 
+    <% if feed.try(:type) == "join_program" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <%user_role_code = Semantic.t(feed.program, "role_type:#{feed.role_code}")%>
+      <% correct_role_code = user_role_code.present? ? user_role_code : feed.role_code%>
+      <% if !user.blank? %>
+        <% program_name = feed.try(:program).try(:title) if params[:controller] == "organisations" %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just joined the <%= program_name.blank? ? "Program" : program_name %> as a <%= correct_role_code %></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_member" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.try(:first_name) %></b> has just joined the team</div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_mentor" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just joined the team as <%= t("role_type:mentor", "s")%></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "mentor_assigned" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% mentor = User.where(:id => feed.mentor_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt">A new <%= t("role_type:mentor", "s") %>: <b><%= mentor.full_name%></b> has been allocated to this <%= t("pitch") %></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_task" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% task = Task.where(:id => feed.task_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just added new task: <%= link_to task.try(:description), polymorphic_url([pitch.program, pitch, Milestone]) %></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_task_completed" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% task = Task.where(:id => feed.task_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just completed task <%= link_to task.try(:description), polymorphic_url([pitch.program, pitch, Milestone]) %></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_feedback" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% feedback = PitchFeedback.where(:id => feed.feedback_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just added private feedback:</br></br><%= feedback.content%></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+      <% elsif feed.try(:type) == "push_notification" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= user.full_name %></b> has just added message:</br></br><%= feed.message %></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "log_mentor_session" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% custom_event = CustomEvent.where(:id => feed.custom_event_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= "#{custom_event.duration_hours} hours #{custom_event.duration_mins} minutes" %></b> <%= t("role_type:mentor") %> session on <%= custom_event.session_date%></br></br></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "log_admin_session" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% custom_event = CustomEvent.where(:id => feed.custom_event_id).first %>
+      <% if !user.blank? && !pitch.blank? %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><b><%= "#{custom_event.duration_hours} hours #{custom_event.duration_mins} minutes" %></b> admin session on <%= custom_event.session_date%></br></br></div>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "be_pitch_mentor" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if pitch.team?(current_user) %>
+        <% if !user.blank? && !pitch.blank? %>
+          <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <div class="post-body">
+                <div class="post-excerpt"><b><%= user.full_name %></b> would like to be a <%= t("role_type:mentor") %> of your team. </br></br>
+                  <% if feed.try(:response) == "no response yet"%>
+                    <%= link_to("Add to Team", add_mentor_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button", style: "color: #fff !important;") %>
+                    <%= link_to("Remove Request", remove_mentor_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button", :style => "margin-right:10px; color: #fff !important;") %>
+                  <%else%>
+                    <b>Response:</b> <%= feed.try(:response) == "accepted" ? "Accepted request" : "Declined request"%>
+                  <%end%>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% @design_align = @design_align +1 %>
+        <% end %>
+      <%end%>
+    <% elsif(feed.try(:type) == "join_team" ) %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if pitch.team?(current_user) %>
+        <% if !user.blank? && !pitch.blank? %>
+          <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <div class="post-body">
+                <div class="post-excerpt"><b><%= user.full_name %></b> would like to join this team.<br/><br/>
+                  <% if feed.try(:response) == "no response yet"%>
+                    <%= link_to("Add to Team", add_membership_requester_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button") %>
+                    <%= link_to("Remove Request", remove_membership_requester_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button", :style => "margin-right:10px") %>
+                  <%else%>
+                    <b>Response:</b> <%= feed.try(:response) == "accepted" ? "Accepted request" : "Declined request"%>
+                  <%end%>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% @design_align = @design_align +1 %>
+        <% end %>
+      <%end%>
+    <% elsif(feed.try(:type) == "event_rating" ) %>
+      <% event_rating = EventRating.where(id: feed.event_rating_id).first%>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% if event_rating.present? %>
+          <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <div class="post-body">
+                <div class="post-excerpt"><b><%= user.full_name %></b> has been given rating to <b><%=  event_rating.try(:identity).try(:program_event).try(:title)%></b> at <b><%= event_rating.try(:identity).try(:location) %></b>.<br/><br/>
+                <input value="<%= event_rating.rating %>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">              
+                <br>
+                Comment: <i><%= event_rating.comment.present? ? event_rating.comment : "No Comment"%></i>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% @design_align = @design_align +1 %>
+        <%end%>
+    <% elsif feed.try(:type) == "pitch_collaborator" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if pitch.team?(current_user) %>
+        <% if !user.blank? && !pitch.blank? %>
+          <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                 <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <div class="post-body">
+                <div class="post-excerpt"><b><%= user.full_name %></b> wants to collaborate</br></br>
+                  <% if feed.try(:response) == "no response yet"%>
+                    <%= pitch.collaborater_requests.where(user_id: user.id).first.try(:request_text).nil? ? "" : (raw (pitch.collaborater_requests.where(user_id: user.id).first.try(:request_text).gsub("\r\n","<br>"))) %>
+                    <%= link_to("Accept", add_collaborater_requester_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button") %>
+                    <%= link_to("Ignore", remove_collaborater_requester_program_pitch_path(context_program, pitch, :user_id => user.id), :method => :put, :class => "button", :style => "margin-right:10px") %>
+                  <%else%>
+                    <b>Response:</b> <%= feed.try(:response) == "accepted" ? "Accepted request" : "Declined request"%>
+                  <%end%>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% @design_align = @design_align +1 %>
+        <% end %>
+      <% end %>
+    <% elsif feed.try(:type) == "badge_awarded" %>
+      <% user = User.where(:id => feed.user_id).first %>
+      <% badge = UserBadge.where(:id => feed.user_badge_id).first %>
+        <% if !user.blank? && !badge.blank? %>
+          <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+            <span class="dot"></span>
+            <article class="post-wrap thumbnail">
+              <div class="post-authorx">
+                 <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                <div class="post-author-data pull-left">
+                  <p class="post-aythor-name"><strong><%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                  <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <div class="post-body">
+                <div class="post-excerpt"><b><%= user.full_name %></b> has beed awarded a badge.</br></br>
+                  <%= image_tag(badge.app_badge.try(:image), height: "100px", width: "150px")%></br>
+                  <b>Badge name:</b> <%= badge.app_badge.try(:name)%></br>
+                  <b>Badge Criteria Description:</b> <%= badge.app_badge.try(:badge_rule).try(:criteria_description)%>
+                </div>
+              </div>
+            </article>
+          </div>
+          <% @design_align = @design_align +1 %>
+      <% end %>
+    <% elsif feed.try(:type) == "pitch_create" %>
+      <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+      <% if !pitch.blank? %>
+        <% pitch_owner = User.where(:id => pitch.user_id).first %>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span> 
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+               <%= link_to image_tag(pitch_owner.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(pitch_owner) %>
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to pitch_owner.full_name, polymorphic_path(pitch_owner), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <div class="post-excerpt"><b><%= pitch_owner.full_name %></b> has just created <%= pitch.title %></div>
+            </div>
+          </article>
+        </div>
+       <% @design_align = @design_align +1 %>
+      <% end %>	
+    <% elsif feed.type == "survey" %>
+      <% survey = Survey.where(:id => feed.survey_id).first %>
+      <%if survey and survey_incomplete?(survey)%>
+        <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+          <span class="dot"></span>
+          <article class="post-wrap thumbnail">
+            <div class="post-authorx">
+              <div class="post-author-data pull-left">
+                <p class="post-aythor-name"><strong><%= link_to survey.name, edit_program_survey_path(survey.program, survey), :style=>"color:#fff" %></strong></p>
+                <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+              </div>
+              <div class="clear"></div>
+            </div>
+            <div class="post-body">
+              <%= link_to "Respond to #{survey.name}", answers_program_survey_path(survey.program, survey) %>
+            </div>
+          </article>
+        </div>
+        <% @design_align = @design_align +1 %>
+      <% end %>
+    <%elsif (feed.type == "due_diligence_post" and context_program.try(:program_scope).try(:show_judging_score))%>
+      <% if defined?(@pitch) %>
+        <% user = User.where(:id => feed.try(:user_id)).first %>
+          <div class="feed_obj">
+            <div class="item col-sm-6 isotope-item <%= @design_align%2 == 0 ? 'item-left' : 'item-right' %>">
+              <span class="dot"></span>
+              <article class="post-wrap thumbnail">
+                <div class="post-authorx">
+                   <%= link_to image_tag(user.avatar.logo.url, :width => "50", :class => "img-circle img-responsive img-circle-border pull-left"), polymorphic_path(user) %>
+                  <div class="post-author-data pull-left">
+                    <p class="post-aythor-name"><strong>Feedback from <%= t("role_type:panellist")%>:  <%= link_to user.full_name, polymorphic_path(user), :style=>"color:#fff" %></strong></p>
+                    <p class="post-aythor-date"><%= time_ago_in_words(feed.created_at) %> ago</p>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <% pitch = Pitch.where(:id => feed.pitch_id).first %>
+                <% pitch.due_diligence_posts.in(id: feed.post_due_diligence_ids).each do|due_diligence| %>
+                    <% if pitch.team?(current_user) or need?(["panellist"], context_program) or need?(["company_admin"], current_organisation) %>
+                      <% if !user.blank? && !pitch.blank? %>
+                        <div class="post-body">
+                          <div class="post-excerpt"><b><%= user.full_name %></b> gives feedback on <%= due_diligence.try(:matrix).try(:description) %> matrix.</br></br>
+                            <div class="met_row" style="width:400px;">
+                              
+                              <% value = due_diligence.points || 0 %>
+                              <%if !@program.due_diligence_matrix.star_system%>
+                                <table class="dd_points">
+                                  <tr>
+                                    <td style="width:140px;"><%= due_diligence.try(:matrix).try(:description) %></td>
+                                    <td style="width:120px;">
+                                      <div id="dd-slider-<%= due_diligence.id %>"></div>
+                                    </td>
+                                    <td style="width:100px;">
+                                      <input type="text" class="amount-slider" id="amount_box-<%= due_diligence.id %>" name="due_diligence[<%= due_diligence.id %>][points]" value="<%= value %>" readonly="readonly" /> / <%= due_diligence.try(:matrix).try(:max_points) %>
+                                    </td>
+                                    
+                                  </tr>
+                                </table>
+                                <script type="text/javascript">
+                                  $(function() {
+                                    $( "#dd-slider-<%= due_diligence.id %>" ).slider({
+                                      range: "max",
+                                      min: 1,
+                                      max: parseInt("<%= due_diligence.try(:matrix).try(:max_points)%>"),
+                                      value: parseInt("<%= value %>"),
+                                      disabled: true,
+                                      slide: function( event, ui ) {
+                                        $("#amount_box-<%= due_diligence.id %>").val(ui.value);
+                                      }
+                                    });
+                                  });
+                                </script>
+                              <%else%>
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td class="rating_low_lbl"><%= due_diligence.matrix.try(:one_star)%></td>
+                                      <td class="rating_middle_lbl"></td>
+                                      <td class="rating_high_lbl"><%= due_diligence.matrix.try(:five_star) %></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <div class="rating_row">
+                                  <div class="star_cont">
+                                    <div class="already_rated" data-id="<%= due_diligence.id %>" data-average="<%= value %>"></div>
+                                  </div>
+                                  <div class="rating_lbl"><%= due_diligence.matrix.try(:description) %></div>
+                                  <div class="clr"></div>
+                                </div>
+                              <% end %>
+                              <div class="box-feeds">
+                                <div class="textbox" style="word-wrap:break-word;">
+                                  <%= due_diligence.feedback ? due_diligence.feedback : nil %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <% end %>
+                    <%end%>
+                <%end%>
+              </article>
+            </div>
+          </div>
+      <%end%>
+      <% @design_align = @design_align +1 %>
+    <% end %>
+  <%end%>
+<% end %>

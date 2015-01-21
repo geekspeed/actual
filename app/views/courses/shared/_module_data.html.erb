@@ -1,0 +1,8 @@
+<div class="pull-left" style="font-size:16px;margin:5px;">
+  <%= @module.title %>
+</div>
+<div class="pull-right">
+  <%= link_to "Edit", polymorphic_path([@program, @course, @module, :edit_module]), :remote =>true, :class=>"btn btn-default" %>
+  <%= link_to "Delete", polymorphic_path([@program, @course, @module, :delete_module]), :class=>"btn btn-default" %>
+</div>
+<br/><br/>

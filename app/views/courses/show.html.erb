@@ -1,0 +1,146 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Courses" %>
+<% end %>           
+<div class="course-show">
+  <%= render 'courses/shared/course_show' %>
+</div>
+
+<script>
+// code for multiple tags switching 
+$(document).ready(function(){
+  adding_flash($("#select-all-modules"))
+});
+
+i = 0 
+$(document).ready(function(){
+  $(".course-tag").click(function(e){
+    if (i==0){
+        removing_flash($("#select-all-modules"))
+        i = i+1
+      }
+    data_tag = $(this)
+      $.each($(this).attr("class").split(" "), function( index, value ){   
+        if (value == "content_flash"){
+          removing_flash(data_tag)
+        }else if (value == "no_content_flash"){
+          adding_flash(data_tag)  
+        }
+      })
+      e.preventDefault()
+  });
+});
+
+
+function adding_flash(data_tag){
+  $("tr[data-tagging]").each(function( index ){ 
+    matched_data_tag = $(this)
+    $.each( $(this).attr("data-tagging").split(" "), function( index, value ){   
+      if (value == $(data_tag).attr("data-tag")){
+        $(matched_data_tag).removeClass("hide")
+        my_div = matched_data_tag
+      }
+    })
+  })
+  // $('html, body').animate({
+  //     scrollTop: $(my_div).offset().top-250
+  // }, 'slow');
+  $(data_tag).addClass("content_flash")  
+  $(data_tag).removeClass("no_content_flash")
+}
+
+function removing_flash(data_tag){
+  $("tr[data-tagging]").each(function( index ){ 
+    matched_data_tag = $(this)
+    $.each( $(this).attr("data-tagging").split(" "), function( index, value ){   
+      if (value == $(data_tag).attr("data-tag")){
+        $(matched_data_tag).addClass("hide")
+      }
+    })
+  })
+  $(data_tag).removeClass("content_flash")
+  $(data_tag).addClass("no_content_flash")
+  $(".course-tag.content_flash").each(function( index ){ 
+    adding_flash(this) 
+  })
+}
+</script>
+
+<style>
+  /* CSS for course show page */
+  .course-show .course-box-div-main{
+    padding: 0;background:rgb(243, 243, 243);border-radius:0px;
+  }
+  .course_activity_perform{cursor: pointer;}
+  .activity_loader{ position:fixed;top:35%;text-align:center;}
+  .course-box-div-main{
+    padding: 72px 24px 24px 24px;background:rgb(243, 243, 243);border-radius:0px;
+  }
+  .course-box-div-inner{
+    background:#ffffff;padding: 20px;border:1px rgb(197, 196, 196) solid
+  }
+  .course-page-action{
+    margin-top:40px;
+    overflow: auto;
+  }
+  .course-tag-container{
+    background: #ebebeb no-repeat right center;
+    padding: 6px 10px 6px 10px;
+    display: block;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #333;
+    margin:5px;
+  }
+  .numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    width: 18px;
+    height: 18px;
+    padding: 3px;
+    background: #fff;
+    color: #111;
+    text-align: center;
+    font-weight: bold;
+    float:right;
+    margin-left:5px;
+    font: 10px Arial, sans-serif;
+  }
+  .table-striped tr.content_flash th{ background: rgba(68, 147, 255, 0.3) !important;}
+  .table-striped tr.content_flash td{ background: rgba(68, 147, 255, 0.3) !important;}
+  .content_flash{ background: rgba(68, 147, 255, 0.3) !important;}
+</style>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.progress .progress-bar').progressbar({display_text: 'fill'});
+    $(".course_activity_perform img").tooltip()
+  });
+  $(function() {
+   $(".start-activity-ajax").bind("ajax:beforeSend", function(){
+      $.fancybox({ 
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },
+        content:"Starting Activity Please Wait...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".start-activity-ajax").bind("ajax:complete", function(){
+    })
+     
+   $(".course-ajax-load").bind("ajax:beforeSend", function(){
+      $.fancybox({ 
+        helpers: {
+          overlay: {
+            locked: false
+          }
+        },
+        content:"Please Wait...   <img src='/images/bx_loader.gif' width='25'>" });
+     })
+     $(".course-ajax-load").bind("ajax:complete", function(){
+    })
+  });
+</script>
+

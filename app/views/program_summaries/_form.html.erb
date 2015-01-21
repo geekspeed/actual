@@ -1,0 +1,2094 @@
+<style>
+.link_tag {
+    color: #0000FF !important;
+    text-decoration: underline !important;
+}
+</style>
+<script type="text/javascript">
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+})
+</script>
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Program Summary" %>
+<% end %>
+<%= f.error_messages %>
+
+<div class="navigator-section">
+<a href="#sec1" name="sec1" class="section_nav"></a>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3>
+            <%= f.label :avatar, "Program Visual"%> <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Change program visual"></i>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="">
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Program thumb</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :avatar, :class => "file_field_width"%>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag(f.object.avatar.url, :class=>"img img-responsive") if !f.object.new_record? %>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Background image</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :lifestyle_background, :class => "file_field_width"%>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag(f.object.lifestyle_background.url, :class=>"img img-responsive") if !f.object.new_record? %>
+              </div>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <hr class="mod_sep" />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Overlay pattern</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+             <%= f.check_box :overlay_pattern, :style => "width: auto;" %>
+             Add Overlay pattern
+            </div>
+           <div class="clr"></div>
+         </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Background overlay color</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+              <input type="text" value="<%=f.try(:object).try(:background_opacity) %>" name="program_summary[background_opacity]" class="pick-a-color form-control pull-left form-style-1" style="width:60%">
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Overlay color opacity</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+              <div class="">
+                <input id="ex1" data-slider-id='ex1Slider' name="program_summary[opacity_color]" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="<%=f.try(:object).try(:opacity_color) %>" value="<%=f.try(:object).try(:opacity_color) %>" />
+              </div>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br>
+  <%
+=begin
+%>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3>
+            <%= f.label :lifestyle_background, "Program Lifesyle Background", :style=>"width:100%;" %>
+            <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Change program background"></i>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top: 20px;">
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Background image</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :lifestyle_background, :class => "file_field_width"%>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag(f.object.lifestyle_background.url, :class=>"img img-responsive") if !f.object.new_record? %>
+              </div>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <hr class="mod_sep" />
+
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Overlay pattern</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+             <%= f.check_box :overlay_pattern, :style => "width: auto;" %>
+             Add Overlay pattern
+            </div>
+           <div class="clr"></div>
+         </div>
+        </div>
+
+
+        
+
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Background overlay color</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+              <input type="text" value="<%=f.try(:object).try(:background_opacity) %>" name="program_summary[background_opacity]" class="pick-a-color form-control pull-left form-style-1" style="width:60%">
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">Overlay color opacity</div>
+          </div>
+          <div class="col-sm-8">
+            <div class="quote_col_row">
+              <div class="">
+                <input id="ex1" data-slider-id='ex1Slider' name="program_summary[opacity_color]" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="<%=f.try(:object).try(:opacity_color) %>" value="<%=f.try(:object).try(:opacity_color) %>" />
+              </div>
+            </div>
+            <div class="clr"></div>
+          </div>
+        </div>
+       
+       
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br>
+ <%
+=end
+%>
+<a href="#sec2" name="sec2" class="section_nav"></a>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3>
+            <%= f.label :overview %>
+            <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A brief overview of the program"></i>
+          </h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;">
+        <%= f.text_area :overview, :id => "overview", :class => "required form-control summernote", :style=>"width:100%;" %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+</div>
+<br>
+<a href="#sec3" name="sec3" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head portlet-header ">
+        <div class="panel-title title_option">
+          <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+          <h3><%= f.label :terms_and_conditions_message %></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body">
+        <ul role="tablist" class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" role="tab" href="#message_for_applicant1"><%= t("role_type:participant", "s") %></a></li>
+          <li><a data-toggle="tab" role="tab" href="#message_for_mentor1"><%= t("role_type:mentor", "s") %></a></li>
+          <li><a data-toggle="tab" role="tab" href="#message_for_selector1"><%= t("role_type:selector", "s") %></a></li>
+          <li><a data-toggle="tab" role="tab" href="#message_for_panellist1"><%= t("role_type:panellist", "s") %></a></li>
+        </ul>
+        <div class="tab-content">
+          <%= f.fields_for :summary_terms_message, (@summary.summary_terms_message.nil? ? @summary.build_summary_terms_message : @summary.summary_terms_message) do |msg| %>
+          <div id="message_for_applicant1" class="tab-pane active"><%= msg.text_area :message_for_applicant, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote"  %></div>
+          <div id="message_for_mentor1" class="tab-pane"><%= msg.text_area :message_for_mentor, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <div id="message_for_selector1" class="tab-pane"><%= msg.text_area :message_for_selector, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <div id="message_for_panellist1" class="tab-pane"><%= msg.text_area :message_for_panellist, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<a href="#sec19" name="sec19" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :welcome_message %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+              <%= program_summary_customization.radio_button :welcome_message, true %>
+              <%= program_summary_customization.label :welcome_message_true, "Enable" %>
+              <%= program_summary_customization.radio_button :welcome_message, false %>
+              <%= program_summary_customization.label :welcome_message_false, "Disable" %>
+            <% end %>
+              </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;display: none;">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#message_for_applicant" role="tab" data-toggle="tab"><%= t("role_type:participant", "s") %></a></li>
+          <li><a href="#message_for_mentor" role="tab" data-toggle="tab"><%= t("role_type:mentor", "s") %></a></li>
+          <li><a href="#message_for_selector" role="tab" data-toggle="tab"><%= t("role_type:selector", "s") %></a></li>
+          <li><a href="#message_for_panellist" role="tab" data-toggle="tab"><%= t("role_type:panellist", "s") %></a></li>
+        </ul>
+        
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <%= f.fields_for :summary_welcome_message, (@summary.summary_welcome_message.nil? ? @summary.build_summary_welcome_message : @summary.summary_welcome_message) do |msg| %>
+          <div class="tab-pane active" id="message_for_applicant"><%= msg.text_area :message_for_applicant, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote"  %></div>
+          <div class="tab-pane" id="message_for_mentor"><%= msg.text_area :message_for_mentor, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <div class="tab-pane" id="message_for_selector"><%= msg.text_area :message_for_selector, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <div class="tab-pane" id="message_for_panellist"><%= msg.text_area :message_for_panellist, placeholder: "Welcome message for joiners", :style => "width:100%", :class=>"summernote" %></div>
+          <% end %>
+        </div>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+
+<br>
+<a href="#sec4" name="sec4" class="section_nav"></a>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><label>Social Links</label></h3>
+          
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+          <thead>
+            <tr role="row">
+              <th aria-label="Student Name: activate to sort column ascending" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Social media</th>
+              <th aria-label="Average Grade: activate to sort column ascending" style="width: 290px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Link</th>
+              <th aria-label="Actions: activate to sort column ascending" style="width: 404px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Control</th>
+            </tr>
+          </thead>
+          <tbody aria-relevant="all" aria-live="polite" role="alert">
+            <tr>
+              <td class=" "><%= f.label :twitter_url %></td>
+              <td class=" "><%= f.text_field :twitter_url, :class => "form-control form-style-1", placeholder: "http://twitter.com/abc"  %></td>
+              <td class=" ">
+                <span>
+                  <div class="radioset">
+                  <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                    <%= program_summary_customization.radio_button :twitter_handle, true %>
+                    <%= program_summary_customization.label :twitter_handle_true, "Enable" %>
+                    <%= program_summary_customization.radio_button :twitter_handle, false %>
+                    <%= program_summary_customization.label :twitter_handle_false, "Disable" %>
+                  <% end %>
+                    <div class="clr"></div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td class=" "><%= f.label :facebook_url %></td>
+              <td class=" "><%= f.text_field :facebook_url, :class => "form-control form-style-1", placeholder: "http://facebook.com/abc"  %></td>
+              <td class=" ">
+                <span>
+                  <div class="radioset">
+                  <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                    <%= program_summary_customization.radio_button :facebook_url, true %>
+                    <%= program_summary_customization.label :facebook_url_true, "Enable" %>
+                    <%= program_summary_customization.radio_button :facebook_url, false %>
+                    <%= program_summary_customization.label :facebook_url_false, "Disable" %>
+                  <% end %>
+                    <div class="clr"></div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td class=" "><%= f.label :linkedin_url %></td>
+              <td class=" "><%= f.text_field :linkedin_url, :class => "form-control form-style-1", placeholder: "http://linkedin.com/abc"  %></td>
+              <td class=" ">
+                <span>
+                  <div class="radioset">
+                  <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                    <%= program_summary_customization.radio_button :linkedin_url, true %>
+                    <%= program_summary_customization.label :linkedin_url_true, "Enable" %>
+                    <%= program_summary_customization.radio_button :linkedin_url, false %>
+                    <%= program_summary_customization.label :linkedin_url_false, "Disable" %>
+                  <% end %>
+                    <div class="clr"></div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br />
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head ">
+        <div class="panel-title title_option">
+          <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+          <h3 style="padding-bottom: 10px;"><%= f.label :twitter_url %></h3>
+          <span>
+            <div class="radioset radio-container">
+            <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+              <%= program_summary_customization.radio_button :twitter_handle, true %>
+              <%= program_summary_customization.label :twitter_handle_true, "Enable" %>
+              <%= program_summary_customization.radio_button :twitter_handle, false %>
+              <%= program_summary_customization.label :twitter_handle_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;display: none;">
+        <%= f.text_field :twitter_url, :class => "form-control form-style-1", placeholder: "http://twitter.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+<%
+=begin
+%>
+<div class="portlet">
+  <div class="portlet-header">  
+     <h2 class="titleLine">
+      <%= f.label :twitter_url %>
+      <div class="radioset pull_right">
+      <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+        <%= program_summary_customization.radio_button :twitter_handle, true %>
+        <%= program_summary_customization.label :twitter_handle_true, "Enable" %>
+        <%= program_summary_customization.radio_button :twitter_handle, false %>
+        <%= program_summary_customization.label :twitter_handle_false, "Disable" %>
+      <% end %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </h2>
+  </div>
+  <div class="portlet-content">
+    <div class="block">
+      <%= f.text_field :twitter_url, :class => "form-control", placeholder: "http://twitter.com/abc"  %>
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3 style="padding-bottom: 10px;"><%= f.label :facebook_url %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+              <%= program_summary_customization.radio_button :facebook_url, true %>
+              <%= program_summary_customization.label :facebook_url_true, "Enable" %>
+              <%= program_summary_customization.radio_button :facebook_url, false %>
+              <%= program_summary_customization.label :facebook_url_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;display: none;">
+        <%= f.text_field :facebook_url, :class => "form-control form-style-1", placeholder: "http://facebook.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+<%
+=begin
+%>
+<div class="portlet">
+  <div class="portlet-header">  
+    <h2 class="titleLine">
+      <%= f.label :facebook_url %>
+      <div class="radioset pull_right">
+      <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+        <%= program_summary_customization.radio_button :facebook_url, true %>
+        <%= program_summary_customization.label :facebook_url_true, "Enable" %>
+        <%= program_summary_customization.radio_button :facebook_url, false %>
+        <%= program_summary_customization.label :facebook_url_false, "Disable" %>
+      <% end %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </h2>
+  </div>
+  <div class="portlet-content">
+    <div class="block">
+      <%= f.text_field :facebook_url, :class => "form-control", placeholder: "http://facebook.com/abc"  %>
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+<div class="row ">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3><%= f.label :linkedin_url %></h3>
+          <span>
+            <div class="radioset">
+            <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+              <%= program_summary_customization.radio_button :linkedin_url, true %>
+              <%= program_summary_customization.label :linkedin_url_true, "Enable" %>
+              <%= program_summary_customization.radio_button :linkedin_url, false %>
+              <%= program_summary_customization.label :linkedin_url_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="display: none;">
+        <%= f.text_field :linkedin_url, :class => "form-control form-style-1", placeholder: "http://linkedin.com/abc"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br>
+<a href="#sec5" name="sec5" class="section_nav"></a>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3>
+            <% privacy_policy_field = t("program_summary:privacy_policy") ? t("program_summary:privacy_policy") : "Privacy Policy"%>
+            <label><%= content_tag :font, privacy_policy_field %></label>
+            <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+            <%= text_field_tag "semantics[program_summary:privacy_policy][singular]", privacy_policy_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+          </h3>
+          <span>
+            <div class="radioset radio-container">
+            <%= f.fields_for :program_summary_customization, @summary.privacy_policy do |privacy_policy| %>
+              <%= privacy_policy.radio_button :privacy_policy, true %>
+              <%= privacy_policy.label :privacy_policy_true, "Enable" %>
+              <%= privacy_policy.radio_button :privacy_policy, false %>
+              <%= privacy_policy.label :privacy_policy_false, "Disable" %>
+            <% end %>
+              <div class="clr"></div>
+            </div>
+          </span>
+        </div>
+        <div class="panel-options">
+          <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:15px;display: none;">
+        <%= f.text_area :privacy_policy, :id => "privacy_policy", :class=>"summernote", :style => "width:100%;"  %>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+</div>
+<br /><br />
+
+<h2 class="titleLine title-normal"><span>Custom section</span></h2>
+  <!-- This div is related to drag and drop positions. Classes are responsible for drag and drop are column and portlet. SO If you wants to add any of the codition inside the div, please add the condition inside the portlet class block and never add any thing outside the portlet class block. -->
+<div class="column navigator-section">
+  <div class="row portlet" id="program_plan-1" >
+  <a href="#sec6" name="sec6" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+            <h3>
+              <% program_plan_field = t("program_summary:program_plan") ? t("program_summary:program_plan") : "Program plan"%>
+              <label><%= content_tag :font, program_plan_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:program_plan][singular]", program_plan_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus form-style-1" %>
+            </h3>
+            <span>
+
+              <div style="display: none" id="eventbrite_events_list">
+                <div class="lightbox_box">
+                    <h2>EventBrite Event</h2>
+                      <p>Choose one or many of the following Eventbrite events</p>
+                      <div id="events">
+                      
+                      </div>
+                </div>
+              </div>
+              <div style="display: none" id="events_attendees">
+                <div class="lightbox_box">
+                      <div id="attendees">
+                      
+                      </div>
+                </div>
+              </div>
+              <div style="display: none">
+                <a href="#eventbrite_events_list" class="fancybox slink" id="fetch_events"></a>
+                <a href="#events_attendees" class="fancybox slink" id="fetch_events_attendees"></a>
+              </div>
+              <div style="display: none" id="eventbrite_event">
+                <div class="lightbox_box">
+                    <h2>EventBrite Accounts</h2>
+                      <% @summary.eventbrite_user_keys.each do |user_key| %>
+                        <div style="height:35px;">
+                          <b></b><%= user_key["email"] %></b>
+                          <div class="pull-right">
+                            <%= link_to "Fetch Events", "#", :class => "fetch_events btn btn-xs btn-info", :id => "submit", :"data-url" => fetch_eventbrite_events_program_summary_path(@program, :user_token => user_key["token"])%>
+                          </div>
+                        </div>
+                      <% end %>
+                      <div class="pull-left"><%= link_to "Add new account", authorize_eventbrite_account_program_summary_path(@program), :class => "btn btn-info", :id => "submit"%></div>
+                </div>
+              </div>
+              
+              <div class="radioset radio-container">
+                <div class="pull-left"> 
+                  <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                    <%= program_summary_customization.radio_button :program_plan, true %>
+                    <%= program_summary_customization.label :program_plan_true, "Enable" %>
+                    <%= program_summary_customization.radio_button :program_plan, false %>
+                    <%= program_summary_customization.label :program_plan_false, "Disable" %>
+                  <% end %>
+                </div>
+                <p class="pull-left radio-sep"></p>
+                <div class="pull-left">
+                  <%= f.radio_button :program_plan_public, true %>
+                  <%= f.label :program_plan_public_true, "Public" %>
+                  <%= f.radio_button :program_plan_public, false %>
+                  <%= f.label :program_plan_public_false, "Private" %>
+                  <div class="clr"></div>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="newRow slink">+ Add new activity</a>
+              <a href="#eventbrite_event" class="fancybox slink">+ Add new EventBrite Event</a> 
+              <!-- <a href="#" class="newCol slink">+ Add column</a> -->
+              <input type="hidden" id="act_col" value="5" /> 
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <table  id="programPlan" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 250px;" aria-label="Student Name: activate to sort column ascending">Date</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 290px;" aria-label="Average Grade: activate to sort column ascending">Time</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 450px;" aria-label="Average Grade: activate to sort column ascending">Activity</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 450px;" aria-label="Average Grade: activate to sort column ascending">Description</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 200px;" aria-label="Average Grade: activate to sort column ascending">Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="copy_col" class="odd no_display">
+                <td class="">
+                  <input class="datepicker_std program_plan_td1 form-control form-style-1" id="program_summary_program_plans_attributes_-1-_date" name="program_summary[program_plans_attributes][-1-][date]"  type="text" />
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td2 form-control time-picker form-style-1" id="program_summary_program_plans_attributes_-1-_time_from" name="program_summary[program_plans_attributes][-1-][time_from]" placeholder="from"  type="text" />
+                  <input class="program_plan_td2 form-control time-picker form-style-1" id="program_summary_program_plans_attributes_-1-_time_to" name="program_summary[program_plans_attributes][-1-][time_to]" placeholder="to"  style="margin-top: 4px" type="text" />
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4 form-control form-style-1" id="program_summary_program_plans_attributes_-1-_activity" name="program_summary[program_plans_attributes][-1-][activity]"  type="text" />
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4 form-control form-style-1" id="program_summary_program_plans_attributes_-1-_location" name="program_summary[program_plans_attributes][-1-][location]"  type="text"/>
+                </td>
+                <td class=" ">
+                  <div class="browse-wrapper">
+                    <input class="program_plan_td5" id="program_summary_program_plans_attributes_-1-_attachment" name="program_summary[program_plans_attributes][-1-][attachment]" type="file">
+                  </div>
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :program_plans, @summary.program_plans.descending('created_at') do |plan| %>
+              <tr class="odd">
+                <td>
+                  <%= plan.text_field :date, :class => "datepicker_std program_plan_td1 form-control form-style-1" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :time_from, :placeholder => "from", :class => "program_plan_td2 form-control time-picker form-style-1" %>
+                  <%= plan.text_field :time_to, :placeholder => "to", :class => "program_plan_td2 form-control time-picker form-style-1", :style => "margin-top: 4px" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :activity, :class => "program_plan_td4 form-control form-style-1", :style => "height:71px;" %>
+                </td>
+                <td class=" ">
+                  <%= plan.text_field :location, :class => "program_plan_td4 form-control form-style-1", :style => "height:71px;" %>
+                </td>
+                <td class=" ">
+                  <div class="browse-wrapper">
+                    <%= plan.file_field :attachment, :class => "program_plan_td5 small_browse" %>
+                  </div>
+                </td>
+                <td class=" ">
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, program_program_plans_path(@program, program_plan_id: plan.object), method: :delete, action: :destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                  <%= link_to 'View Attendees', "#", :"data-url" => attendees_program_program_plans_path(@program, program_plan_id: plan.object), class: "fetch_attendees", :style => "color:black;"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="newRow slink">+ Add new activity</a>  -->
+          <!-- <a href="#" class="newCol slink">+ Add column</a> -->
+          <input type="hidden" id="act_col" value="5" /> 
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="program_plan-1" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <label>Program plan</label>
+        <div class="radioset pull_left" style="float:right;">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :program_plan, true %>
+          <%= program_summary_customization.label :program_plan_true, "Enable" %>
+          <%= program_summary_customization.radio_button :program_plan, false %>
+          <%= program_summary_customization.label :program_plan_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <table id="programPlan" class="table table-striped">
+          <thead>
+            <tr>
+              <td class = "program_plan_td1" width="20%">Date</td>
+              <td class = "program_plan_td2" width="10%">Time</td>
+              <td class = "program_plan_td2" width="30%">Activity</td>
+              <td class = "program_plan_td3" width="20%">Description</td>
+              <td class="row5"></td>
+              <td class="row6"></td>
+              <td class = "program_plan_td4" width="20%">Document</td>
+              <td class = "" width="10%">Action</td>
+            </tr>
+          </thead>
+          <tbody>
+              <tr id="copy_col" class="no_display">
+                <td>
+                  <input class="datepicker_std program_plan_td1 form-control" id="program_summary_program_plans_attributes_-1-_date" name="program_summary[program_plans_attributes][-1-][date]"  type="text" style="min-width:119px;">
+                </td>
+                <td valign="center">
+                  <input class="program_plan_td2 form-control time-picker" id="program_summary_program_plans_attributes_-1-_time_from" name="program_summary[program_plans_attributes][-1-][time_from]" placeholder="from"  type="text">
+                  <input class="program_plan_td2 form-control time-picker" id="program_summary_program_plans_attributes_-1-_time_to" name="program_summary[program_plans_attributes][-1-][time_to]" placeholder="to"  style="margin-top: 4px" type="text">
+                </td>
+                <td>
+                  <input class="program_plan_td4 form-control" id="program_summary_program_plans_attributes_-1-_activity" name="program_summary[program_plans_attributes][-1-][activity]"  type="text" style="width: 180px;height:71px;">
+                </td>
+                <td>
+                  <input class="program_plan_td4 form-control" id="program_summary_program_plans_attributes_-1-_location" name="program_summary[program_plans_attributes][-1-][location]"  type="text" style="width: 180px;height:71px;">
+                </td>
+                <td>
+                  <input class="program_plan_td5" id="program_summary_program_plans_attributes_-1-_attachment" name="program_summary[program_plans_attributes][-1-][attachment]" type="file">
+                </td>
+              </tr>
+            <%= f.fields_for :program_plans, @summary.program_plans.descending('created_at') do |plan| %>
+              <tr>
+                <td>
+                  <%= plan.text_field :date, :class => "datepicker_std program_plan_td1 form-control" %>
+                </td>
+                <td valign="center">
+                  <%= plan.text_field :time_from, :placeholder => "from", :class => "program_plan_td2 time-picker form-control" %>
+                  <%= plan.text_field :time_to, :placeholder => "to", :class => "program_plan_td2 time-picker form-control", :style => "margin-top: 4px" %>
+                </td>
+                <td>
+                  <%= plan.text_field :activity, :class => "program_plan_td4 form-control", :style => "height:71px;" %>
+                </td>
+                <td>
+                  <%= plan.text_field :location, :class => "program_plan_td4 form-control", :style => "height:71px;" %>
+                </td>
+                <td>
+                  <%= plan.file_field :attachment, :class => "program_plan_td5 small_browse" %>
+                </td>
+                <td>
+                  <%= link_to 'Delete', program_program_plans_path(@program, program_plan_id: plan.object), method: :delete, action: :destroy, class: "btn btn-xs btn-danger"%>
+                </td>
+              </tr>
+            <% end -%>
+          </tbody>
+        </table>
+        <a href="#" class="newRow slink">+ Add new activity</a> 
+        <!-- <a href="#" class="newCol slink">+ Add column</a> -->
+        <input type="hidden" id="act_col" value="5" /> 
+      </div>
+    </div>
+  </div>
+ <%
+=end
+%>
+  <div class="row portlet" id="goal-2">
+    <a href="#sec7" name="sec7" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3>
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <% goal_field = t("program_summary:goal") ? t("program_summary:goal") : "Goal"%>
+              <label><%= content_tag :font, goal_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:goal][singular]", goal_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :goal, true %>
+                <%= program_summary_customization.label :goal_true, "Enable" %>
+                <%= program_summary_customization.radio_button :goal, false %>
+                <%= program_summary_customization.label :goal_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="display: none;">
+          <%= f.text_area :goal ,:id => "goal", :class => "required  form-control summernote", :style=>"width:100%;" %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="goal-2" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :goal %>
+        <div class="radioset pull_right">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :goal, true %>
+          <%= program_summary_customization.label :goal_true, "Enable" %>
+          <%= program_summary_customization.radio_button :goal, false %>
+          <%= program_summary_customization.label :goal_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <%= f.text_area :goal, :class => "required  form-control" %>
+      </div>
+    </div>
+  </div>
+  <%
+=end
+%>
+  <div class="row portlet" id="entry_criteria-3">
+    <a href="#sec8" name="sec8" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3>
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <% entry_criteria_field = t("program_summary:entry_criteria") ? t("program_summary:entry_criteria") : "Entry Criteria"%>
+              <label><%= content_tag :font, entry_criteria_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:entry_criteria][singular]", entry_criteria_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :entry_criteria, true %>
+                <%= program_summary_customization.label :entry_criteria_true, "Enable" %>
+                <%= program_summary_customization.radio_button :entry_criteria, false %>
+                <%= program_summary_customization.label :entry_criteria_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <div class="">
+            <div class="tag_functionality">
+             <div class="container_tags">
+                <div class="tagList" id="criteriaList">
+                  <% f.object.entry_criteria.each do |rf| %>
+                    <div class="tagContainer">
+                      <%= link_to rf, "#", :class => "delTag" %>
+                      <%= hidden_field_tag :"tags[entry_criteria][]", rf %>
+                    </div>
+                  <% end unless f.object.new_record? %>
+                 </div>
+                <div class="clr"></div>
+              </div>
+              <div class="container_add_tag">
+                <div class="quote_col_row">
+                  <%= f.text_field :entry_criteria, :value => "", :placeholder=>"Enter new citeria", :class => "form-control form-style-1 pull-left form-style-1" %>
+                  <a href="#" id="submit" class="addCriteria pull-left module_box_submit">Add</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="entry_criteria-3" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :entry_criteria %>
+        <div class="radioset pull_right">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :entry_criteria, true %>
+          <%= program_summary_customization.label :entry_criteria_true, "Enable" %>
+          <%= program_summary_customization.radio_button :entry_criteria, false %>
+          <%= program_summary_customization.label :entry_criteria_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <div class="tag_functionality">
+         <div class="container_tags">
+            <div class="tagList" id="criteriaList">
+              <% f.object.entry_criteria.each do |rf| %>
+                <div class="tagContainer">
+                  <%= link_to rf, "#", :class => "delTag" %>
+                  <%= hidden_field_tag :"tags[entry_criteria][]", rf %>
+                </div>
+              <% end unless f.object.new_record? %>
+                      </div>
+            <div class="clr"></div>
+          </div>
+          <div class="container_add_tag">
+            <%= f.text_field :entry_criteria, :value => "", :class => "form-control" %>
+            <a href="#" class="addCriteria">+ Add New</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%
+=end
+%>
+  <div class="row portlet" id="terms-4">
+    <a href="#sec9" name="sec9" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3>
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <% terms_field = t("program_summary:terms") ? t("program_summary:terms") : "Terms"%>
+              <label><%= content_tag :font, terms_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:terms][singular]", terms_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+                <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                  <%= program_summary_customization.radio_button :terms, true %>
+                  <%= program_summary_customization.label :terms_true, "Enable" %>
+                  <%= program_summary_customization.radio_button :terms, false %>
+                  <%= program_summary_customization.label :terms_false, "Disable" %>
+                <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="display: none;">
+          <%= f.text_area :terms, :class => "form-control form-style-1", :style=>"width:100%"  %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="terms-4" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :terms %>
+        <div class="radioset pull_left" style="float:right;">
+          <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+            <%= program_summary_customization.radio_button :terms, true %>
+            <%= program_summary_customization.label :terms_true, "Enable" %>
+            <%= program_summary_customization.radio_button :terms, false %>
+            <%= program_summary_customization.label :terms_false, "Disable" %>
+          <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <%= f.text_area :terms, :class => "form-control"  %>
+      </div>
+    </div>
+  </div>
+  <%
+=end
+%>
+  <div class="row portlet" id="partners-5">
+    <a href="#sec10" name="sec10" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3>
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <% partners_field = t("program_summary:partners") ? t("program_summary:partners") : "Partners"%>
+              <label><%= content_tag :font, partners_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:partners][singular]", partners_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :partners, true %>
+                <%= program_summary_customization.label :partners_true, "Enable" %>
+                <%= program_summary_customization.radio_button :partners, false %>
+                <%= program_summary_customization.label :partners_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="partnerRow slink">+ Add new partner</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <table  id="programPartner" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Student Name: activate to sort column ascending">Partner Logo</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 300px;" aria-label="Average Grade: activate to sort column ascending">Partner Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 300px;" aria-label="Average Grade: activate to sort column ascending">Partner Website</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="partner_col" class="odd no_display">
+                <td class="">
+                  <!--<a href="#" class="upload_logo_local link_tag  " id="-1-" >Upload locally</a>-->
+                  <input class="program_partner_td2" id="partner_logo_-1-_locally" name="program_summary[program_partners_attributes][-1-][logo]" type="file">
+                  <!--<%= content_tag :b, "OR"%><%= tag 'br'%>
+                  <a  href="#" class="upload_logo_remote link_tag " id="-1-">Add Url</a><br>
+                  <input class="program_partner_td2 form-control" id="partner_logo_-1-_remote" name="program_summary[program_partners_attributes][-1-][remote_logo_url]" type="text" disabled="disabled">-->
+                </td>
+                <td class=" ">
+                  <!--<a href="#" class="upload_doc_local link_tag " id="-1-" >Upload locally</a>-->
+                  <input class="program_partner_td2" id="partner_doc_-1-_locally" name="program_summary[program_partners_attributes][-1-][document]" type="file">
+                  <!--<%= content_tag :b, "OR"%><%= tag 'br'%>
+                  <a  href="#" class="upload_doc_remote link_tag " id="-1-">Add Url</a><br>
+                  <input class="program_partner_td2 form-control" id="partner_doc_-1-_remote" name="program_summary[program_partners_attributes][-1-][remote_document_url]" type="text" disabled="disabled">-->
+                </td>
+                <td class=" ">
+                  <input class="program_partner_td2" id="" name="program_summary[program_partners_attributes][-1-][website]" type="text">
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :program_partners, @summary.program_partners do |partner| %>
+              <tr class="odd">
+                <td>
+                  <%= image_tag(partner.object.logo.url, :class=>"img img-responsive partner-logo") %>
+                  <div class="browse-wrapper">
+                  <%= partner.file_field :logo, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td class=" ">
+                  <%= link_to("Document", partner.object.document.url, :class=>"btn btn-default") %>
+                  <div class="browse-wrapper">
+                  <%= partner.file_field :document, :class => "program_partner_td2" %>
+                  </div>
+                </td>
+                <td>
+                  <%= link_to("Website", partner.object.website, :class=>"btn btn-default") %>
+                  <%= partner.text_field :website, :class => "program_partner_td2" %>
+                </td>
+                <td>
+                   <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, program_summaries_partner_destroy_path(program_partner_id: partner.object), method: :delete, action: :partner_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+               </tr>
+               <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="partnerRow slink">+ Add new partner</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  
+  <%
+=begin
+%>
+  <div id="partners-5" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :partners %>
+        <div class="radioset pull_left" style="float:right;">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :partners, true %>
+          <%= program_summary_customization.label :partners_true, "Enable" %>
+          <%= program_summary_customization.radio_button :partners, false %>
+          <%= program_summary_customization.label :partners_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <table id="programPartner" class="table table-striped">
+          <thead>
+            <tr>
+              <td class = "program_plan_td1" width="50%">Partner Logo</td>
+              <td class = "program_plan_td4" width="50%">Partner Document</td>
+              <td class = "program_plan_td4" width="50%">Partner Website</td>
+              <td class = "program_plan_td4" width="50%">Action</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="partner_col" class="no_display">
+              <td>
+                <!--<a href="#" class="upload_logo_local link_tag  " id="-1-" >Upload locally</a>-->
+                <input class="program_partner_td2" id="partner_logo_-1-_locally" name="program_summary[program_partners_attributes][-1-][logo]" type="file">
+                <!--<%= content_tag :b, "OR"%><%= tag 'br'%>
+                <a  href="#" class="upload_logo_remote link_tag " id="-1-">Add Url</a><br>
+                <input class="program_partner_td2 form-control" id="partner_logo_-1-_remote" name="program_summary[program_partners_attributes][-1-][remote_logo_url]" type="text" disabled="disabled">-->
+              </td>
+              <td>
+                <!--<a href="#" class="upload_doc_local link_tag " id="-1-" >Upload locally</a>-->
+                <input class="program_partner_td2" id="partner_doc_-1-_locally" name="program_summary[program_partners_attributes][-1-][document]" type="file">
+                <!--<%= content_tag :b, "OR"%><%= tag 'br'%>
+                <a  href="#" class="upload_doc_remote link_tag " id="-1-">Add Url</a><br>
+                <input class="program_partner_td2 form-control" id="partner_doc_-1-_remote" name="program_summary[program_partners_attributes][-1-][remote_document_url]" type="text" disabled="disabled">-->
+              </td>
+              <td>
+                 <input class="program_partner_td2" id="" name="program_summary[program_partners_attributes][-1-][website]" type="text">
+              </td>
+            </tr>
+            <%= f.fields_for :program_partners, @summary.program_partners do |partner| %>
+            <tr>
+              <td>
+                <%= image_tag(partner.object.logo.url, :width => "80px;") %>
+              </td>
+              <td valign="bottom">
+                <%= link_to("Document", partner.object.document.url, :class=>"btn btn-default") %>
+              </td>
+              <td>
+                <%= link_to("Website", partner.object.website, :class=>"btn btn-default") %>
+              </td>
+        <td valign="bottom">
+          <%= link_to 'Delete', program_summaries_partner_destroy_path(program_partner_id: partner.object), method: :delete, action: :partner_destroy, class: "btn btn-xs btn-danger"%>
+        </td>
+            </tr>
+            <% end -%>
+          </tbody>
+        </table>
+      <a href="#" class="partnerRow slink">+ Add new partner</a>
+      </div>
+    </div>
+  </div>
+  <%
+=end
+%>
+  <div class="row portlet" id="quotes-6">
+    <a href="#sec11" name="sec11" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3>
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <% quotes_field = t("program_summary:quotes") ? t("program_summary:quotes") : "Quotes"%>
+              <label><%= content_tag :font, quotes_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:quotes][singular]", quotes_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :quotes, true %>
+                <%= program_summary_customization.label :quotes_true, "Enable" %>
+                <%= program_summary_customization.radio_button :quotes, false %>
+                <%= program_summary_customization.label :quotes_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="quoteRow slink">+ Add new quote</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <table   id="programQuote" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Student Name: activate to sort column ascending">Profile Picture</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Average Grade: activate to sort column ascending">Name</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100;" aria-label="Average Grade: activate to sort column ascending">Organisation name</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 200px;" aria-label="Average Grade: activate to sort column ascending">Quote</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr  id="quote_col" class="odd no_display">
+                <td class="">
+                  <input class="quote_col_td2 pull-left" style="margin-left: -10px;" id="program_summary_program_quotes_attributes_-1-_avatar" name="program_summary[program_quotes_attributes][-1-][avatar]" type="file">
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4  form-style-1" id="program_summary_program_quotes_attributes_-1-_name" name="program_summary[program_quotes_attributes][-1-][name]"  type="text" placeholder="Name">
+                </td>
+                <td class=" ">
+                  <input class="program_plan_td4  form-style-1" id="program_summary_program_quotes_attributes_-1-_organisation_name" name="program_summary[program_quotes_attributes][-1-][organisation_name]"  type="text" placeholder="Organisation Name">
+                </td>
+                <td>
+                  <textarea class="program_plan_td4 form-control form-style-1" style="width:100%;" id="program_summary_program_quotes_attributes_-1-_content" name="program_summary[program_quotes_attributes][-1-][content]" placeholder="Quote"></textarea>
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :program_quotes, @summary.program_quotes do |quote| %>
+              <tr class="odd">
+                <td>
+                   <%= image_tag(quote.object.avatar.url, :style=>"max-width:100px;", :class=>"img img-responsive") %>
+                   <%= quote.file_field :avatar, :class => "quote_col_td2 pull-left"%>
+                </td>
+                <td class=" ">
+                  <%= quote.text_field :name, :class => "program_plan_td4  form-style-1" %>
+                </td>
+                <td class=" ">
+                  <%= quote.text_field :organisation_name, :class => "program_plan_td4  form-style-1" %>
+                </td>
+                <td>
+                  <%= quote.text_area :content, :class => "program_plan_td4 form-control form-style-1", :style=>"width:100%" %>
+                </td>
+                <td class=" ">
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, program_summaries_quote_destroy_path(program_quote_id: quote.object), method: :delete, action: :quote_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="quoteRow slink">+ Add new quote</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="quotes-6" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :quotes %>
+        <div class="radioset pull_right">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :quotes, true %>
+          <%= program_summary_customization.label :quotes_true, "Enable" %>
+          <%= program_summary_customization.radio_button :quotes, false %>
+          <%= program_summary_customization.label :quotes_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clear"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <table id="programQuote" class="table table-striped">
+          <tbody>
+              <tr id="quote_col" class="no_display">
+                <td>
+                  <div class="quote_col_row">
+                    <div class="pull-left" style="margin-right: 10px;">
+                    <label style="margin-bottom:8px;" for="program_summary_program_quotes_attributes_-1-_avatar" >Profile Picture</label>
+                    </div>
+                    <input class="quote_col_td2 pull-left" style="margin-left: -10px;" id="program_summary_program_quotes_attributes_-1-_avatar" name="program_summary[program_quotes_attributes][-1-][avatar]" type="file">
+                    <div class="clear"></div>
+                  </div>
+                  <div class="quote_col_row form-group">
+                    <label for="program_summary_program_quotes_attributes_-1-_name">Name </label>
+                    <input class="program_plan_td4 form-control" id="program_summary_program_quotes_attributes_-1-_name" name="program_summary[program_quotes_attributes][-1-][name]"  type="text" placeholder="Name">
+                  </div>
+                  <div class="quote_col_row form-group">
+                    <label for="program_summary_program_quotes_attributes_-1-_organisation_name">Organisation name </label>
+                    <input class="program_plan_td4 form-control" id="program_summary_program_quotes_attributes_-1-_organisation_name" name="program_summary[program_quotes_attributes][-1-][organisation_name]"  type="text" placeholder="Organisation Name">
+                  </div>
+                  <div class="quote_col_row">
+                    <label style="margin-bottom:8px;" for="program_summary_program_quotes_attributes_-1-_content">Quote </label>
+                    <textarea class="program_plan_td4 form-control" style="display:inline;" id="program_summary_program_quotes_attributes_-1-_content" name="program_summary[program_quotes_attributes][-1-][content]" placeholder="Quote"></textarea>
+                </div>
+                </td>
+              </tr>
+            <%= f.fields_for :program_quotes, @summary.program_quotes do |quote| %>
+              <tr>
+                <td>
+                  <div class="quote_col_row">
+                    <div class="pull-left" style="margin-right: 10px;">
+                    <%= quote.label :avatar,"Profile Picture", :style=>"margin-bottom:8px;" %>
+                    <%= image_tag(quote.object.avatar.url, :style=>"width:120px;") %>
+                    </div>
+                    <%= quote.file_field :avatar, :class => "quote_col_td2 pull-left"%>
+                    <div class="clear"></div>
+                  </div>
+                  <div class="quote_col_row form-group">
+                    <%= quote.label :name %>
+                    <%= quote.text_field :name, :class => "program_plan_td4 form-control" %>
+                  </div>
+                  <div class="quote_col_row form-group">
+                    <%= quote.label :organisation_name %>
+                    <%= quote.text_field :organisation_name, :class => "program_plan_td4 form-control" %>
+                  </div>
+                  <div class="quote_col_row">
+                    <%= quote.label :content,"Quote", :style=>"margin-bottom:8px;" %>
+                    <%= quote.text_area :content, :class => "program_plan_td4 form-control", :style => "display:inline;" %>
+                </div>
+                <div class="quote_delete">
+                  <%= link_to 'Delete', program_summaries_quote_destroy_path(program_quote_id: quote.object), method: :delete, action: :quote_destroy, class: "btn btn-xs btn-danger"%>
+                </div>
+                </td>
+              </tr>
+            <% end -%>
+          </tbody>
+        </table>
+        <a href="#" class="quoteRow slink">+ Add new quote</a> 
+      </div>
+    </div>
+  </div>
+  
+  <%
+=end
+%>
+  <div class="row portlet" id="freeform-7">
+    <a href="#sec12" name="sec12" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <%= f.label :freeform, "Free Form" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container ">
+                 <div class="pull-left">
+                      <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                        <%= program_summary_customization.radio_button :freeform, true %>
+                        <%= program_summary_customization.label :freeform_true, "Enable" %>
+                        <%= program_summary_customization.radio_button :freeform, false %>
+                        <%= program_summary_customization.label :freeform_false, "Disable" %>
+                      <% end %>
+                   </div>
+                   <p class="pull-left radio-sep"></p>
+                   <div class="pull-left">
+                      <%= f.radio_button :program_free_form_public, true %>
+                  <%= f.label :program_free_form_public_true, "Public" %>
+                  <%= f.radio_button :program_free_form_public, false %>
+                  <%= f.label :program_free_form_public_false, "Private" %>
+                </div>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down expand_form" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="freeformRow slink">+ Add New Free Form</a> 
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <table id="programFreeForm" class="table table-striped">
+                <tbody>
+                    <tr id="freeform_col" class="no_display">
+                      <td>
+                        <div class="quote_col_row form-group">
+                          <label for="program_summary_program_quotes_attributes_-1-_section_title" class="section-title">Section Title</label>
+                          <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-1-_section_title" name="program_summary[program_free_forms_attributes][-1-][section_title]"  type="text" placeholder="Section Title">
+                          <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-1-_section_id" name="program_summary[program_free_forms_attributes][-1-][section_id]" type="hidden">
+                          <a href="#" id="-1-" class="freeformfieldsRow slink">+ Add New Field</a>
+                          <b>Sub Title </b><input type = "checkbox" id="sub_title_check_-1-" style="width:23px;">
+                          <b>Body </b><input type = "checkbox" id="body_check_-1-" style="width:23px;">
+                          <script>
+                          $('.freeformfieldsRow').click(function(){
+                            var time = new Date().getTime()
+                            if ($("#sub_title_check_"+this.id+":checked").length ==1)
+                            {
+                            var col_sub_title = $('#freeform_fields_col_sub_title').html().replace(/-2-/g, time);
+                             $("table>tbody>tr#fields_"+this.id+" td").append(col_sub_title);
+                              $("#program_summary_program_free_forms_attributes_"+time+"_section_id").val(this.id)
+                              $("#program_summary_program_free_forms_attributes_sub_title_"+time+"_section_id").val(this.id)
+                           }
+                           if ($("#body_check_"+this.id+":checked").length ==1) {
+                            var col_body = $('#freeform_fields_col_body').html().replace(/-2-/g, time);
+                             $("table>tbody>tr#fields_"+this.id+" td").append(col_body);
+                            new nicEditor().panelInstance("program_summary_program_free_forms_attributes_"+time+"_body");
+                          $("#program_summary_program_free_forms_attributes_body_"+time+"_section_id").val(this.id)
+                          }
+                             return false;
+                           });
+                           </script>
+                        </div>
+                      </td>
+                    </tr>
+                    <div id="freeform_fields_col_sub_title" class="no_display">
+                        <div class="quote_col_row">
+                          <label for="program_summary_program_quotes_attributes_-2-_sub_title">Sub Title</label>
+                          <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-2-_sub_title" name="program_summary[program_free_forms_attributes][-2-][sub_title]"  type="text" placeholder="Sub Title">
+                          <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_sub_title_-2-_section_id" name="program_summary[program_free_forms_attributes][-2-][section_id]"  type="hidden">
+                        </div>
+                      </div>
+                      <div id="freeform_fields_col_body" class="no_display">
+                        <div class="quote_col_row">
+                          <label style="margin-bottom:8px;" for="program_summary_program_quotes_attributes_-2-_body">Body</label><br><br>
+                          <textarea class="program_plan_td4 form-control" style="display:inline;" id="program_summary_program_free_forms_attributes_-2-_body" name="program_summary[program_free_forms_attributes][-2-][body]" placeholder="Body" style="display:inline;"></textarea>
+                          <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_body_-2-_section_id" name="program_summary[program_free_forms_attributes][-2-][section_id]"  type="hidden">
+                        </div>
+                      </div>
+                    <%= f.fields_for :program_free_forms, @summary.program_free_forms.sort_by(&:created_at) do |free_form| %>
+                        <% if !free_form.object.section_title.blank? && !free_form.object.section_id.blank? %>
+                        <tr>
+                        <td>
+                        <div id="free_form_fields_append_<%= free_form.object.section_id %>">
+                          <div class="quote_col_row form-group">
+                            <%= free_form.label :section_title, :class=>"section-title" %>
+                            <%= free_form.text_field :section_title, :class => "program_plan_td4 form-control" %>
+                            <%= free_form.hidden_field :section_id %>                
+                            <%= link_to 'Delete Section', program_summaries_free_form_destroy_path(free_form_section_id: free_form.object.section_id), method: :delete, action: :free_form_destroy, class: "btn btn-xs btn-danger", style: "float:right;margin-top:-26px;"%> 
+                          </div>
+                            <%= f.fields_for :program_free_forms, @summary.program_free_forms.sort_by(&:created_at) do |free_form_field| %>
+                              <% if free_form_field.object.section_title.blank? && free_form_field.object.section_id == free_form.object.section_id %>
+                                <% if !free_form_field.object.sub_title.blank? %>
+                                  <div class="quote_col_row form-group">
+                                    <%= free_form_field.label :sub_title %>
+                                    <%= free_form_field.text_field :sub_title, :class => "program_plan_td4 form-control" %>
+                                  </div>
+                                <% end %>
+                                <% if !free_form_field.object.body.blank? %>
+                                  <div class="quote_col_row">
+                                    <%= free_form_field.label :body, :style=>"margin-bottom:8px;" %><br><br>
+                                    <%= free_form_field.text_area :body, :id=>"program_summary_program_free_forms_attributes_#{free_form_field.object.id}_body",:class => "program_plan_td4 form-control", :style => "display:inline;" %>
+                                      <script>
+                                        bkLib.onDomLoaded(function() {
+                                          new nicEditor().panelInstance("program_summary_program_free_forms_attributes_<%=free_form_field.object.id%>_body");
+                                        });
+                                      </script>
+                                    <%= free_form_field.hidden_field :section_id %>
+                                  </div>
+                                <% end %>
+                                <div class="quote_delete">
+                                  <%= link_to 'Delete', program_summaries_free_form_destroy_path(free_form_id: free_form_field.object), method: :delete, action: :free_form_destroy, class: "btn btn-xs btn-danger"%>
+                                </div>
+                              <% end %>
+                            <% end %>
+                            <a href="#" id="<%= free_form.object.section_id %>_section_id" class="freeformfieldsRowDynamic slink">+ Add New Field</a>
+                            <b>Sub Title </b><input type = "checkbox" id="sub_title_check_<%= free_form.object.section_id %>" style="width:23px;">
+                            <b>Body </b><input type = "checkbox" id="body_check_<%= free_form.object.section_id %>" style="width:23px;">
+                          </div>
+                          <hr style="height:2px;">
+                          </td>
+                          </tr>
+                        <% end %>
+                    <% end -%>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+  <div id="freeform-7" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :freeform, "Free Forms" %>
+        <div class="radioset pull_right">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :freeform, true %>
+          <%= program_summary_customization.label :freeform_true, "Enable" %>
+          <%= program_summary_customization.radio_button :freeform, false %>
+          <%= program_summary_customization.label :freeform_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clear"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+        <table id="programFreeForm" class="table table-striped">
+          <tbody>
+              <tr id="freeform_col" class="no_display">
+                <td>
+                  <div class="quote_col_row form-group">
+                    <label for="program_summary_program_quotes_attributes_-1-_section_title" class="section-title">Section Title</label>
+                    <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-1-_section_title" name="program_summary[program_free_forms_attributes][-1-][section_title]"  type="text" placeholder="Section Title">
+                    <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-1-_section_id" name="program_summary[program_free_forms_attributes][-1-][section_id]" type="hidden">
+                    <a href="#" id="-1-" class="freeformfieldsRow slink">+ Add New Field</a>
+                    <b>Sub Title </b><input type = "checkbox" id="sub_title_check_-1-" style="width:23px;">
+                    <b>Body </b><input type = "checkbox" id="body_check_-1-" style="width:23px;">
+                    <script>
+                    $('.freeformfieldsRow').click(function(){
+                      var time = new Date().getTime()
+                      if ($("#sub_title_check_"+this.id+":checked").length ==1)
+                      {
+                      var col_sub_title = $('#freeform_fields_col_sub_title').html().replace(/-2-/g, time);
+                       $("table>tbody>tr#fields_"+this.id+" td").append(col_sub_title);
+                        $("#program_summary_program_free_forms_attributes_"+time+"_section_id").val(this.id)
+                        $("#program_summary_program_free_forms_attributes_sub_title_"+time+"_section_id").val(this.id)
+                     }
+                     if ($("#body_check_"+this.id+":checked").length ==1) {
+                      var col_body = $('#freeform_fields_col_body').html().replace(/-2-/g, time);
+                       $("table>tbody>tr#fields_"+this.id+" td").append(col_body);
+                      new nicEditor().panelInstance("program_summary_program_free_forms_attributes_"+time+"_body");
+                    $("#program_summary_program_free_forms_attributes_body_"+time+"_section_id").val(this.id)
+                    }
+                       return false;
+                     });
+                     </script>
+                  </div>
+                </td>
+              </tr>
+              <div id="freeform_fields_col_sub_title" class="no_display">
+                  <div class="quote_col_row">
+                    <label for="program_summary_program_quotes_attributes_-2-_sub_title">Sub Title</label>
+                    <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_-2-_sub_title" name="program_summary[program_free_forms_attributes][-2-][sub_title]"  type="text" placeholder="Sub Title">
+                    <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_sub_title_-2-_section_id" name="program_summary[program_free_forms_attributes][-2-][section_id]"  type="hidden">
+                  </div>
+                </div>
+                <div id="freeform_fields_col_body" class="no_display">
+                  <div class="quote_col_row">
+                    <label style="margin-bottom:8px;" for="program_summary_program_quotes_attributes_-2-_body">Body</label><br><br>
+                    <textarea class="program_plan_td4 form-control" style="display:inline;" id="program_summary_program_free_forms_attributes_-2-_body" name="program_summary[program_free_forms_attributes][-2-][body]" placeholder="Body" style="display:inline;"></textarea>
+                    <input class="program_plan_td4 form-control" id="program_summary_program_free_forms_attributes_body_-2-_section_id" name="program_summary[program_free_forms_attributes][-2-][section_id]"  type="hidden">
+                  </div>
+                </div>
+              <%= f.fields_for :program_free_forms, @summary.program_free_forms.sort_by(&:created_at) do |free_form| %>
+                  <% if !free_form.object.section_title.blank? && !free_form.object.section_id.blank? %>
+                  <tr>
+                  <td>
+                  <div id="free_form_fields_append_<%= free_form.object.section_id %>">
+                    <div class="quote_col_row form-group">
+                      <%= free_form.label :section_title, :class=>"section-title" %>
+                      <%= free_form.text_field :section_title, :class => "program_plan_td4 form-control" %>
+                      <%= free_form.hidden_field :section_id %>                
+                      <%= link_to 'Delete Section', program_summaries_free_form_destroy_path(free_form_section_id: free_form.object.section_id), method: :delete, action: :free_form_destroy, class: "btn btn-xs btn-danger", style: "float:right;margin-top:-26px;"%> 
+                    </div>
+                      <%= f.fields_for :program_free_forms, @summary.program_free_forms.sort_by(&:created_at) do |free_form_field| %>
+                        <% if free_form_field.object.section_title.blank? && free_form_field.object.section_id == free_form.object.section_id %>
+                          <% if !free_form_field.object.sub_title.blank? %>
+                            <div class="quote_col_row form-group">
+                              <%= free_form_field.label :sub_title %>
+                              <%= free_form_field.text_field :sub_title, :class => "program_plan_td4 form-control" %>
+                            </div>
+                          <% end %>
+                          <% if !free_form_field.object.body.blank? %>
+                            <div class="quote_col_row">
+                              <%= free_form_field.label :body, :style=>"margin-bottom:8px;" %><br><br>
+                              <%= free_form_field.text_area :body, :id=>"program_summary_program_free_forms_attributes_#{free_form_field.object.id}_body",:class => "program_plan_td4 form-control", :style => "display:inline;" %>
+                                <script>
+                                  bkLib.onDomLoaded(function() {
+                                    new nicEditor().panelInstance("program_summary_program_free_forms_attributes_<%=free_form_field.object.id%>_body");
+                                  });
+                                </script>
+                              <%= free_form_field.hidden_field :section_id %>
+                            </div>
+                          <% end %>
+                          <div class="quote_delete">
+                            <%= link_to 'Delete', program_summaries_free_form_destroy_path(free_form_id: free_form_field.object), method: :delete, action: :free_form_destroy, class: "btn btn-xs btn-danger"%>
+                          </div>
+                        <% end %>
+                      <% end %>
+                      <a href="#" id="<%= free_form.object.section_id %>_section_id" class="freeformfieldsRowDynamic slink">+ Add New Field</a>
+                      <b>Sub Title </b><input type = "checkbox" id="sub_title_check_<%= free_form.object.section_id %>" style="width:23px;">
+                      <b>Body </b><input type = "checkbox" id="body_check_<%= free_form.object.section_id %>" style="width:23px;">
+                    </div>
+                    <hr style="height:2px;">
+                    </td>
+                    </tr>
+                  <% end %>
+              <% end -%>
+          </tbody>
+        </table>
+        <a href="#" class="freeformRow slink">+ Add New Free Form</a> 
+      </div>
+    </div>
+  </div>
+  
+  <%
+=end
+%>
+
+  <div class="row portlet" id="casestudy-8">
+    <a href="#sec13" name="sec13" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+            <h3>
+              <%= f.label :case_study, "Case Study" %>
+            </h3>
+            <span>
+              <div class="radioset radio-container">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :casestudy, true %>
+                <%= program_summary_customization.label :casestudy_true, "Enable" %>
+                <%= program_summary_customization.radio_button :casestudy, false %>
+                <%= program_summary_customization.label :casestudy_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            <div class="add_activity_link">
+              <a href="#" class="caseStudyRow slink">+ Add new</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <label for="program_summary_case_study_title" class="section-title">Section Title</label><%= f.text_field :case_study_title, :class => "form-control" %>
+          <table   id="programQuote" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+            <thead>
+              <tr role="row">
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Student Name: activate to sort column ascending">Logo</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 150px;" aria-label="Average Grade: activate to sort column ascending">Document</th>
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 100px;" aria-label="Actions: activate to sort column ascending">Actions</th>
+              </tr>
+            </thead>
+            
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+              <tr id="case_study_col" class="odd no_display">
+                <td class="">
+                  <input class="program_partner_td2 form-style-1" id="program_summary_case_studies_attributes_-1-_logo" name="program_summary[case_studies_attributes][-1-][logo]" type="file">
+                </td>
+                <td class=" ">
+                  <input class="program_partner_td2" id="program_summary_case_studies_attributes_-1-_document" name="program_summary[case_studies_attributes][-1-][document]" type="file">
+                </td>
+                <td class=" ">
+                  &nbsp;
+                </td>
+              </tr>
+              <%= f.fields_for :case_studies, @summary.case_studies do |case_study| %>
+              <tr class="odd">
+                <td>
+                   <%= image_tag(case_study.object.logo.url, :style=>"max-width:100px;", :class=>"img img-responsive") %>
+                </td>
+                <td class=" " colspan="2">
+                  <%= link_to("Document", case_study.object.document.url, :class=>"btn btn-default") %>
+                </td>
+              </tr>
+              <tr class="even">
+                <td>
+                  <%= case_study.file_field :logo, :class => "program_partner_td2" %>
+                </td>
+                <td>
+                  <%= case_study.file_field :document, :class => "program_partner_td2" %>
+                </td>
+                <td>
+                  <%= link_to "<i class='glyphicon glyphicon-remove'></i> Delete".html_safe, program_summaries_case_study_destroy_path(case_study_id: case_study.object), method: :delete, action: :case_study_destroy, class: "btn btn-danger btn-sm btn-icon icon-left"%>
+                </td>
+              </tr>
+              <% end -%>
+            </tbody>
+          </table>
+          <!-- <a href="#" class="caseStudyRow slink">+ Add new</a> -->
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <%
+=begin
+%>
+
+  <div id="casestudy-8" class="portlet">
+    <div class="portlet-header">  
+      <h2 class="titleLine">
+        <%= f.label :case_study %>
+        <div class="radioset pull_left" style="float:right;">
+        <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+          <%= program_summary_customization.radio_button :casestudy, true %>
+          <%= program_summary_customization.label :casestudy_true, "Enable" %>
+          <%= program_summary_customization.radio_button :casestudy, false %>
+          <%= program_summary_customization.label :casestudy_false, "Disable" %>
+        <% end %>
+          <div class="clr"></div>
+        </div>
+        <div class="clr"></div>
+      </h2>
+    </div>
+    <div class="portlet-content">
+      <div class="block">
+      <label for="program_summary_case_study_title" class="section-title">Section Title</label><%= f.text_field :case_study_title, :class => "form-control" %>
+        <table id="programPartner" class="table table-striped">
+          <thead>
+            <tr>
+              <td class = "program_plan_td1" width="50%">Logo</td>
+              <td class = "program_plan_td4" width="50%">Document</td>
+              <td class = "program_plan_td4" width="50%">Action</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="case_study_col" class="no_display">
+              <td>
+                <input class="program_partner_td2" id="program_summary_case_studies_attributes_-1-_logo" name="program_summary[case_studies_attributes][-1-][logo]" type="file">
+              </td>
+              <td>
+                <input class="program_partner_td2" id="program_summary_case_studies_attributes_-1-_document" name="program_summary[case_studies_attributes][-1-][document]" type="file">
+              </td>
+            </tr>
+            <%= f.fields_for :case_studies, @summary.case_studies do |case_study| %>
+            <tr>
+              <td>
+                <%= image_tag(case_study.object.logo.url, :width => "80px;") %>
+              </td>
+              <td valign="bottom">
+                <%= link_to("Document", case_study.object.document.url, :class=>"btn btn-default") %>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <%= case_study.file_field :logo, :class => "program_partner_td2" %>
+              </td>
+              <td valign="bottom">
+                <%= case_study.file_field :document, :class => "program_partner_td2" %>
+              </td>
+              <td valign="bottom">
+                <%= link_to 'Delete', program_summaries_case_study_destroy_path(case_study_id: case_study.object), method: :delete, action: :case_study_destroy, class: "btn btn-xs btn-danger"%>
+              </td>
+            </tr>
+            <% end -%>
+          </tbody>
+        </table>
+      <a href="#" class="caseStudyRow slink">+ Add new</a>
+      </div>
+    </div>
+  </div>
+
+  
+  <%
+=end
+%>
+
+  <div class="row portlet" id="judging_criteria-9">
+    <a href="#sec14" name="sec14" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+            <h3>
+              <% jc_field = t("program_summary:judging_criteria") ? t("program_summary:judging_criteria") : "Judging Criteria"%>
+              <label><%= content_tag :font, jc_field %></label>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+              <%= text_field_tag "semantics[program_summary:judging_criteria][singular]", jc_field , style: "display:none", class: "form-control form-style-1 input-size1 click_focus" %>
+            </h3>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link" style="width:180px;margin-right: 30px">
+              To edit <a href=<%= @program.due_diligence_matrix ? edit_program_due_diligence_path(@program) : new_program_due_diligence_path(@program) %> > Judging Criteria</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          
+        </div>
+      </div>
+    </div>
+  </div>  
+  <div class="row portlet" id="blog-10">
+    <a href="#sec15" name="sec15" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+            <h3 style="padding-bottom: 10px;">
+            <%= content_tag :div, class: "col-md-3", style: "width:100%" do %>
+              <%= link_to "", "#", class: "js_inline_edit edit_btn glyphicon glyphicon-pencil", title:"Edit", style: "color: #FFFFFF !important;" %>
+              <% jc_field = t("program_summary:blog") ? t("program_summary:blog") : "Blog"%>
+              <span><%= content_tag :b, jc_field %></span>
+              <%= text_field_tag "semantics[program_summary:blog][singular]", jc_field , style: "display:none", class: "form-control input-size1 click_focus" %>
+            <% end %>
+            </h3>
+            <span>
+              <div class="radioset">
+                <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                  <%= program_summary_customization.radio_button :blog, true %>
+                  <%= program_summary_customization.label :blog_true, "Enable" %>
+                  <%= program_summary_customization.radio_button :blog, false %>
+                  <%= program_summary_customization.label :blog_false, "Disable" %>
+                <% end %>
+                  <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-up" data-rel="collapse"></a>
+            <div class="add_activity_link" style="width:180px">
+              To add blogs visit Link to <a href=<%=program_community_feeds_path(context_program)%>>Buzz</a>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+   <div class="row portlet" id="freeform_html_1-11">
+    <a href="#sec16" name="sec16" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <label>Free Form (html) 1</label>
+            </h3>
+            <span>
+              <div class="radioset">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :freeform_html_1, true %>
+                <%= program_summary_customization.label :freeform_html_1_true, "Enable" %>
+                <%= program_summary_customization.radio_button :freeform_html_1, false %>
+                <%= program_summary_customization.label :freeform_html_1_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <% free_form1 = @summary.program_free_forms.where(:section_title => "freeform_html_1")%>
+          <% body = free_form1.any? ? free_form1.first.body : "" %>
+          <%= text_area_tag "program_summary[free_form][freeform_html_1][body]", body ,:id => "freeform_html1", :class => "required  form-control summernote", :style=>"width:100%;" %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div class="row portlet" id="freeform_html_2-12">
+    <a href="#sec17" name="sec17" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <label>Free Form (html) 2</label>
+            </h3>
+            <span>
+              <div class="radioset">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :freeform_html_2, true %>
+                <%= program_summary_customization.label :freeform_html_2_true, "Enable" %>
+                <%= program_summary_customization.radio_button :freeform_html_2, false %>
+                <%= program_summary_customization.label :freeform_html_2_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <% free_form2 = @summary.program_free_forms.where(:section_title => "freeform_html_2")%>
+          <% body = free_form2.any? ? free_form2.first.body : "" %>
+          <%= text_area_tag "program_summary[free_form][freeform_html_2][body]", body ,:id => "freeform_html2", :class => "required  form-control summernote", :style=>"width:100%;" %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+  <div class="row portlet" id="freeform_html_3-13">
+  	<a href="#sec18" name="sec18" class="section_nav"></a>
+    <div class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option">
+            <h3 style="padding-bottom: 10px;">
+              <i class="pull-left glyphicon glyphicon-th drag_port"></i>
+              <label>Free Form (html) 3</label>
+            </h3>
+            <span>
+              <div class="radioset">
+              <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+                <%= program_summary_customization.radio_button :freeform_html_3, true %>
+                <%= program_summary_customization.label :freeform_html_3_true, "Enable" %>
+                <%= program_summary_customization.radio_button :freeform_html_3, false %>
+                <%= program_summary_customization.label :freeform_html_3_false, "Disable" %>
+              <% end %>
+                <div class="clr"></div>
+              </div>
+            </span>
+          </div>
+          <div class="panel-options">
+            <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:15px;display: none;">
+          <% free_form3 = @summary.program_free_forms.where(:section_title => "freeform_html_3")%>
+          <% body = free_form3.any? ? free_form3.first.body : "" %>
+          <%= text_area_tag "program_summary[free_form][freeform_html_3][body]", body ,:id => "freeform_html3", :class => "required  form-control summernote", :style=>"width:100%;" %>
+        </div><!-- panel-body -->
+      </div>
+    </div>
+  </div>
+
+<%
+=begin
+%>
+<div class="portlet">
+  <div class="portlet-header">  
+    <h2 class="titleLine">
+      <%= f.label :linkedin_url %>
+      <div class="radioset pull_right">
+      <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+        <%= program_summary_customization.radio_button :linkedin_url, true %>
+        <%= program_summary_customization.label :linkedin_url_true, "Enable" %>
+        <%= program_summary_customization.radio_button :linkedin_url, false %>
+        <%= program_summary_customization.label :linkedin_url_false, "Disable" %>
+      <% end %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </h2>
+  </div>
+  <div class="portlet-content">
+    <div class="block">
+      <%= f.text_field :linkedin_url, :class => "form-control", placeholder: "http://linkedin.com/abc"  %>
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+
+<br />
+
+<%
+=begin
+%>
+<div class="portlet">
+  <div class="portlet-header">  
+    <h2 class="titleLine">
+      <%= f.label :welcome_message,:style=>"width:250px;" %>
+      <div class="radioset pull_right">
+      <%= f.fields_for :program_summary_customization, @summary.program_summary_customization do |program_summary_customization| %>
+        <%= program_summary_customization.radio_button :welcome_message, true %>
+        <%= program_summary_customization.label :welcome_message_true, "Enable" %>
+        <%= program_summary_customization.radio_button :welcome_message, false %>
+        <%= program_summary_customization.label :welcome_message_false, "Disable" %>
+      <% end %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </h2>
+  </div>
+  <div class="portlet-content">
+    <div class="block">
+      <%= f.text_area :welcome_message, placeholder: "Welcome message for joiners", :class => "form-control"  %>
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+
+<br>
+<%
+=begin
+%>
+<div class="portlet">
+  <div class="portlet-header">  
+    <h2 class="titleLine">
+      <%= f.label :privacy_policy %>
+      <div class="radioset pull_right">
+      <%= f.fields_for :program_summary_customization, @summary.privacy_policy do |privacy_policy| %>
+        <%= privacy_policy.radio_button :privacy_policy, true %>
+        <%= privacy_policy.label :privacy_policy_true, "Enable" %>
+        <%= privacy_policy.radio_button :privacy_policy, false %>
+        <%= privacy_policy.label :privacy_policy_false, "Disable" %>
+      <% end %>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+    </h2>
+  </div>
+  <div class="portlet-content">
+    <div class="block">
+      <%= f.text_area :privacy_policy, :class => "form-control"  %>
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+
+
+<% if !@summary.try(:program_summary_order).nil? %>
+  <%= f.fields_for :program_summary_order, @summary.program_summary_order do |program_summary_order| %>
+    <%= program_summary_order.hidden_field :order, :style=>"width:700px;" %>
+  <% end -%>
+<% else %>
+  <%= hidden_field_tag :program_summary_program_summary_order_attributes_order,"program_plan-1,goal-2,entry_criteria-3,terms-4,partners-5,quotes-6,freeform-7,casestudy-8,judging_criteria-9,blog-10,freeform_html_1-11,freeform_html_2-12,freeform_html_3-13", :style=>"width:700px;" %>
+<% end %>
+
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>
+</div>
+<script type="text/javascript">
+$(document).ready(function () {
+
+  $(".pick-a-color").pickAColor({
+    showSpectrum            : true,
+    showSavedColors         : true,
+    saveColorsPerElement    : true,
+    fadeMenuToggle          : true,
+    showAdvanced            : true,
+    showBasicColors         : true,
+    showHexInput            : true,
+    allowBlank              : true,
+    inlineDropdown          : true
+  });
+  
+  $('#ex1').slider();
+$(document).on("click", ".expand_form", function(){
+  $(".nicEdit-panelContain").parent().width('100%');
+  $(".nicEdit-panelContain").parent().next().width('98%');
+  $(".nicEdit-main").width('99%');
+});
+});
+
+</script>

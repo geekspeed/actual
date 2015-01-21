@@ -1,0 +1,27 @@
+<% mentors = get_mentors(@pitch)%>
+<div class="eventInsForm modal fade" id="assign_mentor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"><b>Select the <%= t("role_type:mentor", "s") %>  you want to assign to this team</b></h4>
+			</div>
+			<%= form_for(@pitch, :url => assign_mentor_program_pitch_url(@program, @pitch), :html => {:class => "registerForm reqForm" }) do |f| %>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div><%= t("role_type:mentor", "p") %></div>
+						</div>
+						<div class="col-sm-8">
+							<%= f.select(:mentors, options_for_select(mentors), {}, {multiple: true, size: 5, :class => "form-controls form-style-1"})%>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<%= submit_tag "Assign", :id => "submit" %>
+					<%= link_to "Cancel", "#", id: "submit", :"data-dismiss" => "modal", :style => "margin-top:5px; margin-right:10px;" %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

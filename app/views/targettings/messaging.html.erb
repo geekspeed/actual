@@ -1,0 +1,64 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "messaging"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-envelope gn-icon-large"></i>
+      Messaging
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="A customizable dashboard to visualize key facts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Dashboard</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		<div id="rightcontent" class="full_content">
+			<a href="sec1" name="sec1" class="section_nav"></a>
+		  	<%= render "shared/messaging", :community_feed => CommunityFeed.new %>
+		</div>
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Messaging</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

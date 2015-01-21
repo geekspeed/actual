@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  time_taken: 2014-03-27 18:34:37
+  deadline: 2014-03-27 18:34:37
+  description: MyString
+  greater_detail: MyString
+  link: MyString
+  action: MyString
+
+two:
+  time_taken: 2014-03-27 18:34:37
+  deadline: 2014-03-27 18:34:37
+  description: MyString
+  greater_detail: MyString
+  link: MyString
+  action: MyString

@@ -1,0 +1,70 @@
+<%= render "shared/bs_navbar", :ppage => "badge" %>
+<div class="row">
+  <div class="col-md-12">
+    <%= render "shared/flash"%>
+  </div>
+</div>
+<div id="rightcontent"  class="two_sided_right_content">
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div style="height: 20px">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title title_option">
+            <h3>Badge Management</h3>
+            <span></span>
+          </div>
+          <div class="panel-options">
+            <a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+          </div>
+        </div>
+            
+        <div class="panel-body">
+          <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+              <thead>
+                <tr role="row">
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Image</th>
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Name</th>         
+                  <th aria-label="" style="width: 50px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+                </tr>
+              </thead>
+              
+              <tbody aria-relevant="all" aria-live="polite" role="alert">
+                <% @app_badges.each do |app_badge|%>
+                  <% if app_badge.present?%>
+                    <tr>
+                      <td><%= image_tag app_badge.image.url, height: '100', width: '150'%></td>
+                      <td><%= app_badge.name%></td>                      
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-edit'></i> View List".html_safe, issued_badges_program_path(app_badge: app_badge.id), :remote=>true, :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left view-badge-earner", :"data-url" => () , id: app_badge.id%>
+                        <%= link_to "Issue<i class='glyphicon glyphicon-edit' </i>".html_safe, "#", :"data-toggle"=>"modal", :"data-target"=>"##{app_badge.id}", "id" => "issue_badge",  :class=>"new_activity_box btn btn btn-warning btn-sm btn-icon icon-left" if app_badge.badge_rule.criteria == "manual"%>
+                      </td>
+                    </tr>
+                    <%= render "programs/show/issue_badge", app_badge: app_badge %>
+                  <% end %>
+                <%end%>
+              </tbody>
+            </table>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(function() {
+   $(".view-badge-earner").bind("ajax:beforeSend", function(){
+    $.fancybox({ content:"Loading badge...   <img src='/images/bx_loader.gif' width='25'>" });
+   });
+     $(".view-badge-earner").bind("ajax:complete", function(){
+    });
+  });
+
+ 
+</script>

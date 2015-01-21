@@ -1,0 +1,159 @@
+<% org_id = params[:for] || (params[:references] ? params[:references][:for] : nil) || (current_organisation.present? ? current_organisation.id : nil) || nil %>
+<% org = getting_organisation(org_id)%>
+<% background_color = org.try(:background_color)%>
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+<div id="masthead" class="site-header page-header main-header" role="banner" style="background:<%= background_color%>">
+  <div id="headinner" class="page-header-inner">
+	 	<% if user_signed_in? %>
+   		<!--TODO: it should fetch company/program logo-->
+      <% if !current_user.super_admin? && current_organisation.present? %>
+      	<%= link_to_if(current_organisation, image_tag(current_organisation.avatar.logo.url, :style => "height: 80px;"), (is_subdomain ? root_url(subdomain: false) : root_url), :class => "companyLogo pull-left") %>
+      <% else %>
+      	<%= link_to(image_tag("logo-apptual.png"), root_url(subdomain: false), :class => "companyLogo pull-left") %>
+      <% end %>
+    <% elsif @program.present? && @program.organisation.present? %>
+      <%= link_to(image_tag(@program.organisation.avatar.logo.url, :style => "height: 80px;"), (is_subdomain ? root_url(subdomain: false) : root_url), :class => "companyLogo pull-left") %>
+    <% elsif org%>
+       <%= link_to(image_tag(org.avatar_url, :style => "height: 80px;"), (is_subdomain ? root_url(subdomain: false) : root_url), :class => "companyLogo pull-left") %>
+       <div class="menu-right pull-right">
+       	<%= link_to "Login", (is_subdomain ? eco_login_organisation_url(org, subdomain: false) : eco_login_organisation_url(org)), style:"color:white;",class: "pull-right login-sum-btn" if (controller_name == "organisations" and params[:action] == "show" and !user_signed_in? )%>
+       </div>
+		<% else %>
+			<%= link_to(image_tag("logo-apptual.png"), "/", :class => "companyLogo pull-left") %>
+    <% end %>
+
+		<% if user_signed_in? && !current_user.super_admin? %>
+			<p class="company-slogan pull-left visible-lg"><%= current_organisation.try(:slogan) %></p>
+		<% elsif @program.present? && @program.organisation.present? %>
+      <p class="company-slogan pull-left visible-lg"><%= @program.organisation.try(:slogan) %></p>
+    <% elsif org %>
+      <p class="company-slogan pull-left visible-lg"><%= org.try(:slogan) %></p>
+		<% end %>
+
+		<div class="menu-right pull-right">
+		  <% if user_signed_in? %>
+				<div class="dropdown pull-right">
+				  <button class="btn dropdown-toggle select_prog_btn" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				    <%= current_user.first_name %>
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu top_right_menus" role="menu" aria-labelledby="dropdownMenu1">
+				    <li>
+				       <%= link_to("Settings", (is_subdomain ? edit_user_registration_url(subdomain: false) : edit_user_registration_url)) %>
+					  </li>
+					  	<%= render "layouts/shared/super_admin_options" if current_user.super_admin? %>
+					  <li class="logout_link">
+					  	<%if (controller_name == "organisations" and params[:action] == "show" ) %>
+					  		<%= link_to("Logout", (is_subdomain ? destroy_user_session_url(:organisation_id => org.id, :level => "eco", subdomain: false) : destroy_user_session_url(:organisation_id => org.id, :level => "eco")), :method => :delete) %>
+					  	<% else %>
+					    	<%= link_to("Logout", (is_subdomain ? destroy_user_session_url(subdomain: false) : destroy_user_session_url), :method => :delete) %>
+					    <% end %>
+					  </li>
+				  </ul>
+				</div>
+			  <div id="select_action_container"  class="pull-right">
+			    <div id="notification-block">
+				    <div id="notifications">
+							<div class="tablecell">
+					    	<%= link_to(image_tag(current_user.avatar.thumb.url, :height => "40", :class => "img-circle img-responsive img-circle-border"), (is_subdomain ? user_url(current_user, subdomain: false) : user_url(current_user))) %>
+						  </div>
+			                <% if !context_program.blank? %>
+			                	<%notification_count = notification_counts(context_program)%>
+			                	<%project_id_feeds_present = project_id_feeds_present(context_program)%>
+				              	<% if !current_user.pitch_invitations.empty? %>
+				              		<%= link_to notification_count, "#all_invitations", id: "nfc_counter", class: " nfc_counter_open fancybox" %>
+								<% elsif project_id_feeds_present.count > 1 %>
+									<%= link_to notification_count, "#all_pitch_feeds", id: "nfc_counter", class: "fancybox" %>
+								<% elsif project_id_feeds_present.count == 1 %>
+									<%= link_to notification_count, polymorphic_url([context_program, :visited_notifications], :notification_url=>(is_subdomain ? polymorphic_url([:feeds, @program, feed_pitch(project_id_feeds_present.first)], subdomain: false) : polymorphic_url([:feeds, context_program, feed_pitch(project_id_feeds_present.first)])), type: "pitch"), :method=>"post", id: "nfc_counter", class: "" %>
+								<% elsif notification_count > 0 %>
+									<%= link_to notification_count, polymorphic_url([context_program, :visited_notifications], :notification_url=>program_community_feeds_path(context_program.id), type: "program"), :method=>"post", id: "nfc_counter", class: "" %>
+								<% end %>
+							<% end %>
+						  <div id="nfc_container">
+						    <ul class="inner">
+							    <li><div class="clr"></div>
+							    </li>
+							  </ul>
+						  </div>
+					  </div>
+					  <!--<a id="inbox" class="pull-left" href="#"></a>-->
+					  <div class="clear"></div>
+				  </div>
+			  </div>
+				<div class="dropdown pull-right">
+				  <% if awaited_user.nil? %>
+					<button class="btn dropdown-toggle select_prog_btn" type="button" id="dropdownMenu2" data-toggle="dropdown">
+					  <%= selected_program %>
+					  <span class="<%= (visible_programs.try(:count) && visible_programs.try(:count) > 1)  ? "caret" : "" %>"></span>
+					</button>
+				  <% end %>
+				  <ul class="dropdown-menu top_right_menus open_left" role="menu" aria-labelledby="dropdownMenu2">
+				    <% visible_programs.each do |program| %>
+              <% if program.master_program? && current_user.company_admin?(program.organisation) %>
+                <li>
+                  <nobr><%= link_to program.title, (is_subdomain ? edit_program_url(program, subdomain: false) : edit_program_url(program)) %></nobr>
+                </li>
+              <% elsif !program.master_program? %>
+                <li>
+                  <nobr><%= link_to program.title, (is_subdomain ? edit_program_url(program, subdomain: false) : edit_program_url(program)) %></nobr>
+                </li>
+              <% end %>
+					  <% end if visible_programs.try(:count) > 1 %>
+				  	<% if need?(["company_admin", "program_admin"], current_organisation) %>
+						  <li class="create_program_link">
+						  	<%= link_to "+ Create Program", (is_subdomain ? new_program_url(subdomain: false) : new_program_url)%>
+						  </li>
+					  <% end %>
+				  </ul>
+				</div>
+        <% if current_user.pitch_invitations.any? %>
+          <div style="display: none" id="all_invitations">
+            <div class="lightbox_box">
+              <% current_user.pitch_invitations.each_with_index do |invitation, i| %>
+                <h2><%= invitation.invitee_type == "collaborator" ? "Collaboration Request" : "Invitations to provide support to the #{t('pitch', 'p')}" %></h2>
+                <h3 class="iter_heading"><%= "By #{invitation.invited_by.full_name} on #{invitation.created_at.date_month_year}"%></h3>
+                <div class="previous_iterations">
+                  <% if invitation.invitee_type == "collaborator"%>
+                    <%= link_to "You have received a collaboration request", invitation_link(invitation), :class => "text_underline"%>
+                    <%#= collaboration_msg(invitation) %>
+                  <% else%>
+                    <%= link_to "#{invitation.pitch.title}", invitation_link(invitation)%>
+                    <div class="pull-right" style="margin-left: 10px;">
+                      <%= link_to 'Decline', invitation_decline_link(invitation), :method => invitation.invitee_type == "collaborator" ? :put : :get, :class => "btn btn-xs btn-info"%>
+                    </div>
+                    <div class="pull-right">
+                      <%= link_to 'Accept', invitation_accept_link(invitation), :method => invitation.invitee_type == "collaborator" ? :put : :get, :class => "btn btn-xs btn-info"%>
+                    </div>
+                  <% end %>
+                </div> 
+              <% end %>
+            </div>
+          </div>
+          <% end %>
+          <% if !context_program.blank? && project_id_feeds_present.count > 1 %>
+			<div style="display: none" id="all_pitch_feeds">
+				<div class="lightbox_box">
+				  <h2>Pitch Feed Notifications</h2>
+				  <% feed_pitches(project_id_feeds_present).each_with_index do |pitch, i| %>
+				    <h3 class="iter_heading"><%=i+1%>. <%= pitch.title%> feed updates</h3>
+				        <div class="pull-right">
+				          <%= link_to 'Visit Pitch Feeds', polymorphic_url([context_program, :visited_notifications], :notification_url=>(is_subdomain ? polymorphic_url([:feeds, @program, pitch], subdomain: false) : polymorphic_url([:feeds, context_program, feed_pitch(project_id_feeds_present.first)])), type: "pitch"), :method=>"post", :class => "btn btn-xs btn-info"%>
+				        </div>
+				  <% end %>
+				</div>
+			</div>
+          <% end %>
+		    <div class="clr"></div>
+		  <% else %>
+        <!--<ul>
+			    <li><a href="#">Features & Pricing</a></li>
+				  <li><a href="#">Terms</a></li>
+			  </ul>-->
+			  <%#= render "layouts/shared/login_form" unless controller_name == "omniauth_callbacks" or controller_name == "programs" %>
+				<%= link_to "Login", (is_subdomain ? program_login_program_url(@program, subdomain: false) : program_login_program_url(@program)), style:"color:white;",class: "pull-right  login-sum-btn" if controller_name == "programs" and !user_signed_in?%>
+		  <% end %>
+		</div>
+		<div class="clr"></div>
+	</div>
+</div><!-- #masthead -->

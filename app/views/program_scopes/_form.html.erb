@@ -1,0 +1,1090 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Scope and Settings" %>
+<% end %>
+
+<a href="#sec1" name="sec1" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Scope</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+				<div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>Geography Scope</div>
+          </div>
+          <div class="col-sm-8">
+          	<div class="radioset">
+					    <%= f.radio_button :country_specific, "false" %>
+					    <%= f.label "Global", :for => "#{f.object_name}_country_specific_false" %>
+					
+					    <%= f.radio_button :country_specific, "true" %>
+					    <%= f.label "Country Specific", :for => "#{f.object_name}_country_specific_true" %>
+					  </div>
+					  <div class="sel_country" style = "<%= f.object.country_specific ? '' : 'display: none' %>" >
+					    <%= f.collection_select :country, ProgramScope::COUNTRY, :to_s, :to_s, {:include_blank => "Select a country"} %>
+					  </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div>Participant Scope</div>
+          </div>
+          <div class="col-sm-8">
+          	<div class="radioset">
+					    <% ProgramScope::PARTICIPANT_SCOPE.each do |scope, label| %>
+					      <%= f.radio_button :participant_scope, scope, :checked => (scope == "public" or scope == f.object.participant_scope) ? "checked" : "" %>
+					      <%= f.label label, :for => "#{f.object_name}_participant_scope_#{scope}" %>
+					    <% end %>
+					  </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div><%= f.label :email_restriction, "Email Domain<br/>Restriction".html_safe %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :email_restriction, :class => "form-control form-style-1" %>
+          	<i>ex. 'usa.ca.gov'</i>
+          </div>
+        </div>
+        <hr class="mod_sep">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+					<tbody>
+						<tr class="odd">
+							<td class="radio-table-cell1">Manual approval for all participant applications without invitation</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :manual_approval_for_participant, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_manual_approval_for_participant_true" %>
+				
+				          <%= f.radio_button :manual_approval_for_participant, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_manual_approval_for_participant_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Manual approval for all mentor applications without invitation</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :manual_approval_for_mentor, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_manual_approval_for_mentor_true" %>
+				
+				          <%= f.radio_button :manual_approval_for_mentor, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_manual_approval_for_mentor_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Do you want to have the ability to manually accept applicants who are not from the specified email domain</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :approve_other_domain, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_approve_other_domain_true" %>
+				
+				          <%= f.radio_button :approve_other_domain, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_approve_other_domain_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Can mentors invite external participants to the program by referring startups to them</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :approve_external_participants, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_approve_external_participants_true" %>
+				
+				          <%= f.radio_button :approve_external_participants, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_approve_external_participants_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<%
+=begin
+%>
+
+
+<div class="block">
+  <h2 class="titleLine">Scope</h2>
+  <label>Geography Scope</label>
+  <div class="radioset">
+    <%= f.radio_button :country_specific, "false" %>
+    <%= f.label "Global", :for => "#{f.object_name}_country_specific_false" %>
+
+    <%= f.radio_button :country_specific, "true" %>
+    <%= f.label "Country Specific", :for => "#{f.object_name}_country_specific_true" %>
+  </div>
+  <div class="sel_country" style = "<%= f.object.country_specific ? '' : 'display: none' %>" >
+    <%= f.collection_select :country, ProgramScope::COUNTRY, :to_s, :to_s, {:include_blank => "Select a country"} %>
+  </div>
+  <div class="clr"></div>
+  <br />
+  <label>Participant Scope</label>
+  <div class="radioset">
+    <% ProgramScope::PARTICIPANT_SCOPE.each do |scope, label| %>
+      <%= f.radio_button :participant_scope, scope, :checked => (scope == "public" or scope == f.object.participant_scope) ? "checked" : "" %>
+      <%= f.label label, :for => "#{f.object_name}_participant_scope_#{scope}" %>
+    <% end %>
+  </div>
+  <div class="clr"></div>
+  <br />
+  <p class="p_2row" style="margin-bottom: 5px;">
+    <%= f.label :email_restriction, "Email Domain<br/>Restriction".html_safe %>
+    <%= f.text_field :email_restriction, :class => "form-control" %>
+  </p>
+  <div class="hinweis">ex. 'usa.ca.gov'</div>
+  <table class="settings table">
+    <tr>
+      <td class="lbl">Manual approval for all participant applications without invitation</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :manual_approval_for_participant, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_manual_approval_for_participant_true" %>
+
+          <%= f.radio_button :manual_approval_for_participant, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_manual_approval_for_participant_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">Manual approval for all mentor applications without invitation</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :manual_approval_for_mentor, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_manual_approval_for_mentor_true" %>
+
+          <%= f.radio_button :manual_approval_for_mentor, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_manual_approval_for_mentor_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">Do you want to have the ability to manually accept applicants who are not from the specified email domain</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :approve_other_domain, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_approve_other_domain_true" %>
+
+          <%= f.radio_button :approve_other_domain, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_approve_other_domain_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">Can mentors invite external participants to the program by referring startups to them</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :approve_external_participants, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_approve_external_participants_true" %>
+
+          <%= f.radio_button :approve_external_participants, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_approve_external_participants_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<%
+=end
+%>
+<br />
+
+<a href="#sec2" name="sec2" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Registration &amp; Applications</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+					<tbody>
+						<% if false%>
+					    <tr class="odd">
+					      <td class="lbl radio-table-cell1">People can register with social media</td>
+					      <td>
+					        <div class="radioset">
+					          <%= f.radio_button :social_registration, "true" %>
+					          <%= f.label "Yes", :for => "#{f.object_name}_social_registration_true" %>
+					
+					          <%= f.radio_button :social_registration, "false" %>
+					          <%= f.label "No", :for => "#{f.object_name}_social_registration_false" %>
+					          <div class="clr"></div>
+					        </div>
+					      </td>
+					    </tr>
+						<% end %>
+						<tr class="odd">
+							<td class="radio-table-cell1">People can register with Facebook</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :facebook, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_facebook_true" %>
+				
+				          <%= f.radio_button :facebook, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_facebook_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>People can register with Twitter</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :twitter, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_twitter_true" %>
+				
+				          <%= f.radio_button :twitter, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_twitter_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>People can register with LinkedIn</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :linkedin, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_linkedin_true" %>
+				
+				          <%= f.radio_button :linkedin, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_linkedin_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Can new users register throughout this program?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :can_always_join, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_can_always_join_true" %>
+				
+				          <%= f.radio_button :can_always_join, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_can_always_join_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Can users create multiple <%= t("pitch", "p") %>?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :multiple_pitches, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_multiple_pitches_true" %>
+				
+				          <%= f.radio_button :multiple_pitches, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_multiple_pitches_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Do you want people to be associated with an organisation?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :associated_organisation, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_associated_organisation_true" %>
+				
+				          <%= f.radio_button :associated_organisation, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_associated_organisation_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Stop participants from adding projects</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :stop_adding_project_participants, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_stop_adding_project_participants_true" %>
+				
+				          <%= f.radio_button :stop_adding_project_participants, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_stop_adding_project_participants_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Automatically create a project</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :automatically_create_project, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_automatically_create_project_true" %>
+				
+				          <%= f.radio_button :automatically_create_project, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_automatically_create_project_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td>Offer anonymous login</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :offer_anonymous_login, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_offer_anonymous_login_true" %>
+				
+				          <%= f.radio_button :offer_anonymous_login, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_offer_anonymous_login_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+
+<%
+=begin
+%>
+
+<div class="block">
+  <h2 class="titleLine">Registration & Applications</h2>
+
+  <table class="settings full_width  table">
+  	<% if false%>
+	    <tr>
+	      <td class="lbl">People can register with social media</td>
+	      <td style="width: 100px">
+	        <div class="radioset pull_left">
+	          <%= f.radio_button :social_registration, "true" %>
+	          <%= f.label "Yes", :for => "#{f.object_name}_social_registration_true" %>
+	
+	          <%= f.radio_button :social_registration, "false" %>
+	          <%= f.label "No", :for => "#{f.object_name}_social_registration_false" %>
+	          <div class="clr"></div>
+	        </div>
+	      </td>
+	    </tr>
+	<% end %>
+	
+	<tr>
+      <td class="lbl">People can register with Facebook</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :facebook, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_facebook_true" %>
+
+          <%= f.radio_button :facebook, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_facebook_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+	
+	<tr>
+      <td class="lbl">People can register with Twitter</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :twitter, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_twitter_true" %>
+
+          <%= f.radio_button :twitter, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_twitter_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+	
+	<tr>
+      <td class="lbl">People can register with LinkedIn</td>
+      <td style="width: 100px">
+        <div class="radioset pull_left">
+          <%= f.radio_button :linkedin, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_linkedin_true" %>
+
+          <%= f.radio_button :linkedin, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_linkedin_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+	
+    <tr>
+      <td class="lbl">Can new users register throughout this program?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :can_always_join, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_can_always_join_true" %>
+
+          <%= f.radio_button :can_always_join, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_can_always_join_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">Can users create multiple <%= t("pitch", "p") %>?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :multiple_pitches, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_multiple_pitches_true" %>
+
+          <%= f.radio_button :multiple_pitches, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_multiple_pitches_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl"> Do you want people to be associated with an organisation?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :associated_organisation, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_associated_organisation_true" %>
+
+          <%= f.radio_button :associated_organisation, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_associated_organisation_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<%
+=end
+%>
+<br />
+
+<a href="#sec3" name="sec3" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Feedback</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+					<tbody>
+						<tr class="odd">
+							<td class="radio-table-cell1">Can users peer review the <%= t("pitch", "p") %>?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :peer_review_active, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_peer_review_active_true" %>
+				
+				          <%= f.radio_button :peer_review_active, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_peer_review_active_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						
+						<tr>
+              <td class="radio-table-cell1">Do you want to share the judges feedback and score with the <%= t("role_type:participant", "p") %>?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :show_judging_score, "true" %>
+                  <%= f.label "Yes", :for => "#{f.object_name}_show_judging_score_true" %>
+        
+                  <%= f.radio_button :show_judging_score, "false" %>
+                  <%= f.label "No", :for => "#{f.object_name}_show_judging_score_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+						<tr class="odd">
+              <td class="radio-table-cell1">Stop editing fields for <%= t("pitch", "p") %>?</td>
+              <td>
+                <div class="radioset">
+                  <%= f.radio_button :stop_editing_fields, "true" %>
+                  <%= f.label "Yes", :for => "#{f.object_name}_stop_editing_fields_true" %>
+        
+                  <%= f.radio_button :stop_editing_fields, "false" %>
+                  <%= f.label "No", :for => "#{f.object_name}_stop_editing_fields_false" %>
+                  <div class="clr"></div>
+                </div>
+              </td>
+            </tr>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<%
+=begin
+%>
+
+
+<div class="block">
+  <h2 class="titleLine">Feedback</h2>
+  <table class="settings full_width table">
+    <tr>
+      <td class="lbl">Can users peer review the <%= t("pitch", "p") %>?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :peer_review_active, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_peer_review_active_true" %>
+
+          <%= f.radio_button :peer_review_active, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_peer_review_active_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="lbl">Do you want to share the judges feedback and score with the <%= t("role_type:participant", "p") %>?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :show_judging_score, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_show_judging_score_true" %>
+
+          <%= f.radio_button :show_judging_score, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_show_judging_score_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<%
+=end
+%>
+<br />
+<a href="#sec4" name="sec4" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Privacy</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+					<tbody>
+						<tr class="odd">
+							<td class="radio-table-cell1">Can teams view each other's <%= t("pitch", "p") %>?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :view_other_team_pitches, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_view_other_team_pitches_true" %>
+				
+				          <%= f.radio_button :view_other_team_pitches, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_view_other_team_pitches_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1">Should teams have the ability to set the privacy settings of some fields in their <%= t("pitch", "p") %> to private, so other <%= t("role_type:participant", "p") %> will not be able to see it?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :pitch_privacy_some_fields, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_pitch_privacy_some_fields_true" %>
+				
+				          <%= f.radio_button :pitch_privacy_some_fields, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_pitch_privacy_some_fields_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1">Should teams have the ability to set the privacy settings of their <%= "#{t("pitch")}" %> to private, so other <%= t("role_type:participant", "p") %> will not be able to see it?</td>
+							<td>
+								<div class="radioset">
+				          <%= f.radio_button :pitch_privacy_settings, "true" %>
+				          <%= f.label "Yes", :for => "#{f.object_name}_pitch_privacy_settings_true" %>
+				
+				          <%= f.radio_button :pitch_privacy_settings, "false" %>
+				          <%= f.label "No", :for => "#{f.object_name}_pitch_privacy_settings_false" %>
+				          <div class="clr"></div>
+				        </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<%
+=begin
+%>
+<div class="block">
+  <h2 class="titleLine">Privacy</h2>
+  <table class="settings full_width table">
+    <tr>
+      <td class="lbl">Can teams view each other's <%= t("pitch", "p") %>?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :view_other_team_pitches, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_view_other_team_pitches_true" %>
+
+          <%= f.radio_button :view_other_team_pitches, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_view_other_team_pitches_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr class="pitch_privacy_private">
+      <td class="lbl">Should teams have the ability to set the privacy settings of some fields in their <%= t("pitch", "p") %> to private, so other <%= t("role_type:participant", "p") %> will not be able to see it?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :pitch_privacy_some_fields, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_pitch_privacy_some_fields_true" %>
+
+          <%= f.radio_button :pitch_privacy_some_fields, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_pitch_privacy_some_fields_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+    <tr class="pitch_privacy_private">
+      <td class="lbl">Should teams have the ability to set the privacy settings of their <%= "#{t("pitch")}" %> to private, so other <%= t("role_type:participant", "p") %> will not be able to see it?</td>
+      <td>
+        <div class="radioset pull_left">
+          <%= f.radio_button :pitch_privacy_settings, "true" %>
+          <%= f.label "Yes", :for => "#{f.object_name}_pitch_privacy_settings_true" %>
+
+          <%= f.radio_button :pitch_privacy_settings, "false" %>
+          <%= f.label "No", :for => "#{f.object_name}_pitch_privacy_settings_false" %>
+          <div class="clr"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<%
+=end
+%>
+<%if false%>
+<br />
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Feedback Privacy Settings</label><i>Private means, only visible for admins and <%= t("pitch") %> members</i></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable program-type-table" id="table-2">
+					<tbody>
+						<tr class="odd">
+							<td class="radio-table-cell1"><%= "Feedback from #{t("role_type:participant", "p")}" %></td>
+							<td>
+								<div class="radioset">
+			            <%= f.radio_button :applicants_feedback_public, "true" %>
+			            <%= f.label "Public", :for => "#{f.object_name}_applicants_feedback_public_true" %>
+			  
+			            <%= f.radio_button :applicants_feedback_public, "false" %>
+			            <%= f.label "Private", :for => "#{f.object_name}_applicants_feedback_public_false" %>
+			            <div class="clr"></div>
+			          </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1"><%= "Feedback from #{t("role_type:mentor", "p")}" %></td>
+							<td>
+								<div class="radioset">
+		              <%= f.radio_button :mentors_feedback_public, "true" %>
+		              <%= f.label "Public", :for => "#{f.object_name}_mentors_feedback_public_true" %>
+		  
+		              <%= f.radio_button :mentors_feedback_public, "false" %>
+		              <%= f.label "Private", :for => "#{f.object_name}_mentors_feedback_public_false" %>
+		              <div class="clr"></div>
+		            </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1"><%= "Feedback from #{t("role_type:panellist")}" %></td>
+							<td>
+								<div class="radioset">
+		              <%= f.radio_button :panels_feedback_public, "true" %>
+		              <%= f.label "Public", :for => "#{f.object_name}_panels_feedback_public_true" %>
+		  
+		              <%= f.radio_button :panels_feedback_public, "false" %>
+		              <%= f.label "Private", :for => "#{f.object_name}_panels_feedback_public_false" %>
+		              <div class="clr"></div>
+		            </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1"><%= "Feedback from #{t("role_type:selector", "p")}" %></td>
+							<td>
+								<div class="radioset">
+		              <%= f.radio_button :selectors_feedback_public, "true" %>
+		              <%= f.label "Public", :for => "#{f.object_name}_selectors_feedback_public_true" %>
+		  
+		              <%= f.radio_button :selectors_feedback_public, "false" %>
+		              <%= f.label "Private", :for => "#{f.object_name}_selectors_feedback_public_false" %>
+		              <div class="clr"></div>
+		            </div>
+							</td>
+						</tr>
+						<tr class="odd">
+							<td class="radio-table-cell1">Feedback from Admin</td>
+							<td>
+								<div class="radioset">
+			            <%= f.radio_button :admins_feedback_public, "true" %>
+			            <%= f.label "Public", :for => "#{f.object_name}_admins_feedback_public_true" %>
+			  
+			            <%= f.radio_button :admins_feedback_public, "false" %>
+			            <%= f.label "Private", :for => "#{f.object_name}_admins_feedback_public_false" %>
+			            <div class="clr"></div>
+			          </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<% end %>
+
+<%
+=begin
+%>
+
+<%if false%>
+  <div class="block">
+    <h2 class="titleLine">Feedback Privacy Settings</h2>
+    <i>Private means, only visible for admins and <%= t("pitch") %> members</i>
+    <br /><br />
+    <table class="settings full_width table">
+      <tr>
+        <td width="250" class="lbl"><%= "Feedback from #{t("role_type:participant", "p")}" %></td>
+        <td style="width: 140px;">
+          <div class="radioset pull_left">
+            <%= f.radio_button :applicants_feedback_public, "true" %>
+            <%= f.label "Public", :for => "#{f.object_name}_applicants_feedback_public_true" %>
+  
+            <%= f.radio_button :applicants_feedback_public, "false" %>
+            <%= f.label "Private", :for => "#{f.object_name}_applicants_feedback_public_false" %>
+            <div class="clr"></div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+          <td class="lbl"><%= "Feedback from #{t("role_type:mentor", "p")}" %></td>
+          <td>
+            <div class="radioset pull_left">
+              <%= f.radio_button :mentors_feedback_public, "true" %>
+              <%= f.label "Public", :for => "#{f.object_name}_mentors_feedback_public_true" %>
+  
+              <%= f.radio_button :mentors_feedback_public, "false" %>
+              <%= f.label "Private", :for => "#{f.object_name}_mentors_feedback_public_false" %>
+              <div class="clr"></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lbl"><%= "Feedback from #{t("role_type:panellist")}" %></td>
+          <td>
+            <div class="radioset pull_left">
+  
+              <%= f.radio_button :panels_feedback_public, "true" %>
+              <%= f.label "Public", :for => "#{f.object_name}_panels_feedback_public_true" %>
+  
+              <%= f.radio_button :panels_feedback_public, "false" %>
+              <%= f.label "Private", :for => "#{f.object_name}_panels_feedback_public_false" %>
+              <div class="clr"></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lbl"><%= "Feedback from #{t("role_type:selector", "p")}" %></td>
+          <td>
+            <div class="radioset pull_left">
+              <%= f.radio_button :selectors_feedback_public, "true" %>
+              <%= f.label "Public", :for => "#{f.object_name}_selectors_feedback_public_true" %>
+  
+              <%= f.radio_button :selectors_feedback_public, "false" %>
+              <%= f.label "Private", :for => "#{f.object_name}_selectors_feedback_public_false" %>
+              <div class="clr"></div>
+            </div>
+          </td>
+        </tr>
+            <tr>
+        <td class="lbl">Feedback from Admin</td>
+        <td>
+          <div class="radioset pull_left">
+            <%= f.radio_button :admins_feedback_public, "true" %>
+            <%= f.label "Public", :for => "#{f.object_name}_admins_feedback_public_true" %>
+  
+            <%= f.radio_button :admins_feedback_public, "false" %>
+            <%= f.label "Private", :for => "#{f.object_name}_admins_feedback_public_false" %>
+            <div class="clr"></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+<% end %>
+<%
+=end
+%>
+<br />
+<a href="#sec5" name="sec5" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>On which factors do you like to tag your <%= t("pitch", "p") %></label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <div class="row">
+			    <div class="col-sm-12 tag_functionality">
+			    	<div class="container_tags">
+			        <div class="tagList" id="pitch_tagList">
+				        <div class="tagContainer">
+				          <% f.object.pitch_tags.each do |rf| %>
+				            <div class="tagContainer">
+				              <%= link_to rf, "#", :class => "delTag" %>
+				              <%= hidden_field_tag :"tags[pitch_tags][]", rf %>
+				            </div>
+				          <% end unless f.object.new_record?  %>
+				        </div>
+				        <div class="clr"></div>
+				      </div>
+			        <div class="clr"></div>
+			      </div>
+			      <div class="quote_col_row container_add_tag">
+					  	<%= f.text_field :pitch_tags, :id => "inputTag", :value => "", :class => "form-control form-style-1 pull-left form-style-1", :value => "", :placeholder=>"Enter new factor" %>
+      				<%= link_to "+ Add a category", "#", :class => "add_pitch_tags pull-left module_box_submit low-padding", :id=>"submit" %> 
+					  </div>
+						<div class="clr"></div>
+			    </div>
+        </div>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<%
+=begin
+%>
+<div class="block">
+  <h2 class="titleLine">On which factors do you like to tag your <%= t("pitch", "p") %></h2>
+  <div class="tag_functionality">
+    <div class="container_tags pull_none auto_width">
+      <div class="tagList" id="pitch_tagList">
+        <div class="tagContainer">
+          <% f.object.pitch_tags.each do |rf| %>
+            <div class="tagContainer">
+              <%= link_to rf, "#", :class => "delTag" %>
+              <%= hidden_field_tag :"tags[pitch_tags][]", rf %>
+            </div>
+          <% end unless f.object.new_record?  %>
+        </div>
+        <div class="clr"></div>
+      </div>
+    </div>
+
+    <div class="container_add_tag no_margin">
+      <%= f.text_field :pitch_tags, :id => "inputTag", :value => "", :class => "form-control" %>
+      <%= link_to "+ Add a category", "#", :class => "add_pitch_tags" %>     
+    </div>
+  </div>
+</div>
+<%
+=end
+%>
+<br />
+<a href="#sec6" name="sec6" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>On which factors do you like to tag your mentors</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <div class="row">
+			    <div class="col-sm-12 tag_functionality">
+			    	<div class="container_tags">
+			        <div class="tagList" id="mentor_tagList">
+				        <div class="tagContainer">
+				          <% f.object.mentor_tags.each do |rf| %>
+				            <div class="tagContainer">
+				              <%= link_to rf, "#", :class => "delTag" %>
+				              <%= hidden_field_tag :"tags[mentor_tags][]", rf %>
+				            </div>
+				          <% end unless f.object.new_record? %>
+				        </div>
+				        <div class="clr"></div>
+				      </div>
+			        <div class="clr"></div>
+			      </div>
+			      <div class="quote_col_row container_add_tag">
+					  	<%= f.text_field :mentor_tags, :id => "inputTag", :value => "", :class => "form-control form-style-1 pull-left", :value => "", :placeholder=>"Enter new factor" %>
+      				<%= link_to "+ Add a category", "#", :class => "add_mentor_tags pull-left module_box_submit low-padding", :id=>"submit" %> 
+					  </div>
+						<div class="clr"></div>
+			    </div>
+        </div>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<br />
+<%
+=begin
+%>
+
+<div class="block">
+  <h2 class="titleLine">On which factors do you like to tag your mentors</h2>
+  <div class="tag_functionality">
+    <div class="container_tags pull_none auto_width">
+      <div class="tagList" id="mentor_tagList">
+        <div class="tagContainer">
+          <% f.object.mentor_tags.each do |rf| %>
+            <div class="tagContainer">
+              <%= link_to rf, "#", :class => "delTag" %>
+              <%= hidden_field_tag :"tags[mentor_tags][]", rf %>
+            </div>
+          <% end unless f.object.new_record? %>
+        </div>
+      <div class="clr"></div>
+    </div>
+    <div class="container_add_tag no_margin">
+      <%= f.text_field :mentor_tags, :id => "inputTag", :value => "", :class => "form-control" %>
+      <%= link_to "+ Add a category", "#", :class => "add_mentor_tags" %>    
+    </div>
+  </div>
+</div>
+<br />
+</div>
+<%
+=end
+%>
+<% if @program.virtual_currency? %>
+<a href="#sec7" name="sec7" class="section_nav"></a>
+<div class="row ">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			<div class="panel-heading relative_panel_head ">
+				<div class="panel-title title_option">
+					<h3><label>Virtual Dollars</label></h3>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-up" href="#"></a>
+				</div>
+			</div>
+			<div class="panel-body" style="display: none;">
+        <div class="row">
+        	<div class="col-sm-4 setting-font">
+			      <div><%= f.label :virtual_dollar_for_applicants %></div>
+			    </div>
+			    <div class="col-sm-8">
+			    	<%= f.text_field :virtual_dollar_for_applicants, :class => "virtual_dollar form-control form-style-1" %>
+			    	<i>default: 10</i>
+			    </div>
+        </div>
+        <br />
+        <div class="row">
+        	<div class="col-sm-4 setting-font">
+			      <div><%= f.label :virtual_dollar_for_mentors %></div>
+			    </div>
+			    <div class="col-sm-8">
+			    	<%= f.text_field :virtual_dollar_for_mentors, :class => "virtual_dollar form-control form-style-1" %>
+			    	<i>default: 10</i>
+			    </div>
+        </div>
+        <br />
+        <div class="row">
+        	<div class="col-sm-4 setting-font">
+			      <div><%= f.label :user_backed_pitches %></div>
+			    </div>
+			    <div class="col-sm-8">
+			    	<%= f.text_field :user_backed_pitches, :class => "virtual_dollar form-control form-style-1" %>
+			    	<i>default: 10</i>
+			    </div>
+        </div>
+			</div><!-- panel-body -->
+		</div>
+	</div>
+</div>
+<% end %>
+<%
+=begin
+%>
+
+<% if @program.virtual_currency? %>
+  <div class="sel_virt_mon block p_no_margin" style="">
+    <p style="margin-bottom: 10px;">
+      <h2 class="titleLine">Virtual Dollars</h2>
+    </p>
+    <p>
+      <%= f.label :virtual_dollar_for_applicants, :style => "width:200px" %>
+      <%= f.text_field :virtual_dollar_for_applicants, :class => "virtual_dollar form-control pull-left" %> 
+      <span class="pull-left" style="margin-top: 10px;">default: 10</span>
+      <div class="clear"></div>
+    </p>
+    <br />
+    <p>
+      <%= f.label :virtual_dollar_for_mentors, :style => "width:200px" %>
+      <%= f.text_field :virtual_dollar_for_mentors, :class => "virtual_dollar form-control pull-left" %>
+      <span class="pull-left" style="margin-top: 10px;">default: 10</span>
+      <div class="clear"></div>
+    </p>
+    <br />
+    <p class="p_2row">
+      <%= f.label :user_backed_pitches, :style => "width:200px" %>
+      <%= f.text_field :user_backed_pitches, :class => "virtual_dollar form-control pull-left" %>
+      <span class="pull-left" style="margin-top: 10px;">default: 10</span>
+      <div class="clear"></div>
+    </p>
+  </div>
+<% end %>
+
+<%
+=end
+%>
+<p>
+  <%= f.submit "Save", :id => "submit" %>
+</p>

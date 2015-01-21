@@ -1,0 +1,56 @@
+<% content_for :title do %>
+  <%= "Rate event" %>
+<% end %>
+
+<% page = "rating"%>
+<%= render "shared/bs_navbar", :page => page%>
+<%= render "shared/flash"%>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec3" name="sec3" class="section_nav"></a>
+              <h3>You rated event</h3>
+            </div>
+          </div>
+              
+          <div class="panel-body">
+            <% if @status == "ok"%>
+              <%= form_for(@event_rating, :url => event_ratings_url, :method=> "put", :html => {:class => "registerForm reqForm" })  do |f|%>
+                <%= hidden_field_tag "event_rating_id", @event_rating.id %>
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Your rating</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <input value="<%= @event_rating.rating%>" type="text" class="rating-kv" min=0 max=5 step=0.5 data-size="xs" readonly="true">
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col-sm-4 setting-font">
+                    <div>Comment</div>
+                  </div>
+                  <div class="col-sm-8">
+                    <%= f.text_area :comment, {:class => "form-controls form-style-1 autogrow"}%>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <%= f.submit "Update", :id => "submit" %>
+                </div>
+              <% end %>
+             <%elsif @status == "same_event"%>
+               Reviews can be submitted only once per event. You had already summited ratings for this event.
+             <%elsif @status == "expired"%>
+               You had already submitted your feedback for this event.
+             <%else%>
+               Token Not found
+             <%end%>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

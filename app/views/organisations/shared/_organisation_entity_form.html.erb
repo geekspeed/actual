@@ -1,0 +1,46 @@
+
+  <div class="reg_box block">
+    <h2 class="titleLine">Add new organisation</h2>
+    <br /><br />
+    <div class="logoboxleft form-group">
+
+      <%= f.label :avatar, "Upload your company logo", :class => "file_field_width" %>
+      <div class="browse-wrapper">
+        <%= f.file_field :avatar, :class => "file_field_width pull-left upload_img" %>
+      </div>
+      <%= image_tag((@organisation.avatar_url.present? ? @organisation.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>" img img-responsive")%>
+      <div class="clear"></div>
+    </div>
+
+    <p class="form-group">
+      <%= f.label :company_name,"Organisation name", :class=>"file_field_width" %>
+      <%= f.text_field :company_name, :class => "required form-control" %>
+    </p>
+
+    <div class="form-group"  style="overflow:auto;">
+      <%= f.label :description, :class=>"file_field_width" %>
+      <%= f.text_area :description, :class => "required form-control", :style=>"height:70px;" %>
+    </div>    
+    
+    <p class="form-group">
+      <%= f.label :industry, :class=>"file_field_width" %>
+      <%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, {},:class=>"form-control select-size-1",:include_blank => "Select Indstry" %>
+    </p>
+
+    <p class="form-group">
+      <%= f.label :size, :class=>"file_field_width" %>
+      <%= f.collection_select :size, Organisation::SIZE, :to_s, :to_s, {},:class=>"form-control select-size-1",:include_blank => "Select Size" %>
+    </p>
+
+    <p class="form-group">
+      <%= f.label :type, :class=>"file_field_width" %>
+      <%= f.collection_select :type, Organisation::TYPE, :to_s, :to_s, {},:class=>"form-control select-size-1",:include_blank => "Select Type" %>
+    </p>
+    <%= hidden_field_tag :organisation_id_name,params[:organisation_id_name] %>
+  </div>
+  </div>
+  <p>
+    <%= f.submit "Submit", :id => "submit" %>
+  </p>
+    
+  <div class="clr"></div>

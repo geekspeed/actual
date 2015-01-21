@@ -1,0 +1,65 @@
+<% page = "setup_program"; ppage = "surveys"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<div id="rightcontent" class="right_content_div">
+  <div class="block" style="height:250px;">
+    <div class="block" style="height:200px;width:200px;float:left;">
+      <% if @survey.avatar.present? %>
+        <% file = @survey.avatar_url.split(".")[-1] %>
+        <% if ["jpeg","jpg","png","gif"].include?(file.downcase) %>
+          <%= image_tag @survey.avatar, :style => "width:170px;height:160px"%>
+        <% else %>
+          <%= link_to("#{root_url}#{@survey.avatar}", "#{root_url}#{@survey.avatar_url}", :target =>"_blank", :class => 'text_underline') %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="survey_name" style="float:left;margin-left:20px">
+        <h1><%= @survey.name %></h=>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="description" style="height:120px;margin-left:220px;overflow:hidden;" >
+      <%= @survey.description %>
+    </div>
+  </div>
+  <div class="block custom_questions" style="float:left;width:968px;padding-top:0px;">
+    <%= form_for(@survey, :url => update_answers_program_survey_path(@program, @survey), :method => :put) do |f| %>
+      <%= render "surveys/survey_custom_fields_renderer", f: f, ankor: "survey",outer_wrap: {tag: :div, klass: "form-group help-fix", style: "margin: 0 0 20px 0;"}, label_wrap: {tag: "div", klass: "col-sm-3"}, field_class: "form-control", field_wrap: {tag: "div", klass: "col-sm-9", style: "margin: 0 0 20px 0;"}, custom_fields: @survey.questions %>
+  </div>
+  <p class="pull-right">
+    <%= f.submit "Save", :id => "submit", :class=> "save_answers"%>
+    <%= f.submit "Submit", :id => "submit", :name => "submit", class: 'submit_answers'%>
+    <%= f.submit "Save", :id => "save_answers", :style => "display:none;"%>
+  </p>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  $(document).on('click', ".show_help_text", function(e){
+     e.preventDefault();
+     current_obj = $(this);
+     $.ajax({
+       url: $(this).data('url'),
+       type: 'get',
+       data: "field_name="+ $(this).data('field-name'),
+       contentType: 'application/json; charser=utf-8',
+       success: function(data){
+         current_obj.data('content', data.content);
+         current_obj.popover();
+         current_obj.popover('show');
+       },
+       error: function(){
+         alert('Request failed. Sorry, we are analyzing the cause of this problem');
+       }
+     })
+   });
+  $(document).on('click', '.save_answers', function(e){
+    e.preventDefault();
+    input_fields = $(this).parents('.right_content_div').find('.custom_questions :input');
+    input_fields.each(function() {
+      $(this).removeAttr('required');
+    });
+    $('#save_answers').trigger('click');
+  });
+</script>

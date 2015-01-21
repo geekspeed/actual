@@ -1,0 +1,180 @@
+<% content_for :title do %>
+  <%= "Register" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "basic" %>
+<%= render "shared/flash"%>
+
+<div id="rightcontent" class="two_sided_right_content" style="float: none;">
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => "registerForm reqForm"}) do |f| %>
+       
+<div class="row">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Register</h3>
+					<span>Registration step one</span>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :salutation %></div>
+          </div>
+          <div class="col-sm-8">
+						<%= f.collection_select :salutation, User::SALUTATION, :to_s, :to_s,{}, {:class=>"form-control form-style-1", :style=>"width:70%;"} %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :first_name, class:"mend_field_label" %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :first_name, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :last_name, class:"mend_field_label" %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :last_name, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :email, "Email Address", class:"mend_field_label" %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.email_field :email, :autofocus => true, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :password, class:"mend_field_label" %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.password_field :password, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :password_confirmation, "Confirm Password", class:"mend_field_label" %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.password_field :password_confirmation, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :company_name %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :company_name,:class=>"form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :job_title %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :job_title,:class=>"form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;"><%= f.label :industry %></div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, {},:class=>"form-control select-size-1 form-style-1", :style=>"width:70%;",:include_blank => "Select Indstry" %>
+          </div>
+        </div>
+        <br />
+        <%= hidden_field_tag :role_type, params[:role_type] if params[:role_type].present? %>
+				<%= hidden_field_tag :program_id, params[:program_id] if params[:program_id].present? %>
+        <div class="row">
+          <div class="col-sm-12">
+             <%= f.submit "Next", :id => "submit" %>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>    
+    
+<%
+=begin
+%>
+
+<div class="block">
+    	<p>
+      <%= f.label :salutation %>
+      <%= f.collection_select :salutation, User::SALUTATION, :to_s, :to_s,{}, {:class=>"form-control select-size-1"} %>
+		</p>
+		<br />
+		<p>
+		  <%= f.label :first_name, class:"mend_field_label" %>
+		  <%= f.text_field :first_name, :class => "required form-control" %>
+		</p>
+		<br />
+		<p>
+		  <%= f.label :last_name, class:"mend_field_label" %>
+		  <%= f.text_field :last_name, :class => "required form-control" %>
+		</p>
+<br />
+    <p>
+      <%= f.label :email, "Email Address", class:"mend_field_label" %>
+      <%= f.email_field :email, :autofocus => true, :class => "required form-control" %>
+    </p>
+<br />
+    <p>
+      <%= f.label :password, class:"mend_field_label" %>
+      <%= f.password_field :password, :class => "required form-control" %>
+    </p>
+<br />
+    <p>
+      <%= f.label :password_confirmation, "Confirm Password", class:"mend_field_label" %>
+      <%= f.password_field :password_confirmation, :class => "required form-control" %>
+    </p>
+<br />
+    <p>
+		  <%= f.label :company_name %>
+		  <%= f.text_field :company_name,:class=>"form-control" %>
+		</p>
+<br />
+    <p>
+		  <%= f.label :job_title %>
+		  <%= f.text_field :job_title,:class=>"form-control" %>
+		</p>
+<br />
+    <p>
+		  <%= f.label :industry %>
+		  <%= f.collection_select :industry, User::INDUSTRY, :to_s, :to_s, {},:class=>"form-control select-size-1",:include_blank => "Select Indstry" %>
+		</p>
+  
+    <%= hidden_field_tag :role_type, params[:role_type] if params[:role_type].present? %>
+    <%= hidden_field_tag :program_id, params[:program_id] if params[:program_id].present? %>
+</div>
+		<p>
+		  <%= f.submit "Next", :id => "submit" %>
+		</p>
+		<div class="clr"></div>
+
+
+<%
+=end
+%>
+  <% end %>
+</div>

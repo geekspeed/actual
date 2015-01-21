@@ -1,0 +1,178 @@
+<% page = "report_program"; ppage = "pie_chart"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-piechart gn-icon-large"></i>
+      Build Pie Chart
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Build Pie Chart lets you build pie charts about people and activities in your program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_reportings_path(context_program) %>>Report</a> / <a href="#" class="active_bread">Build Pie Chart</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+	<a href="sec1" name="sec1" class="section_nav"></a>
+	<h2 class="titleLine title-normal"><span style="font-weight:bold;">Pie Chart</span></h2>
+        <%= form_tag new_pie_chart_program_reportings_path(context_program), :id=>"graph_report", :role=>"form" do %>
+            <% render 'program_reportings/shared/chart_form', :graph_type=>"Pie Chart" %>
+        <% end %>        
+        <br />         
+        <div class="row">
+			<div class="col-sm-2">
+				<%= button_tag :preview, :id=>"preview",:class=>"btn btn-default btn-xs" %>
+			</div>
+			<% if params[:reporting].present? && !@graph_data.blank? %>
+			<div class="col-sm-2 pull-right">
+				<%= button_tag "Save Graph", :id=>"save_graph", :class=>"btn btn-default btn-xs graph_event", :style=>"width:100%"   %>
+			</div>
+			<div class="col-sm-2 pull-right">
+				<%= button_tag "Add To Dashboard", :id=>"add_to_dashboard", :class=>"btn btn-default btn-xs graph_event", :style=>"width:100%"  %>
+			</div>
+			<div class="col-sm-2 pull-right">
+				<%= button_tag "Export to CSV", :id=>"export_csv_build", :class=>"btn btn-default btn-xs", :style=>"width:100%" %>
+			</div>
+			<% end %>
+		</div>
+		<a href="sec2" name="sec2" class="section_nav"></a>
+         <% if params[:reporting].present? && !@graph_data.blank? %>             
+            <br />
+            <div class="row">
+				<div class="col-md-12">
+					<div style="margin-bottom:2px;" class="panel panel-custom panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3>Preview</h3>
+							</div>
+							<div class="panel-options">
+								<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+							</div>
+						</div>
+						<div class="panel-body">
+					        <div class="row">
+					            <div class="col-md-12">
+					                <div id="chart"></div>    
+					            </div> 
+					        </div>          
+					        <div class="row">
+					            <div class="col-md-12">
+					                <% if params[:reporting].present? && !@graph_data.blank? %>    
+					                     <table id="table-2" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+					                        <thead>
+					                            <tr role="row">
+					                                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 330px;" aria-label="Student Name: activate to sort column ascending"><%=@graph_data[1]%></th>
+					                                <th class="sorting" role="columnheader" tabindex="0" aria-controls="table-2" rowspan="1" colspan="1" style="width: 190px;" aria-label="Average Grade: activate to sort column ascending"><%=@graph_data[2]%></th>
+					                            </tr>
+					                        </thead>                  
+					                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+					                            <% @graph_data[0].each_with_index do |report| %>
+					                                <tr class="odd">
+					                                    <td class=" "><%= report[0] %></td>
+					                                    <td class=" "><%= report[1] %></td>                          
+					                                </tr>
+					                            <% end %>
+					                        </tbody>
+					                    </table> 
+					                <% end %>
+					            </div>
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+        <br />
+       <% elsif params[:reporting].present? && @graph_data.blank? %>
+        	<br />
+        	<div class="row">
+				<div class="col-md-12">
+					<div style="margin-bottom:2px;" class="panel panel-custom panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3>Preview</h3>
+							</div>
+							<div class="panel-options">
+								<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+							</div>
+						</div>
+						<div class="panel-body">
+							<div role="alert" class="alert alert-danger">
+					      <strong><%= "Query is not possible" if params[:reporting].present? && @graph_data.blank? %></strong>
+					    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+        <% end %>
+       <br />
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Build Chart</a></li>
+					<li><a href="#sec2">Preview</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript"> 
+    <% if params[:reporting].present? %>
+        $(document).ready(function(){           
+            $("#reporting_who_field_1").change()
+            $("#reporting_who_field_2").val("<%=params[:reporting]["who_field_2"]%>") 
+            $.who_field_3_data_single = "<%= params[:reporting]["who_field_3"] %>"  
+            $("#reporting_who_field_2").change()                                        
+            $.who_field_3_data_multiple = "<%= params[:reporting]["who_field_3"] %>".replace(/&quot;/g,"").replace(/\]/g,"").replace(/\[/g,"").split(", ")
+            $("#reporting_who_field_3").change()
+            $("#reporting_who_field_4").val("<%=params[:reporting]["who_field_4"]%>")
+            $("#reporting_what_field_1").change()
+            $("#reporting_what_field_2").val("<%=params[:reporting]["what_field_2"]%>")
+            $("#reporting_what_field_2").change()
+            $("#reporting_what_field_3").val("<%=params[:reporting]["what_field_3"]%>")
+            $("#reporting_how_field_1").change() 
+            $("#reporting_how_field_2").val("<%=params[:reporting]["how_field_2"]%>")   
+            $("#reporting_how_field_2").change()
+            $("#reporting_how_field_3").val("<%=params[:reporting]["how_field_3"]%>")
+            $("#reporting_how_field_3").change()   
+            $("#reporting_how_field_4").val("<%=params[:reporting]["how_field_4"]%>")
+        });
+    <% end %>
+    <% if !@graph_data.blank? %>
+        $(document).ready(function(){
+            pie_chart('#chart',0,0,<%= raw @graph_data[0] %>)
+        });
+    <% end%>    
+    $("#preview").click(function(){
+    	$("#submit_preview").trigger("click");
+    });
+    $(".graph_event").click(function(){
+        $.post(this.id+"?"+$("form#graph_report").serialize());
+    });
+    $("#export_csv_build").click(function(){
+        window.location.href = this.id+".csv?"+$("form#graph_report").serialize();
+    });
+    
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

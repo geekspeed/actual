@@ -1,0 +1,87 @@
+<%= content_tag(main_tag, :class => "value_line #{@edit_form_class}") do %>
+  <%= content_tag(in_tag, :class => "form-group") do %>
+    <%= content_tag(label_tag) do %>Organisation<% end %>
+  <% end %>
+  <%= content_tag(in_field_tag) do %>
+    <div id="org-box" style="<%= ("display:none;" if !f.object.try(:organisation).blank?) %>">
+      <%= f.text_field :organisation, :class => "form-control #{@form_style_1}", :size=>"30", :style=>"#{@org_field}" %>
+        <ul class="ui-front ui-menu ui-widget ui-widget-content ui-corner-all" id="add-new-company" tabindex="0" style="display: none; width: <%=add_new_width%>;margin-left: <%=add_new_margin_left%>; padding: 12px;"><li class="ui-menu-item" id="add-new-organisation"><a href="<%= new_organisation_path(:organisation_id_name =>organisation_id_name) %>" data-remote="true" id="ui-id-2" class="ui-corner-all" tabindex="-1"><h4>Add <strong><span id="add-org-text"></span></strong> as a new company</h4></a></li></ul>
+    </div>
+    <div id="org-content" style="<%= ("display:none;" if f.object.try(:organisation).blank?) %>">
+      <div class="selected-company"><strong>
+        <% user_org =  Organisation.where(:id=>f.object.organisation).try(:first) %>
+        <%= user_org.try(:company_name) %></strong>
+        <span class="change-company">Change Organisation</span>
+        <% if !user_org.blank? %>
+          <%= link_to '<span class="edit-organisation">Edit Organisation</span>'.html_safe, organisations_edit_user_org_path(user_org.id), :remote=>true, :method=>"put" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<div class="clr"></div>
+<style>
+ul#add-new-company{
+    position:absolute;
+}
+#org-content.selected-company {
+  line-height: 21px;
+}
+#org-content span.change-company,span.edit-organisation {
+    color: #006699;
+    cursor: pointer;
+    font-size: 10px;
+    padding-left: 10px;
+}
+#org-content span.change-company:hover,span.edit-organisation:hover {
+    text-decoration: underline;
+} 
+#add-new-organisation{ cursor: pointer; }
+#add-new-organisation:hover{ text-decoration: underline;}
+</style>
+
+<script>
+$(function() {
+  $( "#<%=organisation_id_name%>" ).autocomplete({
+   source: function( request, response ) {
+        $.ajax({
+            url: "<%=organisation_autosuggest_path%>",
+            dataType: "json",
+            method: "post",
+            data: "name=" + request.term,
+            success: function( data ) {
+                response( $.map( data, function( item ) {
+                    return {
+                        label: item.company_name,
+                        id: item._id
+                    }
+                }));
+            }
+        });
+    },
+    response: function(event, ui) {
+      if (ui.content.length === 0) {
+          $("#add-new-company").show();
+          $("#add-new-company #add-org-text").text($("#org-box #<%=organisation_id_name%>").val())
+      } else {
+          $("#add-new-company").hide();
+          $(".edit-organisation").hide();
+          $("#add-new-company #add-org-text").text()
+      }
+    },
+    select: function( event, ui ) {
+      $( "#org-content strong" ).text( ui.item.label );
+      $("#org-box").hide(); 
+      $("#org-box #<%=organisation_id_name%>").val( ui.item.id )
+      $("#org-content").show()  
+        return false;
+    }
+  });
+
+  $( ".change-company" ).click(function(){
+    $("#org-box #<%=organisation_id_name%>").val("")
+    $("#org-box").show(); 
+    $("#org-content").hide()  
+  });
+});
+</script>

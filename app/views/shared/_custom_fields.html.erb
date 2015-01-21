@@ -1,0 +1,47 @@
+<% objekt = f.object;
+    klass = objekt.class;
+    ankor = ankor;
+%>
+<% custom_fields = ankor.present? ? klass.custom_fields_with_anchor(ankor).enabled : klass.custom_fields.enabled %>
+<% custom_fields.each do |custom_field| %>
+  <% required = (custom_field.present? && custom_field.required) ? "required" : "" %>
+  <div class="row additional-info-row">
+    <div class="col-md-4">
+      <%= label_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", custom_field.label %>
+    </div>
+    <div class="col-md-8">
+      <div class="value">
+        <%= @pitch.send(custom_field.code.to_sym) %>
+      </div>
+      <div class="editvalue">
+        <% if custom_field.element_type == "text_area" %>
+          <%= text_area_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{required}" %>
+        <% elsif custom_field.element_type == "date" %>
+          <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "datepicker_std #{required}" %>
+        <% elsif custom_field.element_type == "dropdown" || custom_field.element_type == "dropdown_with_other" || custom_field.element_type == "dropdown_with_multiple_select" %>
+          <% multiple = custom_field.element_type == "dropdown_with_multiple_select"  %>
+          <%= select_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", options_for_select(custom_field.options, objekt.send(:"#{custom_field.code}")), :placeholder => custom_field.placeholder, :multiple => multiple, :class => "#{required}" %>
+        <% else %>
+          <%= text_field_tag "#{f.object_name}[custom_fields][#{custom_field.code}]", objekt.send(:"#{custom_field.code}"), :placeholder => custom_field.placeholder, :class => "#{required}" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    $("[data-code]").on("focusout", function(e){
+      var code = $(this).data("code");
+      var value = $(this).val().toLowerCase();
+      $("[data-linked]").each(function(i, elem){
+        var d_json = $(elem).data("linked");
+        var v = d_json[code + "_" + value]
+        if(v != undefined && v.length > 0){
+          if($(elem).val() == undefined || $(elem).val().length <= 0){
+            $(elem).val(d_json[code + "_" + value]);
+          }
+        }
+      });
+    });
+  });
+</script>

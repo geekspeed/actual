@@ -1,0 +1,21 @@
+$.fancybox({
+  fitToView:false,
+  width:'75%',
+  height:'auto',
+  autoSize:false,
+  closeClick	: false,
+  openEffect:'fade',
+  closeEffect:'fade',
+  openSpeed:200,
+  closeSpeed:200,
+  padding: 0,
+  content:"<%= escape_javascript(render 'program_reportings/shared/show_chart') %>"
+});
+
+$(document).ready(function(){
+	<% if @report.graph_type=="Line Chart" %>
+    line_chart('#show_chart<%= @report.id %>',0,0,'<%= raw @graph_data[1] %>', '<%= raw @graph_data[2] %>', <%=  raw @graph_data[0] %>, 75, 130, 30)
+  <% elsif @report.graph_type=="Pie Chart"  %>
+  	pie_chart('#show_chart<%= @report.id %>',0,0,<%= raw @graph_data[0] %>)
+  <% end %>
+});

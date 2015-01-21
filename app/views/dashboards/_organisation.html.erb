@@ -1,0 +1,10 @@
+<div class="col-sm-4 pitch-col">
+    <div class="p_img" style="position: relative; left: 0; top: 0;">
+      <%= link_to(image_tag(organisation.avatar.logo.url, :class => "img-responsive img-pitch-logo", :style=>"position: relative; top: 0; left: 0;"), popup_details_organisation_path(organisation), :remote=>true) %>
+    </div>
+	<div class="pitch-data">
+    <h2 class="pitch-title">
+      <%= link_to(organisation.try(:company_name), popup_details_organisation_path(organisation), :remote=>true) %>
+    </h2>
+	</div>
+</div>

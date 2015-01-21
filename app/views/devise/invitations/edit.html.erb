@@ -1,0 +1,64 @@
+<% content_for :title do %>
+  <%= "Accept Invitation" %>
+<% end %>
+<% @resource ||= resource%>
+<%= render "devise/shared/navbar", page: "basic" %>
+<%= render "shared/flash" %>
+<div id="rightcontent" class="two_sided_right_content" style="float: none !important;">
+
+<%= form_for(@resource, :as => resource_name, :url => invitation_validation_path, :html => {:class => "registerForm reqForm", :method => :put}) do |f| %>
+<div class="block">
+<%#= devise_error_messages! %>
+
+    <%= f.hidden_field :invitation_token %>
+    <%= hidden_field_tag :user_id, params[:user]%>
+    <%= hidden_field_tag :for, params[:for] %>
+    <%= hidden_field_tag :role_code, params[:role] %>
+    <%= hidden_field_tag :program_invitation_mail_id, params[:program_invitation_mail_id] %>
+    <% if params[:for_pitch] %>
+      <%= hidden_field_tag :for_pitch, params[:for_pitch] %>
+    <% end %>
+    <%= @resource.encrypted_password.blank? ? (render "form", f: f) : (render "accept", f: f) %>
+    <% if params[:from]%>
+      <%= content_tag :h1, "OR"%>
+      <%= content_tag :p, "You can register with any of the following options"%>
+      <%= tag('br', nil, nil)%>
+      <%= link_to(image_tag("ico_facebook.png"), user_omniauth_authorize_path(:facebook, :program_id => @program.id, role: params[:role])) if @program.program_scope.try(:facebook) %>
+      <%= link_to(image_tag("ico_twitter2.png"), user_omniauth_authorize_path(:twitter, :program_id => @program.id, role: params[:role])) if @program.program_scope.try(:twitter) %>
+      <%= link_to(image_tag("ico_linkedin.png"), user_omniauth_authorize_path(:linkedin, :program_id => @program.id, role: params[:role])) if @program.program_scope.try(:linkedin) %>
+    <% end %>
+</div>
+<p>
+  <%= f.submit "Next", :name => "schritt", :id => "submit" if @resource.encrypted_password.blank?%>
+</p>
+    <div class="clr"></div>
+
+  <% end %>
+
+</div>
+<div style="display: none">
+  <div id="existing_user">
+    <%= form_tag users_invitation_invite_existing_path, method: :get do %>
+      <%= hidden_field_tag :for, params[:for] -%>
+      <%= hidden_field_tag :role, params[:role] -%>
+      <%= hidden_field_tag :from, params[:from] -%>
+      <%= hidden_field_tag :email, "" -%>
+      <p>You already
+        have a profile under this email address, would 
+        you like to use this profile?
+      </p>
+      <br>
+      <%= submit_tag "Yes", :id => "submit", class: "previous_user", style: "margin-left: 5px" %>
+      <%= link_to "No", "#", id: "submit", :onclick=>"window.location.reload(true);" %>
+    <% end %>
+  </div>
+</div>
+<div style="display: none">
+  <div id ="invalid_domain">
+    <p>
+      Please use your <b><%= @domain_name %></b> email address.
+    </p>
+    <br>
+    <%= link_to "OK", "#", id: "submit", :onclick=>"empty_email()" %>
+  </div>
+</div>

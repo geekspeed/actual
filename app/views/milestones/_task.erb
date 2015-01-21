@@ -1,0 +1,21 @@
+<div style="display: none">
+  <div id="give_a_task">
+    <%= form_for @task, :url => polymorphic_path([@program, @pitch, Task]), :id => "give_a_task_form" do |task| %>
+      <div>
+        <p>Task title</p>
+        <%= task.text_area :description, :placeholder => "Set a task here", :class=>"form-control", :rows=>"3", :cols=>"10" %>
+      </div>
+      <br />
+      <div>
+        <p>The deadline for when the task is to be completed</p>
+        <%= task.text_field :deadline, :class => "datepicker_std form-control" %>
+      </div>
+      <br />
+      <div>
+        <p>The task to a milestone to provide the necessary context</p>
+        <%= task.collection_select :milestone_id, @pitch.milestones, :id, :description, :class=>"form-control" %>
+      </div>
+      <%= task.submit "Post", :id => "submit" %>
+    <% end %>
+  </div>
+</div>

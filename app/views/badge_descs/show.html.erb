@@ -1,0 +1,38 @@
+<%= render "shared/bs_navbar"%>
+<div id="rightcontent"  class="two_sided_right_content">
+  <div class="row">
+    <div class="col-md-12">
+      <div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+        <div class="panel-heading">
+          <div class="panel-title" style= "margin-left: 40%">
+            <h3>Badge Description</h3>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+        <div class="col-sm-12">
+           <table  class="table table-bordered table-striped " >                           
+              <tbody >
+                <tr role="row">
+                    <td  style="width: 330px;">Image</td>
+                    <td  style="width: 330px;">Badge Name</td>
+                    <td  style="width: 190px;" >Description</td>
+                    <td  style="width: 190px;" >type</td>
+                    <td  style="width: 190px;" >Criteria Description</td>
+                </tr>
+              
+                <tr role="row">
+                    <td class=" "><%= image_tag(@badge_rule.app_badge.try(:image), height: "200px", width: "200px") %></td>
+                    <td class=" "><%= @badge_rule.app_badge.name %></td>
+                    <td class=" "><%= @badge_rule.app_badge.description %></td>
+                    <td class=" "><%= @badge_rule.app_badge.badge_type %></td>
+                    <td class=" "><%= @badge_rule.criteria_description %></td>
+                </tr>
+              </tbody>
+            </table> 
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

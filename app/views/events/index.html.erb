@@ -1,0 +1,113 @@
+<%= javascript_include_tag "jquery.collapsiblepanel" %>
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Event" %>
+<% end %>
+
+<% page = "setup_program"; ppage = "events"%>
+<%= render "shared/program_sidebar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-events gn-icon-large"></i>
+      Program events
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Program events</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+		<%= nested_form_for(@program, :url => program_events_path(@program), :method => 'post', :html => {:class => "reqForm no_float", :style => "" }) do |f| %>
+			<%= render "form", :f => f %>
+		<% end %>
+		<br>
+		<br>
+		<br>
+    <div class="row">
+      <a href="sec2" name="sec2" class="section_nav"></a>
+      <div class="col-md-12">
+        <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <h3>Rate events</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+              
+          <div class="panel-body">
+            <%= form_for(@program, :html => {:class => "registerForm reqForm" }) do |f| %>
+              <div class="row">
+                <div class="col-sm-4">
+                  Do you want people to be to rate events?
+                </div>
+                <div class="col-sm-4">
+                  <div class="radioset">
+                    <%= f.radio_button :can_rate_events, "true", :class => "option_match_mentors"  %>
+                    <%= f.label "Yes", :for => "#{f.object_name}_can_rate_events_true" %>
+            
+                    <%= f.radio_button :can_rate_events, "false", :class => "option_match_mentors"  %>
+                    <%= f.label "No", :for => "#{f.object_name}_can_rate_events_false" %>
+                    <div class="clr"></div>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="pull-right"><%= f.submit "Save", :id => "submit" %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1">New Events</a></li>
+          <li><a href="#sec2">Rate Events</a></li>
+          <li><a href="#sec3">My Events</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+	<%= render "program_event", :program_events => @program_events %>
+
+<style>
+.glyphicon {
+  color: inherit;
+}
+</style>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+  $(document).on("click", "#add_new_event", function(){
+  	$( ".radioset" ).buttonset();
+  });
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  $("[rel=tooltip]").tooltip();
+</script>

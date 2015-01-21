@@ -1,0 +1,228 @@
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<style type="text/css">
+.pitch-by:hover, .pitch-title a{
+color:<%= menubar_color %>;
+}
+.s_details p {
+color:<%= menubar_color %> !important;
+}
+.admin_section_feature, .team-user-name{
+color: <%= menubar_color %> !important;
+}
+.admin_section_feature_container .glyphicon{
+color: <%= menubar_color %> !important;
+}
+.panel-default > .panel-heading {
+color: #323B3D !important;
+}
+.panel-title a:hover{
+		color: #fff !important;
+background-color: <%= menubar_color %> !important;
+}
+u a{
+color: <%= menubar_color %> !important;
+}
+</style>
+ 
+<div class="col-md-12 col-pitch-logo">
+  <%= image_tag(@pitch.avatar.url, :class => "img-responsive img-pitch") %>
+</div>
+<div class="col-md-12 the_b_col">
+<a class="cir_arrow" href="#"><span class="glyphicon glyphicon-chevron-right"></span></a>
+  <div class="pitch-title-row">
+    <h2 class="pitch-title pitch-detail-title"><%= @pitch.title %></h2>
+  </div>
+  <div class="pitch-content pitch-detail-content">
+    <!-- <div class="text-center  s_details"> -->
+<!--       <div class="pull-left pitch-detail-backer pitch-backer prog">
+		    <%#= link_to image_tag("heart.png"), :title => "Backers" %>
+        <p>Backers (0)</p>
+      </div>
+      <div class="pull-left pitch-detail-backer pitch-backer prog">
+        <%#= link_to image_tag("vote.png"),  :title => "Vote" %>
+		    <p>Vote (0)</p>
+      </div>
+      <div class="pull-left pitch-detail-backer pitch-backer prog">
+		  <%#= link_to image_tag("help.png"),  :title => "Help" %>
+        <p>Help (0)</p>
+      </div>
+      <div class="pull-left pitch-detail-backer pitch-backer prog outstanding">
+        <%#= link_to image_tag("posts.png"), :title => "Posts" %>
+		    <p>Outstanding Tasks (0)</p>
+      </div> -->
+      <!-- <br/> -->
+    <!-- </div> -->
+  </div>
+  <!--<div class="pitch-content pitch-detail-content no-padding">
+    <div class="pitch-progress-bar pull-left">
+      <div class="progress-bar-content">
+        <span class="progress-title progress-title-margin pull-left">Progress</span>
+        <div class="progress pitch-progress pull-left">
+          <div class="progress-bar progress-bar-success" style="width: 20%;"></div>
+        </div>
+				<div class="clear"></div>
+      </div>
+      
+      <div class="progress-bar-content" style="margin:8px 5px 14px;">
+        <div class="progress-title pull-left">Quality of work</div>
+        <div class="star-rating pull-left">No data available</div>
+				<div class="clear"></div>
+      </div>
+      
+      <div class="progress-bar-content">
+        <span class="progress-title progress-title-margin pull-left">Risk Level</span>
+        <div class="progress pitch-progress pull-left">
+          <div class="progress-bar progress-bar-danger pull-left" style="width: 20%;"></div>
+        </div>
+				<div class="clear"></div>
+      </div>
+    </div>
+    <div class="progress-bar-fancybox pull-left">
+    </div>
+    <div class="clear"></div>
+  </div>-->
+  <div class="clear"></div>
+  <div class="progress_table_container value">
+    <div style="display: none;" id="detail_view_1056">
+      <script>
+        $(document).ready(function(){
+          $('.popup_button').click(function(event){
+            event.preventDefault();
+            var tab = $(this).data('tab');
+            $('.popup_button').removeClass('button_active');
+            $(this).addClass('button_active');
+            $('.tabs').hide();
+            $('#'+tab).show();
+          });
+        });
+     </script>
+      <div style="text-align: center">
+        <div class="popup_header">Last program targets Team Progress<!-- (Rank 00...bottom 00%)--></div>
+        <div class="popup_line"><hr></div>
+        <div class="popup_button_block">
+          <div class="popup_button_sub_block">
+            <a data-tab="bar" class="button_active popup_button button">Progress Bars</a>
+          </div>
+          <div style="width:130px;float:left;">
+            <a data-tab="chart" class="popup_button button">Spider Chart</a>
+          </div>
+          <div class="clear"></div>
+        </div>
+
+        <div class="tabs" id="bar">
+          <table class="detailed_values table">
+            <tbody>
+              <tr class="first_vals">
+                <td class="label_left">Hustling</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 100%"></div>
+                    <div class="green_bar" style="width: 0%"></div>
+                  </div>
+                </td>
+                <td class="label_right">
+                  You need to acquire 1 more backers 
+                </td>
+              </tr>
+              <tr>
+                <td class="label_left">Seeking</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 0%"></div>
+                    <div class="green_bar" style="width: 0%"></div>
+                  </div>
+                </td>
+                <td class="label_right">You need to get 3 more pieces of feedback </td>
+              </tr>
+              <tr>
+                <td class="label_left">Iterating</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 67%"></div>
+                    <div class="orange_bar" style="width: 0%"></div>
+                  </div>
+                </td>
+                <td class="label_right">You need to iterate 3 more times </td>
+              </tr>
+              <tr>
+                <td class="label_left">Efficiency</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 100%"></div>
+                    <div class="orange_bar" style="width: 0%"></div>
+                  </div>
+                </td>
+                <td class="label_right">You need to meet another 3 mentor tasks on time </td>
+              </tr>
+              <tr>
+                <td class="label_left">Communication</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 100%"></div>
+                    <div class="green_bar" style="width: 0%"></div>
+                  </div>
+                </td>
+                <td class="label_right">You need to post at least 3 more status updates </td>
+              </tr>
+              <tr>
+                <td class="label_left">Risk Level</td>
+                <td class="progress_bar_td">
+                  <div class="progress_bar">
+                    <div class="grey_bar" style="width: 13%"></div>
+                    <div class="green_bar" style="width: 1%"></div>
+                  </div>
+                </td>
+                <td class="label_right"></td>
+              </tr>
+            </tbody>
+          </table>
+          <hr>
+          <table class="meta_data_val">
+            <tbody>
+              <tr>
+                <td>
+                  <% context_program.virtual_currency? ? "0 Virtual Dollars" : "" %> 
+                </td>
+                <td><% context_program.virtual_currency? ? "0 Backers" : "" %></td>
+                <td>3 Views</td>
+              </tr>
+            </tbody>
+          </table>
+          <br/>
+        </div>
+        <div style="display:none;" class="tabs" id="chart">
+          <img src="">
+        </div>   
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function($) {
+      $("#main_values_1056").find("#grey_bar").css("width", "0%");
+      $("#main_values_1056").find("#custom_bar").addClass("orange_bar").css("width", "0%");
+      $("#main_values_1056").find(".final_position").html("Rank 4");
+      $("#progress_table_1056").on("click", ".progress_table_more", function(){
+        $(this).removeClass("progress_table_more").addClass("progress_table_less").html("- less");
+        $("#progress_table_1056").find("tr").show();
+        return false;
+      });
+      $("#progress_table_1056").on("click", ".progress_table_less", function(){
+        $(this).removeClass("progress_table_less").addClass("progress_table_more").html("+ more");
+        return false;
+      });
+
+      $('#main').on('click', '#iteration_remote', function(e){
+        $(this).parent().find('.loader').show();
+        $.post( $(this).data("href"), {content: $(this).parent().find("textarea").val()}, function( data, status, xhr ) {
+          $('.loader').hide();
+          $(this).parent().find('.ok_ico').show().delay(500).fadeOut();
+          location.reload(true);
+        });
+        e.preventDefault();
+      });
+
+    });
+    
+  </script>  
+</div>

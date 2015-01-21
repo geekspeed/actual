@@ -1,0 +1,49 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  platform_name: "Apptual"
+  terms:
+    hello: "Hello World"
+  simple_captcha:
+    placeholder: "Enter the code you see in the image above"
+    label: "Enter the code in the box:"
+    message:
+      default: "Secret Code did not match with the Image"
+      user: "The secret Image and code were different"
+
+  mongoid:
+    models:
+      program: "Program"
+      address: "Address"
+      organisation: "Organisation"
+      program_type: "Type of Program"
+      role: "Role"
+      telephone: "Telephone"
+      user: "User"
+    attributes:
+      user:
+        email: "E-Mail"
+        password: "Password"
+        approved: "Approved?"
+        salutation: "Salutation"
+        first_name: "First Name"
+        last_name: "Last Name"
+        company_name: "Company Name"
+        job_title: "Job Title"
+        industry: "Industry"
+        bio: "My Bio"
+        speciality: "My Speciality"
+        skills: "My Skills"
+        interests: "My Interests"
+        education_qualification: "Highest Education Qualification"
+        linkedin_profile: "Linkedin Profile"
+        nickname: "Nickname"
+        display_name: "Display Name"
+      program:
+        title: "Program Title"
+        type_of_program: "Type of Program"
+      program_scope:
+        virtual_dollar_for_applicants: "Amount of virtual Dollars for Applicants"
+        virtual_dollar_for_mentors: "Amount of virtual Dollars for Mentors"
+        user_backed_pitches: "Number of pitches a user can back"

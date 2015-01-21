@@ -1,0 +1,9 @@
+<!-- Admin Page header --> 
+<ul>
+  <li class='<%= 'active' if @page == "index" %>'>
+    <%= link_to("Manage Customers", polymorphic_path([:admin, Organisation])) %>
+  </li>
+  <li class='<%= 'active' if @page == "setup" %>'>
+    <%= link_to("Setup", polymorphic_path([:role_invitation, :admin, Organisation])) %>
+  </li>
+</ul> 

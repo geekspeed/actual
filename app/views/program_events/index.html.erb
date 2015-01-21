@@ -1,0 +1,27 @@
+<% content_for :title do %>
+  <% community = params[:code] ? params[:code].titleize : "Community"%>
+  <%= "#{context_program.try(:title)} - Event" %>
+<% end %>
+
+<%= render "shared/navbar", :page => "events" %>
+<%= render "dashboards/shared/sidebar", :page => "events" %>
+<% content_for :bs_sidebar do %>
+  <%= render "dashboards/shared/bs_sidebar", :page => "events" %>
+<% end %>
+
+<div id="rightcontent"  class="full_content">
+	<table  id="programEvent" class="table table-bordered table-striped datatable dataTable" aria-describedby="table-2_info">
+		<tr>
+			<td>Event Name</td>
+			<td>Date</td>
+			<td>Attended</td>
+		</tr>
+		<% @event_records.each do |record| %>
+			<tr>
+				<td><%=record.event_session.program_event.title%></td>
+				<td><%=record.event_session.date%></td>
+				<td></td>
+			</tr>
+		<% end %>
+	</table>
+</div>

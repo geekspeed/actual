@@ -1,0 +1,26 @@
+<div class="company-btns">
+  <div id="error_registration_message" style="display: none;">
+                    <div class="">
+      <p>We're sorry. The registration period for this program has ended.</p>
+                    </div>
+  </div>
+  <% invitation_link_applicant = context_program.try(:program_scope).try(:can_always_join) ? accept_invitation_url(User.new, :invitation_token => 0, :role => "participant", :for => context_program.id, :from => "program") : "#error_registration_message" %>
+  <% if context_program.try(:program_scope).try(:participant_scope) == "public" %>
+  <div <%= context_program.try(:mentor_allowed?) ? "class=pull-left" : "" %> <%= context_program.try(:mentor_allowed?) ? "style=width:50%" : "style=width:100%" %>>
+    <%= link_to invitation_link_applicant, :class => "fancybox" do %>
+      <button type="button" class="btn btn-default <%= context_program.try(:mentor_allowed?) ? "pull-right" : "" %>" style="margin-right:1%;min-width: 65%;"><span class="glyphicon glyphicon-plus-sign"> </span> REGISTER AS <%= t("role_type:participant") %></button>
+      <div class="clear"></div>
+    <% end %>
+  </div>
+  <% end %>
+  <% if context_program.try(:program_scope).try(:participant_scope) == "public" and context_program.try(:mentor_allowed?) %>
+      <% invitation_link_mentor = context_program.try(:program_scope).try(:can_always_join) ? accept_invitation_url(User.new, :invitation_token => 0, :role => "mentor", :for => context_program.id, :from => "program") : "#error_registration_message" %>
+    <div class="pull-right" style="width:50%">
+      <%= link_to invitation_link_mentor, :class => "fancybox" do %>
+        <button type="button" class="btn btn-default pull-left" style="margin-right:1%;min-width: 65%;"><span class="glyphicon glyphicon-plus-sign"> </span> REGISTER AS <%= t("role_type:mentor") %></button>
+        <div class="clear"></div>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="clear"></div>
+</div>

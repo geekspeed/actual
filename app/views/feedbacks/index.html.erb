@@ -1,0 +1,154 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)} - Feedback" %>
+<% end %>
+
+<%#= render "shared/navbar", :page => "pitch" %>
+<%#= render "pitches/shared/bs_sidebar", :page => "feedback" %>
+<div id="rightcontent">
+  <%= hidden_field_tag :page_name, "feedback_page"%>
+  <div id="community_stream" style="overflow: hidden;">
+    <% if @feedbacks.present? || @due_diligences.present?%>
+      <% @feedbacks.each do |feedback| %>
+        <div class="newsentry">
+          <div class="user-avatar-row">
+            <%= link_to image_tag(feedback.user.avatar.logo.url, :class=> "img-circle img-responsive img-circle-border", :width=>"60"), user_path(feedback.user) %>
+          </div>
+          <div class="box-content">
+            <div class="box-user-info">
+              <span class="box-user-name">
+                <%= link_to feedback.user.full_name, user_path(feedback.user) %>
+                <i><%= "(#{feedback.user.roles_string_for(context_program, current_organisation).join(",")})" %></i>
+              </span>
+              <span class="box-post-date pull-right">
+                <%= feedback.updated_at.day_date_month %>
+              </span>
+            </div>
+            <div class="box-feeds">
+                  <div class="textbox">
+                    The feedback "<%= feedback.content %>" was provided to the <%= t("pitch:summary") %> section of the <%= t("pitch") %>
+                  </div>
+            </div>
+          </div>
+          <div class="clr"></div>
+        </div>
+      <% end %>
+      <% @custom_feedbacks.each do |feedback| %>
+        <div class="newsentry">
+          <div class="user-avatar-row">
+            <%= link_to image_tag(feedback.user.avatar.logo.url, :class=> "img-circle img-responsive img-circle-border", :width=>"60"), user_path(feedback.user) %>
+          </div>
+          <div class="box-content">
+            <div class="box-user-info">
+                  <span class="box-user-name">
+                    <%= link_to feedback.user.full_name, user_path(feedback.user) %>
+                    <i><%= "(#{feedback.user.roles_string_for(context_program, current_organisation).join(",")})" %></i>
+                  </span>
+                  <span class="box-post-date pull-right">
+                    <%= feedback.created_at.day_date_month %>
+                  </span>
+                </div>
+            <div class="box-feeds">
+                  <div class="textbox">
+                    <%= feedback.feedback %>
+                  </div>
+            </div>
+          </div>
+          <div class="clr"></div>
+        </div>
+      <% end %>
+      <div class="newsentry">
+        <% @due_diligences.asc(:created_at).each do |matrix| %>
+          <div class="newsentry">
+            <div class="user-avatar-row">
+              <%= link_to image_tag(matrix.panellist.avatar.logo.url, :class=> "img-circle img-responsive img-circle-border", :width=>"60"), user_path(matrix.panellist) %>
+            </div>
+            <div class="box-user-info">
+              <span class="box-user-name">
+                <%= link_to matrix.panellist.full_name, user_path(matrix.panellist) %>
+                <i><%= "(#{matrix.panellist.roles_string_for(context_program, current_organisation).join(",")})" %></i>
+              </span>
+            </div>
+          <div class="box-content">
+              <span class="box-post-date pull-right">
+                <%= matrix.updated_at.day_date_month %>
+              </span>
+            <div class="met_row" style="width:710px;">
+              
+              <% value = matrix.points || 0 %>
+              <%if !@program.due_diligence_matrix.star_system%>
+                <table class="dd_points">
+                  <tr>
+                    <td style="width:140px;"><%= matrix.try(:matrix).try(:description) %></td>
+                    <td style="width:120px;">
+                      <div id="dd-slider-<%= matrix.id %>"></div>
+                    </td>
+                    <td style="width:100px;">
+                      <input type="text" class="amount-slider" id="amount_box-<%= matrix.id %>" name="due_diligence[<%= matrix.id %>][points]" value="<%= value %>" readonly="readonly" /> / <%= matrix.try(:matrix).try(:max_points) %>
+                    </td>
+                    
+                  </tr>
+                </table>
+                <script type="text/javascript">
+                  $(function() {
+                    $( "#dd-slider-<%= matrix.id %>" ).slider({
+                      range: "max",
+                      min: 1,
+                      max: parseInt("<%= matrix.try(:matrix).try(:max_points) %>"),
+                      value: parseInt("<%= value %>"),
+                      disabled: true,
+                      slide: function( event, ui ) {
+                        $("#amount_box-<%= matrix.id %>").val(ui.value);
+                      }
+                    });
+                  });
+                </script>
+              <%else %>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="rating_low_lbl"><%= matrix.matrix.try(:one_star)%></td>
+                      <td class="rating_middle_lbl"></td>
+                      <td class="rating_high_lbl"><%= matrix.matrix.try(:five_star) %></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="rating_row">
+                  <div class="star_cont">
+                    <div class="already_rated" data-id="<%= matrix.id %>" data-average="<%= value %>"></div>
+                  </div>
+                  <div class="rating_lbl"><%= matrix.matrix.try(:description) %></div>
+                  <div class="clr"></div>
+                </div>
+              <% end %>
+              <div class="box-feeds">
+                <div class="textbox">
+                  <%= matrix.feedback ? matrix.feedback : nil %>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        <% end if @program.due_diligence_matrix.present? %>
+      </div>
+    <% else %>
+      <div class="block">
+        When you receive private feedback it will be displayed here.
+      </div>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".already_rated").jRating({ 
+      step:true,
+      length : 5,
+      rateMax: 5,
+      showRateInfo:false,
+      isDisabled: true,
+      bigStarsPath: '/images/icons/stars_old.png',
+      onSuccess : function(){
+
+      }
+    });
+  });
+</script>

@@ -1,0 +1,45 @@
+<div class="column">
+  <div class="row portlet" id=<%= ques.try(:id) %>>
+    <div  class="col-md-12">
+      <div class="panel panel-white panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;" data-collapsed="0">
+        <div class="panel-heading relative_panel_head portlet-header">
+          <div class="panel-title title_option" style="padding:10px 25px;">
+            Question 1
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="ques_div"> 
+            <%= label_tag "Question Text" %>
+            <%= hidden_field_tag "question[][id]", ques.try(:id)%>
+            <%= text_field_tag "question[][question_text]", ques.try(:question_text), class: "form-control", style: "width:21%;"%>
+            <br>
+            <div class="ques_select">
+              <%= label_tag "Question Type" %>
+              <%= select_tag "question[][question_type]",content_tag(:option,'Choose Question Type',:value=>"")+options_from_collection_for_select(ques_type, :to_s, :humanize, ques.try(:question_type)), class: "form-control",:required => true %>
+              <br>
+            </div>
+           <div class= "answer_div options" style=<%=display_options(ques) ? "" : "display:none" %>>
+             <%= label_tag "Answer Options" %>
+             <%= text_area_tag "question[][answer_options]", ques.try(:answer_options), rows: 5, class: "options_field_area form-control", style: "width:21%;",:placeholder => "Comma seperated options"%>
+             <br>
+           </div>
+        
+        <% if ques.try(:question_type) == "branch_field" %>
+          <% ques.answer_options.each do |option| %>
+            <tr class="option_row add_field_container">
+              <td>
+                <h4 class="option_name" >Options for <%= option %></h4>
+                <br>
+              </td>
+            </tr>
+            <% @questions.where(parent_id: ques.id.to_s, parent_option: option).each do |option_field|%>
+              <%= render "options_question_form", field: option_field %>
+            <% end %>
+          <% end %>
+        <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

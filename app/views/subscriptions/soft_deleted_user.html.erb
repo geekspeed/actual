@@ -1,0 +1,46 @@
+<%= render "devise/shared/navbar" %>
+
+<div id="rightcontent"  class="two_sided_right_content">
+	<div class="row">
+		<div class="col-md-12">
+			<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+				<div class="panel-heading">
+					<div class="panel-title title_option">
+						<h3>Deleted User Account</h3>
+						<span>Reactivate User Account</span>
+					</div>
+					<div class="panel-options">
+						<a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+					</div>
+				</div>    
+        <div class="panel-body">
+          <table class="table table-bordered table-striped">
+              <tr>
+                <th>
+                  Name
+                </th>
+                 <th>
+                  Email
+                </th>
+                <th>
+                </th>
+              </tr>
+              <% @deleted_users.each do |user| %>
+                <tr>
+                  <td>
+                    <%=user.first_name%>
+                  </td>
+                 <td>
+                    <%=user.email%>
+                 </td>
+                 <td>
+                    <%= link_to "Reactivate", reactivate_account_organisations_path(id: user.id), :class => "button"%>
+                 </td>
+                </tr>
+              <%end%>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

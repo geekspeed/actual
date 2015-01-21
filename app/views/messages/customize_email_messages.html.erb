@@ -1,0 +1,80 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - System Email Customizer" %>
+<% end %>
+<% page = "setup_program"; ppage = "messages"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "messages" %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-envelope gn-icon-large"></i>
+      System Email Customizer
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="System Email customiser lets you customise the content of the various emails leaving the platform"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">System Email Customizer</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <% if context_program.master_program? %>
+	  <% setting = MasterSetting.for(context_program).first %>
+	  <div class="block">
+	    <h2 class="titleLine">Set standard system emails across all programs</h2>
+	    <table class="settings full_width table">
+	      <tbody>
+	        <tr class="show_option_mentoring">
+	          <td class="lbl">Would you like to set standard system emails across all Programs?
+	            <br>
+	            YES - means that all programs will use these email content.
+	            <br>
+	            No - means that administrators for each program will choose their own system emails(not recommended)
+	          </td>
+	          <td class="col_setting">
+	            <div class="radioset pull_left cloneble_setting" data-url="<%= cloneable_program_settings_path(context_program) %>">
+	              <%= radio_button_tag :"settings[messages_cloneable]", "true", setting.messages_cloneable, :class => "option_cloneable" %>
+	              <%= label_tag :"settings[messages_cloneable]", "Yes", :for => "settings_messages_cloneable_true" %>
+
+	              <%= radio_button_tag :"settings[messages_cloneable]", "false", !setting.messages_cloneable, :class => "option_cloneable" %>
+	              <%= label_tag :"settings[messages_cloneable]", "No", :for => "settings_messages_cloneable_false" %>
+	              <div class="clr"></div>
+	            </div>
+	          </td>
+	        </tr>
+	      </tbody>
+	    </table>
+	  </div>
+	<% end %>
+	<div class="block">
+		<%= link_to "Feedback Emails",feedback_emails_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Comments Emails",comment_emails_program_messages_path, :class=>"email-tab" %>
+
+		<%= link_to "Admin Invite",admin_invite_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Team member Invite",team_member_invite_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Mentor Invite", team_mentor_invite_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Mentor Offer To Invite" ,mentor_offer_invite_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "I would like to join this team" ,join_team_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "I would like to submit this #{ t('pitch')}" ,submit_pitch_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "collaboration Successfull Email" ,collaboration_successfull_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Thanks for joining the team email" , join_team_email_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Declines join team request" , declines_join_team_request_program_messages_path, :class=>"email-tab" %>
+		<%= link_to "Rate events mail" , rate_events_mail_program_messages_path, :class=>"email-tab" %>
+	</div>
+</div>
+</div>
+<script>
+  $(".cloneble_setting").on("click", function(){
+    var elem = $(this)
+    $.post( 
+      elem.data("url"), 
+      $(".cloneble_setting :checked").serialize(),
+      function( data ) {
+        console.log(data)
+      }
+    );
+  });
+</script>

@@ -1,0 +1,69 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "pre_application"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<%#= render "shared/navbar", :page => "manage_program" %>
+<%#= render "phases/shared/sidebar", :page => "pre_application" %>
+<div id="rightcontent" class="two_sided_right_content">
+  <%= hidden_field_tag :page_name, "manage_program_page"%>
+  <%= render "shared/feed_form", :community_feed => CommunityFeed.new, :post_to => true, :full_form => true %>
+  <div class="block">
+    <h2 class="titleLine">Invitation Links</h2>
+    <% if @context_program.try :selectors_allowed? %>
+      <div>
+        <div style="font-weight:bold;margin-top:10px;"><%= t("role_type:selector", "p") %></div>
+        <%= accept_invitation_url(User.new, :invitation_token => 0, :role => "selector", :for => @context_program.id) %>
+      </div>
+    <% end %>
+    <% if @context_program.try :mentor_allowed? %>
+      <div>
+        <div style="font-weight:bold;margin-top:10px;"><%= t("role_type:mentor", "p") %></div>
+        <%= accept_invitation_url(User.new, :invitation_token => 0, :role => "mentor", :for => @context_program.id) %>
+      </div>
+    <% end %>
+    <% if @context_program.try :penallist_allowed? %>
+      <div>
+        <div style="font-weight:bold;margin-top:10px;"><%= t("role_type:panellist", "p") %></div>
+        <%= accept_invitation_url(User.new, :invitation_token => 0, :role => "panellist", :for => @context_program.id) %>
+      </div>
+    <% end %>
+    <div>
+      <div style="font-weight:bold;margin-top:10px;"><%= t("role_type:participant", "p") %></div>
+      <%= accept_invitation_url(User.new, :invitation_token => 0, :role => "participant", :for => @context_program.id) %>
+    </div>
+  </div>
+  <%= render "task_manager" %>
+  <%= render "pre_application" if !@current_phase.nil? && @current_phase.code == "draft_pitch" %>
+  <%= render "application" if !@current_phase.nil? && @current_phase.code == "publish_pitch" %>
+  <%= render "shortlisted" if !@current_phase.nil? && @current_phase.code == "shortlisting" %>
+  <%= render "winner_phase" if !@current_phase.nil? && @current_phase.code == "winner_selection" %>
+  <% if !@current_phase.nil? %>
+    <div class="block">
+      <h2 class="titleLine"><%= "#{t("pitch", "p")} completed this phase" %></h2>
+      <% @current_phase.pitches_achieved.each do |pitch| %>
+        <div class="row_div_data">
+          <div class="user_name pull-left"><%= pitch.title %></div>
+          <%= link_to "Message", "#pitch_message_#{pitch.id}", class: "send_reminder fancybox_small pull-right" %>
+          <%= render "phases/shared/message_all", :code => "pitch_members", :recipients => "#{t("pitch", "p")} completed this phase", :anchor_id => "pitch_message_#{pitch.id}", :pitch_id => pitch.id, :url => polymorphic_path([:pitches, @program, :messages]) %>
+          <div class="clr"></div>
+		    </div>
+      <% end %>
+    </div>
+  <% end %>
+	<% if !@current_phase.nil? %>
+	  <div class="block">
+	    <h2 class="titleLine"><%= "#{t("pitch", "p")} have not completed this phase" %></h2>
+	    <% @current_phase.pitches_not_achieved.each do |pitch| %>
+	      <div class="row_div_data">
+	        <div class="user_name pull-left"><%= pitch.title %></div>
+	        <%= link_to "Message", "#pitch_message_#{pitch.id}", class: "send_reminder fancybox_small pull-right" %>
+	        <%= render "phases/shared/message_all", :code => "pitch_members", :recipients => "#{t("pitch", "p")}  have not completed this phase", :anchor_id => "pitch_message_#{pitch.id}", :pitch_id => pitch.id, :url => polymorphic_path([:pitches, @program, :messages]) %>
+	        <div class="clr"></div>
+	      </div>
+	    <% end %>
+	  </div>
+	<% end %>
+</div>

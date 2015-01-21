@@ -1,0 +1,369 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Manage Phases" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "invites"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<% roles_allowed =  context_program.roles_allowed.map{|role| [role.code, role.code]}%>
+<%#= render "shared/navbar", :page => "manage_program" %>
+<%#= render "phases/shared/sidebar", :page => "manage_phases" %>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail gn-icon-large"></i>
+      Invites
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Invites lets you invite people to your program and manage the status of their invitation"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Invites</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<%= form_for(@invitation, :url => send_invites_program_invitation_path(@program), :html => {:class => "invitees closable_h2" }) do |f| %>
+			<div class="row">
+			  <div class="col-md-12">
+			    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+			      <div class="panel-heading relative_panel_head">
+			        <div class="panel-title title_option">
+			        	<a href="sec1" name="sec1" class="section_nav"></a>
+			          <h2>Invite people to your program by adding their email address below, this will send the template invitation message defined in: <%= link_to "Roles and Invitation", new_program_invitation_path(@program), :title=>"The template invitation in Roles and Invitation will be sent to your invitee list", :rel=>"tooltip"%></h2>
+			        </div>
+			        <div class="panel-options">
+			          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+			        </div>
+			      </div>
+			      <div class="panel-body">
+			        <div class="row">
+			        	<div class="col-sm-4 setting-font">
+			        		Role
+			        	</div>
+			        	<div class="col-sm-8">
+			        		<%= f.select :people_role, options_for_select(roles_allowed), {:class => "form-control form-style-1"}%>
+			        	</div>
+			        </div>
+			        <br />
+			        <div class="row">
+			        	<div class="col-sm-12 setting-font">
+			        		Emails
+			        		<%= f.text_area :invited_people, :class=>"form-control form-style-1", :rows => 10, :placeholder => "Add the email address of the people you invite separated by a comma. You can easily generate such a list using your favourite email client and copy / paste it here", value: "" %>
+			        	</div>
+			        </div>
+			        <br />
+			        <div class="row">
+			        	<div class="col-sm-12 setting-font">
+			        		<%= f.submit "Send", :id => "submit" %>
+			        	</div>
+			        </div>
+			      </div><!-- panel-body -->
+			    </div>
+			  </div>
+			</div>
+			
+		<%end%>
+		<br />
+		<br />
+		<div class="row">
+		  <div class="col-md-12">
+		    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+		      <div class="panel-heading relative_panel_head">
+		        <div class="panel-title title_option">
+		          <a href="sec2" name="sec2" class="section_nav"></a>
+		          <h3>You can also send these links directly</h3>
+		        </div>
+		        <div class="panel-options">
+		          <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+		        </div>
+		      </div>
+		      <div class="panel-body">
+						<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+							<thead>
+								<tr role="row">
+									<th  style="width: 150px;" colspan="1" rowspan="1" >Role</th>
+									<th  style="width: 500px;" colspan="1" rowspan="1">Link</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<% if @program.try :selectors_allowed? %>
+								<tr>
+									<td><%= t("role_type:selector", "p") %></td>
+									<td><%= accept_invitation_url(User.new, :invitation_token => 0, :role => "selector", :for => @context_program.id) %></td>
+								</tr>
+								<% end %>
+								<% if @program.try :mentor_allowed? %>
+								<tr>
+									<td><%= t("role_type:mentor", "p") %></td>
+									<td><%= accept_invitation_url(User.new, :invitation_token => 0, :role => "mentor", :for => @context_program.id) %></td>
+								</tr>
+								<% end %>
+								<% if @program.try :penallist_allowed? %>
+								<tr>
+									<td><%= t("role_type:panellist", "p") %></td>
+									<td><%= accept_invitation_url(User.new, :invitation_token => 0, :role => "panellist", :for => @context_program.id) %></td>
+								</tr>
+								<% end %>
+								<tr>
+									<td><%= t("role_type:participant", "p") %></td>
+									<td><%= accept_invitation_url(User.new, :invitation_token => 0, :role => "participant", :for => @context_program.id) %></td>
+								</tr>
+							</tbody>
+						</table>
+		      </div><!-- panel-body -->
+		    </div>
+		  </div>
+		</div>
+	
+		<br />
+		<br />
+		<section class="profile-info-tabs">
+			<div class="row">
+				<div class="user_data_btm col-sm-12">
+					<a href="sec3" name="sec3" class="section_nav"></a>
+					<ul class="nav nav-tabs" id="profTab">
+						<li class="active"><a href="#applicant_div"><%= t("role_type:participant", "s") %></a></li>
+						<li><a href="#selector_div"><%= t("role_type:selector", "s") %></a></li>
+						<li><a href="#panel_div"><%= t("role_type:panellist", "s") %></a></li>
+						<li><a href="#mentor_div"><%= t("role_type:mentor", "s") %></a></li>
+					</ul>
+						
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="tab-content user_prof_tab_cont">
+					<div class="tab-pane active" id="applicant_div">
+						<div class="row">
+						  <div class="col-md-12">
+						    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+						      <div class="panel-heading relative_panel_head">
+						        <div class="panel-title title_option">
+						          <h3><%= "Invited #{t("role_type:participant", "p")}" %></h3>
+						        </div>
+						      </div>
+						      <div class="panel-body">
+										<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+											<thead>
+												<tr role="row">
+													<th  style="width: 500px;" colspan="1" rowspan="1" >Name or E-mail</th>
+													<th  style="width: 100px;" colspan="1" rowspan="1">Status</th>
+												</tr>
+											</thead>
+											
+											<tbody>
+												<% @not_registered_applicants.each do |applicant| %>
+												<tr>
+													<td><%= name_or_email(applicant) %></td>
+													<td>
+														<div class="user_status user_status_Pending col-md-4">Pending</div>
+														<div class="col-md-4">
+															<a data-remote="true" class="send_reminder fancybox_small btn btn-warning btn-sm btn-icon icon-left" href="#remind_<%= applicant.id %>"><i class="glyphicon glyphicon-bell"></i> Send Reminder</a>
+															<%= render "shared/reminder_lightbox", :user => applicant, :program => @program, :code => "participant", :anchor_id => "remind_#{applicant.id}" %>
+														</div>
+													</td>
+												</tr>
+												<% end %>
+												<% @registered_applicants.each do |applicant| %>
+												<tr>
+													<td><%= name_or_email(applicant) %></td>
+													<td><div class="user_status user_status_Yes pull-right" id="tag">Yes</div></td>
+												</tr>
+												<% end %>
+											</tbody>
+										</table>
+						      </div><!-- panel-body -->
+						    </div>
+						  </div>
+						</div>
+					</div>
+					<div class="tab-pane" id="selector_div">
+						<div class="row">
+						  <div class="col-md-12">
+						    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+						      <div class="panel-heading relative_panel_head">
+						        <div class="panel-title title_option">
+						          <h3><%= "Approval Status from #{t("role_type:selector", "p")}" %></h3>
+						        </div>
+						      </div>
+						      <div class="panel-body">
+										<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+											<thead>
+												<tr role="row">
+													<th  style="width: 500px;" colspan="1" rowspan="1" >Name or E-mail</th>
+													<th  style="width: 100px;" colspan="1" rowspan="1">Status</th>
+												</tr>
+											</thead>
+											
+											<tbody>
+												<% pending_selector, approved_selector = fetch_selectors(@selectors, @program)%>
+												<% pending_selector.each do |selector| %>
+													<tr>
+														<td><%= name_or_email selector %></td>
+														<td>
+															<div class="user_status user_status_Pending col-md-4">Pending</div>
+															<div class="col-md-4">
+																<a data-remote="true" class="send_reminder fancybox_small btn btn-warning btn-sm btn-icon icon-left" href="#remind_<%= selector.id %>"><i class="glyphicon glyphicon-bell"></i> Send Reminder</a>
+																<%= render "shared/reminder_lightbox", :user => selector, :program => @program, :code => "selector", :anchor_id => "remind_#{selector.id}" %>
+															</div>
+														</td>
+													</tr>
+												<% end %>
+												<% approved_selector.each do |selector| %>
+														<tr>
+															<td><%= name_or_email selector %></td>
+															<td>
+																<div class="user_status user_status_Yes pull-right" id="tag">Yes</div>
+															</td>
+														</tr>
+												<% end %>
+											</tbody>
+										</table>
+						      </div><!-- panel-body -->
+						    </div>
+						  </div>
+						</div>
+					</div>
+					<div class="tab-pane" id="panel_div">
+						<div class="row">
+						  <div class="col-md-12">
+						    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+						      <div class="panel-heading relative_panel_head">
+						        <div class="panel-title title_option">
+						          <h3>Agreement to participate from Due Diligence Panel</h3>
+						        </div>
+						      </div>
+						      <div class="panel-body">
+										<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+											<thead>
+												<tr role="row">
+													<th  style="width: 500px;" colspan="1" rowspan="1" >Name or E-mail</th>
+													<th  style="width: 100px;" colspan="1" rowspan="1">Status</th>
+												</tr>
+											</thead>
+											
+											<tbody>
+												<% pending_panelist, approved_panellist = fetch_panellist(@panellists, @program)%>
+												<% pending_panelist.each do |user| %>
+													<tr>
+														<td><%= name_or_email user %></td>
+														<td>
+															<div class="user_status user_status_Pending col-md-4">Pending</div>
+															<div class="col-md-4">
+																<a data-remote="true" class="send_reminder fancybox_small btn btn-warning btn-sm btn-icon icon-left" href="<%= "#remind_#{user.id}" %>"><i class="glyphicon glyphicon-bell"></i> Send Reminder</a>
+																<%= render "shared/reminder_lightbox", :user => user, :program => @program, :code => "panellist", :anchor_id => "remind_#{user.id}" %>
+															</div>
+														</td>
+													</tr>
+												<% end %>
+												<% pending_panelist.each do |user| %>
+													<tr>
+														<td><%= name_or_email user %></td>
+														<td>
+															<div class="user_status user_status_Yes pull-right" id="tag">Yes</div>
+														</td>
+													</tr>
+												<% end %>
+											</tbody>
+										</table>
+						      </div><!-- panel-body -->
+						    </div>
+						  </div>
+						</div>
+					</div>
+					<div class="tab-pane" id="mentor_div">
+						<div class="row">
+						  <div class="col-md-12">
+						    <div data-collapsed="0" class="panel panel-white panel-shadow ui-widget collapses panel-table">
+						      <div class="panel-heading relative_panel_head">
+						        <div class="panel-title title_option">
+						          <h3><%= "Agreement to participate from #{t("role_type:mentor", "p")}" %></h3>
+						        </div>
+						      </div>
+						      <div class="panel-body">
+										<table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+											<thead>
+												<tr role="row">
+													<th  style="width: 500px;" colspan="1" rowspan="1" >Name or E-mail</th>
+													<th  style="width: 100px;" colspan="1" rowspan="1">Status</th>
+												</tr>
+											</thead>
+											
+											<tbody>
+												<% pending_mentors, approved_mentors = fetch_mentors(@mentors, @program)%>
+												<% pending_mentors.each do |user| %>
+													<tr>
+														<td><%= name_or_email user %></td>
+														<td>
+																<div class="user_status user_status_Pending col-md-4">Pending</div>
+																<div class="col-md-4">
+																	<a data-remote="true" class="send_reminder fancybox_small btn btn-warning btn-sm btn-icon icon-left" href="#remind_<%= user.id %>"><i class="glyphicon glyphicon-bell"></i> Send Reminder</a>
+																	<%= render "shared/reminder_lightbox", :user => user, :program => @program, :code => "mentor", :anchor_id => "remind_#{user.id}" %>
+																</div>
+														</td>
+													</tr>
+												<%end%>
+												<% approved_mentors.each do |user| %>
+													<tr>
+														<td><%= name_or_email user %></td>
+														<td>
+															<div class="user_status user_status_Yes pull-right" id="tag">Yes</div>
+														</td>
+													</tr>
+												<% end %>
+											</tbody>
+										</table>
+						      </div><!-- panel-body -->
+						    </div>
+						  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</section>
+	
+	</div>
+	<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Invite People</a></li>
+					<li><a href="#sec2">Direct Links</a></li>
+					<li><a href="#sec3">Invited People</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+	 $('#profTab a').click(function (e) {
+		e.preventDefault()
+		$(this).tab('show')
+	});
+	$(document).ready(function($){
+		$('.collapses').collapsiblePanel();
+	});
+	jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+	 $("[rel=tooltip]").tooltip();
+</script>

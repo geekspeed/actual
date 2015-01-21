@@ -1,0 +1,687 @@
+<%= stylesheet_link_tag    "normalize", :media => "all" %>
+<%= stylesheet_link_tag    "component", :media => "all" %>
+<%= javascript_include_tag "modernizr.custom" %>
+<%= javascript_include_tag "jquery.sticky" %>
+<%= stylesheet_link_tag    "jquery-ui-1.10.0.custom.min", :media => "all" %>
+<%#= javascript_include_tag "jquery-ui-1.10.0.custom.min" %>
+
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - #{@pitch.try(:title)}" %>
+<% end %>
+
+<div id="pitch-details-page">
+  <div class="row main-row">
+    <%= hidden_field_tag :page_name, "pitch_detail_page"%>
+    <div class="col-md-10 main-right-section">
+      <%= form_for(@pitch, :url => polymorphic_path([@program, @pitch]), :html => {:class => "editForm ", :multipart => true }) do |f| %>
+      <div class="pitch_main_section">
+        <div class="row">
+          <div class="col-sm-3 pitch_image_container">
+            <%= image_tag(@pitch.avatar.url, :class => "img img-responsive pitch_image") %>
+            <p style="display:none;">
+              <%= f.file_field :avatar, :class => "file_field_width editAvatar" %>
+            </p>
+            <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) and !@program.program_scope.try(:stop_editing_fields) or need?(["company_admin", "program_admin"], current_organisation) %>          
+              <div class="change_pitch_image">
+                  <a href="#" data-toggle="tooltip" data-placement="bottom" title="Change Image"><i class="glyphicon glyphicon-cog editFormImageLink"></i></a>
+              </div>            
+            <% end %>
+          </div>
+          <div class="col-sm-9">
+            <div class="pitch_title_container">
+              <p class="pitch_title"><%= @pitch.title %></p>  
+              <p class="editTitle" style="display:none;">
+                <%= f.text_field :title, :style=>"margin-bottom: 10px;padding: 5px;width:30%;" %>
+                <%= f.submit "Save", :id => "submit", :class => "saveEditForm", :style=>"border-radius:0px;" %>
+              </p>
+              <p class="pitch_last_update">Last updated: <%= @pitch.updated_at.day_date_month %></p>
+            </div>
+            <br />
+            <div class="team_container">
+              <div class="row">
+                <div class="col-sm-3 team_member">
+                  <div class="pitch-user">
+                    <div class="pitch-user-img pull-left">
+                      <%= link_to(image_tag(@pitch.try(:user).try(:avatar).try(:thumb).try(:url), :width => "40", :class => "img-circle img-responsive img-circle-border"), user_path(@pitch.user)) %>
+                    </div>
+                    <div class="pitch-user-detail pull-left">
+                      <%= link_to(["by", @pitch.user.try(:full_name)].join(" "), user_path(@pitch.user), :class => "pitch-by") -%>    
+                      <div class="time_low">
+                        <%= time_in_words(@pitch.created_at)%>
+                      </div>
+                    </div>
+                    <div class="clr"></div>
+                  </div>
+                </div> 
+                <% members = pitch_team_members(@pitch) %>
+                <div class="col-sm-3 team_member">
+                  <% if !members[0].blank? %>
+                    <div class="pitch-user">
+                      <div class="pitch-user-img pull-left">
+                        <%= link_to(image_tag(members[0].try(:avatar).try(:thumb).try(:url), :width => "40", :class => "img-circle img-responsive img-circle-border"), user_path(members)) %>
+                      </div>
+                      <div class="pitch-user-detail pull-left">
+                        <%= link_to(members[0].try(:full_name), user_path(members[0]), :class => "pitch-by") -%>    
+                        <div class="time_low">
+                          <%#= time_in_words(@pitch.created_at)%>
+                        </div>
+                      </div>
+                      <div class="clr"></div>
+                    </div>
+                  <%end%>
+                </div>
+                <div class="col-sm-3 team_member">
+                  <% if !members[1].blank? %>
+                    <div class="pitch-user">
+                      <div class="pitch-user-img pull-left">
+                        <%= link_to(image_tag(members[1].try(:avatar).try(:thumb).try(:url), :width => "40", :class => "img-circle img-responsive img-circle-border"), user_path(members)) %>
+                      </div>
+                      <div class="pitch-user-detail pull-left">
+                        <%= link_to(members[1].try(:full_name), user_path(members[1]), :class => "pitch-by") -%>    
+                        <div class="time_low">
+                          <%#= time_in_words(@pitch.created_at)%>
+                        </div>
+                      </div>
+                      <div class="clr"></div>
+                    </div>
+                  <%end%>
+                </div>  
+
+                <div class="col-sm-3 team_control">
+                  <% if context_program.try(:workspace).try(:right_team) || context_program.try(:workspace).try(:right_team).nil? %> 
+                    <ul class="team_control_actions">
+                     <% if !@pitch.team?(current_user) %>
+                        <% is_subdomain = valid_subdomain(current_subdomain)%>
+                        <li class="pull-right"><a href="<%=(is_subdomain ? join_team_program_pitch_url(context_program, @pitch, subdomain: false) : join_team_program_pitch_url(context_program, @pitch))%>" data-toggle="tooltip" data-placement="bottom" title="Join this team"><i class="gn-icon gn-icon-auto gn-icon-contacts add-team-member"></i></a></li>
+                      <% end %>
+                      <%# if context_program.try(:workspace).try(:left_team)%>
+                        <% is_subdomain = valid_subdomain(current_subdomain)%>
+                        <li class="pull-right">
+                        <a href="<%=(is_subdomain ? polymorphic_url([:team, @program, @pitch], subdomain: false) : polymorphic_url([:team, @program, @pitch]))%>" data-toggle="tooltip" data-placement="bottom" title="View all members"><i class="gn-icon gn-icon-auto icon-paragraph-justify team-list"></i></a></li>
+                      <%# end %>
+                      
+                      <% if @pitch.owner?(current_user) || @pitch.member?(current_user) or need?(["company_admin", "program_admin"], current_organisation) %>
+                        <li class="pull-right"><a href="#inviteMember" data-toggle="tooltip" data-placement="bottom" title="Invite people" class="fancybox"><i class="gn-icon gn-icon-auto gn-icon-refere team_invite"></i></a></li>
+                      <%end%>
+                    </ul>
+                  <%end%>
+                </div>
+              </div>
+            </div>
+            <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) and !@program.program_scope.try(:stop_editing_fields) or need?(["company_admin", "program_admin"], current_organisation) %> 
+              <ul class="pitch_controls clearfix">
+                <% if (need?(["participant"], context_program) && @pitch.owner?(current_user)) || need?(["company_admin", "program_admin"], current_organisation) %>
+                 <li><%= link_to "<i class='glyphicon glyphicon-trash' style='text-align:right;'></i>".html_safe, polymorphic_path([context_program, @pitch]), method: "delete", confirm: "Are you sure? This can not be undone." %></li>
+                <% end %>
+                <li><a href="#"><i class="glyphicon glyphicon-pencil editFormTitleLink" data-toggle="tooltip" data-placement="bottom" title="Edit pitch"></i></a></li>             
+                <% if need?(["participant"], context_program) && @pitch.owner?(current_user) or need?(["company_admin", "program_admin"], current_organisation)%>
+                  <% if @program.try(:program_scope).try(:pitch_privacy_settings) or !@program.try(:program_scope) or need?(["company_admin", "program_admin"], current_organisation)%>
+                    <%= f.hidden_field :public %> 
+                    <%= f.submit :submit, :id=>"pitch_public_submit", :style=>"display:none;" %>
+                     <% if f.object.public %>                       
+                        <li>
+                          <a href="#" class="public-pitch" data-check="0"><i class="icon-unlock-design icon-unlock-alt" data-toggle="tooltip" data-placement="bottom" title="Make pitch private"></i>
+                          </a>
+                        </li> 
+                      <%else%>
+                        <li>
+                          <a href="#" class="public-pitch" data-check="1"><i class="icon-unlock-design icon-lock" data-toggle="tooltip" data-placement="bottom" title="Make pitch public"></i>
+                          </a>
+                        </li>
+                      <% end %> 
+                  <% end %>  
+                <% end %>
+              </ul>
+            <% end %>
+            <div class="pull-right" id="image-edit" style="bottom: -20px;right: 0px;position: absolute;display:none;">
+              <%= f.submit "Save", :id => "submit", :class => "saveEditForm", :style=>"border-radius:0px;" %>
+              <div class="clr"></div>
+            </div>
+            </div>
+          </div>
+        </div>    
+        <br><br>
+
+        <div class="" id="accordion">
+          <% if @pitch.team_and_mentor?(current_user) or need?(["company_admin", "program_admin"], current_organisation)%>
+            <%= render "workflow" %>
+            <br>
+          <% end %>
+          <div class="row">
+            <div class="col-md-12">
+              <%= render "bs_summary", f: f %> 
+            </div>
+          </div>          
+          <br>
+          <div id="custom-fields-text-areas">
+            <% objekt = f.object;
+                    klass = objekt.class;
+                    ankor = "pitch";
+              %>
+            <% additional_custom_fields = []%>
+            <% custom_fields = ankor.present? ? klass.custom_fields_with_anchor(ankor).enabled : klass.custom_fields.enabled %>
+            <% custom_fields.where(program_id: @program.id).or({branch_id: nil}, {branch_id: @pitch.pitch_branch_id.to_s}).
+                  select{|field| field if Workflow.where(program_id: @program.id.to_s, active: true, :code.in => field.phases).present?}.each do |custom_field| 
+              %>
+                <% if custom_field.element_type == 'text_area' or custom_field.element_type == 'video_url' or custom_field.element_type == 'image_url' or custom_field.element_type == 'sound_url' %>
+                  <%= render "bs_custom_fields", custom_field: custom_field, f: f%>
+                  <br>
+                <% elsif custom_field.element_type != 'text_section' %>
+                  <%= render "bs_custom_fields_other", custom_field: custom_field, f: f %>        
+                  <br>                
+                <% else %>   
+                  <%= render "bs_custom_fields_text_section", custom_field: custom_field, f: f %>        
+                  <br> 
+                <% end %>
+              <% end %>  
+            </div> 
+            <%= render "bs_additional_information", f: f %>
+        </div>
+      <% end %>
+      <br/><br/><br/><br/>
+    </div>
+    <div class="col-md-2 pitch_stick_me">
+      <%#= render "bs_admin_actions" %>
+      <%= render "bs_todo_list" %>
+      <%#= render "workflow" %>
+      <!-- It is for team member invite popup -->
+      <%= render "team" %>
+      <%= render "skill_needs" %>
+      <%#= render "bs_settings" %>
+      <%#= render "reviews"%>
+    </div>
+  </div>
+</div>
+
+      <%= content_tag :div, :style =>"display:none", :id => "rem_form" do%>
+        <%= form_for @pitch.feedbacks.build, :url => program_pitch_feedbacks_path(context_program, @pitch), :html => {:id => "feedback_submit"} do |form| %>
+          <div class="met_row">
+            <div class="comment_row">
+              <%= form.hidden_field :content %>
+            </div>
+          </div>
+          <%= form.submit "Post", :id => "submit", :class => "subm_form" %>
+        <% end %>
+      <% end %>
+
+      <%= content_tag :div, :style =>"display:none", :id => "custom_field_feedback_form" do%>
+        <%= form_for @pitch.custom_feedbacks.build, :url => program_pitch_pitch_custom_feedbacks_path(context_program, @pitch), :html => {:id => "custom_feedback_submit"} do |form| %>
+          <div class="met_row">
+            <div class="comment_row">
+              <%= form.hidden_field :custom_field_id, :id => "custom_field_id"%>
+              <%= form.hidden_field :feedback, :id => "custom_field_feedback_content" %>
+            </div>
+          </div>
+          <%= form.submit "Post", :id => "submit", :class => "subm_custom_feedback_form" %>
+        <% end %>
+      <% end %>
+      
+      <%= content_tag :div, :style =>"display:none", :id => "custom_field_iteration_form" do%>
+        <%= form_for @pitch.custom_iterations.build, :url => program_pitch_pitch_custom_iterations_path(context_program, @pitch), :html => {:id => "custom_iteration_submit", :multipart => true } do |form| %>
+          <div class="met_row">
+            <div class="comment_row">
+              <%= hidden_field_tag "changed_iteration_value", "", :id => "changed_iteration_value"%>
+              <%= form.hidden_field :custom_field_id, :id => "custom_field_iteration_id"%>
+              <%= form.hidden_field :content, :id => "custom_field_iteration_content" %>
+              <%= file_field_tag 'attachment' %>
+            </div>
+          </div>
+          <%= form.submit "Post", :id => "submit", :class => "subm_custom_iteration_form" %>
+        <% end %>
+      <% end %>
+
+<div id="gallery-extra" style="display:none;">
+  <div class="clr"></div>
+  <br/>
+  <div id="-1-_gallery_error_-2-"></div>  
+  <br/>
+  <input class="file_field_width pull-left check-no-of-file -1-_galleries" id="-1-_gallery_-2-" multiple="multiple" name="-1-_gallery[]" onchange="checkNoOfFiles(this,&quot;-1-_gallery_&quot;,&quot;_-2-&quot;)" type="file">
+  <label class="accepted_value_label pull-left" for="accepted_value" style="margin-top: -32px;margin-left: 231px;">Upload multiple photos, Accepted File types: [ png, jpg, jpeg ]</label>
+</div>
+
+
+<style>
+  .editcustomfieldvalue input[type=file]{padding: 0px !important;padding-top: 31px !important;overflow-y: hidden;overflow-x: hidden;}
+  .icon-unlock-design::before {
+    width: auto !important;
+    font-size: 120%;
+  }
+  .submit-button-to-normal{
+    border-radius: 0px !important;
+    padding: 5px 20px !important;
+    line-height: 1.428571429;
+    font-size: 14px !important;
+  }
+  .gallery-remove-pic{position: absolute;padding: 3px 10px;right: 0px;font-weight: normal;font-size: 15px;cursor:pointer;}
+  .phase-link{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin-right: 20px;
+    }  
+    .phase-link:hover{
+    text-decoration: underline !important;
+    }
+.demo-wrapper {  
+    width: 38%;  
+    margin: 0 auto;  
+}  
+.html5-fullscreen-api {  
+    position: relative;  
+}  
+.html5-fullscreen-api img {  
+    max-width: 100%;  
+    border: 10px solid #fff;  
+    box-shadow: 0px 0px 50px #ccc;  
+}  
+.html5-fullscreen-api .fs-button {  
+    z-index: 100;  
+    display: inline-block;  
+    width: 32px;  
+    height: 32px;  
+    position: absolute;  
+    top: 10px;  
+    right: 10px;  
+    cursor: pointer;  
+}  
+.demo-wrapper {  
+    width: 38%;  
+    margin: 0 auto;  
+}  
+.html5-fullscreen-api {  
+    position: relative;  
+}  
+.html5-fullscreen-api img {  
+    max-width: 100%;  
+    border: 10px solid #fff;  
+    box-shadow: 0px 0px 50px #ccc;  
+}  
+.html5-fullscreen-api .fs-button {  
+    z-index: 100;  
+    display: inline-block;  
+    width: 32px;  
+    height: 32px;  
+    position: absolute;  
+    top: 10px;  
+    right: 10px;  
+    cursor: pointer;  
+}  
+.mosaicflow:-webkit-full-screen {  
+  width: 100%;  
+  background: #000000;
+}  
+
+.addGalleryExtra{font-size: 13px;}
+.scroll-link {
+position: absolute !important;
+top: -70px !important;
+}
+</style>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('body').on('click', '#send_back', function(){
+      var amount_box = $('#amount_box').val();
+      jQuery.post(admin_url, {action:'back_pitch',pid:757,ptid:762,amount_box:amount_box}, function(data) {
+        jQuery.post(admin_url, {action:'getMyBacks',pid:757}, function(data) {
+          jQuery("#mybacks").html(data);
+        });
+        parent.$.fancybox.close();
+      });
+      return false;
+    });
+  });
+  $(function() {
+    $( "#back-pitch-slider" ).slider({
+      range: "max",
+      min: 1,
+      max: 10,
+      value: 1,
+      slide: function( event, ui ) {
+        $( "#amount_box" ).val(  ui.value );
+      }
+    });
+  });
+  $(document).ready(function() {
+    $(".ratings").jRating({ 
+      step:true,
+      length : 5,
+      rateMax: 5,
+      showRateInfo:false,
+      bigStarsPath: '/images/icons/stars_old.png',
+      onSuccess : function(){
+
+      }
+    });
+  });
+  $(document).ready(function() {
+    $(".already_rated").jRating({ 
+      step:true,
+      length : 5,
+      rateMax: 5,
+      showRateInfo:false,
+      isDisabled: true,
+      bigStarsPath: '/images/icons/stars_old.png',
+      onSuccess : function(){
+
+      }
+    });
+  });
+  $(document).ready(function(){
+    $(document).on('click', "#post_fdb", function(e){
+      e.preventDefault();
+      $('input#pitch_feedback_content').attr('value', $('#fd_b').val());
+      $('.subm_form').trigger('click');
+    })
+  })
+  $(document).ready(function(){
+    $(document).on('click', ".custom_feedback_post_btn", function(e){
+      e.preventDefault();
+      $('#custom_field_id').attr('value', $(this).attr("data_custom_field_id"))
+      $('#custom_field_feedback_content').attr('value', $('#custom_feedback'+$(this).attr("data_custom_field_id")).val());
+      $('.subm_custom_feedback_form').trigger('click');
+    })
+  })
+  $(document).ready(function(){
+    $(document).on('click', ".editSummaryFormLink", function(e){
+      e.preventDefault();
+      $('.summaryArea').html($('.editable_summary_div').html())
+      $('.editable_summary_div').html('')     
+      $('.pitch_feedback_text').autosize();
+    })
+  })
+  $(document).ready(function(){
+    $(document).on('click', ".editCustomField", function(e){
+      e.preventDefault();
+      if (($(this).data('field-type') == "dropdown") || ($(this).data('field-type') == "dropdown_with_other") ) {
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id") + 'dropdown').html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      else if($(this).data('field-type') == "file_upload"){
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id") + 'upload').html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      else if($(this).data('field-type') == "dropdown_with_multiple_select"){
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id") + 'multi').html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      else if($(this).data('field-type') == "text"){
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id") + 'text').html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      else if($(this).data('field-type') == "gallery"){
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id") + 'gallery').html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      else {
+        $('.customArea' + $(this).attr("data_custom_field_id")).html($('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html());
+        $('.editable_custom_field_div' + $(this).attr("data_custom_field_id")).html('');
+      }
+      $('.pitch_feedback_text').autosize();
+    })
+  })
+  $(document).ready(function(){
+    $(document).on('click', ".custom_iteration_post_btn", function(e){
+      e.preventDefault();
+      $('#custom_field_iteration_id').attr('value', $(this).attr("data_custom_field_id"))
+      $('#changed_iteration_value').attr('value', $('#custom_iteration'+$(this).attr("data_custom_field_id")).val());
+      $('#custom_field_iteration_content').attr('value', $('#iteration_content'+$(this).attr("data_custom_field_id")).val());
+      $('.subm_custom_iteration_form').trigger('click');
+    })
+  })
+  $(document).ready(function(){
+    $(document).on('click', ".custom_edit_btn", function(e){
+      e.preventDefault();
+      $('#custom_field_iteration_id').attr('value', $(this).attr("data_custom_field_id"))
+      if($(this).data("custom-field-type") == "multiple"){
+        $('#changed_iteration_value').attr('value', $('#new_content'+$(this).attr("data_custom_field_id")+'_mul').val());
+      }
+      else if($(this).data("custom-field-type") == "upload"){
+        $("#attachment").replaceWith($('#'+$(this).attr("data_custom_field_id")+'_upload')[0]);
+      }  
+      else if($(this).data("custom-field-type") == "gallery"){
+        $("#attachment").replaceWith($('.'+$(this).attr("data_custom_field_id")+'_galleries'));
+      }
+      else{
+        $('#changed_iteration_value').attr('value', $('#new_content'+$(this).attr("data_custom_field_id")).val());
+      }
+      if($('#new_content'+$(this).attr("data_custom_field_id")).val()=="other" || $('#new_content'+$(this).attr("data_custom_field_id")).val()=="Other"){$('#changed_iteration_value').attr('value', $('#new_other_content'+$(this).attr("data_custom_field_id")).val());}
+      $('#custom_field_iteration_content').attr('value', $('#custom_content'+$(this).attr("data_custom_field_id")).val());
+      $('.subm_custom_iteration_form').trigger('click');
+    })
+  })
+  $(document).ready(function(){    
+    $('.act_arrow').on('click', function () {
+        if($(this).hasClass('glyphicon-chevron-down')){
+          $(this).removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+        }else{
+           $(this).removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");              
+      }
+    });
+  });
+
+
+  $(document).ready(function(){ 
+    $(document).on('change', ".other_select", function(e){
+        e.preventDefault();
+        if($(this).val()=="other" || $(this).val()=="Other"){
+          $(this).next().removeClass("hide");
+          $(this).next().attr("disabled", false);
+          if ($(this).hasClass('required')){ $(this).next().addClass('required'); }
+        }
+        else{
+          $(this).next().addClass("hide");
+          $(this).next().attr("disabled", true);
+          if ($(this).next().hasClass('required')){ $(this).next().removeClass('required'); }
+        }
+      });
+      
+      $('.carousel').carousel();
+      });
+    
+
+    $(document).ready(function(){
+      $(document).on('click', ".private_pitch", function(e){
+        var program_id = $('#program_id').val();
+        var pitch_id = $('#private_pitch_id').val();
+        var custom_field_id = $(this).attr("id").split("_")[0];
+        var value = $(this).attr("id").split("_")[1];
+        var elem = $(this).attr("id")
+        path = '/programs/'+ program_id + '/pitches/'+ pitch_id +'/pitch_privacies/change_privacy_of_pitch'
+        $.ajax({
+          url: path,
+          type: 'get',
+          async: false,
+          data: "custom_field_id="+custom_field_id+"&private="+value,
+          contentType: 'application/json; charser=utf-8',
+          success: function(data){
+            change_val = ( (value == "1") ? "0" : "1");
+            $("#"+elem).removeClass('show');
+            $("#"+elem).addClass('hide');
+            $("#"+custom_field_id+"_"+change_val).removeClass('hide').css("display","inline");
+          },
+          error: function(){
+            alert('Request failed. Sorry, we are analyzing the cause of this problem');
+          }
+        });
+      });
+    });
+    
+   function checkValidityOffile(file, types, field_id){
+    $("#" +field_id +"_error").html('');
+    if(file.value.split(".") && types != "All"){
+      if(file.value.split(".").length >= 1){
+        upload_type = file.value.split(".")[file.value.split(".").length-1]
+        if (types.indexOf(upload_type) == -1){
+           text = "You tried to upload a " +upload_type + " file, only " + types + " files are accepted.";
+          $("#" +field_id +"").val("");
+          $("#" +field_id +"_error").html('<span style="color:red">'+ text +'</span>');
+        }
+      }
+    }
+   }
+
+  function checkNoOfFiles(file, field_id, count){
+      $("#" +field_id +"error"+count).html('');
+        $(".thumb-"+field_id+""+count).remove()
+        var files = file.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+          // Only process image files.
+          if (!f.type.match('image.*')) {
+            continue;
+          }
+
+          var reader = new FileReader();
+
+          // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+              // Render thumbnail.
+              var span = document.createElement('span');
+              span.innerHTML = ['<img class="thumb-gallery thumb-'+field_id+''+count+'" src="', e.target.result,
+                                '" title="', escape(theFile.name), '"/>'].join('');
+              $("#" +field_id +""+count.replace("_","")).next().after(span)        
+          };
+          })(f);
+          // Read in the image file as a data URL.
+          reader.readAsDataURL(f);
+        }
+      if (file.files["length"] > 10){       
+        $(".thumb-"+field_id+""+count).remove()
+        $("#" +field_id +"error"+count).html('');
+        $("#" +field_id +""+count.replace("_","")).val("");
+        $("#" +field_id +"error"+count).html('<span style="color:red">Limit excceed, Please upload 10 files.</span>');
+      }
+    }
+
+  $(document).ready(function(){
+    $(".pitch_stick_me").stick_in_parent({
+       parent: $("#pitch-details-page"),
+       offset_top: 80
+     });
+  });
+
+  $(window).load(function(){ 
+    var imgWidth = $('.pitch_image_container img').width();
+     $('.change_pitch_image').css( "width", imgWidth );
+  });
+     
+    
+    jQuery(document).ready(function($) {
+      $("#main_values_1056").find("#grey_bar").css("width", "0%");
+      $("#main_values_1056").find("#custom_bar").addClass("orange_bar").css("width", "0%");
+      $("#main_values_1056").find(".final_position").html("Rank 4");
+      $("#progress_table_1056").on("click", ".progress_table_more", function(){
+        $(this).removeClass("progress_table_more").addClass("progress_table_less").html("- less");
+        $("#progress_table_1056").find("tr").show();
+        return false;
+      });
+      $("#progress_table_1056").on("click", ".progress_table_less", function(){
+        $(this).removeClass("progress_table_less").addClass("progress_table_more").html("+ more");
+        return false;
+      });
+
+      $('#main').on('click', '#iteration_remote', function(e){
+        $(this).parent().find('.loader').show();
+        $.post( $(this).data("href"), {content: $(this).parent().find("textarea").val()}, function( data, status, xhr ) {
+          $('.loader').hide();
+          $(this).parent().find('.ok_ico').show().delay(500).fadeOut();
+          location.reload(true);
+        });
+        e.preventDefault();
+      });
+      
+      $("#owl-example").owlCarousel({
+      	items:5,
+      	navigation:true,
+    		navigationText: [
+      	"<i class='icon-chevron-left icon-white'></i>",
+      	"<i class='icon-chevron-right icon-white'></i>"
+      	],
+      });
+      
+$('div.pahse-in').each(function() {
+      var $dropdown = $(this);
+      var $currentId = $(this).attr('name');
+      var $popup_id2 = null
+
+      $("a.dropdown-link", $dropdown).click(function(e) {
+        e.preventDefault();
+        var $popup_id = $currentId + "_pupup";
+        
+        var div = $popup_id;
+        $popup_id2 = $("#"+$popup_id)
+        var pos = $(this).offset();
+        var width = $(this).outerWidth();
+        var width2 = $("#"+$popup_id).outerWidth();
+        var lefts = (width-width2)/2;
+        $popup_id2.css({
+            top:"85px",
+            left: (pos.left + lefts - "70") + "px"
+          });
+        $popup_id2.fadeToggle('slow');
+        $(this).toggleClass('active_phase');
+         $(".phase_dropdown").not($popup_id2).hide();
+        return false;
+      });
+
+      $('html').click(function(){
+        if($popup_id2){
+  	      $popup_id2.hide(500);
+  	      $('.dropdown-link').removeClass('active_phase');
+        }
+      });
+
+
+    });
+      
+   
+    $(".public-pitch").click(function(e){
+      $("#pitch_public").val($(this).attr("data-check"))
+      $("#pitch_public_submit").trigger("click")
+      e.preventDefault()
+    });
+
+    $(".gallery-remove-pic").click(function(e){
+      data_custom_field_code = $(this).attr("data_custom_field_code")
+      data_custom_field_value = $(this).attr("data_custom_field_value")
+      data_delete = $(this).attr("data_delete")
+      data_url = $(this).attr("data_url")
+      $("#"+data_delete).remove();
+      $.ajax({
+        url: data_url,
+        method: "delete",
+        data: {data_custom_field_code: data_custom_field_code, data_custom_field_value: data_custom_field_value},
+         success: function(data){
+        }
+      })
+      e.preventDefault()
+    });
+    
+  });
+  
+  $( document ).ready(function() {
+    $( "body" ).on('click',".addGalleryExtra", function() {
+          $("#"+($(this).data("custom-field-id"))+"_browse_button").val(parseInt($("#"+($(this).data("custom-field-id"))+"_browse_button").val())+1)
+          $("#"+($(this).data("custom-field-id"))+"_gallery_section").append($("#gallery-extra").html().replace(/-1-/g,$(this).data("custom-field-id")).replace(/-2-/g,$("#"+($(this).data("custom-field-id"))+"_browse_button").val()))
+          // e.preventDefault()
+          return false
+      });
+   });
+
+    $('.fs-button').on('click', function(e){
+        elem_id = $(this).data("id")  
+        var elem = document.getElementById('portfolio-'+elem_id);  
+        if(document.webkitFullscreenElement) {  
+            document.webkitCancelFullScreen();  
+        }  
+        else {  
+            elem.webkitRequestFullScreen();  
+        };  
+        e.preventDefault()
+    }); 
+</script>

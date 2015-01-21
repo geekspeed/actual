@@ -1,0 +1,29 @@
+<div class="module-big-desc">
+  Description
+</div>
+<%=course_module.greater_detail.try(:html_safe) %> 
+<div class="module-big-desc">
+  Resource
+</div>
+<% if course_module.resource_format == "Video" || course_module.resource_format == "External URL" %>   
+  <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+  <% if course_module.link.present? %>
+      <% if !course_module.link.scan(/~^(?:f|ht)tps?:/i).present? %>
+          <% emb_obj = emb_api.extract(:url => course_module.link, :width=>@video_size)%>
+          <%= course_attachment(emb_obj)%>
+      <% end  %>
+  <% end %>   
+<% else %> 
+  <% if course_module.resource_format == "Image" %>
+    <%= image_tag course_module.attachment, :width=>"100%" %>
+  <% else %>
+    <%= link_to "View Attachment", course_module.attachment.url %>      
+  <% end %>
+<% end %>
+
+<style>
+  /* CSS for module detailed description */
+  .module-big-desc{
+    font-weight:bold;font-size:14px;margin-top:15px;margin-bottom:5px;
+  }
+</style>

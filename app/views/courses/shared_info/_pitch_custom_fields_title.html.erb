@@ -1,0 +1,14 @@
+<% klass = "Pitch".constantize;
+    ankor = "pitch";
+    outer_wrap = {tag: :tr, klass: "value_line custom_tr"};
+    label_wrap = {tag: :td, klass: "label_row"};
+    field_wrap = {tag: :td, klass: ""}; 
+    field_class = "form-control"%>
+<% branch_select_fields = @custom_branch_field ? "branch_select_fields" : "" %>
+<% count = count%>
+<% @custom_fields.each_with_index do |custom_field,index| %>
+  <% count = count+1%>
+  <% required = (custom_field.present? && custom_field.required) ? "required" : "" %>
+  <% label_mand_class = required == "required" ? "mend_field_label" : ""%>
+  <a href="#" data-id="<%=custom_field.id %>" data-focus="<%="pitch_custom_fields_#{custom_field.code}"%>" data-href="<%="#{polymorphic_path([@program, @course, @activity.course_module, @activity, :show_exercise])}?pitch_id=#{params[:pitch_id]}&custom_field_id=pitch_custom_fields_#{custom_field.code}"%>" class="check-course-task"><li><%= count%>. <%= custom_field.label %></li></a>    
+<% end %>

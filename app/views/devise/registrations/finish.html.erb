@@ -1,0 +1,85 @@
+<% content_for :title do %>
+  <%= "Finish Registration" %>
+<% end %>
+<%= render "devise/shared/navbar", page: "finish" %>
+<% @program ||= (!!context_program ? context_program : nil)%>
+<div id="rightcontent" class="two_sided_right_content" style="float: none;">
+  <% unless @user.confirmed? %>
+		<div class="alert alert-warning error">
+			<strong>Please confirm your email.</strong>
+			<br />
+			Please click on the link sent to you in the verification email in order to confirm your account.
+		</div>
+  <% end if false%>
+    <% if @organisation.present? %>
+    	<div class="row">
+				<div class="col-md-12">
+					<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3 class="congratulations">Congratulations!</h3>
+							</div>
+						</div>
+								
+						<div class="panel-body">
+							<%= "#{@organisation.company_name} and your account has been registered successfully.  Please click on the link sent to you in the verification  email in order to confirm your account. Next Apptual team will approve your account, and you will be able to sign in." %>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+      <%= link_to "Go to Application", force_sign_in_path(:id => @user.id, org_id: @organisation.try(:id)), :id => "submit" %>
+    <% elsif @program.present? %>
+    	<div class="row">
+				<div class="col-md-12">
+					<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3 class="congratulations">Terms and Conditions</h3>
+							</div>
+						</div>
+								
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<%= terms_and_conditions_message(@program, @user.roles_string_for(@program.id)) %>
+									<br />
+									<%= @program.program_summary.try(:terms).try(:html_safe) %>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<%= link_to "Accept", force_sign_in_path(:id => @user.id, prg_id: @program.id, role: @role_code), :id => "submit", :class=>"pull-right" %>
+				          <%= link_to "Decline", params[:references] ? program_path(params[:references][:for]) : root_path, :id => "submit", :class=>"pull-right", :style=>"margin-right:10px;" %>
+				          <div class="clear"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+    <% elsif @org.present? %>
+    	<div class="row">
+				<div class="col-md-12">
+					<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+						<div class="panel-heading">
+							<div class="panel-title title_option">
+								<h3 class="congratulations">Terms and Conditions</h3>
+							</div>
+						</div>
+								
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<%= @org.eco_summary.try(:terms).try(:html_safe) %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+			<%= link_to "Go to Application", force_sign_in_path(:id => @user.id), :id => "submit" %>
+    <% else %>
+      <%= link_to "Go to Application", force_sign_in_path(:id => @user.id), :id => "submit" %>
+    <% end %>

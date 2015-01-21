@@ -1,0 +1,45 @@
+<%@program = get_domain_branding(request.host)%>
+<% content_for :title do %>
+  <%= "Lost Password" %>
+<% end %>
+<% content_for :navigation do %>
+  <div id="mainnavi">
+		<div class="clr"></div>
+  </div>
+<% end %>
+<% content_for :sidebar do %>
+  <div id="sidebar"></div>
+<% end %>
+<div id="rightcontent" class="two_sided_right_content" style="float: none;">
+  <% if notice %>
+    <div class="alert alert-warning"><%= notice%></div>
+  <% else %>
+   <div class="alert alert-warning">Please enter your email address. You will receive a link to create a new password via email.</div>
+  <% end %>		
+		<div id="content" role="main" class="block">
+      <h2 class="titleLine">Lost Password</h1>
+      <div class="entry-content">
+			  <div class="login" id="theme-my-login">
+          <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => "reqForm" }) do |f| %>
+  				<%= devise_error_messages! %>
+		        <p class="form-group">
+		          <%= f.label :email, "E-Mail" %>
+              <%= f.email_field :email, :autofocus => true, :class => "input form-control", :size => "30" %>
+              <%#= hidden_field_tag "program_id", params[:program]%>
+		        </p>
+		        <div class="submit">
+		          <%= f.submit "Get New Password", :id=>"submit", :style=>"float:left;margin-left:150px;" %>
+							<div class="clear"></div>
+		        </div>
+          <% end %>
+					<hr />
+          <ul class="tml-action-links">
+            <li>
+              <%= render "devise/shared/links" %>
+							<div class="clear"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</div>

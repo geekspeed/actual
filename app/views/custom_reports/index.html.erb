@@ -1,0 +1,45 @@
+<%= javascript_include_tag "jquery.collapsiblepanel" %>
+<%= render "shared/bs_navbar"%>
+
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+    <h2 class="titleLine title-normal"><span>All Reports</span></h2>
+    <div class="row">
+      <div class="col-md-12">
+        <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+          <thead>
+            <tr role="row">
+              <th aria-label="Student Name: activate to sort column ascending" style="width: 300px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Report Name</th>
+              <th aria-label="Average Grade: activate to sort column ascending" style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Type</th>
+              <th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Date Created</th>
+              <th aria-label="Actions: activate to sort column ascending" style="width: 200px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Action</th>
+            </tr>
+          </thead>
+          <% @custom_reports.each do |report|%>
+            <tbody aria-relevant="all" aria-live="polite" role="alert">
+              <tr class="odd">
+                <td><%= report.name%></td>
+                <td><%= report.type%></td>
+                <td><%= report.created_at%></td>
+                <td>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      Action <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="<%=polymorphic_path([:edit, context_program, report])%>">Edit</a></li>
+                      <li><%= link_to "Print", send_report_program_custom_report_path(@program, report.id)%></li>
+                      <li><%= link_to "Preview", [:preview, @program, report], target: "_blank"%></li>
+                      <li class="divider"></li>
+                      <li><%= link_to "Delete", [@program, report], :method => :delete%></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<% page = "ecosystem"; ppage = "ecosystem" %>
+<% if params[:ecosystem] == "true" %>
+  <%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<%end%>
+
+<% background_color = current_organisation.try(:background_color) || "#17a3bf" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#17a3bf" %>
+<style type="text/css">
+.pitch-by:hover, .pitch-title a{
+color:<%= menubar_color %>;
+}
+.s_details p {
+
+}
+.admin_section_feature{
+color: <%= menubar_color %> !important;
+}
+.admin_section_feature_container .glyphicon{
+color: <%= menubar_color %> !important;
+}
+.col-md-4 {
+    width: 32%;
+}
+</style>
+
+<div id="rightcontent">
+  <div class="masonry js-masonry" id="masonry_container" data-masonry-options='{ "columnWidth":".pitch-col", "itemSelector": ".pitch-col", "gutter": 10 }'>
+      <% @organisations.each do |organisation| %>
+        <%= render "organisation", organisation: organisation %>
+      <% end %>
+  </div>
+</div><!-- #rightcontent -->
+<% content_for :sidebar do %>
+      <%= javascript_include_tag "classie" %>
+      <%= javascript_include_tag "gnmenu" %>
+      <script>
+      $(document).ready(function(){
+        new gnMenu( document.getElementById( 'gn-menu' ) );
+      });
+</script>
+      
+  <% end %>
+<script type="text/javascript">
+    $(window).load(function(){
+        var $container = $('.js-masonry');
+        $container.masonry();
+    })
+    
+</script>

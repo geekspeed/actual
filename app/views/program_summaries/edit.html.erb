@@ -1,0 +1,298 @@
+<% page = "setup_program"; ppage = "summary"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+
+<%#= render "shared/navbar", :page => "setup_program" %>
+<%#= render "shared/program_setup_sidebar", :page => "summary" %>
+
+<div class="row page_head">
+	<div class="col-md-8">
+		<h3>
+			<i class="gn-icon gn-icon-file gn-icon-large"></i>
+			Program Summary
+			<i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Program summary lets you customise the front page of your program"></i>
+		</h3>
+	</div>
+	<div class="col-md-4 breadcrumb">
+		<a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Program summary</a>
+	</div>
+</div>
+<div class="row main-row">
+<div id="" class="col-md-10 main-right-section">
+	<%= render "shared/flash" %>
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+  <%= render "add_url"%>
+  <%= form_for(@summary, :url => program_summary_path(@program), :html => {:class => "reqForm no_float"}) do |f| %>
+    <%= render "form", :f => f %>
+  <% end %>
+</div>
+<div class="col-md-2 stick_me">
+		<ul class="navigator-menu">
+			<li id="nav_sec1" class="active-navigator-title">
+				<p>Main Section</p>
+				<ul>
+					<li><a href="#sec1">Program Visual</a></li>
+					<li><a href="#sec2">Overview</a></li>
+					<li><a href="#sec3">Terms &amp; Conditions Message</a></li>
+					<li><a href="#sec19">Welcome Message</a></li>
+					<li><a href="#sec4">Social Links</a></li>
+					<li><a href="#sec5">Privacy Policy</a></li>
+				</ul>
+			</li>
+			<li id="nav_sec2">
+				<p>Custom Section</p>
+				<ul>
+					<li><a href="#sec6">Program Plan</a></li>
+					<li><a href="#sec7">Goal</a></li>
+					<li><a href="#sec8">Entry Citeria</a></li>
+					<li><a href="#sec9">Terms</a></li>
+					<li><a href="#sec10">Partners</a></li>
+					<li><a href="#sec11">Quotes</a></li>
+					<li><a href="#sec12">Free Form</a></li>
+					<li><a href="#sec13">Case Study</a></li>	
+					<li><a href="#sec14">Judging Criteria</a></li>
+					<li><a href="#sec15">Blog</a></li>
+					<li><a href="#sec16">Free Form (html) 1</a></li>
+					<li><a href="#sec17">Free Form (html) 2</a></li>
+					<li><a href="#sec17">Free Form (html) 3</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+ <style>
+.column .portlet .portlet-header{
+  cursor:pointer;
+}
+.column {
+width: 100%;
+overflow-y: hidden;
+}
+
+.portlet {
+margin-bottom:1em;
+border:0px;
+} 
+.portlet-header h2.titleLine {
+padding-top:6px;
+padding-bottom:6px;
+border-bottom: 0px;
+line-height: 0px;
+margin-bottom: 0px;
+margin-top: 0px;
+}
+.portlet-header {
+border:0px;
+box-shadow: 1px 1px 5px #CCCCCC;
+-moz-box-shadow: 1px 1px 5px #CCCCCC;
+-webkit-box-shadow: 1px 1px 5px #CCCCCC;
+border-radius:0;1px 1px 5px #CCCCCC;
+position: relative;
+}
+.portlet-toggle {
+position: absolute;
+top: 50%;
+right: 0;
+margin-top: -8px;
+}
+.portlet-placeholder {
+border: 1px dotted black;
+margin: 0 1em 1em 0;
+height: 42px;
+}
+label.section-title{ font-size:18px;}
+a.doc_upload:hover{
+  text-decoration: underline;
+  color:#017FB2
+}
+
+a.doc_upload{
+  color:#2B542C; 
+}
+.input-size1 {
+    width: 196px;
+}
+.two_sided_right_content {
+    margin: 20px 0 0 80px !important;
+    width: 73% !important;
+}
+</style>
+<% if @summary.program_summary_order.try(:order).present? %>
+   <% order = @summary.program_summary_order.order.gsub("-",",").split(",") %>
+   <% program_summary_arrange_order = Hash[*order].values %>
+   <% program_summary_arrange_order = (raw program_summary_arrange_order) %>
+<% end %>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript" charset="utf-8">
+ $(function() {
+<% if @summary.program_summary_order.try(:order).present? %>
+    var arrValuesForOrder = <%= program_summary_arrange_order %>;
+    var div = $("div.column"),
+        items = $("div.column div.portlet");
+
+    for (var i = arrValuesForOrder.length - 1; i >= 0; i--) {
+        // arrValuesForOrder[i] element to move
+        // i = index to move element at
+        div.prepend(items.get(arrValuesForOrder[i] - 1));
+    }
+  <% end %>
+  $('div.column').sortable({
+    stop: function(event, div) {
+      var order_list = $("div.column").sortable('toArray');
+        $("#program_summary_program_summary_order_attributes_order").val(order_list)
+      },
+  });
+  $( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+  });
+  $( ".portlet" )
+  .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+  .find( ".portlet-header" )
+  .addClass( "ui-widget-header ui-corner-all" )
+  .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+  $( ".portlet-toggle" ).click(function() {
+    var icon = $( this );
+    icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+    icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+    });
+  });
+  
+  $('.summernote').summernote();
+  // bkLib.onDomLoaded(function() {
+    // new nicEditor().panelInstance('overview');
+  // });
+  Array.prototype.diff = function(a) {
+    return this.filter(function(i) {return !(a.indexOf(i) > -1);});
+}; 
+  $(document).ready(function() {
+    $(document).on('click', ".fetch_events", function(e){
+      e.preventDefault();
+      current_btn = $(this)
+      current_btn.addClass("disabled");
+      current_btn.text("Please wait...")
+      $.ajax({
+        url: $(this).attr("data-url"),
+        type: 'GET',
+        success: function(data){
+          current_btn.removeClass("disabled");
+          current_btn.text("Fetch Events")
+          if (data.status == "No events found for this user."){
+			alert(data.status);
+		}
+		else{
+			$('#events').html(data)
+              $('#fetch_events').trigger('click');
+		}
+        },
+        error: function(){
+	  	$('.add_user_key_btn').removeClass("disabled");
+          $('.add_user_key_btn').text("Add")
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      });
+    });
+    $(document).on('click', ".create_events_btn", function(e){
+      e.preventDefault();
+      $('.create_events_btn').addClass("disabled");
+      $('.create_events_btn').text("Please wait...")
+      checked = $(".check_evenbrite_event:checked");
+      data = new Array();
+      for(i = 0; i < checked.length; i++){
+          data.push(checked[i].dataset["eventId"]);
+      }
+      $.ajax({
+        url: $(this).attr("data-url"),
+        type: 'POST',
+        data: {event_ids: data},
+        success: function(data){
+          window.location.reload();
+        },
+        error: function(){
+          $('.create_events_btn').removeClass("disabled");
+          $('.create_events_btn').text("Add")
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      });
+    });
+    $(document).on('click', ".fetch_attendees", function(e){
+      e.preventDefault();
+      $.ajax({
+        url: $(this).attr("data-url"),
+        type: 'GET',
+        success: function(data){
+              $('#attendees').html(data)
+              $('#fetch_events_attendees').trigger('click');
+        },
+        error: function(){
+          alert('Request failed. Sorry, we are analyzing the cause of this problem');
+        }
+      });
+    });
+    $(document).on('click', ".attending_list_btn", function(e){
+      e.preventDefault();
+      $('#not_attending_list').hide()
+      $('#attendees_list').show()
+    });
+    $(document).on('click', ".not_attending_list_btn", function(e){
+      e.preventDefault();
+      $('#attendees_list').hide()
+      $('#not_attending_list').show()
+    });
+  	$(".stick_me").stick_in_parent({
+			parent: $(".two_sides_content"),
+			offset_top: 120
+		});
+		
+		$('.help-sign').tooltip();
+  });
+
+	$("form").on("click", ".js_inline_edit", function(e){
+	  $(this).siblings("input").show();
+	  $(this).siblings("span").hide();
+	  $(this).hide();
+	  e.preventDefault();
+	});
+
+  	$("form").on("click", ".click_focus", function(e){
+	  $(this).focus();
+	  e.preventDefault();
+	});
+	
+	// $(function(){
+    // var sections = {},
+        // _height  = $(window).height(),
+        // i        = 0;
+//     
+    // // Grab positions of our sections 
+    // $('.section_nav').each(function(){
+        // sections[this.name] = $(this).offset().top;
+    // });
+// 
+    // $(document).scroll(function(){
+        // var $this = $(this),
+            // pos   = $this.scrollTop();
+//             
+        // for(i in sections){
+            // if(sections[i] > pos && sections[i] < pos + _height){
+                // $('.navigator-menu li.active-navigator-title').removeClass('active-navigator-title');
+                // $('#nav_' + i).addClass('active-navigator-title');
+            // }  
+        // }
+    // });
+//     
+// });
+
+$('.navigator-menu li ul li a').click(function(){
+    	$('.navigator-menu li ul li').removeClass('active-navigator-section');
+    	$('.navigator-menu li').removeClass('active-navigator-title');
+    	$(this).parent().addClass('active-navigator-section');
+    	$(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 100
+    }, 500);
+    
+    return false;
+});
+</script>

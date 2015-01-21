@@ -1,0 +1,348 @@
+<% content_for :title do %>
+<%= "#{context_program.try(:title)} - Workspace" %>
+<% end %>
+<% page = "setup_program"; ppage = "workspace"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-doc gn-icon-large"></i>
+      Workspace
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Workspace lets you customize the workspace in which each project takes place"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Workspace</a>
+  </div>
+</div>
+<div class="row main-row">
+<div class="col-md-10 main-right-section">
+  <h2 class="titleLine title-normal"><span>Main section</span></h2>
+    <%= form_for(@workspace, :url => polymorphic_path([context_program, :workspace, :index]), :html => {:class => "reqForm no_float", :method=>"post"}) do |f| %>
+      <a href="#sec1" name="sec1" class="section_nav"></a>
+      <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <h3>Left Hand side menu</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body">        
+            <div class="panel-body-title">
+              <h3>Overview</h3>
+              </div>
+             <table class="settings table table-workspace">
+                <tr>
+                  <td class="lbl">
+                    <div style="font-weight: bold;font-size:13px; margin-bottom: 10px;overflow: hidden;">                
+                      <span>
+                        <%= f.object.left_buzz.blank? ? "Project Feed" : f.object.left_buzz %>
+                      </span>
+                        <%= f.text_field :left_buzz, style: "display:none", class: "form-control input-size1" %>
+                    </div>
+                  </td>  
+                  <td style="width: 200px">
+                    <div class="pull_left">
+                      <%= link_to "", "#", class: "js_inline_edit_workspace edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+                    </div>
+                  </td>
+                </tr>     
+                <tr>
+                  <td class="lbl">
+                    <div style="font-weight: bold;font-size:13px; margin-bottom: 10px;overflow: hidden;">                
+                      <span>
+                        <%= f.object.left_milestone.blank? ? "Milestones" : f.object.left_milestone %>
+                      </span>
+                      <%= f.text_field :left_milestone, style: "display:none", class: "form-control input-size1" %>
+                    </div>
+                  </td>  
+                  <td style="width: 200px">
+                      <div class="pull_left">
+                        <%= link_to "", "#", class: "js_inline_edit_workspace edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+                      </div>
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :left_to_do_list, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_left_to_do_list_true" %>
+
+                      <%= f.radio_button :left_to_do_list, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_left_to_do_list_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Feedback</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :left_feedback, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_left_feedback_true" %>
+
+                      <%= f.radio_button :left_feedback, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_left_feedback_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Contacts</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :left_contacts, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_left_contacts_true" %>
+
+                      <%= f.radio_button :left_contacts, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_left_contacts_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Survey</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :left_survey, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_left_survey_true" %>
+
+                      <%= f.radio_button :left_survey, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_left_survey_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Team</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :left_team, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_left_team_true" %>
+
+                      <%= f.radio_button :left_team, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_left_team_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">
+                    <div style="font-weight: bold;font-size:13px; margin-bottom: 10px;overflow: hidden;">                
+                      <span>
+                        <%= f.object.left_event.blank? ? "Events" : f.object.left_event %>
+                      </span>
+                        <%= f.text_field :left_event, style: "display:none", class: "form-control input-size1" %>
+                    </div>
+                  </td>  
+                  <td style="width: 200px">
+                    <div class="pull_left">
+                      <%= link_to "", "#", class: "js_inline_edit_workspace edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+                    </div>
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :hide_events_tab, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_hide_events_tab_true" %>
+
+                      <%= f.radio_button :hide_events_tab, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_hide_events_tab_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <a href="#sec2" name="sec2" class="section_nav"></a>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <h3>Right Hand side menu</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body">            
+            <div class="panel-body-title">
+              <h3>To do</h3>
+              </div>             
+            <table class="settings table table-workspace ">
+                <tr>
+                  <td class="lbl">Workflow</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :right_workflow, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_right_workflow_true" %>
+
+                      <%= f.radio_button :right_workflow, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_right_workflow_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Team</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :right_team, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_right_team_true" %>
+
+                      <%= f.radio_button :right_team, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_right_team_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="lbl">Skills Needed</td>
+                  <td style="width: 200px">
+                    <div class="radioset pull_left">
+                      <%= f.radio_button :right_skills_needed, "true" %>
+                      <%= f.label "Enable", :for => "#{f.object_name}_right_skills_needed_true" %>
+
+                      <%= f.radio_button :right_skills_needed, "false" %>
+                      <%= f.label "Disable", :for => "#{f.object_name}_right_skills_needed_false" %>
+                      <div class="clr"></div>
+                    </div>
+                  </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <a href="#sec4" name="sec4" class="section_nav"></a>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <h3>Recommended Actions</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body">            
+            <div class="panel-body-title">
+              <h3>To do</h3>
+              </div>             
+            <table class="settings table table-workspace ">
+                <tr>
+                  <td class="lbl">
+                      <div style="font-weight: bold;font-size:13px; margin-bottom: 10px;overflow: hidden;">                
+                        <span>
+                          <%= f.object.to_do_list_join_this_team_txt.blank? ? "I would like to join this team" : f.object.to_do_list_join_this_team_txt %>
+                        </span>
+                          <%= f.text_field :to_do_list_join_this_team_txt, style: "display:none", class: "form-control input-size1" %>
+                      </div>
+                    </td>
+                    <td style="width: 200px">
+                      <div class="pull_left">
+                        <%= link_to "", "#", class: "js_inline_edit_workspace edit_btn glyphicon glyphicon-pencil", title:"Edit" %>
+                      </div>
+                      <div class="radioset pull_left">
+                        <%= f.radio_button :to_do_list_join_this_team, "true" %>
+                        <%= f.label "Enable", :for => "#{f.object_name}_to_do_list_join_this_team_true" %>
+                        <%= f.radio_button :to_do_list_join_this_team, "false" %>
+                        <%= f.label "Disable", :for => "#{f.object_name}_to_do_list_join_this_team_false" %>
+                        <div class="clr"></div>
+                      </div>
+                    </td>
+                  </tr>                  
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <a href="#sec3" name="sec3" class="section_nav"></a>
+      <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <h3>To do list help text</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body">        
+            <%= f.text_area :todo_list_help, :class=> "form-control summernote", :style=>"width:100%" %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <%= f.submit "Save Workspace", :id=>"submit"%>    
+    <br/>
+  <% end %>
+</div>
+<div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1">Left Hand side menu</a></li>
+          <li><a href="#sec2">Right Hand side menu</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .panel-body-title h3 {
+    font-weight: bold;
+    font-size: 19px;
+    color: #373E4A;
+    padding:8px;
+  }
+  .workspace .panel-body{ width:55%;}
+  table.table-workspace td.lbl, table.table-workspace td.lbl span{
+    font-weight: bold;
+    color: #373E4A;
+    font-size: 14px;
+  }
+</style>
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script>
+  $(".summernote").summernote()
+  $("form").on("click", ".js_inline_edit_workspace", function(e){
+      $(this).parent().parent().parent().find(".lbl input").show();
+      $(this).parent().parent().parent().find(".lbl span").hide();
+      $(this).hide();
+      e.preventDefault();
+    });
+  jQuery(document).ready(function($){ 
+    $('.collapses').collapsiblePanel();
+    $(".ui-expander").click(function(e){
+          e.preventDefault(); 
+      });
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 305
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

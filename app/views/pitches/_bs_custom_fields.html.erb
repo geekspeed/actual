@@ -1,0 +1,156 @@
+<div class="row">
+  <div class="col-md-12">     
+    <%public = show_pitch_field(@pitch, custom_field, current_organisation, context_program, current_user)%>
+    <% show_it = (public && pitch_visibility_to_team(current_user, custom_field, @pitch, current_organisation) )%>
+    <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+      <a class="scroll-link" name="<%= custom_field.label %>">&nbsp;</a>
+
+      <div class="panel-heading relative_panel_head">
+        <div class="panel-title title_option">
+          <h3><label><%= custom_field.label %><%if (@pitch.team_and_mentor?(current_user) and params[:action] == "edit") or need?(["company_admin", "program_admin"], current_organisation)%><%= image_tag("/images/icons/lock_encrypted.png", :style =>"margin-top: 2px;width: 20px;", :title=>"Private Field", :class=>"pull-right" ,"data-toggle"=>"tooltip") if custom_field.private_to_team? %><% end %><%= render "pitch_privacy", f: f, custom_field: custom_field, pitch: @pitch if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) or need?(["company_admin", "program_admin"], current_organisation) %><%= link_to("<i class='glyphicon glyphicon-question-sign help-sign'></i>".html_safe, "#", :"data-text-for" => "pitch", :"data-url" => show_help_content_program_help_contents_path(@program), :"data-field-name" => custom_field.code, :"data-custom-field-id" => custom_field.id, :class => "show_help_text_pitch no_background_color", :style =>"height:22px;width:22px;float:right;") if show_help_icon(@program, "pitch", custom_field.code, custom_field.id)%></label></h3>
+        </div>
+        <div class="panel-options">
+          <a href="#iterations" class="panel-options-link open-first-level-control">
+            <i class="glyphicon glyphicon-repeat"></i> Last iteration on 
+            <% if @pitch.custom_iterations.iteration_for(custom_field.id).where(:user_id.ne => nil).try(:last).blank? %>
+              <%= custom_field.updated_at.app_format %> 
+            <% else %>
+              <%= @pitch.custom_iterations.iteration_for(custom_field.id).where(:user_id.ne => nil).try(:last).updated_at.app_format %>
+            <% end %>
+          </a>
+          <a href="#all_feedbacks<%=custom_field.id%>" class="panel-options-link open-all-control">
+            <i class="glyphicon glyphicon-comment"></i> <%= feedback_view(@pitch.custom_feedbacks.feedback_for(custom_field.id).count) %>
+          </a>
+          <a data-toggle="<%= show_it ? "collapse" : "tooltip" %>" data-parent="#accordion" title="<%= show_it ? "" : "private field" %>" href="#-" class="<%= show_it ? "ui-expander gn-icon gn-icon-chevron-down" : "ui-expander-design-fix gn-icon gn-icon-lock" %>">
+          </a>
+        </div>
+      </div>
+      <div style="display:none;" class="panel-body" id="collapse-additional-info<%=custom_field.id%>">
+        <div class="row">
+          <div class="col-sm-12 last-iter-links">
+            <!--<span class="my-iteration">Last iteration on <%=@pitch.created_at.app_format%></span>-->
+           <a href="#all_iterations<%=custom_field.id%>" class="fancybox all-iterations pull-right"><i class="glyphicon glyphicon-repeat"></i> <%= iteration_view(@pitch.custom_iterations.iteration_for(custom_field.id).count) %></a>
+          </div>
+          <div class="col-sm-12">
+            <div class="customArea<%=custom_field.id%>">
+              <p class="last-iter-box">
+                <i class="fa icon-quote-left"></i>
+                  <% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+                  <% custom_field_content = @pitch.send(custom_field.code.to_sym)%>
+                  <% if custom_field_content.present? and (custom_field.element_type == "video_url" or custom_field.element_type == "sound_url" or custom_field.element_type == "image_url") and !custom_field_content.scan(/~^(?:f|ht)tps?:/i).present? %>
+                    <% emb_obj = emb_api.extract(:url => custom_field_content, :maxwidth => 525)%>
+                    <%= show_attachment(emb_obj)%>
+                  <% else %>
+                    <%= custom_field_content.present? ? custom_field_content.gsub(/\r\n/, "<br>").html_safe : "" %>
+                  <% end  %>
+                  <% if (((params[:action] == "edit" && @pitch.team?(current_user)) || @pitch.owner?(current_user)) and !submit_deadline?(@pitch)) and !@program.program_scope.try(:stop_editing_fields) or need?(["company_admin", "program_admin"], current_organisation)%>
+                    <%= link_to "<i class=\"icon icon-edit\"></i>".html_safe, "#", class: "editCustomField triangle-edit", :data_custom_field_id => "#{custom_field.id}"%>
+                  <% end %>
+                <i class="fa icon-quote-right"></i>
+              </p>
+            </div> 
+
+            <div class="editable_custom_field_div<%=custom_field.id%>" style='display:none'>
+              <div class="">  
+                <div class="editcustomfieldvalue">
+                   <div class="met_row">
+                    <div class="comment_row">
+                      <%= hidden_field_tag "custom_content#{custom_field.id}", custom_field_content%>
+                      <%= text_area_tag "new_content#{custom_field.id}", custom_field_content, :class => "pitch_feedback_text"%> 
+                      <div class="editcustomfieldvalue">
+                        <%= link_to "Save", "#", :class=>"btn button reload-page sub-btn pull-right custom_edit_btn textarea_submit_btn", :data_custom_field_id => "#{custom_field.id}"%>                  
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+            </div>
+            <br>
+
+
+            <div class="row">
+              <%= content_tag :div, :class => "col-md-12" do%>
+                <div class="panel panel-none ui-widget collapses" data-collapsed="0">
+                  <div class="panel-heading relative_panel_head">
+                    <div class="panel-title title_option">
+                      <h3><i class="glyphicon glyphicon-comment"></i></h3>
+                      <i class="icon icon-angle-up angle"></i>
+                    </div>
+                    <div class="panel-options">
+                      <% if !@pitch.custom_feedbacks.feedback_for(custom_field.id).where(:user_id.ne => nil).try(:last).blank?%> 
+                        <a href="#all_feedbacks" class="panel-options-link open-first-level-control">
+                          <i class="glyphicon glyphicon-comment"></i> Last feedback on <%= @pitch.custom_feedbacks.feedback_for(custom_field.id).where(:user_id.ne => nil).try(:last).created_at.app_format %>
+                        </a>
+                      <% end %>
+                      <a data-rel="collapse" class="ui-expander gn-icon gn-icon-chevron-down" href="#"></a>
+                    </div>
+                  </div>
+                  <div class="panel-body no-padding feedback-panel" style="display: none;">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <%= content_tag :div, :id => "collapse-summary", :class => "panel-collapse collapse in feedback_group", :style=>"" do%>
+                            <% if !@pitch.custom_feedbacks.feedback_for(custom_field.id).where(:user_id.ne => nil).blank? %>
+                              <% @pitch.custom_feedbacks.feedback_for(custom_field.id).where(:user_id.ne => nil).reverse.each.each_with_index do |feedback, i| %>
+                                  <p class="triangle-right">
+                                    <%= feedback.feedback %> 
+                                    <%= link_to '', program_pitch_pitch_custom_feedback_path(@program,@pitch,feedback), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2 pull-right" if need?(["company_admin"], current_organisation) %>
+                                    <span class="triangle-post"><%= "By #{feedback.user.first_name} #{feedback.user.last_name} on #{feedback.created_at.date_month_year}"%></span>
+                                  </p>
+                                  <br /><br /><br />
+                              <% end %> 
+                            <% else %>
+                              <span class="my-iteration"><i>No Feedback</i></span>
+                              <br><br>
+                            <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>               
+                <% if !submit_deadline?(@pitch) %>
+                  <% if @pitch.user_id != current_user.id %>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <%= text_area_tag :content, "",:placeholder => "Share your feedback to help the team sharpen their big idea", :id => "custom_feedback#{custom_field.id}", :class=>"pitch_feedback_text feedback_textarea"%>
+                        <%= link_to "Post", "#", :class=>"btn button reload-page sub-btn pull-right custom_feedback_post_btn textarea_submit_btn", :data_custom_field_id => "#{custom_field.id}" %>
+                      </div>
+                    </div>
+                  <% end %> 
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback_counter">
+        <div style="display: none" id="all_feedbacks<%=custom_field.id%>">
+          <div class="lightbox_box">
+            <h2><%= custom_field.label %> Feedbacks</h2>
+            <% @pitch.custom_feedbacks.feedback_for(custom_field.id).where(:user_id.ne => nil).reverse.each_with_index do |feed, i| %>
+                <h3 class="iter_heading"><%= "By #{feed.user.first_name} #{feed.user.last_name} on #{feed.created_at.date_month_year}"%></h3>
+                  <div class="previous_iterations">
+                    <%= feed.feedback %>
+                    <p class= "pull-right"><%= link_to '', program_pitch_pitch_custom_feedback_path(@program,@pitch,feed), :method => :delete, :confirm => "Are you sure?", :class => "gn-icon icon-remove2 pull-right" if need?(["company_admin"], current_organisation) %><p>
+                  </div> 
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="iteration_counter">
+        <div style="display: none" id="all_iterations<%=custom_field.id%>">
+          <div class="lightbox_box">
+            <h2>Previous iterations and their learnings</h2>
+            <% @pitch.custom_iterations.iteration_for(custom_field.id).where(:user_id.ne => nil).reverse.each_with_index do |iteration, i| %>
+              <h3 class="iter_heading <%= 'first-child' if i==0 %>"><%= "Iteration on #{iteration.created_at.date_month_year}" %></h3>
+              <div class="previous_iterations">
+                <%= iteration.content %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>

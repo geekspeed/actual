@@ -1,0 +1,12 @@
+<% if @users.present? %>
+  <% @users.each do |user| %>
+    <%= render "person_tile", user: user %>
+  <% end %>
+<% else %>
+  <div class="block">
+    <% term = params[:code].present? ? t("role_type:#{params[:code]}") : "member" %>
+    Sorry, but there is no <%= term %> that meets your requirements, please amend your selection criteria or contact your program administrator<a href="#missing_person" class="send_reminder fancybox_small pull-right">here</a>
+    <%= render "phases/shared/message_all", :code => "company_admins", pitch_id: params[:match] , :recipients => "#{t("role_type:company_admin", "s")}", :anchor_id => "missing_person" %>
+  </div>
+<% end %>
+<div class="clr"></div>

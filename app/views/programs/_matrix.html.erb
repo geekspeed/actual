@@ -1,0 +1,36 @@
+<div class="table-responsive">
+	<table class="table table-striped metric_table table-bordered">
+	    <tr>
+	      <th>&nbsp;</th>
+	      <th style="width: 45%">Description</th>
+	      <% if @program.try(:due_diligence_matrix).try(:star_system?) %>
+	        <th><img src="/images/star.png" /></th>
+	        <th><img src="/images/5star.png" /></th>
+	      <% else %>
+	        <th>Max Points Possible</th>
+	      <% end %>
+	    </tr>
+	    <% index = 0 %>
+	    <% @program.try(:due_diligence_matrix).try(:matrices).try(:each) do |metric| %>
+	      <%= content_tag :tr do %>
+	        <% index += 1 %>
+	        <td class="vertical-text" valign="center"><p><%= "Criteria #{index}" %></p></td>
+	        <td valign="center">
+	          <%= metric.description %>
+	        </td>
+	        <% if @program.due_diligence_matrix.star_system? %>
+	          <td valign="center">
+	            <span class="label label-default"><%= metric.try :one_star %></span>
+	          </td>
+	          <td valign="center">
+	            <span class="label label-warning"><%= metric.try :five_star %></span>
+	          </td>
+	        <% else %>
+	          <td valign="center">
+	            <span class="label label-warning"><%= metric.try :max_points %></span>
+	          </td>
+	        <% end %>
+	      <% end unless metric.description.blank? %>
+	    <% end %>
+	</table>
+</div>

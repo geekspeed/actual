@@ -1,0 +1,192 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Pending Approvals" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "pre_application"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+<%= render "shared/flash"%>
+
+<% is_subdomain = valid_subdomain(current_subdomain)%>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-busy gn-icon-large"></i>
+      Pending Approvals
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Pending Approvals lets you manage approvals for people applying to join the program"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">Pending Approvals</a>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+
+    <% if !@participants.empty? || !@mentors.empty? %>
+      <div class="row ">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-heading relative_panel_head ">
+              <div class="panel-title title_option">
+                <h3><%= content_tag :label, "#{Semantic.t(@program, "role_type:participant", "p").present? ? Semantic.t(@program, "role_type:participant", "p") : 'Participant(s)'} Approval"%></h3>
+              </div>
+              <div class="panel-options">
+                <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+              </div>
+            </div>
+            <div style="" class="panel-body">
+              <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+                <tbody>
+                  <% @participants.each do |participant|%>
+                    <tr class="odd">
+                      <td class="radio-table-cell1"><%= link_to "#{participant.first_name} #{participant.last_name}", user_path(participant) %></td>
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-ban-circle'></i> Decline".html_safe, (is_subdomain ? decline_user_program_url(@program, :user_id => participant.id, :role => "participant", subdomain: false) : decline_user_program_url(@program, :user_id => participant.id, :role => "participant")), :id => "", :class=>"btn btn-danger btn-sm btn-icon icon-left"%>
+                        <%= link_to "<i class='glyphicon glyphicon-ok'></i> Approve".html_safe, (is_subdomain ? approve_user_program_url(@program, :user_id => participant.id, :role => "participant", subdomain: false) : approve_user_program_url(@program, :user_id => participant.id, :role => "participant")), :id => "", :class=>"btn btn-success btn-sm btn-icon icon-left"%>
+                      </td>
+                    </tr>
+                  <% end if !@participants.empty?%>
+                </tbody>
+              </table>
+            </div><!-- panel-body -->
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row ">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-heading relative_panel_head ">
+              <div class="panel-title title_option">
+                  <h3><%= content_tag :label, "#{Semantic.t(@program, "role_type:mentor", "p").present? ? Semantic.t(@program, "role_type:mentor", "p") : 'Mentor(s)'} Approval"%></h3>
+              </div>
+              <div class="panel-options">
+                <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+              </div>
+            </div>
+            <div style="" class="panel-body">
+              <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+                <tbody>
+                  <% @mentors.each do |mentor|%>
+                    <tr class="odd">
+                      <td class="radio-table-cell1"><%= link_to "#{mentor.first_name} #{mentor.last_name}", user_path(mentor) %></td>
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-ban-circle'></i> Decline".html_safe, (is_subdomain ? decline_user_program_url(@program, :user_id => mentor.id, :role => "mentor", subdomain: false) : decline_user_program_url(@program, :user_id => mentor.id, :role => "mentor")), :id => "", :class=>"btn btn-danger btn-sm btn-icon icon-left"%>
+                        <%= link_to "<i class='glyphicon glyphicon-ok'></i> Approve".html_safe, (is_subdomain ? approve_user_program_url(@program, :user_id => mentor.id, :role => "mentor", subdomain: false) : approve_user_program_url(@program, :user_id => mentor.id, :role => "mentor")), :id => "", :class=>"btn btn-success btn-sm btn-icon icon-left"%>
+                      </td>
+                    </tr>
+                  <% end if @program.mentor_allowed and !@mentors.empty? %>
+                </tbody>
+              </table>
+            </div><!-- panel-body -->
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%= content_tag :h1, "No pending approvals for this program"%>
+    <% end %>
+    <br>
+    <br>
+    <% if !@rejected_participants.empty? || !@rejected_mentors.empty? %>
+      <div class="row ">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-heading relative_panel_head ">
+              <div class="panel-title title_option">
+                <h3><%= content_tag :label, "#{Semantic.t(@program, "role_type:participant", "p").present? ? 'Rejected ' + Semantic.t(@program, "role_type:participant", "p") : 'Rejected Participant(s)'}"%></h3>
+              </div>
+              <div class="panel-options">
+                <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+              </div>
+            </div>
+            <div style="" class="panel-body">
+              <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+                <tbody>
+                  <% @rejected_participants.each do |participant|%>
+                    <tr class="odd">
+                      <td class="radio-table-cell1"><%= link_to "#{participant.first_name} #{participant.last_name}", user_path(participant) %></td>
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-ok'></i> Profile".html_safe, user_path(participant), :class=>"btn btn-success btn-sm btn-icon icon-left"%>
+                        <%= link_to "<i class='glyphicon glyphicon-ban-circle'></i> Delete".html_safe, (is_subdomain ? delete_user_program_url(@program, :user_id => participant.id, :role => "participant", subdomain: false) : delete_user_program_url(@program, :user_id => participant.id, :role => "participant")), :id => "", :class=>"btn btn-danger btn-sm btn-icon icon-left"%>
+                      </td>
+                    </tr>
+                  <% end if !@rejected_participants.empty?%>
+                </tbody>
+              </table>
+            </div><!-- panel-body -->
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row ">
+        <div class="col-md-12">
+          <div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+            <div class="panel-heading relative_panel_head ">
+              <div class="panel-title title_option">
+                <h3><%= content_tag :label, "#{Semantic.t(@program, "role_type:mentor", "p").present? ? 'Rejected ' + Semantic.t(@program, "role_type:mentor", "p") : 'Rejected Mentor(s)'}"%></h3>
+              </div>
+              <div class="panel-options">
+                <a href="#" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+              </div>
+            </div>
+            <div style="" class="panel-body">
+              <table id="table-2" class="table table-bordered table-striped datatable dataTable program-type-table" aria-describedby="table-2_info">
+                <tbody>
+                  <% @rejected_mentors.each do |mentor|%>
+                    <tr class="odd">
+                      <td class="radio-table-cell1"><%= link_to "#{mentor.first_name} #{mentor.last_name}", user_path(mentor) %></td>
+                      <td>
+                        <%= link_to "<i class='glyphicon glyphicon-ok'></i> profile".html_safe, user_path(mentor), :class=>"btn btn-success btn-sm btn-icon icon-left"%>
+                        <%= link_to "<i class='glyphicon glyphicon-ban-circle'></i> Delete".html_safe, (is_subdomain ? delete_user_program_url(@program, :user_id => mentor.id, :role => "mentor", subdomain: false) : delete_user_program_url(@program, :user_id => mentor.id, :role => "mentor")), :id => "", :class=>"btn btn-danger btn-sm btn-icon icon-left"%>
+                      </td>
+                    </tr>
+                  <% end if @program.mentor_allowed and !@rejected_mentors.empty? %>
+                </tbody>
+              </table>
+            </div><!-- panel-body -->
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%= content_tag :h1, "No rejected users for this program"%>
+    <% end %>
+		<!-- <div class="block">
+		  <% if !@participants.empty? || !@mentors.empty? %>
+		    <%= content_tag :div do%>
+		      <%= content_tag :h3, "#{Semantic.t(@program, "role_type:participant", "p").present? ? Semantic.t(@program, "role_type:participant", "p") : 'Participant(s)'} Approval"%>
+		      <% @participants.each do |participant|%>
+		        <div style="height:35px;">
+		          <%= link_to "#{participant.first_name} #{participant.last_name}", user_path(participant) %>
+		          <div class="pull-right" style="margin-left: 10px;">
+		            <%= link_to "Decline", (is_subdomain ? decline_user_program_url(@program, :user_id => participant.id, :role => "participant", subdomain: false) : decline_user_program_url(@program, :user_id => participant.id, :role => "participant")), :id => "submit"%>
+		          </div>
+		          <div class="pull-right">
+		            <%= link_to "Approve", (is_subdomain ? approve_user_program_url(@program, :user_id => participant.id, :role => "participant", subdomain: false) : approve_user_program_url(@program, :user_id => participant.id, :role => "participant")), :id => "submit"%> &nbsp;
+		          </div>
+		        </div>
+		      <% end %>
+		    <% end if !@participants.empty?%>
+		
+		    <%= content_tag :div do%>
+		      <%= content_tag :h3, "#{Semantic.t(@program, "role_type:mentor", "p").present? ? Semantic.t(@program, "role_type:mentor", "p") : 'Mentor(s)'} Approval"%>
+		      <% @mentors.each do |mentor|%>
+		        <div style="height:35px;">
+		          <%= link_to "#{mentor.first_name} #{mentor.last_name}", user_path(mentor) %>
+		          <div class="pull-right" style="margin-left: 10px;">
+		            <%= link_to "Decline", (is_subdomain ? decline_user_program_url(@program, :user_id => mentor.id, :role => "mentor", subdomain: false) : decline_user_program_url(@program, :user_id => mentor.id, :role => "mentor")), :id => "submit"%>
+		          </div>
+		          <div class="pull-right">
+		            <%= link_to "Approve", (is_subdomain ? approve_user_program_url(@program, :user_id => mentor.id, :role => "mentor", subdomain: false) : approve_user_program_url(@program, :user_id => mentor.id, :role => "mentor")), :id => "submit"%>
+		          </div>
+		        </div>
+		      <% end %>
+		    <% end if @program.mentor_allowed and !@mentors.empty? %>
+		  <% else %>
+		    <%= content_tag :h1, "No Pending Approvals for this program"%>
+		  <% end %>
+		</div>  --> 
+  </div>
+</div>

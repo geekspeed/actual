@@ -1,0 +1,7 @@
+$("#org-content strong").html( "<%= @organisation.company_name %>" );
+$("#org-box").hide(); 
+$("#org-box #<%=params[:organisation_id_name]%>").val( "<%=@organisation.id %>")
+$("#org-content").show() 
+$("#add-new-company").hide();          
+$(".edit-organisation").hide();
+$.fancybox.close();

@@ -1,0 +1,9 @@
+<% help_content = @program.help_contents.find_or_initialize_by(field_name: params[:field_name])%>
+  <%= form_for [@program, help_content] do |f| %>
+    <%= content_tag :div do%>
+    <%= content_tag :h2, "Help Content"%>
+    <%= f.hidden_field :field_name, value: params[:field_name]%>
+    <%= f.text_area :content, :class => "form-control", :rows => 5%>
+    <%= f.submit "Save", :id => "submit"%>
+  <% end %>
+<% end %>

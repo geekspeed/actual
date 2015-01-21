@@ -1,0 +1,26 @@
+<% setting = MasterSetting.for(context_program).first %>
+<div class="block">
+  <h2 class="titleLine">Set standard form for Projects across all programs</h2>
+  <table class="settings full_width table">
+    <tbody>
+      <tr class="show_option_mentoring">
+        <td class="lbl">Would you like to set standard form for Projects across all programs?
+          <br>
+          YES - means that all programs will use this application form.
+          <br>
+          No - means that people who apply for multiple programs will need to fill in the About Me section of their registration form again for each program they apply to
+        </td>
+        <td class="col_setting">
+          <div class="radioset pull_left cloneble_setting" data-url="<%= cloneable_program_settings_path(context_program) %>">
+            <%= radio_button_tag :"settings[pitch_form_cloneable]", "true", setting.pitch_form_cloneable, :class => "option_cloneable" %>
+            <%= label_tag :"settings[pitch_form_cloneable]", "Yes", :for => "settings_pitch_form_cloneable_true" %>
+
+            <%= radio_button_tag :"settings[pitch_form_cloneable]", "false", !setting.pitch_form_cloneable, :class => "option_cloneable" %>
+            <%= label_tag :"settings[pitch_form_cloneable]", "No", :for => "settings_pitch_form_cloneable_false" %>
+            <div class="clr"></div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

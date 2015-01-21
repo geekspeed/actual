@@ -1,0 +1,390 @@
+<br>
+<br>
+<div class="row">
+	<div class="col-md-12">
+		<div data-collapsed="0" class="panel panel-custom panel-shadow ui-widget collapses panel-table" style="margin-bottom:2px;">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3>Register</h3>
+					<span>Branding of the platform</span>
+				</div>
+				<div class="panel-options">
+					<a data-rel="collapse" id="toggle-setting-box" class="ui-expander gn-icon gn-icon-chevron-up" href="#-"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+				<% if f.object.new_record? %>
+					<div class="row">
+	          <div class="col-sm-12 setting-font">
+				    <%= f.hidden_field :admins, :name => "#{f.object_name}[admins][]", :value => params[:user] %>
+				    </div>
+				  </div>
+			  <% end %>
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	<%= f.label :avatar, "Upload your company logo", :class => "" %>
+            </div>
+          </div>
+          <div class="col-sm-8">
+          	<div class="row">
+              <div class="col-sm-2">
+                <div class="browse-wrapper">
+                  <%= f.file_field :avatar, :class => "upload_img pull-left" %>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <%= image_tag((@organisation.avatar_url.present? ? @organisation.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-responsive pull-left")%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	<%= f.label :avatar, "Your company slogan", :class => "" %>
+            </div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :slogan, :placeholder => "Enter your company name or slogan", :id => "slogan", :class=>"form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br>
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	<label class="">Background Color RG code </label>
+            </div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :background_color, :class => "background_color" %>
+          </div>
+        </div>
+        <br>
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	Menu Bar Color RG code
+            </div>
+          </div>
+          <div class="col-sm-8">
+          	<%= f.text_field :manubar_color, :class => "manubar_color" %>
+  					<i>(preferably a rather dark color)</i>
+          </div>
+        </div>
+        <br />
+        
+        <div style="border-bottom: 1px rgb(230, 230, 230) solid;margin-top:20px;margin-bottom:20px;"></div>
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="panel_form_heads">Details</div>
+          </div>
+        </div>
+        <br />
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	<label class="">Type of Organisation</label>
+            </div>
+          </div>
+          <div class="col-sm-8">
+          	<div class="radioset">
+				      <% Organisation::TYPES.each do |type, label| %>
+				        <%= f.radio_button :type_of, type, :checked => "checked" %>
+				        <%= f.label label, :for => "#{f.object_name}_type_of_#{type}" %>
+				      <% end %>
+				    </div>
+          </div>
+        </div>
+        <br />
+        
+        <div class="row">
+          <div class="col-sm-4 setting-font">
+            <div style="line-height: 28px;">
+            	<%= f.label :company_name, :class=>"" %>
+            </div>
+          </div>
+          <div class="col-sm-8">
+						<%= f.text_field :company_name, :class => "required form-control form-style-1", :style=>"width:70%;" %>
+          </div>
+        </div>
+        <br />
+        
+        <div class="row">
+        	<div class="col-sm-12">
+				    <ul class="nav nav-tabs" id="myTab">
+				      <li class="active"><a data-toggle="tab" href="#contact_details">Your Contact Details</a></li>
+				      <li class=""><a data-toggle="tab" href="#administration">Administration</a></li>
+				    </ul>
+				    <div class="tab-content" id="myTabContent">
+				      <div id="contact_details" class="tab-pane fade active in form-in-tab">
+				      	<%= f.fields_for :address, @organisation.address do |address| %>
+				      		<%= address.fields_for :telephone, address.object.telephone do |telephone| %>
+					      		<div class="row">
+						          <div class="col-sm-4 setting-font">
+						            <div style="line-height: 28px;">
+						            	<%= telephone.label :country_code, "Telephone", :class=>"" %>
+						            </div>
+						          </div>
+						          <div class="col-sm-8">
+						          	<%= telephone.text_field :country_code, :class => "form-control form-style-1 pull-left", :placeholder => "Country Code" %>
+          							<%= telephone.text_field :number, :class => "form-control form-style-1 pull-left", :placeholder => "Number" %>
+						          </div>
+						        </div>
+					        <% end %>
+					        <br />
+					        
+					        <div class="row">
+					          <div class="col-sm-4 setting-font">
+					            <div style="line-height: 28px;">
+					            	<%= address.label :line_1, "Company Address", :class=>"" %>
+					            </div>
+					          </div>
+					          <div class="col-sm-8">
+					          	<%= address.text_field :line_1, :class => "form-control form-style-1", :placeholder => "Address Line 1", :style=>"width:70%;" %><br />
+					          	<%= address.text_field :line_2, :class => "form-control form-style-1", :placeholder => "Address Line 2", :style=>"width:70%;" %>
+					          </div>
+					       </div>
+					       <br />	
+					       
+					       <div class="row">
+					          <div class="col-sm-4 setting-font">
+					            <div style="line-height: 28px;">
+					            	<label class="">City</label>
+					            </div>
+					          </div>
+					          <div class="col-sm-8">
+					          	<%= address.text_field :city, :class => "form-control form-style-1", :placeholder => "City", :style=>"width:70%;" %>
+					          </div>
+					       </div>
+					       <br />	
+					       
+					       <div class="row">
+					          <div class="col-sm-4 setting-font">
+					            <div style="line-height: 28px;">
+					            	<label class="">Zip/Postal code</label> 
+					            </div>
+					          </div>
+					          <div class="col-sm-8">
+					          	<%= address.text_field :zipcode, :class => "form-control form-style-1", :placeholder => "Zip Code", :style=>"width:70%;" %>
+					          </div>
+					       </div>
+					       <br />	
+					       
+					       <div class="row">
+					          <div class="col-sm-4 setting-font">
+					            <div style="line-height: 28px;">
+					            	<%= address.label :state, :class=>"" %>
+					            </div>
+					          </div>
+					          <div class="col-sm-8">
+					          	<%= address.text_field :state, :class=>"form-control  form-style-1", :style=>"width:70%;" %>
+					          </div>
+					       </div>
+					       <br />	
+					       
+					       <div class="row">
+					          <div class="col-sm-4 setting-font">
+					            <div style="line-height: 28px;">
+					            	<%= address.label :country, :class=>"" %>
+					            </div>
+					          </div>
+					          <div class="col-sm-8">
+					          	<%= address.country_select(:country, ["United Kingdom", "United States"], {:include_blank => "Select Country"}, {:class=>"form-control form-style-1 select-size2", :style=>"width:70%;"} ) %>
+					          </div>
+					       </div>
+					       <br />	
+				      	<% end %>
+				      </div>
+				      <div id="administration" class="tab-pane fade form-in-tab">
+				      	<div class="row">
+				          <div class="col-sm-12 setting-font">
+				            <div style="line-height: 28px;">
+				            	Invite Administrators
+				            </div>
+				          </div>
+				          <div class="col-sm-12">
+				          	<textarea name="invites[company_admin]" placeholder="For maximum efficiency, create a dummy email in your email client e.g. Outlook, Mac Mail where you can easily add the emails of those you want to invite from your address book. Then copy and paste all the emails into this section and you are good to go
+        						Comma separeted Email List" class="form-control form-style-1" style="width:70%;"></textarea>
+				          </div>
+				       	</div>
+					      <br />	
+					      
+					      <div class="row">
+				          <div class="col-sm-12 setting-font">
+				            <div style="line-height: 28px;">
+				            	Message
+				            </div>
+				          </div>
+				          <div class="col-sm-12">
+				          	<%= text_area_tag "invites[invite_mail]","Hi <br> #URL" %>
+				          </div>
+				       	</div>
+				       	
+				      </div>
+				    </div>
+        	</div>
+        </div>
+        
+        <div class="row">
+          <div class="col-sm-12">
+             <%= f.submit "Submit", :id => "submit" %>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>
+		
+		
+<%
+=begin
+%>
+
+	
+
+<div class="reg_box block">
+  <h2 class="titleLine">Branding of the platform</h2>
+  Choose the logo an slogan you want everyone to see when they sign into your accelerator.
+  <br /><br />
+
+  <% if f.object.new_record? %>
+    <%= f.hidden_field :admins, :name => "#{f.object_name}[admins][]", :value => params[:user] %>
+  <% end %>
+  <div class="logoboxleft form-group">
+
+    <%= f.label :avatar, "Upload your company logo", :class => "file_field_width" %>
+    <%= f.file_field :avatar, :class => "file_field_width pull-left upload_img" %>
+    <%= image_tag((@organisation.avatar_url.present? ? @organisation.avatar_url : "/images/icons/image-missing.png"), :id => "show_img", :class=>"img img-responsive")%>
+    <div class="clear"></div>
+  </div>
+
+  <div class="settingsright form-group">
+    <%= f.label :avatar, "Your company slogan", :class => "file_field_width" %>      
+    <%= f.text_field :slogan, :placeholder => "Enter your company name or slogan", :id => "slogan", :class=>"form-control" %>
+  </div>
+
+  <div class="form-group">
+  	<label class="file_field_width">Background Color RG code </label>
+  	<%= f.text_field :background_color, :class => "background_color" %>
+  </div>
+
+  <div class="form-group">
+    <label class="file_field_width">Menu Bar Color RG code</label>
+
+  <%= f.text_field :manubar_color, :class => "manubar_color" %>
+  <i>(preferably a rather dark color)</i> 
+
+</div>
+
+<div class="clr"></div>
+
+<div class="reg_box block">
+  <h2 class="titleLine">Details</h2>
+  <div>
+    <label class="file_field_width">Type of Organisation</label>
+    <div class="radioset">
+      <% Organisation::TYPES.each do |type, label| %>
+        <%= f.radio_button :type_of, type, :checked => "checked" %>
+        <%= f.label label, :for => "#{f.object_name}_type_of_#{type}" %>
+      <% end %>
+    </div>
+    <div class="clr"></div>
+  </div>
+
+  <div class="infoboxprice">
+    Please get in touch with us for pricing and a demo by entering your contact details below
+  </div>
+
+  <p class="form-group">
+    <%= f.label :company_name, :class=>"file_field_width" %>
+    <%= f.text_field :company_name, :class => "required form-control" %>
+  </p>
+
+  <div class="radioset" id="act_tab">
+    <input type="radio" id="payerdetails" checked="checked" name="act_tab" value="payerdetails" class="tab_menu" /><label for="payerdetails">Your Contact Details</label>
+    <input type="radio" id="administration" name="act_tab" value="administration" class="tab_menu" /><label for="administration">Administration</label>
+    <div class="clr"></div>
+  </div>
+
+  <div class="payerdetails tab_men_cont">
+    <%= f.fields_for :address, @organisation.address do |address| %>
+      <%= address.fields_for :telephone, address.object.telephone do |telephone| %>
+        <div class="form-group">
+          <%= telephone.label :country_code, "Telephone", :class=>"file_field_width" %>
+          <%= telephone.text_field :country_code, :class => "short_input form-control pull-left", :placeholder => "Country Code" %>
+          <%= telephone.text_field :number, :class => "short_input form-control pull-left", :placeholder => "Number" %>
+    			<div class="clear"></div>	        
+    		</div>
+
+      <% end %>
+
+      <p class="form-group">
+        <%= address.label :line_1, "Company Address", :class=>"file_field_width" %>
+        <%= address.text_field :line_1, :class => "fullwidth form-control", :placeholder => "Address Line 1" %>
+      </p>
+
+      <p class="form-group">
+        <label class="file_field_width"></label>
+        <%= address.text_field :line_2, :class => "fullwidth form-control", :placeholder => "Address Line 2" %>
+      </p>
+
+      <p class="form-group">
+        <label class="file_field_width">City</label>
+        <%= address.text_field :city, :class => " short_input form-control", :placeholder => "City" %>
+      </p>
+
+    	<p class="form-group">
+      	<label class="file_field_width">Zip/Postal code</label>        
+        <%= address.text_field :zipcode, :class => " short_input form-control", :placeholder => "Zip Code" %>
+      </p>
+
+      <div class="form-group">
+        <%= address.label :state, :class=>"file_field_width" %>
+        <%= address.text_field :state, :class=>"form-control pull-left" %>
+        <div class="clear"></div>
+      </div>
+      <div class="form-group">
+        <%= address.label :country, :class=>"file_field_width" %>
+        <%= address.country_select(:country, ["United Kingdom", "United States"], {:include_blank => "Select Country"}, {:class=>"form-control pull-left select-size2"}) %>
+		    <div class="clear"></div>      
+	    </div>
+
+    <% end %>
+  </div>
+
+  <div class="administration tab_men_cont" style="display: none">
+    <div>
+      <h3>Invite Administrators</h3>
+      <div class="inner">
+        <textarea name="invites[company_admin]" placeholder="For maximum efficiency, create a dummy email in your email client e.g. Outlook, Mac Mail where you can easily add the emails of those you want to invite from your address book. Then copy and paste all the emails into this section and you are good to go
+
+        Comma separeted Email List" class="form-control"></textarea><br/>
+        <h3>Message</h3>
+        <div><%= text_area_tag "invites[invite_mail]","Hi <br> #URL" %></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<p>
+  <%= f.submit "Submit", :id => "submit" %>
+</p>
+  
+<div class="clr"></div>
+<%
+=end
+%>	
+
+<script>
+  bkLib.onDomLoaded(function() {
+    new nicEditor().panelInstance('invites_invite_mail');
+  });
+</script>

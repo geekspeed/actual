@@ -1,0 +1,45 @@
+<div id="rightcontent" style="float: none !important;">
+  <%= content_tag :div, :id => "main", :class => "two_sides_content" do%>
+    <div class="col-md-12 block" style="">
+      <div class="login" id="theme-my-login">
+        <%= content_tag :h2, "Login With", :class=>"titleLine"%>
+        <%= link_to(image_tag("ico_facebook.png"), "#")%>
+        <%= link_to(image_tag("ico_twitter2.png"), "#") %>
+        <%= link_to( image_tag("ico_linkedin.png"), "#")%>
+      
+      <br><br>
+      <%= content_tag :h2, "- OR - Login with " + (@organisation.try(:eco_summary).try(:ecosystem_name).to_s == "" ? "Apptual Account" : @organisation.try(:eco_summary).try(:ecosystem_name).to_s + " Account"), :class=>"titleLine"%>
+      <%= content_tag :div do%>
+        <%= form_for(:user, :url => session_path(:user, :organisation_id=>@organisation.id, :level => "eco"), :id => "loginform") do %>
+          <%= content_tag :div, :class => "form" do%>
+            <%= content_tag :div, :class => "form-group" do%>
+              <%= content_tag :label, "Email"%>
+              <%= text_field_tag "user[email]", "", :class => "input form-control", :size => 20 %>
+            <% end %>
+            
+            <%= content_tag :div, :class => "form-group" do%>
+              <%= content_tag :label, "Password"%>
+              <%= password_field_tag "user[password]", "", :class => "input form-control", :size => 20 %>
+            <% end %>
+            
+            <%= content_tag :div, :class => "form-group" do%>
+              <%= content_tag :label, ""%>
+              <%= check_box_tag "user[remember_me]" %>
+              <%= content_tag :label, "Remember Me"%>
+              <div class="clear"></div>
+            <% end %>
+
+            <%= content_tag :div, :class => "form-group" do%>
+              <%= content_tag :label, ""%>
+              <%= button_to "Login", "#", :class => "submit pull-left", :id => "submit"%>
+              <%= link_to "Lost password", new_password_path("user"), :class => "pull-left lost_pass_link" %>
+              <div class="clear"></div>
+            <% end %>
+
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    </div>
+  <% end %>
+</div>

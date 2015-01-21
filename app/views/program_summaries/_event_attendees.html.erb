@@ -1,0 +1,39 @@
+<h2>Attendees for <%= @program_plan.activity %></h2>
+<a href="#" class="attending_list_btn">Attending (<%= @attending_users.count %>)</a> |
+<a href="#" class="not_attending_list_btn">Not Attending (<%= @not_attending_users.count %>)</a>
+<div id="attendees_list">
+<table id="" class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @attending_users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.full_name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<div id="not_attending_list" style="display:none;">
+<table id="" class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @not_attending_users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.full_name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>

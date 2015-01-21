@@ -1,0 +1,93 @@
+<!-- <h2 class="sidebarTitle">Workflow</h2> -->
+<% background_color = current_organisation.try(:background_color) || "#333" %>
+<% menubar_color = current_organisation.try(:manubar_color) || "#07b291" %>
+<style type="text/css">
+/*.active_workflow{
+background:<%= menubar_color %> !important;
+color: #fff;
+padding: 5px;
+border-radius:5px 5px 0 0;
+-webkit-border-radius:5px 5px 0 0;
+box-shadow: 0 -1px 2px #888888;
+-webkit-box-shadow: 0 -1px 2px #888888;
+}*/
+</style>
+<% if context_program.try(:workspace).try(:right_workflow) || context_program.try(:workspace).try(:right_workflow).nil? %> 
+  <% applicable_role = current_user.role_code_for(context_program.id, current_organisation.id)[0] %> 
+  <div class="row pitch_phases">
+    <div class="col-sm-12">
+      <div id="rootwizard" class="form-horizontal form-wizard visible-lg phases_wizard">
+        <div class="steps-progress" style="margin-right: 7.14286%; margin-left: 7.14286%;">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="owl-example" class="owl-carousel owl-theme">
+          <% prev_phase = nil%>
+          <% if @pitch.team_and_mentor_both?(current_user) %>
+             <% workflows = @pitch.workflows.on.where(:applicable_role.in => [applicable_role,"participant"]) %>
+          <% else %>
+            <% workflows = @pitch.workflows.on.role_specific(applicable_role) %>
+          <% end %>
+          <% workflows.each do |phase| %>
+          <%if phase.active? %>
+            <% if phase_action_allowed?(phase.applicable_role, @pitch) && @pitch.phase_conditions_completed(phase) and phase.code != "due_diligence" or (applicable_role == "company_admin" && @pitch.phase_conditions_completed(phase)) %>
+              <% if phase.complete?(@pitch, current_user) %>
+                <% pitch_color_status = "completed" %>
+              <% elsif @pitch.prev_phase_completed(prev_phase) or applicable_role == "company_admin" %>
+                <% pitch_color_status = "uncompleted" %>
+              <% end %>
+            <%else%>
+                <% pitch_color_status = "" %>
+            <%end%>
+          <%else%>
+           <% pitch_color_status = "danger" %>
+          <% end %>
+            <div class="pahse-in <%= pitch_color_status%>" name="<%=phase.code%>">
+                <a data-toggle="tab" href="#tab1" id="box1" class="action-click dropdown-link"><div><span></span></div><%= phase.phase_name %></a>
+                <% if phase.workflow_milestone.present? %>
+                  <span class="phase_date"> <%= phase.workflow_milestone.try(:due_date) %><br> <span class="sep">|</span> </span>
+                <% end %>
+            </div>
+            <% prev_phase = phase %>
+          <% end %>
+        </div>
+        <%# prev_phase = nil%>
+        <% workflows.each do |phase| %>
+          <div class="dropdown-container phase_dropdown" id="<%=phase.code%>_pupup" style="display: none;">
+            <p class="phase_arrrow"><i class="glyphicon glyphicon-eject"></i></p>
+            <div class="row">
+              <div class="col-sm-12">               
+                <% if phase.workflow_milestone.present? %>
+                  <p class="phase-dropdown-title">Milestone to next level</p>
+                <% end %>
+                <ul>
+                  <li>
+                      <% if phase.active? %>
+                        <p><%= "#{phase.help_text} <br><br>".html_safe if !phase.help_text.blank?%></p>
+                      <% if phase_action_allowed?(phase.applicable_role, @pitch) && @pitch.phase_conditions_completed(phase) and phase.code != "due_diligence" or (applicable_role == "company_admin" && @pitch.phase_conditions_completed(phase))%>
+                          <%= (render "pitches/shared/#{phase.code}_phase", phase: phase) rescue (render "pitches/shared/default_phase", phase: phase, applicable_role: applicable_role) %>
+                        <%else%>
+                          <p>This phase will be available once you have achieved.</p>
+                          <br/>
+                          <% @pitch.workflows.where(:id.in=>phase.phase_conditions).each_with_index do |phase, index|%>
+                            <p><b><%=index+1%>.</b> <%=phase.try(:phase_name)%></p>
+                          <% end %>
+                        <%end%>
+                      <%else%>
+                       <p>This phase is not yet available</p>
+                    <% end %>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <%# prev_phase = phase %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<br><br>
+<% end %>
+
+<style>
+.phase_dropdown ul li ul.tasks_list li {padding:0px;}
+</style>

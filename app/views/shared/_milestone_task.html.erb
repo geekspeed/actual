@@ -1,0 +1,32 @@
+  <div style="display: none">
+    <div id="give_a_task">
+      <%= form_for @task, :url => polymorphic_path([@program, @pitch, Task]), :id => "give_a_task_form" do |task| %>
+        <%= task.text_area :description, :placeholder => "Set a task here", :rows => "5" %>
+        <br /><br />
+        Set the deadline for when the task is to be completed
+        <%= task.text_field :deadline, :class => "datepicker_std" %>
+        <br /><br />
+        Link the task to a milestone to provide the necessary context:
+        <%= task.collection_select :milestone_id, @pitch.milestones, :id, :description %>
+        <br /><br />
+        <%= task.submit "Post", :id => "submit" %>
+      <% end %>
+    </div>
+                      
+    <!--<script type="text/javascript">
+      // $(document).ready(function() {
+      //   var options = {
+      //     url: admin_url+"?action=give_a_task&pid=1023&ptid=1033",
+      //     beforeSerialize: function($form, options) { 
+      //       $("#give_a_task_form").find('.watermark').val('');
+      //     },
+      //     success: function(data) { 
+      //       parent.$.fancybox.close();
+      //       location.reload();
+      //     }
+
+      //   }
+      //   $('#give_a_task_form').ajaxForm(options);
+      // });
+    </script>-->
+  </div>

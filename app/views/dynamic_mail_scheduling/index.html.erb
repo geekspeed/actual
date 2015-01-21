@@ -1,0 +1,144 @@
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Mail Scheduling" %>
+<% end %>
+
+<% page = "manage_program"; ppage = "mail_scheduling"%>
+<%= render "shared/bs_navbar", :page => page, :ppage => ppage%>
+
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-mail-settings gn-icon-large"></i>
+      Mail Scheduling
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Mail scheduling lets you decide on the scheduling of the various automated emails leaving the platform"></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= program_dashboard_url(context_program) %>>Manage Program</a> / <a href="#" class="active_bread">User Mail Scheduling</a>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-10 main-right-section">
+    <h2 class="titleLine title-normal"><span>Main sections</span></h2>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+          <div class="panel-heading">
+            <div class="panel-title title_option">
+              <a href="sec1" name="sec1" class="section_nav"></a>
+              <h3>Mail Scheduling</h3>
+            </div>
+            <div class="panel-options">
+              <a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+            </div>
+          </div>
+          <div class="panel-body">
+            <%= form_for(@mail_scheduling, :url => polymorphic_path([context_program, :dynamic_mail_scheduling, :index]), :html => {:class => "reqForm no_float", :method=>"post"}) do |f| %>
+              <table aria-describedby="table-2_info" class="table table-bordered table-striped datatable dataTable" id="table-2">
+                <thead>
+                  <tr role="row">
+                    <th aria-label="" style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Mail Type</th>
+                    <th aria-label="" style="width: 150px;" colspan="1" rowspan="1" aria-controls="table-2" tabindex="0" role="columnheader" class="sorting">Scheduling Time (HH:MM)</th>
+                  </tr>
+                </thead>
+                
+                <tbody aria-relevant="all" aria-live="polite" role="alert">
+                  <tr role="row">
+                    <td>User Adoption Mail</td>
+                    <td>
+                      <div class='input-append bootstrap-timepicker' style='display: inline;'>
+                        <%= f.text_field :user_adoption, :class => "timepicker input-small", :placeholder => "Type time here" %>
+                          <span class='add-on'><i class='icon-time'></i></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr role="row">
+                    <td>Activity Feed Mail</td>
+                    <td>
+                      <div class='input-append bootstrap-timepicker' style='display: inline;'>
+                        <%= f.text_field :activity_feed, :class => "timepicker input-small", :placeholder => "Type time here" %>
+                          <span class='add-on'><i class='icon-time'></i></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr role="row">
+                    <td>Project Feed Mail</td>
+                    <td>
+                      <div class='input-append bootstrap-timepicker' style='display: inline;'>
+                        <%= f.text_field :project_feed, :class => "timepicker input-small", :placeholder => "Type time here" %>
+                          <span class='add-on'><i class='icon-time'></i></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr role="row">
+                    <td>Course Inactive User Mail</td>
+                    <td>
+                      <div class='input-append bootstrap-timepicker' style='display: inline;'>
+                        <%= f.text_field :course_inactive_user, :class => "timepicker input-small", :placeholder => "Type time here" %>
+                          <span class='add-on'><i class='icon-time'></i></span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <%= f.submit "Save", :id=>"submit"%>    
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Sections</p>
+        <ul>
+          <li><a href="#sec1">Mail Scheduling</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<br />
+
+<script type="text/javascript">
+  $(document).ready(function($){
+    $('.collapses').collapsiblePanel();
+    $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: false,
+                showMeridian: false
+            });
+  });
+</script>
+
+<style>
+  table tr td i{color:#333 !important;}
+</style>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+  $(document).ready(function($){
+    $('.collapses').collapsiblePanel();
+  });
+  
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 150
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+</script>

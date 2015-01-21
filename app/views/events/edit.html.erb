@@ -1,0 +1,166 @@
+<%= javascript_include_tag "jquery.collapsiblepanel" %>
+<% content_for :title do %>
+  <%= "#{context_program.try(:title)} - Admin - Event" %>
+<% end %>
+
+<% page = "setup_program"; ppage = "events"%>
+<%= render "shared/program_sidebar", :page => page, :ppage => ppage %>
+<div class="row page_head">
+  <div class="col-md-8">
+    <h3>
+      <i class="gn-icon gn-icon-events gn-icon-large"></i>
+      Program events
+      <i class="glyphicon glyphicon-question-sign help-sign" data-toggle="tooltip" data-placement="bottom" title="Program events lets you organise the various events that make part of your program "></i>
+    </h3>
+  </div>
+  <div class="col-md-4 breadcrumb">
+    <a href="#"><%=context_program.title%></a> / <a href=<%= context_program.try(:persisted?) ? edit_program_url(context_program) : new_program_url %>>Setup</a> / <a href="#" class="active_bread">Program events</a>
+  </div>
+</div>
+<div class="row main-row">
+	<div class="col-md-10 main-right-section">
+		<h2 class="titleLine title-normal"><span>Main section</span></h2>
+
+<a href="sec1" name="sec1" class="section_nav"></a>
+<h2 class="titleLine title-normal"><span>Edit event</span></h2>
+<div class="row">
+	<div class="col-md-12">
+		<div style="margin-bottom:2px;" class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+			<div class="panel-heading">
+				<div class="panel-title title_option">
+					<h3><%=@program_event.title%></h3>
+				</div>
+				<div class="panel-options">
+					<a href="#-" class="ui-expander gn-icon gn-icon-chevron-down" data-rel="collapse"></a>
+				</div>
+			</div>
+					
+			<div class="panel-body">
+				<input type="hidden" id="program_id" value="<%= @program.id%>" />
+				<input type="hidden" id="event_id" value="<%= @program_event.id%>" />
+				<%= form_for(@program_event, :url => program_event_path(@program, @program_event), :method=> "put") do |program_event | %>
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div style="line-height: 28px;">Title</div>
+						</div>
+						<div class="col-sm-8">
+							<%= program_event.text_field :title, :class => "autogrow form-control form-style-1", :placeholder => "Type title here" %>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div style="line-height: 28px;">Attachment</div>
+						</div>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-sm-5">
+									<% if @program_event.attachment.present? %>
+										<div class="post-media">
+											<div class="thumbnail no-border do-hover">
+												<% emb_api = Embedly::API.new(:key => AppConfig.embedly["key"]) %>
+												<% emb_obj = emb_api.extract(:url => root_url.chomp('/') + @program_event.attachment_url, :maxwidth => 525)%>
+												<%= show_attachment(emb_obj)%>
+											</div>
+										</div>
+									<% end %>
+								</div>
+								<div class="col-sm-3">
+									<div class="browse-wrapper">
+										<%= program_event.file_field :attachment, :class => "file_field_width", :placeholder => "Type description here" %>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-sm-4 setting-font">
+							<div style="line-height: 28px;">Is this a private event?</div>
+						</div>
+						<div class="radioset">
+							<%= program_event.radio_button :is_private, "true", :class => "option_mentoring ui-helper-hidden-accessible" %>
+							<%= program_event.label :is_private, "Yes", :for => "#{program_event.object_name}_is_private_true", :class => "ui-button ui-widget ui-state-default ui-button-text-only ui-corner-left", "role" => "button", "aria-disabled" => "false", "aria-pressed" => "false" %>
+							<%= program_event.radio_button :is_private, "false", :class => "option_mentoring ui-helper-hidden-accessible" %>
+							<%= program_event.label :is_private, "No", :for => "#{program_event.object_name}_is_private_false" ,:class => "ui-button ui-widget ui-state-default ui-button-text-only ui-state-active ui-corner-right", "role" => "button", "aria-disabled" => "false", "aria-pressed" => "true" %>
+							<div class="clr"></div>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-sm-12  setting-font">
+							<div style="line-height: 28px;">Description</div>
+						</div>
+						<div class="col-sm-12">
+							<%= program_event.text_area :description, :class => "autogrow form-control summernote", :placeholder => "Type description here" %>
+						</div>
+					</div>
+					<hr class="mod_sep">
+					<%= render "edit_event_session", :program_event => program_event %>
+					<div class="pull-right"><%= program_event.submit "Update", :id => "submit" %></div>
+				<% end %>
+
+				<table>
+					<tr id="event_col" class="no_display">
+						<td><%= text_field_tag "program_event[event_sessions_attributes][-1-][location]", nil, :class => "autogrow form-control", :placeholder => "Type location here" %></td>
+						<td><%= number_field_tag "program_event[event_sessions_attributes][-1-][seat_no]", nil, :class => "autogrow form-control", :placeholder => "Type seats no here", style: "width:60px;" %></td>
+						<td>
+						  <%= text_field_tag "program_event[event_sessions_attributes][-1-][date]", nil, :class => "datepicker_std form-control form-style-1", :placeholder => "Date from" %>
+						  <br>
+						  <%= text_field_tag "program_event[event_sessions_attributes][-1-][date_to]", nil, :class => "datepicker_std form-control form-style-1", :placeholder => "Date to" %>
+						</td>
+						<td>
+							<div class='input-append bootstrap-timepicker' style='display: inline;'>
+								<%= text_field_tag "program_event[event_sessions_attributes][-1-][time_from]", nil, :class => "timepicker input-small", :placeholder => "Type time here" %>
+								<span class='add-on'><i class='icon-time'></i></span>
+							</div>
+							<div class='input-append bootstrap-timepicker' style='display: inline;'>
+								<%= text_field_tag "program_event[event_sessions_attributes][-1-][time_to]", nil, :class => "timepicker input-small", :placeholder => "Type time here", style: "margin-top: 5px;" %>
+								<span class='add-on'><i class='icon-time'></i></span>
+							</div>
+						</td>
+						<td><%= text_area_tag "program_event[event_sessions_attributes][-1-][description]", nil, :class => "autogrow form-control form-style-1", style: "height: 100px;" %></td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="col-md-2 stick_me">
+    <ul class="navigator-menu">
+      <li id="nav_sec1" class="active-navigator-title">
+        <p>Main Section</p>
+        <ul>
+          <li><a href="#sec1">Edit Event</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="template_area"></div>
+
+<%= javascript_include_tag "jquery.sticky-kit.min" %>
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    $(".stick_me").stick_in_parent({
+      parent: $(".two_sides_content"),
+      offset_top: 300
+    });
+    
+    $('.help-sign').tooltip();
+  });
+  $('.navigator-menu li ul li a').click(function(){
+      $('.navigator-menu li ul li').removeClass('active-navigator-section');
+      $('.navigator-menu li').removeClass('active-navigator-title');
+      $(this).parent().addClass('active-navigator-section');
+      $(this).parent().parent().parent().addClass('active-navigator-title');
+    $('html, body').animate({
+        scrollTop: $('[name="' + $.attr(this, 'href').substr(1) + '"]').offset().top - 60
+    }, 500);
+    return false;
+  });
+  $("[rel=tooltip]").tooltip();
+</script>

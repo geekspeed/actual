@@ -1,0 +1,35 @@
+<div class="panel panel-white panel-shadow ui-widget collapses panel-table" data-collapsed="0">
+		<div class="panel-heading">
+			<div class="panel-title title_option">
+				<h3>Badge</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-12">
+						<div class="col-sm-12 center">
+							<div class="row">
+								<%= image_tag @app_badge.image %>
+							</div>
+						</div>
+					
+		         <table  class="table table-bordered table-striped " >                           
+		            <tbody >
+		            		<tr role="row">
+		                    <td  style="width: 330px;">Badge Name</td>
+		                    <td  style="width: 190px;" >Description</td>
+		                    <td  style="width: 190px;" >type</td>
+		                </tr>
+		              
+		                <tr role="row">
+		                    <td class=" "><%= @app_badge.name %></td>
+		                    <td class=" "><%= @app_badge.description %></td>
+		                    <td class=" "><%= @app_badge.badge_type %></td>                        
+		                </tr>
+		            </tbody>
+		        	</table> 
+				</div>
+			
+			</div>
+		</div>
+</div>
